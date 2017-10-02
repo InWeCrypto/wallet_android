@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<capital.fbg.wallet.common.widget.SimpleToolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    android:paddingTop="@dimen/status_bar_height">
+
+    <TextView
+        android:id="@+id/txt_left_title"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:drawableLeft="@mipmap/nav_back"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/txt_main_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/txt_right_title"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="right"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:drawableRight="@mipmap/nav_backup"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:visibility="visible"/>
+
+</capital.fbg.wallet.common.widget.SimpleToolbar>

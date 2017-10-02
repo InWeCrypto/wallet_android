@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.youth.banner.Banner
+        android:id="@+id/banner_img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"/>
+
+    <View
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:visibility="gone"
+        android:background="@color/c_efefef"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="106dp"
+        android:visibility="gone"
+        android:background="@color/c_ffffff"/>
+
+    <TextView
+        android:textColor="@color/c_333333"
+        android:textSize="14sp"
+        android:text="@string/discover_hit1"
+        android:paddingLeft="25dp"
+        android:paddingTop="17dp"
+        android:paddingBottom="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c_efefef"/>
+</LinearLayout>
