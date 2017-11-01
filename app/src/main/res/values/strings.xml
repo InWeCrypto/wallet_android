@@ -1,0 +1,274 @@
+<resources>
+    <string name="app_name">inwecrypto</string>
+    <string name="qianbao">资产</string>
+    <string name="hangqing">行情</string>
+    <string name="faxian">资讯</string>
+    <string name="wode">定制</string>
+    <string name="reqianbao">热钱包</string>
+    <string name="lengqianbao">冷钱包</string>
+    <string name="zhuce">注册</string>
+    <string name="login_hint">太忙了？找回密码</string>
+    <string name="zongzichan">总资产</string>
+    <string name="yuedenghao">≈</string>
+    <string name="yuedenghaopricecn">≈¥</string>
+    <string name="yuedenghaopriceus">≈$</string>
+    <string name="wuzichan">￥0.00</string>
+    <string name="eth">ETH</string>
+    <string name="btc">BTC</string>
+    <string name="qianbaodizhi">钱包地址</string>
+    <string name="zhuanzhang">转账</string>
+    <string name="shoukuan">收款</string>
+    <string name="jiaoyijilu">交易纪录</string>
+    <string name="quanbuzichan">全部资产</string>
+    <string name="qianbaoxiangqin">钱包详情</string>
+    <string name="mail_hit1">请输入域名</string>
+    <string name="mail_hit2">请输入钱包地址</string>
+    <string name="mail_hit3">添加成功！</string>
+    <string name="mail_hit4">修改成功！</string>
+    <string name="mail_hit5">删除成功！</string>
+    <string name="mail_hit7">添加失败！</string>
+    <string name="mail_hit8">修改失败！</string>
+    <string name="mail_hit9">删除失败！</string>
+    <string name="mail_title_add">添加联系人</string>
+    <string name="mail_title_see">查看联系人</string>
+    <string name="mail_title_edit">编辑联系人</string>
+    <string name="load_error">加载失败!请检查网络后重试!</string>
+    <string name="fix_error">修改失败!请检查网络后重试!</string>
+    <string name="mail_title">通讯录</string>
+    <string name="zanwushuju">暂无数据</string>
+    <string name="ico_order_hit1">众筹币种：</string>
+    <string name="ico_order_hit2">可去转账钱包添加代币查看众筹完毕后的资金</string>
+    <string name="ico_order_hit3">转账方钱包地址</string>
+    <string name="ico_order_hit4">合约地址</string>
+    <string name="ico_order_hit5">交易时间</string>
+    <string name="ico_order_hit6">交易名称</string>
+    <string name="ico_order_hit7">交易单号：</string>
+    <string name="login_error">登陆失败</string>
+    <string name="add_market_title">添加行情</string>
+    <string name="market_detail">行情详情</string>
+    <string name="market">行情</string>
+    <string name="btc_rate_title">BTC手续费率设置</string>
+    <string name="ico_order_title">ico订单</string>
+    <string name="ico_trade_title">ico交易</string>
+    <string name="ico_order_detail_title">ico订单详情</string>
+    <string name="signature_title">签名信息认证</string>
+    <string name="unit_title">货币单位</string>
+    <string name="add_wallet_title">添加钱包</string>
+    <string name="add_token_title">添加代币</string>
+    <string name="receive_title">收款</string>
+    <string name="receive_confirm_title">收款确认</string>
+    <string name="receive_detaile_title">收款详情</string>
+    <string name="transaction_record_title">交易纪录</string>
+    <string name="transfer_title">转账</string>
+    <string name="transfer_confirm">转账确认</string>
+    <string name="transfer_detaile_title">转账详情</string>
+    <string name="discover_hit1">资讯文章</string>
+    <string name="add_walllet">添加钱包</string>
+    <string name="scan">扫一扫\u0020\u0020\u0020\u0020</string>
+    <string name="weibeifen">未备份</string>
+    <string name="guancha">观察</string>
+    <string name="market_hit1">零点开盘</string>
+    <string name="market_hit2">最高</string>
+    <string name="market_hit3">最低</string>
+    <string name="market_hit4">成交量</string>
+    <string name="market_hit5">显示资产</string>
+    <string name="market_hit6">价格上限</string>
+    <string name="market_hit7">价格下限</string>
+    <string name="mail_hit6">昵称</string>
+    <string name="mail_hit10">钱包地址</string>
+    <string name="mail_hit11">备注</string>
+    <string name="signature_hit1">签名用的地址</string>
+    <string name="signature_hit2">原信息</string>
+    <string name="signature_hit3">签名</string>
+    <string name="yanzheng">验 证</string>
+    <string name="baocun">保 存</string>
+    <string name="me_hit1">已登陆</string>
+    <string name="me_hit2">通讯录</string>
+    <string name="me_hit3">ico订单详情</string>
+    <string name="me_hit4">btc费率设置</string>
+    <string name="me_hit5">签名认证</string>
+    <string name="me_hit6">货币单位</string>
+    <string name="tianjiaxinqianbao">添加新钱包</string>
+    <string name="wallet_hit1">添加成功</string>
+    <string name="wallet_hit2">请及时进入钱包并备份种子保障钱包的安全，种子一经备份则会在APP上消失，需要牢记，否则钱包无法找回</string>
+    <string name="wallet_hit3">进入钱包开始备份</string>
+    <string name="wallet_hit5">请及时进入钱包并备份助记词以及Key Store保障钱包的安全，助记词一经备份则会在APP上消失，需要牢记，否则钱包无法找回</string>
+    <string name="wallet_hit4">请输入种子，按空格分隔</string>
+    <string name="wallet_hit6">全部代币</string>
+    <string name="wallet_hit7">转账扫描签名</string>
+    <string name="zhuanzhangjine">转账金额</string>
+    <string name="beizhu">备注</string>
+    <string name="wallet_hit8">转账钱包地址</string>
+    <string name="shoukuanjine">收款金额</string>
+    <string name="wallet_hit9">收款方钱包地址</string>
+    <string name="wallet_hit10">转账方钱包地址</string>
+    <string name="wallet_hit11">到账时间</string>
+    <string name="wallet_hit12">转账钱包地址</string>
+    <string name="queding">确 定</string>
+    <string name="wallet_hit13">转账钱包地址</string>
+    <string name="zhuanzhan">转 账</string>
+    <string name="touxiang">头像</string>
+    <string name="nicheng">昵称</string>
+    <string name="sex">性别</string>
+    <string name="settting">个人设置</string>
+    <string name="nan">男</string>
+    <string name="nv">女</string>
+    <string name="headimg">个人头像</string>
+    <string name="jingqingqidai">敬请期待</string>
+    <string name="xiangce">相册</string>
+    <string name="pay_success">支付成功</string>
+    <string name="pay_hit1">您的订单已经支付成功</string>
+    <string name="no_qrcode">未发现二维码</string>
+    <string name="saoyisao">扫一扫</string>
+    <string name="gao">高</string>
+    <string name="di">低</string>
+    <string name="liang">量</string>
+    <string name="save">保存</string>
+    <string name="tianjiahangqing">添加行情</string>
+    <string name="bianjihangqing">编辑行情</string>
+    <string name="tixing">提醒</string>
+    <string name="market_hit8">显示资产</string>
+    <string name="market_hit9">拖动</string>
+    <string name="import_wallet">导入钱包</string>
+    <string name="wallet_hit14">钱包名称</string>
+    <string name="walllet_hit15">设定密码</string>
+    <string name="wallet_hit16">重复输入密码</string>
+    <string name="wallet_hit15">密码需包含不少于8位数的大小写字母以及数字</string>
+    <string name="wallet_hit17">确定添加</string>
+    <string name="wallet_hit18">请填写名称</string>
+    <string name="wallet_hit_19">请填写密码</string>
+    <string name="wallet_hit_20">两次密码输入不一样</string>
+    <string name="wallet_hit21">复制粘贴keystore文件内容，也可通过右上角扫描二维码，将信息录入</string>
+    <string name="wallet_hit22">请输入助记词，按空格分隔</string>
+    <string name="wallet_hit23">请输入明文私钥</string>
+    <string name="wallet_hit24">观察钱包只需要导入钱包地址即可，可进行日常的账户管理以及交易。大额资产建议使用冷钱包或其他途径管理，避免泄露被盗</string>
+    <string name="wallet_hit25">请输入种子，按空格分隔</string>
+    <string name="keystore">Keystore</string>
+    <string name="anquanma">助记词</string>
+    <string name="key">私钥</string>
+    <string name="watch">观察</string>
+    <string name="seed">种子</string>
+    <string name="kaishidaoru">开始导入</string>
+    <string name="weidu">未读</string>
+    <string name="yidu">已读</string>
+    <string name="xinxi">信息</string>
+    <string name="dialog_hit1">请输入密码</string>
+    <string name="dialog_hit2">删除后无法找回钱包，请慎重</string>
+    <string name="quxiao">取消</string>
+    <string name="dialog_queding">确定</string>
+    <string name="dialog_hit3">请输入密码</string>
+    <string name="tishi">提示</string>
+    <string name="dialog_hit4">手机启用飞行模式后才可以创建冷钱包，冷钱包创建后无法切换热钱包，请备份钱包</string>
+    <string name="dialoghit5">热钱包将使用微信进行账号登录，确认后将跳转至微信认证，请问是否继续</string>
+    <string name="delete">删除</string>
+    <string name="dingzhi">置顶</string>
+    <string name="dingzhishibai">置顶失败！</string>
+    <string name="dingzhichenggong">置顶成功</string>
+    <string name="jiazaishibi">加载失败！</string>
+    <string name="wancheng">完成</string>
+    <string name="tianjiashibai">添加失败</string>
+    <string name="qingshurumima">请输入密码</string>
+    <string name="wallet_hit27">密码错误请重试</string>
+    <string name="shanchuchenggong">删除成功</string>
+    <string name="shanchushibai">删除失败</string>
+    <string name="fuzhichenggong">复制成功，可以发给朋友们了</string>
+    <string name="transfer_hit1">另付手续费：</string>
+    <string name="transfer_hit2">交易单号：</string>
+    <string name="account_label">wallet</string>
+    <string name="dialog_hit6">请牢记下面的账户助记词，这是找回钱包的有效方式，一旦忘记则钱包无法找回，账户失效 ，此助记词请记好并抄录下来，此操作不可逆且备份后不会再出现</string>
+    <string name="dialog_hit7">重复输入助记词，确认钱包助记词的正确性</string>
+    <string name="wojihaole">我记好了</string>
+    <string name="zhujici_hit1">备份助记词 并删除记录</string>
+    <string name="login_hit">通过微信登录 Whale wallet</string>
+    <string name="fixname_title">修改昵称</string>
+    <string name="fixsex_title">修改性别</string>
+    <string name="fixname_hit1">昵称不能为空</string>
+    <string name="xiugaichenggong">修改成功</string>
+    <string name="xiugaishibai">修改失败</string>
+    <string name="baocun2">保存</string>
+    <string name="remind_hit">输入价格不能为空</string>
+    <string name="tianjichenggong">添加成功</string>
+    <string name="tupianshangchuanshibai">图片上传失败</string>
+    <string name="shezhiyidu">设置为已读</string>
+    <string name="shezhishibai">设置失败</string>
+    <string name="copyaddress">该地址已复制</string>
+    <string name="xieyi">服务协议&amp;隐私条款
+
+特别提示
+
+成都宇链科技有限公司（以下简称“宇链”）在此特别提醒您（用户），在使用本产品（以下称为“imToken”）之前，请认真阅读《服务协议&amp;隐私条款》（以下简称协议），确保您充分理解本协议中的各条款，包括免除宇链责任的条款。请您审慎阅读并选择接受或不接受本协议。您使用宇链产品或服务的任何行为，均为对本协议的接受。
+
+本协议约定宇链与用户之间关于“宇链”软件服务（以下简称“服务”）的权利义务。“用户”指使用本服务的自然人、法人或集体组织。本协议由宇链随时更新，并发布与宇链官方网站https://www.unichain.io/。不再另行通知用户，请用户注意定期查看。
+
+使用规则
+
+用户需从官方渠道下载安装宇链提供的“imToken”软件（App）；
+用户可以使用imToken生成冷+热钱包，导入冷+热钱包（V3格式）；
+用户可以使用imToken的转账、收款功能进行数字货币交易；
+用户可以使用imToken查看宇链所提供的最新数字货币价格；
+用户可以使用imToken添加或移除宇链所提供的数字资产（ETH除外）；
+用户应谨慎使用删除钱包、备份助记词的功能，一旦删除，无法还原。
+用户账户安全
+
+用户的钱包密码由用户负责，用户不应将自己的密码告诉第三者；
+用户应妥善保管好自己的钱包密码以及助记词，一旦泄露或遗失，导致钱包不能使用或资产遗失，宇链概不负责；
+用户如果遇到任何账户安全问题，可向support@unichain.io发送邮件，寻求帮助和咨询。
+
+服务的变更、中断、终止
+
+因设备维修或更换、故障和通信中断等技术原因而中断业务，宇链可视情况事前或事后通知用户；
+因不可抗力导致的业务中断发生时，宇链不给予用户补偿；
+宇链临时中断业务时，将会以消息推送方式告知用户；
+
+当imToken用户发生如下情况时，宇链可单方面终止本协议，取消用户继续使用imToken产品的资格：
+
+用户死亡；
+盗用他人的钱包信息或手机；
+填写公测问卷时提供虚假信息；
+以非法手段(包括且不限于黑客攻击等)来谋取不正当利益；
+妨碍其他用户正常使用；
+伪称宇链的工作人员或管理人员；
+擅自强行更改宇链的计算机系统, 或威胁侵入系统；
+利用宇链的产品及服务宣传垃圾广告；
+其他违反本协议的行为以及违法行为；
+用户如因上述问题而被取消使用资格, 可向宇链提出书面申请。
+
+用户个人隐私信息保护
+
+宇链在未经用户同意, 不向任何第三方公开、透露用户的个人隐私信息。但以下特定情形除外：
+宇链根据法律法规规定或有权机关的指示提供用户的个人账户信息；
+由于用户将其钱包密码或助记词等信息告知他人，由此导致的任何个人账户信息的泄漏，或其他非因宇链原因导致的个人账户信息的泄露；
+用户自行向第三方公开其个人隐私信息；
+任何由于黑客攻击、电脑病毒侵入及其他非因宇链原因导致用户个人隐私信息的泄露。
+用户同意宇链可在以下事项中使用用户的个人隐私信息：
+
+向用户及时发送重要通知，如软件更新、本协议条款的变更；
+宇链内部进行审计、数据分析和研究等，以改进宇链的产品、服务和与用户之间的沟通；
+依本协议约定，宇链管理、审查用户信息及进行处理措施；
+适用法律法规规定的其他事项。
+
+用户使用规范
+
+imToken用户不得利用宇链产品提供的服务进行如下行为：
+侵害宇链以及第三者的知识产权；
+提交、发布虚假信息，或盗用他人资料，冒充、利用他人名义；
+其他不遵守本协议的行为；
+其他违法以及不正当的行为。
+
+免责条款
+宇链提供的服务中包括数字货币的当前价格信息, 用户若通过宇链提供的显示货币信息服务进行交易等操作行为造成的资产亏损, 宇链不承担任何责任。
+用户若因个人原因遗忘助记词, 删除遗失钱包, 导致资产丢失, 宇链不承担任何责任。
+
+知识产权保护
+
+宇链的商标、钱包业务以及有关广告内容的知识产权都归属于宇链。 用户从宇链获得的信息内容不经宇链的许可不能擅自复制、发布与出版。
+
+其他
+
+宇链郑重提示用户注意本协议中免除宇链责任和限制用户权利的条款，请用户仔细阅读，自主考虑风险。
+未成年人应在法定监护人的陪同下阅读本协议。
+本协议的效力、解释及纠纷的解决,适用于中华人民共和国法律。若用户和宇链之间发生任何纠纷或争议，首先应友好协商解决，协商不成的，用户同意将纠纷或争议提交宇链住所地有管辖权的人民法院管辖。
+本协议的任何条款无论因何种原因无效或不具可执行性，其余条款仍有效，对双方具有约束力。
+本协议的版权由宇链所有，宇链保留一切解释和修改的权力。
+本协议从2017年8月30日起适用。</string>
+</resources>

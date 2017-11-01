@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="28dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp">
+
+    <RelativeLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/order"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="@color/c_333333"
+            android:ellipsize="middle"
+            android:textSize="14sp"
+            android:layout_toRightOf="@+id/img"
+            android:layout_marginLeft="6dp"/>
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_toRightOf="@+id/order"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:singleLine="true"
+            android:textColor="@color/c_333333"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_999999"
+            android:textSize="12sp"
+            android:layout_below="@+id/order"
+            android:layout_toRightOf="@+id/img"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="6dp"/>
+    </RelativeLayout>
+    
+
+    <TextView
+        android:id="@+id/hit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ll"
+        android:textColor="@color/c_333333"
+        android:textSize="11sp"/>
+    
+    <ProgressBar
+        android:id="@+id/progess"
+        android:layout_below="@+id/hit"
+        android:layout_width="match_parent"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/progressbar"
+        android:layout_height="2.5dp"
+        android:layout_marginTop="4dp"
+        android:max="100" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/progess"
+        android:layout_marginTop="10dp"
+        android:background="@color/c_bababb"/>
+</RelativeLayout>

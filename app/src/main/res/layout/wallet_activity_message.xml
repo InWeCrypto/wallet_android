@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_ffffff">
+
+    <include layout="@layout/base_title_bar"/>
+
+    <RadioGroup
+        android:id="@+id/rg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/rb_eth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/weidu"
+            android:background="@drawable/group_left_selector"
+            android:button="@null"
+            android:checked="true"
+            android:textSize="14sp"
+            android:textColor="@drawable/group_text_selector"
+            android:paddingLeft="48dp"
+            android:paddingRight="48dp"
+            android:paddingBottom="11dp"
+            android:paddingTop="11dp"/>
+        <RadioButton
+            android:id="@+id/rb_btc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/yidu"
+            android:background="@drawable/group_right_selector"
+            android:button="@null"
+            android:textSize="14sp"
+            android:textColor="@drawable/group_text_selector"
+            android:paddingLeft="48dp"
+            android:paddingRight="48dp"
+            android:paddingBottom="11dp"
+            android:paddingTop="11dp"/>
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/c_ececec"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

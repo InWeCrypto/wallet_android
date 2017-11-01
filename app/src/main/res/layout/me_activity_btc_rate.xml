@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_efefef"
+    android:orientation="vertical">
+
+    <include layout="@layout/base_title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_bg"
+        android:clickable="true"
+        android:paddingBottom="22dp"
+        android:paddingLeft="34dp"
+        android:paddingRight="26dp"
+        android:paddingTop="22dp">
+
+        <TextView
+            android:id="@+id/rate1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10倍"
+            android:textColor="@color/c_333333"
+            android:textSize="19sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rate1"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/rate1"
+            android:text="1.0mBTC／kb"
+            android:textColor="#666666"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/iv_10"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:id="@+id/rl_genggao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_bg"
+        android:clickable="true"
+        android:paddingBottom="22dp"
+        android:paddingLeft="34dp"
+        android:paddingRight="26dp"
+        android:paddingTop="22dp">
+
+        <TextView
+            android:id="@+id/rate2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更高"
+            android:textColor="@color/c_333333"
+            android:textSize="19sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rate2"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/rate2"
+            android:text="0.5mBTC／kb"
+            android:textColor="#666666"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/iv_genggao"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:id="@+id/rl_gao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_bg"
+        android:clickable="true"
+        android:paddingBottom="22dp"
+        android:paddingLeft="34dp"
+        android:paddingRight="26dp"
+        android:paddingTop="22dp">
+
+        <TextView
+            android:id="@+id/rate3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="高"
+            android:textColor="@color/c_333333"
+            android:textSize="19sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rate3"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/rate3"
+            android:text="0.2mBTC／kb"
+            android:textColor="#666666"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/iv_gao"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:id="@+id/rl_biaozhun"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_bg"
+        android:clickable="true"
+        android:paddingBottom="22dp"
+        android:paddingLeft="34dp"
+        android:paddingRight="26dp"
+        android:paddingTop="22dp">
+
+        <TextView
+            android:id="@+id/rate4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标准"
+            android:textColor="@color/c_333333"
+            android:textSize="19sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rate4"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/rate4"
+            android:text="0.1mBTC／kb"
+            android:textColor="#666666"
+            android:textSize="10sp" />
+
+        <ImageView
+            android:id="@+id/iv_biaozhun"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8" />
+
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:background="@drawable/round_6dp_bule_bg"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:text="保 存"
+        android:textColor="@color/c_ffffff"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4" />
+
+</LinearLayout>

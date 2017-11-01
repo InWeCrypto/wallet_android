@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_ffffff"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/base_title_bar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/wallet_hit14"
+        android:textColor="@color/c_333333"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:background="@color/c_ffffff"
+        android:cursorVisible="true"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:textColor="@color/c_333333"
+        android:textCursorDrawable='@null'
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/c_ececec" />
+
+    <TextView
+        android:id="@+id/hit1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/walllet_hit15"
+        android:textColor="@color/c_333333"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/et_ps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:background="@color/c_ffffff"
+        android:cursorVisible="true"
+        android:gravity="center_vertical"
+        android:hint="@string/wallet_hit15"
+        android:inputType="textPassword"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:textColor="@color/c_333333"
+        android:textCursorDrawable='@null'
+        android:textSize="14sp" />
+
+    <View
+        android:id="@+id/hit2"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/c_ececec" />
+
+    <TextView
+        android:id="@+id/hit3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/wallet_hit16"
+        android:textColor="@color/c_333333"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/et_pst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:background="@color/c_ffffff"
+        android:cursorVisible="true"
+        android:gravity="center_vertical"
+        android:inputType="textPassword"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:textColor="@color/c_333333"
+        android:textCursorDrawable='@null'
+        android:textSize="14sp" />
+
+    <View
+        android:id="@+id/hit4"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/c_ececec" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/round_6dp_bule_bg"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:text="@string/wallet_hit17"
+        android:textColor="@color/c_ffffff"
+        android:textSize="14sp" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="46dp" />
+
+</LinearLayout>
