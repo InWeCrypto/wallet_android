@@ -1,1 +1,1 @@
-include ':app', ':zxinglite'
+include ':app'

@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2F2F2F</color>
+    <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FFFFFF</color>
-    <color name="c_bababa">#BABABA</color>
-    <color name="c_bababb">#BABABB</color>
-    <color name="c_ececec">#ECECEC</color>
-    <color name="c_efefef">#EFEFEF</color>
-    <color name="c_d4d2d2">#D4D2D2</color>
-    <color name="c_ffffff">#FFFFFF</color>
-    <color name="c_333333">#333333</color>
-    <color name="c_999999">#999999</color>
-    <color name="c_fe5864">#FE5864</color>
-    <color name="c_afafb0">#AFAFB0</color>
-    <color name="c_2169fc">#2169FC</color>
-    <color name="c_232772">#232772</color>
-    <color name="c_282828">#282828</color>
-    <color name="c_fcd845">#fcd845</color>
-    <color name="c_fdd930">#fdd930</color>
-    <color name="c_66b7fb">#66b7fb</color>
-    <color name="c_242a70">#242a70</color>
-    <color name="c_9e9e9e">#9e9e9e</color>
-    <color name="c_9a9a9a">#9a9a9a</color>
-    <color name="c_c8c8c8">#C8C8C8</color>
+    <color name="colorAccent">#FF4081</color>
 </resources>
