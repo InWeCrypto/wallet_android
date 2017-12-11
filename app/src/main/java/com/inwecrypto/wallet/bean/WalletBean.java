@@ -10,14 +10,30 @@ import java.io.Serializable;
 
 public class WalletBean implements Serializable{
 
+
+    /**
+     * id : 90
+     * user_id : 8
+     * category_id : 2
+     * name : 有钱Neo
+     * address : AMpupnF6QweQXLfCtF4dR45FDdKbTXkLsr
+     * created_at : 2017-11-27 18:16:14
+     * updated_at : 2017-11-27 18:16:14
+     * deleted_at : null
+     * category : {"id":2,"name":"NEO"}
+     */
+
     private int id;
+    private int user_id;
     private int category_id;
     private String name;
     private String address;
     private String created_at;
-    private Category category;
-    private String type;
+    private String updated_at;
+    private String deleted_at;
     private int icon;
+    private String type;
+    private CategoryBean category;
 
     public int getId() {
         return id;
@@ -25,6 +41,14 @@ public class WalletBean implements Serializable{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public int getCategory_id() {
@@ -59,20 +83,28 @@ public class WalletBean implements Serializable{
         this.created_at = created_at;
     }
 
-    public Category getCategory() {
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public String getDeleted_at() {
+        return deleted_at;
+    }
+
+    public void setDeleted_at(String deleted_at) {
+        this.deleted_at = deleted_at;
+    }
+
+    public CategoryBean getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(CategoryBean category) {
         this.category = category;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public int getIcon() {
@@ -83,8 +115,30 @@ public class WalletBean implements Serializable{
         this.icon = icon;
     }
 
-    public static class Category implements Serializable{
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public static class CategoryBean implements Serializable{
+        /**
+         * id : 2
+         * name : NEO
+         */
+
+        private int id;
         private String name;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
 
         public String getName() {
             return name;
@@ -94,5 +148,4 @@ public class WalletBean implements Serializable{
             this.name = name;
         }
     }
-
 }

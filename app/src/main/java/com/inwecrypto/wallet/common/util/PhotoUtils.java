@@ -20,6 +20,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.style.ImageSpan;
 
+import com.inwecrypto.wallet.R;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,7 +53,7 @@ public class PhotoUtils {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
             context.startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
         } else {
-            ToastUtil.show("内存卡不存在");
+            ToastUtil.show(R.string.neicunkabucunzai);
         }
     }
 

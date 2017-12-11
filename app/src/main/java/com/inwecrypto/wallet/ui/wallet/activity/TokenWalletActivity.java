@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
@@ -104,7 +105,6 @@ public class TokenWalletActivity extends BaseActivity {
 
     private BigDecimal totleEther = new BigDecimal("0.0000");
     private BigDecimal totlePrice = new BigDecimal("0.00");
-    private BigDecimal pEther = new BigDecimal("1000000000000000000");
 
     private String flag;
 
@@ -179,14 +179,14 @@ public class TokenWalletActivity extends BaseActivity {
                     if (!isFinish) {
                         title.setVisibility(View.INVISIBLE);
                         titlell.setVisibility(View.VISIBLE);
-                        startShowAnimation();
-                        startMoveLeftAnimation();
+                        AnimUtil.startShowAnimation(titlell);
+                        AnimUtil.startMoveLeftAnimation(tvHit,distance);
                         isFinish = true;
                     }
                 } else {
                     if (isFinish) {
-                        startHideAnimation();
-                        startMoveRightAnimation();
+                        AnimUtil.startHideAnimation(titlell);
+                        AnimUtil.startMoveRightAnimation(tvHit,distance);
                         isFinish = false;
                     }
                 }
@@ -197,38 +197,43 @@ public class TokenWalletActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isEth) {
                     if (wallet.getType().equals(Constant.GUANCHA)){
-                        PackageManager pm = getPackageManager();
-                        boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
-                        if (!nfc){
-                            ToastUtil.show("您的手机不支持nfc!请使用热钱包创建！");
-                            return;
-                        }
+                        ToastUtil.show("暂时不支持生成冷钱包!");
+                        return;
+//                        PackageManager pm = getPackageManager();
+//                        boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
+//                        if (!nfc){
+//                            ToastUtil.show(R.string.no_nfc_hit);
+//                            return;
+//                        }
                     }
                     Intent intent = new Intent(mActivity, TransferAccountsActivity.class);
                     intent.putExtra("wallet", wallet);
-                    intent.putExtra("price", totleEther.divide(pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
+                    intent.putExtra("price", totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
                     if (wallet.getType().equals(Constant.GUANCHA)) {
                         intent.putExtra("isClod", true);
                     }
                     keepTogo(intent);
                 } else {
                     if (wallet.getType().equals(Constant.GUANCHA)) {
-                        PackageManager pm = getPackageManager();
-                        boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
-                        if (!nfc){
-                            ToastUtil.show("您的手机不支持nfc!请使用热钱包创建！");
-                            return;
-                        }
-                        Intent intent = new Intent(mActivity, WatchTokenTransferAccountsActivity.class);
-                        intent.putExtra("wallet", wallet);
-                        intent.putExtra("price", tokenEther.divide(pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
-                        intent.putExtra("gnt", gnt);
-                        keepTogo(intent);
+                        ToastUtil.show("暂时不支持生成冷钱包!");
+                        return;
+//                        PackageManager pm = getPackageManager();
+//                        boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
+//                        if (!nfc){
+//                            ToastUtil.show(R.string.no_nfc_hit);
+//                            return;
+//                        }
+//                        Intent intent = new Intent(mActivity, WatchTokenTransferAccountsActivity.class);
+//                        intent.putExtra("wallet", wallet);
+//                        intent.putExtra("price", tokenEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
+//                        intent.putExtra("gnt", gnt);
+//                        keepTogo(intent);
+
                     } else {
                         Intent intent = new Intent(mActivity, TokenTransferAccountsActivity.class);
                         intent.putExtra("wallet", wallet);
                         intent.putExtra("gnt", gnt);
-                        intent.putExtra("price", tokenEther.divide(pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
+                        intent.putExtra("price", tokenEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
                         keepTogo(intent);
                     }
                 }
@@ -248,13 +253,13 @@ public class TokenWalletActivity extends BaseActivity {
         } else {
             Glide.with(this).load(gnt.getGnt_category().getIcon()).transform(new GlideCircleTransform(this)).crossFade().into(ivImg);
             BigDecimal currentPrice = new BigDecimal(AppUtil.toD(gnt.getBalance().replace("0x", "0")));
-            tvPrice.setText(currentPrice.divide(pEther, 4, BigDecimal.ROUND_HALF_UP).toString());
+            tvPrice.setText(currentPrice.divide(Constant.pEther, 4, BigDecimal.ROUND_HALF_UP).toString());
             if (1 == AppApplication.get().getUnit()) {
-                tvChPrice.setText("≈￥" + currentPrice.divide(pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                titlePrice.setText("(￥" + currentPrice.divide(pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                tvChPrice.setText("≈￥" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                titlePrice.setText("(￥" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
             } else {
-                tvChPrice.setText("≈$" + currentPrice.divide(pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                titlePrice.setText("($" + currentPrice.divide(pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                tvChPrice.setText("≈$" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                titlePrice.setText("($" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
             }
         }
 
@@ -387,7 +392,7 @@ public class TokenWalletActivity extends BaseActivity {
             return;
         }
         if (null == wallet) {
-            ToastUtil.show("钱包数据错误，请退出重试");
+            ToastUtil.show(R.string.qianbaoshujucuowu_qingtuichuchongshi);
             return;
         }
         if (isEth) {
@@ -405,13 +410,13 @@ public class TokenWalletActivity extends BaseActivity {
                     BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
                     totleEther = totleEther.add(currentPrice);
                     if (1 == AppApplication.get().getUnit()) {
-                        totlePrice = totlePrice.add(currentPrice.divide(pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_cny()))).setScale(2, BigDecimal.ROUND_HALF_UP);
-                        tvPrice.setText(totleEther.divide(pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
+                        totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_cny()))).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
                         tvChPrice.setText("≈￥" + totlePrice.toString());
                         titlePrice.setText("(￥" + totlePrice.toString() + ")");
                     } else {
-                        totlePrice = totlePrice.add(currentPrice.divide(pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_usd()))).setScale(2, BigDecimal.ROUND_HALF_UP);
-                        tvPrice.setText(totleEther.divide(pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
+                        totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_usd()))).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
                         tvChPrice.setText("≈$" + totlePrice.toString());
                         titlePrice.setText("($" + totlePrice.toString() + ")");
                     }
@@ -435,13 +440,13 @@ public class TokenWalletActivity extends BaseActivity {
                     }
                     //进行计算
                     tokenEther = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
-                    tvPrice.setText(tokenEther.divide(pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
+                    tvPrice.setText(tokenEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
                     if (1 == AppApplication.get().getUnit()) {
-                        tvChPrice.setText("≈￥" + tokenEther.divide(pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                        titlePrice.setText("(￥" + tokenEther.divide(pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                        tvChPrice.setText("≈￥" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                        titlePrice.setText("(￥" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
                     } else {
-                        tvChPrice.setText("≈$" + tokenEther.divide(pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                        titlePrice.setText("($" + tokenEther.divide(pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                        tvChPrice.setText("≈$" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                        titlePrice.setText("($" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
                     }
                 }
 
@@ -509,71 +514,6 @@ public class TokenWalletActivity extends BaseActivity {
             initData();
             EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
-    }
-
-    public void startHideAnimation() {
-        //清除动画
-        titlell.clearAnimation();
-        /**
-         * @param fromAlpha 开始的透明度，取值是0.0f~1.0f，0.0f表示完全透明， 1.0f表示和原来一样
-         * @param toAlpha 结束的透明度，同上
-         */
-        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        //设置动画持续时长
-        alphaAnimation.setDuration(300);
-        //设置动画结束之后的状态是否是动画的最终状态，true，表示是保持动画结束时的最终状态
-        alphaAnimation.setFillAfter(true);
-        //开始动画
-        titlell.startAnimation(alphaAnimation);
-    }
-
-    public void startShowAnimation() {
-        //清除动画
-        titlell.clearAnimation();
-        /**
-         * @param fromAlpha 开始的透明度，取值是0.0f~1.0f，0.0f表示完全透明， 1.0f表示和原来一样
-         * @param toAlpha 结束的透明度，同上
-         */
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-
-        //设置动画持续时长
-        alphaAnimation.setDuration(300);
-        //设置动画结束之后的状态是否是动画的最终状态，true，表示是保持动画结束时的最终状态
-        alphaAnimation.setFillAfter(true);
-        //开始动画
-        titlell.startAnimation(alphaAnimation);
-    }
-
-    private void startMoveRightAnimation() {
-        //清除动画
-        tvHit.clearAnimation();
-        /**
-         * @param fromAlpha 开始的透明度，取值是0.0f~1.0f，0.0f表示完全透明， 1.0f表示和原来一样
-         * @param toAlpha 结束的透明度，同上
-         */
-        TranslateAnimation animation = new TranslateAnimation(-distance,0, 0, 0);
-        animation.setDuration(800);
-        animation.setRepeatCount(0);//动画的重复次数
-        //设置动画结束之后的状态是否是动画的最终状态，true，表示是保持动画结束时的最终状态
-        animation.setFillAfter(true);
-        //开始动画
-        tvHit.startAnimation(animation);
-    }
-
-    private void startMoveLeftAnimation() {
-        //清除动画
-        tvHit.clearAnimation();
-        /**
-         * @param fromAlpha 开始的透明度，取值是0.0f~1.0f，0.0f表示完全透明， 1.0f表示和原来一样
-         * @param toAlpha 结束的透明度，同上
-         */
-        TranslateAnimation animation = new TranslateAnimation(0, -distance, 0, 0);
-        animation.setDuration(800);
-        animation.setRepeatCount(0);//动画的重复次数
-        //设置动画结束之后的状态是否是动画的最终状态，true，表示是保持动画结束时的最终状态
-        animation.setFillAfter(true);
-        //开始动画
-        tvHit.startAnimation(animation);
     }
 
 }

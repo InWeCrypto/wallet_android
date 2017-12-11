@@ -15,7 +15,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="30dp"
-        android:text="@string/wallet_hit14"
+        android:text="@string/qianbaomingcheng"
         android:textColor="@color/c_333333"
         android:textSize="12sp" />
 
@@ -26,7 +26,6 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:background="@color/c_ffffff"
-        android:cursorVisible="true"
         android:gravity="center_vertical"
         android:inputType="text"
         android:paddingBottom="20dp"
@@ -49,7 +48,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="14dp"
-        android:text="@string/walllet_hit15"
+        android:text="@string/shedingmima"
         android:textColor="@color/c_333333"
         android:textSize="12sp" />
 
@@ -62,7 +61,7 @@
         android:background="@color/c_ffffff"
         android:cursorVisible="true"
         android:gravity="center_vertical"
-        android:hint="@string/wallet_hit15"
+        android:hint="@string/mimayaoqiu"
         android:inputType="textPassword"
         android:paddingBottom="20dp"
         android:paddingTop="20dp"
@@ -85,7 +84,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="14dp"
-        android:text="@string/wallet_hit16"
+        android:text="@string/chongfushurumima"
         android:textColor="@color/c_333333"
         android:textSize="12sp" />
 
@@ -128,7 +127,7 @@
         android:gravity="center"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="@string/wallet_hit17"
+        android:text="@string/quedingtianjia"
         android:textColor="@color/c_ffffff"
         android:textSize="14sp" />
 

@@ -14,7 +14,7 @@
         android:layout_gravity="center_horizontal"
         android:textSize="18sp"
         android:textColor="@color/c_333333"
-        android:text="@string/dialog_hit3"/>
+        android:text="@string/qingshurumiam"/>
 
 
     <EditText

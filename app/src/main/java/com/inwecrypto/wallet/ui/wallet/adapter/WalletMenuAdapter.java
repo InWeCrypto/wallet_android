@@ -38,13 +38,7 @@ public class WalletMenuAdapter extends CommonAdapter<WalletBean> {
                     holder.setBackgroundRes(R.id.state,R.drawable.round_solid_pink_bg);
                     break;
                 case 1:
-                    if (AppApplication.get().getSp().getBoolean(Constant.IS_CLOD,false)){
-                        holder.setVisible(R.id.state,true);
-                        holder.setText(R.id.state,"冷钱包");
-                        holder.setBackgroundRes(R.id.state,R.drawable.round_999dp_bule_bg);
-                    }else {
-                        holder.setVisible(R.id.state,false);
-                    }
+                    holder.setVisible(R.id.state, false);
                     break;
                 case 2:
                     holder.setVisible(R.id.state,true);

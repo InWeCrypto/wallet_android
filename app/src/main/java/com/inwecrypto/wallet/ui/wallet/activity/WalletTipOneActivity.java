@@ -86,7 +86,7 @@ public class WalletTipOneActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        txtMainTitle.setText("备份助记词");
+        txtMainTitle.setText(R.string.beifenzhujici);
         txtRightTitle.setVisibility(View.GONE);
 
         String[] zjcStr=zjc.split(" ");

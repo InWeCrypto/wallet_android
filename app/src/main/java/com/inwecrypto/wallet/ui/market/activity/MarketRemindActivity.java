@@ -94,7 +94,7 @@ public class MarketRemindActivity extends BaseActivity {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
-                deleteItem.setText(getString(R.string.delete));
+                deleteItem.setText(R.string.shanchu);
                 deleteItem.setTextSize(14);
                 deleteItem.setTextColorResource(R.color.c_ffffff);
                 deleteItem.setBackgroundColorResource(R.color.c_E86438);
@@ -104,7 +104,7 @@ public class MarketRemindActivity extends BaseActivity {
                 swipeRightMenu.addMenuItem(deleteItem); // 在Item左侧添加一个菜单。
 
                 SwipeMenuItem upItem = new SwipeMenuItem(mActivity);
-                upItem.setText("编辑");
+                upItem.setText(R.string.bianji);
                 upItem.setTextSize(14);
                 upItem.setTextColorResource(R.color.c_ffffff);
                 upItem.setBackgroundColorResource(R.color.c_bababb);

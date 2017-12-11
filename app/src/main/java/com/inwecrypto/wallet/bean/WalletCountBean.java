@@ -30,7 +30,7 @@ public class WalletCountBean implements Serializable {
     private String address;
     private String created_at;
     private String updated_at;
-    private Object deleted_at;
+    private String deleted_at;
     private String balance;
     private CategoryBean category;
 
@@ -90,11 +90,11 @@ public class WalletCountBean implements Serializable {
         this.updated_at = updated_at;
     }
 
-    public Object getDeleted_at() {
+    public String getDeleted_at() {
         return deleted_at;
     }
 
-    public void setDeleted_at(Object deleted_at) {
+    public void setDeleted_at(String deleted_at) {
         this.deleted_at = deleted_at;
     }
 
@@ -171,7 +171,7 @@ public class WalletCountBean implements Serializable {
              * market_cap_cny : 4255817751.0
              */
 
-            private int id;
+            private String id;
             private String asset_id;
             private String name;
             private String symbol;
@@ -190,11 +190,11 @@ public class WalletCountBean implements Serializable {
             private String volume_cny_24h;
             private String market_cap_cny;
 
-            public int getId() {
+            public String getId() {
                 return id;
             }
 
-            public void setId(int id) {
+            public void setId(String id) {
                 this.id = id;
             }
 

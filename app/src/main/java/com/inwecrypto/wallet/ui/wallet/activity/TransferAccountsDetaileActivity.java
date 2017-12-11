@@ -14,13 +14,19 @@ import com.bumptech.glide.Glide;
 import java.math.BigDecimal;
 
 import butterknife.BindView;
+
+import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.OrderBean;
+import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
+
+import static com.inwecrypto.wallet.common.http.Url.ORDER_TEST_ULR;
+import static com.inwecrypto.wallet.common.http.Url.ORDER_ULR;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -56,7 +62,6 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
     TextView tvUnit;
 
     private OrderBean order;
-    private BigDecimal pEther = new BigDecimal("1000000000000000000");
     private String unit;
 
     @Override
@@ -78,7 +83,7 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.transfer_detaile_title);
+        txtMainTitle.setText(R.string.zhuanzhangxiangqing);
         txtRightTitle.setVisibility(View.GONE);
         tvUnit.setText("("+unit+")");
     }
@@ -86,9 +91,9 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
     @Override
     protected void initData() {
         BigDecimal b = new BigDecimal(order.getFee());
-        price.setText("-" + b.divide(pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
+        price.setText("-" + b.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
         BigDecimal s = new BigDecimal(order.getHandle_fee());
-        shouxufei.setText(getString(R.string.transfer_hit1) + s.divide(pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
+        shouxufei.setText(getString(R.string.lingfushouxufei) + s.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
 
         if (order.getStatus() == 0) {
             Glide.with(this).load(R.mipmap.icon_complete).crossFade().into(status);
@@ -110,7 +115,7 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 // 将文本内容放到系统剪贴板里。
                 cm.setText(order.getTrade_no());
-                ToastUtil.show("钱包地址已复制到剪贴板");
+                ToastUtil.show(R.string.qianbaodizhifuzhi);
             }
         });
 
@@ -122,17 +127,17 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 // 将文本内容放到系统剪贴板里。
                 cm.setText(order.getTrade_no());
-                ToastUtil.show("钱包地址已复制到剪贴板");
+                ToastUtil.show(R.string.qianbaodizhifuzhi);
             }
         });
 
-        tvOrder.setText(Html.fromHtml("<u>" + getString(R.string.transfer_hit2) + order.getTrade_no() + "<u>"));
+        tvOrder.setText(Html.fromHtml("<u>" + getString(R.string.jiaoyidanhao) + order.getTrade_no() + "<u>"));
         tvOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, CommonWebActivity.class);
-                intent.putExtra("title", "查询交易");
-                intent.putExtra("url", Url.ORDER_ULR + order.getTrade_no());
+                intent.putExtra("title", getString(R.string.chaxunjiaoyi));
+                intent.putExtra("url", AppApplication.isMain?ORDER_ULR:ORDER_TEST_ULR + order.getTrade_no());
                 keepTogo(intent);
             }
         });

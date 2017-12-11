@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 
 /**
- * Created by Administrator on 2017/8/10.
+ * Created by xiaoji on 2017/8/10.
  * 功能描述：
  * 版本：@version
  */

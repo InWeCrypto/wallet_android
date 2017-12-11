@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.inwecrypto.wallet.common.widget.CardView
+        android:id="@+id/online"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/frount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/icon_online"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/space"/>
+
+            <TextView
+                android:id="@+id/name_online"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_ffffff"
+                android:layout_above="@+id/space"
+                android:layout_centerHorizontal="true"
+                android:textSize="14sp"/>
+
+            <Space
+                android:id="@+id/space"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/shoucang"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="14dp"
+                android:src="@mipmap/icon_market_like"/>
+
+            <TextView
+                android:id="@+id/back_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_ffffff"
+                android:textSize="18sp"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <TextView
+                android:id="@+id/dangqianjiage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/c_ffffff"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textSize="10sp"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="4dp"/>
+
+            <TextView
+                android:id="@+id/zuigaojiage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/c_ffffff"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textSize="10sp"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="4dp"/>
+
+            <TextView
+                android:id="@+id/zuidijiage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/c_ffffff"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textSize="10sp"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="4dp" />
+
+            <TextView
+                android:id="@+id/zhangfu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/c_ffffff"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textSize="10sp"/>
+
+        </LinearLayout>
+
+    </com.inwecrypto.wallet.common.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/underline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/line"/>
+
+        <TextView
+            android:id="@+id/fenshu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8.5"
+            android:textColor="@color/c_ffffff"
+            android:layout_marginBottom="4dp"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/line"
+            android:textSize="11sp" />
+
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="40dp"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/name"
+            android:background="@color/c_ffffff"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/c_ffffff"
+            android:textSize="14sp"
+            android:layout_above="@+id/state"/>
+
+        <TextView
+            android:id="@+id/state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_ffffff"
+            android:textSize="11sp"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/space1"/>
+
+        <android.support.v4.widget.Space
+            android:id="@+id/space1"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+</FrameLayout>

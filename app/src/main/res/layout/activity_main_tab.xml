@@ -17,7 +17,7 @@
             android:orientation="vertical">
 
             <FrameLayout
-                android:id="@android:id/tabcontent"
+                android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -25,11 +25,42 @@
 
             <include layout="@layout/base_gray_line" />
 
-            <TabWidget
-                android:id="@android:id/tabs"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="bottom" />
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:background="@color/c_ffffff">
+
+                <include
+                    android:id="@+id/tab1"
+                    layout="@layout/view_tab_indicator"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+
+                <include
+                    android:id="@+id/tab2"
+                    layout="@layout/view_tab_indicator"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+
+                <include
+                    android:id="@+id/tab3"
+                    layout="@layout/view_tab_indicator"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+
+                <include
+                    android:id="@+id/tab4"
+                    layout="@layout/view_tab_indicator"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

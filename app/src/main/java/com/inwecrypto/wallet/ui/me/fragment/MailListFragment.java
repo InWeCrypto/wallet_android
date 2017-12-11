@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.inwecrypto.wallet.base.BaseFragment;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
@@ -20,7 +21,6 @@ import java.util.Map;
 import butterknife.BindView;
 import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
-import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MailBean;
 import com.inwecrypto.wallet.bean.MailIconBean;
@@ -52,7 +52,7 @@ public class MailListFragment extends BaseFragment {
     private ArrayList<MailBean> mails=new ArrayList<>();
     private MailListAdapter adapter;
 
-    private boolean isEth;
+    private int type;
     private boolean address;
 
     @Override
@@ -65,10 +65,11 @@ public class MailListFragment extends BaseFragment {
 
         Bundle bundle=getArguments();
         if (null!=bundle){
-            isEth=bundle.getBoolean("isEth");
+            type=bundle.getInt("type");
             address=bundle.getBoolean("address");
         }
         isOpenEventBus=true;
+        setLazyOpen(true);
         adapter=new MailListAdapter(mContext,R.layout.me_item_mail_list,mails);
         mailList.setLayoutManager(new LinearLayoutManager(mContext));
         mailList.setAdapter(adapter);
@@ -103,6 +104,7 @@ public class MailListFragment extends BaseFragment {
                 }else {
                     Intent intent=new Intent(mActivity,MailDetaileActivity.class);
                     intent.putExtra("mail",mails.get(position));
+                    intent.putExtra("type",type);
                     keepTogo(intent);
                 }
             }
@@ -116,27 +118,27 @@ public class MailListFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
-        if (isEth){
+        if (type==6||type==7){
             swipeRefresh.post(new Runnable() {
                 @Override
                 public void run() {
                     swipeRefresh.setRefreshing(true);
                 }
             });
-            MeApi.contact(mFragment,new JsonCallback<LzyResponse<CommonListBean<MailBean>>>() {
+            MeApi.contact(mFragment,type,new JsonCallback<LzyResponse<ArrayList<MailBean>>>() {
                 @Override
-                public void onSuccess(Response<LzyResponse<CommonListBean<MailBean>>> response) {
+                public void onSuccess(Response<LzyResponse<ArrayList<MailBean>>> response) {
                     LoadSuccess(response);
                 }
 
                 @Override
-                public void onCacheSuccess(Response<LzyResponse<CommonListBean<MailBean>>> response) {
+                public void onCacheSuccess(Response<LzyResponse<ArrayList<MailBean>>> response) {
                     super.onCacheSuccess(response);
                     onSuccess(response);
                 }
 
                 @Override
-                public void onError(Response<LzyResponse<CommonListBean<MailBean>>> response) {
+                public void onError(Response<LzyResponse<ArrayList<MailBean>>> response) {
                     super.onError(response);
                     ToastUtil.show(getString(R.string.load_error));
                 }
@@ -157,12 +159,12 @@ public class MailListFragment extends BaseFragment {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode()== Constant.EVENT_REFRESH&&isEth){
+        if (event.getEventCode()== Constant.EVENT_REFRESH&&(type==6||type==7)){
             loadData();
         }
     }
 
-    private void LoadSuccess(Response<LzyResponse<CommonListBean<MailBean>>> response) {
+    private void LoadSuccess(Response<LzyResponse<ArrayList<MailBean>>> response) {
         boolean isSave=false;
         String mailIco=AppApplication.get().getSp().getString(Constant.MAIL_ICO,"[]");
         ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
@@ -171,8 +173,8 @@ public class MailListFragment extends BaseFragment {
             mailHash.put(mailId.get(i).getId(),mailId.get(i).getIcon());
         }
         mails.clear();
-        if (null!=response.body().data.getList()){
-            ArrayList<MailBean> mailsBean = response.body().data.getList();
+        if (null!=response.body().data){
+            ArrayList<MailBean> mailsBean = response.body().data;
             for (int i=0;i<mailsBean.size();i++){
                 if (null==mailHash.get(mailsBean.get(i).getId())){
                     int icon= AppUtil.getRoundmIcon();

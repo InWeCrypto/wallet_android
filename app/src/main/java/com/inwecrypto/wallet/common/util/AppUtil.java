@@ -10,24 +10,58 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Environment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import com.inwecrypto.wallet.R;
+import com.inwecrypto.wallet.base.BaseActivity;
+import com.inwecrypto.wallet.bean.ProjectBean;
+import com.inwecrypto.wallet.common.Constant;
+import com.inwecrypto.wallet.common.widget.WebView4Scroll;
+import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.info.activity.AllInfoActivity;
+import com.inwecrypto.wallet.ui.info.activity.InfoWebActivity;
+import com.inwecrypto.wallet.ui.info.adapter.ExplorerAdapter;
+import com.inwecrypto.wallet.ui.info.adapter.MarketAdapter;
+import com.inwecrypto.wallet.ui.info.adapter.WalletAdapter;
+import com.inwecrypto.wallet.ui.info.fragment.AllInfoFragment;
+import com.inwecrypto.wallet.ui.info.activity.IcoActivity;
+import com.inwecrypto.wallet.ui.info.activity.ProjectOnlineActivity;
+import com.inwecrypto.wallet.ui.info.activity.ProjectUnderlineActivity;
+import com.inwecrypto.wallet.ui.info.adapter.PopupMarketAdapter;
+import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
+import com.zhy.adapter.recyclerview.wrapper.EmptyWrapper;
 
-/**
- * @author MaTianyu
- * @date 2014-12-10
- */
+import org.greenrobot.eventbus.EventBus;
+
+
 public class AppUtil {
 
     /**
@@ -121,11 +155,12 @@ public class AppUtil {
      */
     public static boolean isAddress(String address) {
         String num = "0x[0-9a-zA-Z]{40}";
+        String neo = "[0-9a-zA-Z]{34}";
         if (TextUtils.isEmpty(address)) {
             return false;
         } else {
             //matches():字符串是否在给定的正则表达式匹配
-            return address.matches(num);
+            return address.matches(num)||address.matches(neo);
         }
     }
 
@@ -260,5 +295,330 @@ public class AppUtil {
                 return R.drawable.img_10;
         }
         return R.drawable.img_1;
+    }
+
+    /**
+     * 规则3：必须同时包含大小写字母及数字
+     * 是否包含
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isContainAll(String str) {
+        boolean isDigit = false;//定义一个boolean值，用来表示是否包含数字
+        boolean isLowerCase = false;//定义一个boolean值，用来表示是否包含字母
+        boolean isUpperCase = false;
+        for (int i = 0; i < str.length(); i++) {
+            if (Character.isDigit(str.charAt(i))) {   //用char包装类中的判断数字的方法判断每一个字符
+                isDigit = true;
+            } else if (Character.isLowerCase(str.charAt(i))) {  //用char包装类中的判断字母的方法判断每一个字符
+                isLowerCase = true;
+            } else if (Character.isUpperCase(str.charAt(i))) {
+                isUpperCase = true;
+            }
+        }
+        String regex = "^[a-zA-Z0-9]+$";
+        boolean isRight = isDigit && isLowerCase && isUpperCase && str.matches(regex);
+        return isRight;
+    }
+
+    /**
+     * byte数组转换为十六进制的字符串
+     **/
+    public static String conver16HexStr(byte[] b) {
+        StringBuffer result = new StringBuffer();
+        for (int i = 0; i < b.length; i++) {
+            if ((b[i] & 0xff) < 0x10)
+                result.append("0");
+            result.append(Long.toString(b[i] & 0xff, 16));
+        }
+        return result.toString().toUpperCase();
+    }
+
+    public static void showMainMenu(View view, final BaseActivity activity,boolean isShowMain) {
+
+        View selectPopupWin = LayoutInflater.from(activity).inflate(R.layout.view_popup_main_menu, null, false);
+        TextView main=(TextView)selectPopupWin.findViewById(R.id.main);
+        TextView allNews = (TextView) selectPopupWin.findViewById(R.id.all_news);
+        TextView ico = (TextView) selectPopupWin.findViewById(R.id.ico);
+
+        if (!isShowMain){
+            main.setVisibility(View.GONE);
+        }
+        final PopupWindow window = new PopupWindow(selectPopupWin, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00FFFFFF")));
+        window.setFocusable(true);
+        window.setOutsideTouchable(true);
+        window.update();
+        window.showAsDropDown(view,-DensityUtil.dip2px(activity,20),-DensityUtil.dip2px(activity,20));
+
+        if (isShowMain){
+            main.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AppManager.getAppManager().finishActivity(ProjectOnlineActivity.class);
+                    AppManager.getAppManager().finishActivity(ProjectUnderlineActivity.class);
+                    AppManager.getAppManager().finishActivity(AllInfoFragment.class);
+                    AppManager.getAppManager().finishActivity(IcoActivity.class);
+                }
+            });
+        }
+
+        allNews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.keepTogo(AllInfoActivity.class);
+                window.dismiss();
+            }
+        });
+
+        ico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.keepTogo(IcoActivity.class);
+                window.dismiss();
+            }
+        });
+    }
+
+    public static void showMarketMenu(View view, final BaseActivity activity,ArrayList<ProjectBean.ProjectMarketsBean> marketList) {
+
+        View selectPopupWin = LayoutInflater.from(activity).inflate(R.layout.info_popup_view_market, null, false);
+        RecyclerView list= (RecyclerView) selectPopupWin.findViewById(R.id.list);
+        list.setLayoutManager(new LinearLayoutManager(activity));
+        PopupMarketAdapter adapter=new PopupMarketAdapter(activity,R.layout.info_item_popup_market,marketList);
+        list.setAdapter(adapter);
+
+        final PopupWindow window = new PopupWindow(selectPopupWin, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00FFFFFF")));
+        window.setFocusable(true);
+        window.setOutsideTouchable(true);
+        window.update();
+        window.showAsDropDown(view,0,0);
+
+        adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_POPUP_MARKET,position));
+                window.dismiss();
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
+    }
+
+    public static void showLiulanqi(final BaseActivity activity, View view, final ArrayList<ProjectBean.ProjectExplorersBean> data){
+        // 产生背景变暗效果
+        WindowManager.LayoutParams lp = activity.getWindow()
+                .getAttributes();
+        lp.alpha = 0.4f;
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        activity.getWindow().setAttributes(lp);
+
+        View selectPopupWin = LayoutInflater.from(activity).inflate(R.layout.view_popup_liulanqi, null, false);
+        TextView title=(TextView)selectPopupWin.findViewById(R.id.title);
+        RecyclerView list = (RecyclerView) selectPopupWin.findViewById(R.id.list);
+        title.setText(R.string.liulanqi);
+
+        final PopupWindow window = new PopupWindow(selectPopupWin, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#eeeeee")));
+        window.setFocusable(true);
+        window.setOutsideTouchable(true);
+        window.update();
+        window.showAtLocation(view,
+                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = activity.getWindow()
+                        .getAttributes();
+                lp.alpha = 1f;
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                activity.getWindow().setAttributes(lp);
+            }
+        });
+
+        ExplorerAdapter explorerAdapter = new ExplorerAdapter(activity, R.layout.info_item_explorer, data);
+        list.setLayoutManager(new LinearLayoutManager(activity));
+        list.setAdapter(explorerAdapter);
+        explorerAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                if (null == data.get(position).getUrl()
+                        || null == data.get(position).getName()) {
+                    return;
+                }
+                Intent intent = new Intent(activity, InfoWebActivity.class);
+                intent.putExtra("title", data.get(position).getName());
+                intent.putExtra("url", data.get(position).getUrl());
+                activity.keepTogo(intent);
+                window.dismiss();
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
+    }
+
+    public static void showWallet(final BaseActivity activity, View view, final ArrayList<ProjectBean.ProjectWalletsBean> data){
+        // 产生背景变暗效果
+        WindowManager.LayoutParams lp = activity.getWindow()
+                .getAttributes();
+        lp.alpha = 0.4f;
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        activity.getWindow().setAttributes(lp);
+
+        View selectPopupWin = LayoutInflater.from(activity).inflate(R.layout.view_popup_liulanqi, null, false);
+        TextView title=(TextView)selectPopupWin.findViewById(R.id.title);
+        RecyclerView list = (RecyclerView) selectPopupWin.findViewById(R.id.list);
+        title.setText(R.string.zhichiqianbao);
+
+        final PopupWindow window = new PopupWindow(selectPopupWin, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#eeeeee")));
+        window.setFocusable(true);
+        window.setOutsideTouchable(true);
+        window.update();
+        window.showAtLocation(view,
+                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = activity.getWindow()
+                        .getAttributes();
+                lp.alpha = 1f;
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                activity.getWindow().setAttributes(lp);
+            }
+        });
+
+        WalletAdapter walletAdapter = new WalletAdapter(activity,R.layout.info_item_explorer, data);
+        list.setLayoutManager(new LinearLayoutManager(activity));
+        list.setAdapter(walletAdapter);
+        walletAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                if (null == data.get(position).getUrl()
+                        || null == data.get(position).getName()) {
+                    return;
+                }
+                Intent intent = new Intent(activity, InfoWebActivity.class);
+                intent.putExtra("title", data.get(position).getName());
+                intent.putExtra("url", data.get(position).getUrl());
+                activity.keepTogo(intent);
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
+
+    }
+
+    public static WebView createWebView(WebView webView,BaseActivity activity) {
+
+        WebView.setWebContentsDebuggingEnabled(true);
+        //不能横向滚动
+        webView.setHorizontalScrollBarEnabled(false);
+        //不能纵向滚动
+        webView.setVerticalScrollBarEnabled(false);
+        //允许截图
+        webView.setDrawingCacheEnabled(true);
+        //屏蔽长按事件
+        webView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
+        //初始化WebSettings
+        final WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        //隐藏缩放控件
+        settings.setBuiltInZoomControls(false);
+        settings.setDisplayZoomControls(false);
+        //禁止缩放
+        settings.setSupportZoom(false);
+        //文件权限
+        settings.setAllowFileAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setAllowContentAccess(true);
+
+        if (NetworkUtils.isConnected(activity.getApplicationContext())) {
+            settings.setCacheMode(WebSettings.LOAD_DEFAULT);//根据cache-control决定是否从网络上取数据。
+        } else {
+            settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//没网，则从本地获取，即离线加载
+        }
+
+        //缓存相关
+        settings.setAppCacheEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setDatabaseEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+
+        return webView;
+    }
+
+    public static WebView4Scroll createWebView(WebView4Scroll webView, BaseActivity activity) {
+
+        WebView.setWebContentsDebuggingEnabled(true);
+        //不能横向滚动
+        webView.setHorizontalScrollBarEnabled(false);
+        //不能纵向滚动
+        webView.setVerticalScrollBarEnabled(false);
+        //允许截图
+        webView.setDrawingCacheEnabled(true);
+        //屏蔽长按事件
+        webView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
+        //初始化WebSettings
+        final WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        //隐藏缩放控件
+        settings.setBuiltInZoomControls(false);
+        settings.setDisplayZoomControls(false);
+        //禁止缩放
+        settings.setSupportZoom(false);
+        //文件权限
+        settings.setAllowFileAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setAllowContentAccess(true);
+
+        if (NetworkUtils.isConnected(activity.getApplicationContext())) {
+            settings.setCacheMode(WebSettings.LOAD_DEFAULT);//根据cache-control决定是否从网络上取数据。
+        } else {
+            settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//没网，则从本地获取，即离线加载
+        }
+
+        //缓存相关
+        settings.setAppCacheEnabled(true);
+        settings.setDomStorageEnabled(true);
+        settings.setDatabaseEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+
+        return webView;
+    }
+
+    public static String getTime(String time){
+        SimpleDateFormat dff = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH);//输入的被转化的时间格式
+        SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//需要转化成的时间格式
+        Date date1 = null;
+        try {
+            date1 = dff.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return df1.format(date1);
     }
 }

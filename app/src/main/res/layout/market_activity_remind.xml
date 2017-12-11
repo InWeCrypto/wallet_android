@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/c_333333"
             android:textSize="14sp"
-            android:text="@string/market_hit5"/>
+            android:text="@string/xianshizichan"/>
 
         <TextView
             android:layout_width="0dp"
@@ -33,7 +33,7 @@
             android:gravity="center"
             android:textColor="@color/c_333333"
             android:textSize="14sp"
-            android:text="@string/market_hit6"/>
+            android:text="@string/jiageshangxian"/>
 
         <TextView
             android:layout_width="0dp"
@@ -42,7 +42,7 @@
             android:textColor="@color/c_333333"
             android:gravity="right"
             android:textSize="14sp"
-            android:text="@string/market_hit7"/>
+            android:text="@string/jiagexiaxian"/>
 
     </LinearLayout>
 

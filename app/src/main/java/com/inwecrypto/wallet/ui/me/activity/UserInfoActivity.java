@@ -34,22 +34,14 @@ public class UserInfoActivity extends BaseActivity {
     TextView txtRightTitle;
     @BindView(R.id.img)
     ImageView img;
-    @BindView(R.id.right_hint1)
-    TextView rightHint1;
     @BindView(R.id.rl_img)
     RelativeLayout rlImg;
-    @BindView(R.id.hit)
-    TextView hit;
     @BindView(R.id.nicheng)
     TextView nicheng;
-    @BindView(R.id.right_hint2)
-    TextView rightHint2;
     @BindView(R.id.rl_nicheng)
     RelativeLayout rlNicheng;
     @BindView(R.id.sex)
     TextView sex;
-    @BindView(R.id.right_hint3)
-    TextView rightHint3;
     @BindView(R.id.rl_sex)
     RelativeLayout rlSex;
 
@@ -73,7 +65,7 @@ public class UserInfoActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.settting);
+        txtMainTitle.setText(R.string.gerenshezhi);
         txtRightTitle.setVisibility(View.GONE);
         rlImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +103,12 @@ public class UserInfoActivity extends BaseActivity {
                 Glide.with(this)
                         .load(loginBean.getUser().getImg())
                         .crossFade()
-                        .placeholder(R.mipmap.clod_icon)
+                        .transform(new GlideCircleTransform(this))
+                        .into(img);
+            }else {
+                Glide.with(this)
+                        .load(R.mipmap.clod_icon)
+                        .crossFade()
                         .transform(new GlideCircleTransform(this))
                         .into(img);
             }

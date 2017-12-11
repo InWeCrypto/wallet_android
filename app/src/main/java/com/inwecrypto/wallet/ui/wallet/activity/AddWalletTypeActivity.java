@@ -8,17 +8,19 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
+import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.wallet.activity.neowallet.AddNeoWalletClodSettingActivity;
+import com.inwecrypto.wallet.ui.wallet.activity.neowallet.AddNeoWalletSettingActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -27,6 +29,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 
 public class AddWalletTypeActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks{
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
@@ -38,10 +41,12 @@ public class AddWalletTypeActivity extends BaseActivity implements EasyPermissio
     @BindView(R.id.clod)
     LinearLayout clod;
     private int type_id;
+    private ArrayList<WalletBean> wallets;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         type_id = extras.getInt("type_id");
+        wallets= (ArrayList<WalletBean>) extras.getSerializable("wallets");
     }
 
     @Override
@@ -51,7 +56,7 @@ public class AddWalletTypeActivity extends BaseActivity implements EasyPermissio
 
     @Override
     protected void initView() {
-        txtMainTitle.setText(R.string.add_wallet_title);
+        txtMainTitle.setText(R.string.tianjiaqianbao);
         txtLeftTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,8 +68,14 @@ public class AddWalletTypeActivity extends BaseActivity implements EasyPermissio
         hot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mActivity, AddWalletSettingActivity.class);
+                Intent intent = null;
+                if (type_id==1){
+                    intent = new Intent(mActivity, AddWalletSettingActivity.class);
+                }else if (type_id==2){
+                    intent = new Intent(mActivity, AddNeoWalletSettingActivity.class);
+                }
                 intent.putExtra("type_id", type_id);
+                intent.putExtra("wallets",wallets);
                 keepTogo(intent);
             }
         });
@@ -72,23 +83,31 @@ public class AddWalletTypeActivity extends BaseActivity implements EasyPermissio
         clod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*
-                 * 使用hasSystemFeature方法可以检查设备是否其他功能。如陀螺仪，NFC，蓝牙等等，
-                 */
-                PackageManager pm = getPackageManager();
-                boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
-                if (nfc){
-                    if (EasyPermissions.hasPermissions(mActivity, Manifest.permission.NFC)) {
-                        Intent intent = new Intent(mActivity, AddWalletClodSettingActivity.class);
-                        intent.putExtra("type_id", type_id);
-                        keepTogo(intent);
-                    } else {
-                        EasyPermissions.requestPermissions(mActivity, "为了您能够创建钱包，需要获得NFC权限",
-                                0, Manifest.permission.CAMERA);
-                    }
-                }else {
-                    ToastUtil.show("您的手机不支持nfc!请使用热钱包创建！");
-                }
+
+                ToastUtil.show("暂时不支持生成冷钱包!");
+//                /*
+//                 * 使用hasSystemFeature方法可以检查设备是否其他功能。如陀螺仪，NFC，蓝牙等等，
+//                 */
+//                PackageManager pm = getPackageManager();
+//                boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
+//                if (nfc){
+//                    if (EasyPermissions.hasPermissions(mActivity, Manifest.permission.NFC)) {
+//                        Intent intent = null;
+//                        if (type_id==1){
+//                            intent = new Intent(mActivity, AddWalletClodSettingActivity.class);
+//                        }else if (type_id==2){
+//                            intent = new Intent(mActivity, AddNeoWalletClodSettingActivity.class);
+//                        }
+//                        intent.putExtra("wallets",wallets);
+//                        intent.putExtra("type_id", type_id);
+//                        keepTogo(intent);
+//                    } else {
+//                        EasyPermissions.requestPermissions(mActivity, getString(R.string.nfc_hit),
+//                                0, Manifest.permission.NFC);
+//                    }
+//                }else {
+//                    ToastUtil.show(getString(R.string.no_nfc_hit));
+//                }
             }
         });
     }
@@ -111,7 +130,7 @@ public class AddWalletTypeActivity extends BaseActivity implements EasyPermissio
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Toast.makeText(this,"权限请求成功！",Toast.LENGTH_SHORT).show();
+        ToastUtil.show(R.string.quanxianqingqiuchenggong);
         Intent intent = new Intent(mActivity, AddWalletClodSettingActivity.class);
         intent.putExtra("type_id", type_id);
         keepTogo(intent);

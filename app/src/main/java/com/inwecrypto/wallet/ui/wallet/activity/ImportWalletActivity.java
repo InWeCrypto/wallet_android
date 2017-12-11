@@ -20,7 +20,8 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.ui.ScanActivity;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.event.KeyEvent;
-import me.drakeet.materialdialog.MaterialDialog;
+import com.inwecrypto.wallet.common.widget.MaterialDialog;
+import com.inwecrypto.wallet.ui.wallet.activity.neowallet.ImportNeoWalletSettingActivity;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -29,6 +30,7 @@ import me.drakeet.materialdialog.MaterialDialog;
  */
 
 public class ImportWalletActivity extends BaseActivity {
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
@@ -53,10 +55,8 @@ public class ImportWalletActivity extends BaseActivity {
     protected void getBundleExtras(Bundle extras) {
         type=extras.getInt("type");
         type_id=extras.getInt("type_id");
+        wallets= (ArrayList<WalletBean>) extras.getSerializable("wallets");
         isOpenEventBus=true;
-        if (type==1||type==4){
-            wallets= (ArrayList<WalletBean>) extras.getSerializable("wallets");
-        }
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ImportWalletActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (etInfo.getText().toString().length() == 0) {
-                    ToastUtil.show("填写内容不能为空");
+                    ToastUtil.show(getString(R.string.tianxieneirongbuenngweikong));
                     return;
                 }
                 switch (type){
@@ -105,32 +105,29 @@ public class ImportWalletActivity extends BaseActivity {
                     case 4:
                         impotWatch(etInfo.getText().toString().trim());
                         break;
-                    case 5:
-                        impotSeed(etInfo.getText().toString().trim());
-                        break;
                 }
             }
         });
         switch (type){
             case 1:
-                txtMainTitle.setText("添加结果");
-                hit.setText(R.string.wallet_hit21);
+                txtMainTitle.setText(R.string.tianjiakeystore);
+                hit.setText(R.string.keystore_hit);
                 break;
             case 2:
-                txtMainTitle.setText("添加助记词");
-                hit.setText(R.string.wallet_hit22);
+                txtMainTitle.setText(R.string.tianjiazhujici);
+                hit.setText(R.string.zhujici_hit);
                 break;
             case 3:
-                txtMainTitle.setText("添加明文私钥");
-                hit.setText(R.string.wallet_hit23);
+                txtMainTitle.setText(R.string.tianjiamingwensiyao);
+                hit.setText(R.string.siyao_hit);
                 break;
             case 4:
-                txtMainTitle.setText("添加观察钱包");
-                hit.setText(R.string.wallet_hit24);
+                txtMainTitle.setText(R.string.tianjiaguanchaqianbao);
+                hit.setText(R.string.guancha_hit);
                 break;
             case 5:
-                txtMainTitle.setText("添加种子");
-                hit.setText(R.string.wallet_hit25);
+                txtMainTitle.setText(R.string.tianjiazhongzi);
+                hit.setText(R.string.zhongzi_hit);
                 break;
         }
     }
@@ -156,19 +153,13 @@ public class ImportWalletActivity extends BaseActivity {
                 if (null!=wallets){
                     for (WalletBean wallet:wallets){
                         if (key.contains(wallet.getAddress().replace("0x","").toLowerCase())){
-                            ToastUtil.show("该钱包已添加，不能重复添加");
+                            ToastUtil.show(getString(R.string.wallet_has_add_error));
                             return;
                         }
                     }
                 }
 
-                Intent intent=new Intent(mActivity,ImportWalletSettingActivity.class);
-                intent.putExtra("wallets",wallets);
-                intent.putExtra("pass",pass.getText().toString());
-                intent.putExtra("key",key);
-                intent.putExtra("type",type);
-                intent.putExtra("type_id",type_id);
-                keepTogo(intent);
+                gotoImport(pass.getText().toString().trim(), key);
             }
         });
 
@@ -179,23 +170,11 @@ public class ImportWalletActivity extends BaseActivity {
     }
 
     private void impotAnquanma(String key) {
-        Intent intent=new Intent(mActivity,ImportWalletSettingActivity.class);
-        intent.putExtra("wallets",wallets);
-        intent.putExtra("pass","");
-        intent.putExtra("key",key);
-        intent.putExtra("type",type);
-        intent.putExtra("type_id",type_id);
-        keepTogo(intent);
+        gotoImport("", key);
     }
 
     private void impotKey(String key) {
-        Intent intent=new Intent(mActivity,ImportWalletSettingActivity.class);
-        intent.putExtra("wallets",wallets);
-        intent.putExtra("pass","");
-        intent.putExtra("key",key);
-        intent.putExtra("type",type);
-        intent.putExtra("type_id",type_id);
-        keepTogo(intent);
+        gotoImport("", key);
     }
 
     private void impotWatch(String key) {
@@ -203,24 +182,30 @@ public class ImportWalletActivity extends BaseActivity {
             if (null!=wallets){
                 for (WalletBean wallet:wallets){
                     if (key.toLowerCase().contains(wallet.getAddress().replace("0x","").toLowerCase())){
-                        ToastUtil.show("该钱包已添加，不能重复添加");
+                        ToastUtil.show(R.string.wallet_has_add_error);
                         return;
                     }
                 }
             }
-            Intent intent=new Intent(mActivity,ImportWalletSettingActivity.class);
-            intent.putExtra("wallets",wallets);
-            intent.putExtra("pass","");
-            intent.putExtra("key",key.toLowerCase());
-            intent.putExtra("type",type);
-            intent.putExtra("type_id",type_id);
-            keepTogo(intent);
+            gotoImport("", key.toLowerCase().trim());
         }else {
-            ToastUtil.show("请输入正确地址");
+            ToastUtil.show(getString(R.string.qingshuruzhengquedizhi));
         }
     }
 
-    private void impotSeed(String key) {
+    private void gotoImport(String pass, String key) {
+        Intent intent=null;
+        if (type_id==2){
+            intent=new Intent(mActivity,ImportNeoWalletSettingActivity.class);
+        }else {
+            intent=new Intent(mActivity,ImportWalletSettingActivity.class);
+        }
+        intent.putExtra("wallets",wallets);
+        intent.putExtra("pass",pass);
+        intent.putExtra("key",key);
+        intent.putExtra("type",type);
+        intent.putExtra("type_id",type_id);
+        keepTogo(intent);
     }
 
     @Override
@@ -232,7 +217,7 @@ public class ImportWalletActivity extends BaseActivity {
     protected void EventBean(BaseEventBusBean event) {
         if (event.getEventCode()== Constant.EVENT_KEY){
             KeyEvent keyEvent= (KeyEvent) event.getData();
-            etInfo.setText(keyEvent.getKey());
+            etInfo.setText(keyEvent.getKey().trim());
         }
     }
 }

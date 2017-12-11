@@ -3,6 +3,7 @@ package com.inwecrypto.wallet.common.http.api;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.inwecrypto.wallet.AppApplication;
@@ -25,47 +26,47 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 
 public class MeApi {
 
-    public static void contact(Object object,JsonCallback<LzyResponse<CommonListBean<MailBean>>> callback){
-        OkGo.<LzyResponse<CommonListBean<MailBean>>>get(Url.CONTACT)
+    public static void contact(Object object,int id,JsonCallback<LzyResponse<ArrayList<MailBean>>> callback){
+        OkGo.<LzyResponse<ArrayList<MailBean>>>get(Url.USER_CONTACT+id)
                 .tag(object)
-                .cacheKey(Constant.MAIL_LIST+ AppApplication.isMain)
+                .cacheKey(Constant.MAIL_LIST+id+ AppApplication.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
 
-    public static void contact(Object object,int category_id,String name,String address,String remark,JsonCallback<LzyResponse<Object>> callback){
+    public static void contact(Object object,int ico_id,String name,String address,String remark,JsonCallback<LzyResponse<Object>> callback){
         HashMap<String,String> params=new HashMap<>();
-        params.put("category_id",category_id+"");
+        params.put("ico_id",ico_id+"");
         params.put("name",name);
         params.put("address",address);
         params.put("remark",remark);
-        OkGo.<LzyResponse<Object>>post(Url.CONTACT)
+        OkGo.<LzyResponse<Object>>post(Url.USER_CONTACT_ADD)
                 .tag(object)
                 .params(params)
                 .execute(callback);
     }
 
-    public static void getContact(Object object,int id,JsonCallback<LzyResponse<CommonRecordBean<MailBean>>> callback){
-        OkGo.<LzyResponse<CommonRecordBean<MailBean>>>get(Url.CONTACT+"/"+id)
+    public static void getContact(Object object,int id,JsonCallback<LzyResponse<MailBean>> callback){
+        OkGo.<LzyResponse<MailBean>>get(Url.USER_CONTACT_ADD+"/"+id)
                 .tag(object)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
 
-    public static void editContact(Object object,int id,int category_id,String name,String address,String remark,JsonCallback<LzyResponse<Object>> callback){
+    public static void editContact(Object object,int id,int ico_id,String name,String address,String remark,JsonCallback<LzyResponse<Object>> callback){
         HashMap<String,String> params=new HashMap<>();
-        params.put("category_id",category_id+"");
+        params.put("ico_id",ico_id+"");
         params.put("name",name);
         params.put("address",address);
         params.put("remark",remark);
-        OkGo.<LzyResponse<Object>>put(Url.CONTACT+"/"+id)
+        OkGo.<LzyResponse<Object>>put(Url.USER_CONTACT_ADD+"/"+id)
                 .tag(object)
                 .params(params)
                 .execute(callback);
     }
 
     public static void deleteContact(Object object,int id,JsonCallback<LzyResponse<Object>> callback){
-        OkGo.<LzyResponse<Object>>delete(Url.CONTACT+"/"+id)
+        OkGo.<LzyResponse<Object>>delete(Url.USER_CONTACT_ADD+"/"+id)
                 .tag(object)
                 .execute(callback);
     }

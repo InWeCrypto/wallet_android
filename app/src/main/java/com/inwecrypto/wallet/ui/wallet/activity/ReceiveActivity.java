@@ -66,7 +66,7 @@ public class ReceiveActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        txtMainTitle.setText(R.string.receive_title);
+        txtMainTitle.setText(R.string.shoukuan);
         txtLeftTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

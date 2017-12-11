@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -35,10 +34,6 @@ public class MessageActivity extends BaseActivity {
     TextView txtMainTitle;
     @BindView(R.id.txt_right_title)
     TextView txtRightTitle;
-    @BindView(R.id.rb_eth)
-    RadioButton rbEth;
-    @BindView(R.id.rb_btc)
-    RadioButton rbBtc;
     @BindView(R.id.rg)
     RadioGroup rg;
     @BindView(R.id.vp_list)

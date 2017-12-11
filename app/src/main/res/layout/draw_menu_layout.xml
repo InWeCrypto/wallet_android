@@ -20,7 +20,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:paddingTop="18dp"
-        android:text="@string/add_walllet"
+        android:text="@string/tianjiaqianbao"
         android:textColor="@color/c_333333"
         android:textSize="14sp" />
 
@@ -36,7 +36,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:paddingTop="18dp"
-        android:text="@string/import_wallet"
+        android:text="@string/daoruqianbao"
         android:textColor="@color/c_333333"
         android:textSize="14sp" />
 
@@ -53,7 +53,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:paddingTop="18dp"
-        android:text="@string/scan"
+        android:text="@string/saoyisao_space"
         android:textColor="@color/c_333333"
         android:textSize="14sp" />
 

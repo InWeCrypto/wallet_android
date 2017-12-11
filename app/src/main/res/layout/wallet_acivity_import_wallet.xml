@@ -19,7 +19,7 @@
         android:layout_marginBottom="28dp"
         android:textColor="@color/c_333333"
         android:textSize="12sp"
-        android:text="@string/wallet_hit4"/>
+        android:text="@string/zhongzishurutishi"/>
 
 
     <EditText

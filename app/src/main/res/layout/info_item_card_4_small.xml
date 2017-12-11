@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <include
+            android:id="@+id/small_1"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            layout="@layout/info_item_card_small"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="3dp"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/small_2"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            layout="@layout/info_item_card_small"/>
+    </LinearLayout>
+    
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="3dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <include
+            android:id="@+id/small_3"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            layout="@layout/info_item_card_small"/>
+
+        <android.support.v4.widget.Space
+            android:layout_width="3dp"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/small_4"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            layout="@layout/info_item_card_small"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,6 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
+        android:layout_gravity="center_horizontal"
         android:layout_centerHorizontal="true"
         android:src="@mipmap/logo"/>
 
@@ -14,9 +15,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Copyright © 2017 Rai Stone PTE. All rights reserved."
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="36dp"
         android:textSize="10sp"
         android:textColor="@color/c_333333"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"/>
-</RelativeLayout>
+</FrameLayout>

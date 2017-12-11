@@ -13,7 +13,6 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
@@ -30,6 +29,8 @@ import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.wallet.activity.neowallet.AddNeoWalletClodNfcActivity;
+import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoWalletActivity;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,7 +40,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import unichain.ETHWallet;
 
 /**
  * Created by donghaijun on 2017/10/31.
@@ -56,7 +56,6 @@ public class AddWalletClodNfcActivity extends BaseActivity {
     @BindView(R.id.card)
     ImageView card;
 
-    private String pass;
     private String name;
     private int type_id;
     private String address;
@@ -81,7 +80,6 @@ public class AddWalletClodNfcActivity extends BaseActivity {
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-        pass=extras.getString("ps");
         name=extras.getString("name");
         type_id=extras.getInt("type_id");
         address=extras.getString("address");
@@ -103,7 +101,7 @@ public class AddWalletClodNfcActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText("正在创建冷钱包");
+        txtMainTitle.setText(R.string.zhengzaichaungjianlengqianbao);
         txtRightTitle.setVisibility(View.GONE);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -153,7 +151,7 @@ public class AddWalletClodNfcActivity extends BaseActivity {
 //                        Log.i(TAG, "SELECT: " + bin2hex(result));
 
                         if (!(result[0] == (byte) 0x90 && result[1] == (byte) 0x00)){
-                            ToastUtil.show("没有此应用！");
+                            ToastUtil.show(getString(R.string.nfc_card_error));
                             throw new IOException("could not select application");
                         }
 
@@ -170,7 +168,7 @@ public class AddWalletClodNfcActivity extends BaseActivity {
                         result = isodep.transceive(SET_STRING.array());
 
                         if (!(result[result.length-2] == (byte) 0x90 && result[result.length-1] == (byte) 0x00)){
-                            ToastUtil.show("数据写入失败！请重试");
+                            ToastUtil.show(getString(R.string.nfc_write_error));
                             throw new IOException("could not select application");
                         }
 
@@ -203,7 +201,7 @@ public class AddWalletClodNfcActivity extends BaseActivity {
                         result = isodep.transceive(SET_STRING2.array());
 
                         if (!(result[result.length-2] == (byte) 0x90 && result[result.length-1] == (byte) 0x00)){
-                            ToastUtil.show("数据写入失败！请重试");
+                            ToastUtil.show(R.string.nfc_write_error);
                             throw new IOException("could not select application");
                         }
 
@@ -217,11 +215,11 @@ public class AddWalletClodNfcActivity extends BaseActivity {
                     }
 
                 }else {
-                    ToastUtil.show("读卡错误！请重试！");
+                    ToastUtil.show(R.string.nfc_read_error);
                     readCardError();
                 }
             }else {
-                ToastUtil.show("读卡错误！请重试！");
+                ToastUtil.show(R.string.nfc_read_error);
                 readCardError();
             }
 
@@ -233,7 +231,7 @@ public class AddWalletClodNfcActivity extends BaseActivity {
         card.postDelayed(new Runnable() {
             @Override
             public void run() {
-               card.setImageResource(R.mipmap.card);
+                card.setImageResource(R.mipmap.card);
             }
         },3000);
     }
@@ -247,11 +245,12 @@ public class AddWalletClodNfcActivity extends BaseActivity {
                     @Override
                     public void run() {
                         hideLoading();
-                        AppManager.getAppManager().finishActivity(AddWalletClodNfcActivity.class);
+                        AppManager.getAppManager().finishActivity(AddNeoWalletClodNfcActivity.class);
                         AppManager.getAppManager().finishActivity(AddWalletClodSettingActivity.class);
                         AppManager.getAppManager().finishActivity(AddWalletTypeActivity.class);
                         AppManager.getAppManager().finishActivity(AddWalletListActivity.class);
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
+
                         Intent intent = new Intent(mActivity, HotWalletActivity.class);
                         WalletBean walletBean=response.body().data.getRecord();
                         walletBean.setType(Constant.GUANCHA);
@@ -262,7 +261,7 @@ public class AddWalletClodNfcActivity extends BaseActivity {
                         mailId.add(new MailIconBean(walletBean.getId(),icon));
                         AppApplication.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
                         walletBean.setIcon(AppUtil.getIcon(icon));
-                        WalletBean.Category category=new WalletBean.Category();
+                        WalletBean.CategoryBean category=new WalletBean.CategoryBean();
                         category.setName("ETH");
                         walletBean.setCategory(category);
                         intent.putExtra("wallet",walletBean);
@@ -278,7 +277,7 @@ public class AddWalletClodNfcActivity extends BaseActivity {
                     @Override
                     public void run() {
                         hideLoading();
-                        ToastUtil.show("钱包创建失败！请检查网络后重试");
+                        ToastUtil.show(getString(R.string.wallet_creat_error));
                     }
                 });
             }
@@ -302,6 +301,5 @@ public class AddWalletClodNfcActivity extends BaseActivity {
         if (nfcAdapter != null)
             nfcAdapter.disableForegroundDispatch(this); // 取消调度
     }
-
 
 }

@@ -34,6 +34,7 @@ import com.inwecrypto.wallet.event.BaseEventBusBean;
  */
 
 public class MailDetaileActivity extends BaseActivity {
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
@@ -59,12 +60,14 @@ public class MailDetaileActivity extends BaseActivity {
 
     private boolean isAdd;
     private boolean isEdit;
+    private int type;
     private MailBean mailListBean;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         isOpenEventBus=true;
         isAdd = extras.getBoolean("isAdd",false);
+        type = extras.getInt("type");
         if (!isAdd){
             mailListBean= (MailBean) extras.getSerializable("mail");
         }
@@ -90,15 +93,16 @@ public class MailDetaileActivity extends BaseActivity {
         txtRightTitle.setVisibility(View.GONE);
 
         if (isAdd){
-            txtMainTitle.setText(R.string.mail_title_add);
+            txtMainTitle.setText(R.string.tianjialianxiren);
             llDetaile.setVisibility(View.GONE);
             tvSave.setVisibility(View.VISIBLE);
+            scan.setVisibility(View.VISIBLE);
         }else {
             resetUI();
             tvEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    txtMainTitle.setText(R.string.mail_title_edit);
+                    txtMainTitle.setText(R.string.bianjilianxiren);
                     isEdit=true;
                     etName.setEnabled(true);
                     etAddress.setEnabled(true);
@@ -106,6 +110,7 @@ public class MailDetaileActivity extends BaseActivity {
                     scan.setEnabled(true);
                     llDetaile.setVisibility(View.GONE);
                     tvSave.setVisibility(View.VISIBLE);
+                    scan.setVisibility(View.VISIBLE);
 
                 }
             });
@@ -132,29 +137,34 @@ public class MailDetaileActivity extends BaseActivity {
 
     private void saveMail() {
         String name=etName.getText().toString();
-        String address=etAddress.getText().toString().trim().toLowerCase();
+        String address=etAddress.getText().toString().trim();
+        if (type==6){
+            address=address.toLowerCase();
+        }
         String hint=etHint.getText().toString();
 
         if (StringUtils.isEmpty(name)){
-            ToastUtil.show(getString(R.string.mail_hit1));
+            ToastUtil.show(R.string.qingshurunicheng);
             return;
         }
 
         if (StringUtils.isEmpty(address)){
-            ToastUtil.show(getString(R.string.mail_hit2));
+            ToastUtil.show(R.string.qingshuruqianbaodizhi);
             return;
         }
 
         if (!AppUtil.isAddress(address.trim())){
-            ToastUtil.show("请输入正确的钱包地址");
+            ToastUtil.show(R.string.qingshuruzhengquedeqianbaodizhi);
             return;
         }
 
+        showFixLoading();
         if (isAdd){
-            MeApi.contact(mActivity,2,name, address, hint, new JsonCallback<LzyResponse<Object>>() {
+            MeApi.contact(mActivity,type,name, address, hint, new JsonCallback<LzyResponse<Object>>() {
                 @Override
                 public void onSuccess(Response<LzyResponse<Object>> response) {
-                    ToastUtil.show(getString(R.string.mail_hit3));
+                    hideFixLoading();
+                    ToastUtil.show(R.string.tianjiachenggong);
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFRESH));
                     finish();
                 }
@@ -162,22 +172,25 @@ public class MailDetaileActivity extends BaseActivity {
                 @Override
                 public void onError(Response<LzyResponse<Object>> response) {
                     super.onError(response);
-                    ToastUtil.show(getString(R.string.mail_hit7));
+                    hideFixLoading();
+                    ToastUtil.show(R.string.tianjiashibai);
                 }
             });
         }else {
-            MeApi.editContact(mActivity,mailListBean.getId(),mailListBean.getCategory_id(), name, address, hint, new JsonCallback<LzyResponse<Object>>() {
+            MeApi.editContact(mActivity,mailListBean.getId(),mailListBean.getIco_id(), name, address, hint, new JsonCallback<LzyResponse<Object>>() {
                 @Override
                 public void onSuccess(Response<LzyResponse<Object>> response) {
                     resetUI();
-                    ToastUtil.show(getString(R.string.mail_hit4));
+                    hideFixLoading();
+                    ToastUtil.show(R.string.xiugaichenggong);
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFRESH));
                 }
 
                 @Override
                 public void onError(Response<LzyResponse<Object>> response) {
                     super.onError(response);
-                    ToastUtil.show(getString(R.string.mail_hit8));
+                    hideFixLoading();
+                    ToastUtil.show(R.string.xiugaishibai);
                 }
             });
         }
@@ -185,10 +198,12 @@ public class MailDetaileActivity extends BaseActivity {
     }
 
     private void deleteMaile() {
+        showFixLoading();
         MeApi.deleteContact(mActivity,mailListBean.getId(), new JsonCallback<LzyResponse<Object>>() {
             @Override
             public void onSuccess(Response<LzyResponse<Object>> response) {
-                ToastUtil.show(getString(R.string.mail_hit5));
+                hideFixLoading();
+                ToastUtil.show(R.string.shanchuchenggong);
                 EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFRESH));
                 finish();
             }
@@ -196,7 +211,8 @@ public class MailDetaileActivity extends BaseActivity {
             @Override
             public void onError(Response<LzyResponse<Object>> response) {
                 super.onError(response);
-                ToastUtil.show(getString(R.string.mail_hit9));
+                hideFixLoading();
+                ToastUtil.show(R.string.shanchushibai);
             }
         });
     }
@@ -204,14 +220,14 @@ public class MailDetaileActivity extends BaseActivity {
     @Override
     protected void initData() {
         if (!isAdd){
-            MeApi.getContact(mActivity,mailListBean.getId(), new JsonCallback<LzyResponse<CommonRecordBean<MailBean>>>() {
+            MeApi.getContact(mActivity,mailListBean.getId(), new JsonCallback<LzyResponse<MailBean>>() {
                 @Override
-                public void onSuccess(Response<LzyResponse<CommonRecordBean<MailBean>>> response) {
+                public void onSuccess(Response<LzyResponse<MailBean>> response) {
                     setData(response.body().data);
                 }
 
                 @Override
-                public void onCacheSuccess(Response<LzyResponse<CommonRecordBean<MailBean>>> response) {
+                public void onCacheSuccess(Response<LzyResponse<MailBean>> response) {
                     super.onCacheSuccess(response);
                     onSuccess(response);
                 }
@@ -219,10 +235,10 @@ public class MailDetaileActivity extends BaseActivity {
         }
     }
 
-    private void setData(CommonRecordBean<MailBean> data) {
-        etName.setText(data.getRecord().getName());
-        etAddress.setText(data.getRecord().getAddress());
-        etHint.setText(data.getRecord().getRemark());
+    private void setData(MailBean data) {
+        etName.setText(data.getName());
+        etAddress.setText(data.getAddress());
+        etHint.setText(data.getRemark());
     }
 
     @Override
@@ -230,10 +246,10 @@ public class MailDetaileActivity extends BaseActivity {
         if (event.getEventCode()==Constant.EVENT_KEY){
             if (null!=event.getData()){
                 com.inwecrypto.wallet.event.KeyEvent key= (com.inwecrypto.wallet.event.KeyEvent) event.getData();
-                if (key.getKey().startsWith("0x")&&key.getKey().length()==42){
+                if (AppUtil.isAddress(key.getKey().trim())){
                     etAddress.setText(key.getKey().trim());
                 }else {
-                    ToastUtil.show("请输入正确的钱包地址");
+                    ToastUtil.show(R.string.qingshuruzhengquedeqianbaodizhi);
                 }
             }
         }
@@ -254,7 +270,7 @@ public class MailDetaileActivity extends BaseActivity {
     }
 
     private void resetUI() {
-        txtMainTitle.setText(R.string.mail_title_see);
+        txtMainTitle.setText(R.string.chakanlianxiren);
         isEdit=false;
         etName.setEnabled(false);
         etAddress.setEnabled(false);
@@ -262,5 +278,6 @@ public class MailDetaileActivity extends BaseActivity {
         scan.setEnabled(false);
         llDetaile.setVisibility(View.VISIBLE);
         tvSave.setVisibility(View.GONE);
+        scan.setVisibility(View.GONE);
     }
 }

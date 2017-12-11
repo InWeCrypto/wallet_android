@@ -19,10 +19,13 @@ import android.widget.ScrollView;
 import com.bumptech.glide.Glide;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.inwecrypto.wallet.R;
-import com.inwecrypto.wallet.common.util.ScreenUtils;
+import com.inwecrypto.wallet.bean.AdsBean;
+import com.inwecrypto.wallet.common.http.Url;
+import com.inwecrypto.wallet.common.util.DensityUtil;
 
 /**
  * 广告轮播，默认自动滚动，滚动间隔4秒
@@ -32,7 +35,7 @@ import com.inwecrypto.wallet.common.util.ScreenUtils;
 public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageChangeListener {
 
     private ViewPager mViewPager;
-    private List<String> data;
+    private List<AdsBean.ListBean> data;
     private MyPagerAdapter mAdapter;
     private Context context;
     private int currentViewPagerItem;
@@ -40,8 +43,9 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
     private boolean isAutoPlay=true;
     private boolean isTouch;
     private long delayedTime = 4000;
-    private String type;
     private int totleSize;
+    private LinearLayout pointLL;
+    private List<View> points;
 
     public AutoLoopViewPager(Context context) {
         super(context);
@@ -62,6 +66,7 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
         this.context=context;
         View view= LayoutInflater.from(context).inflate(R.layout.view_autoloop_viewpager,null);
         mViewPager=(ViewPager)view.findViewById(R.id.live_view_pager);
+        pointLL=(LinearLayout)view.findViewById(R.id.pointLL);
         this.addView(view);
         final ViewConfiguration conf = ViewConfiguration.get(getContext());
         mPagingTouchSlop = conf.getScaledTouchSlop() * 2;
@@ -72,7 +77,7 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
      * @param parent 界面
      * @param data 广告数据
      */
-    public void setPagerAdapter(OnGetAdsViewPager parent, List<String> data){
+    public void setPagerAdapter(OnGetAdsViewPager parent, List<AdsBean.ListBean> data){
         if (null == data || data.size()<=0){
             return;
         }
@@ -87,10 +92,10 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
         }
 
         totleSize=data.size();
+        addPoints();
         mAdapter = new MyPagerAdapter();
         mViewPager.setAdapter(mAdapter);
         mViewPager.addOnPageChangeListener(this);
-
         //让其在最大值的中间开始滑动, 一定要在 mBottomImages初始化之前完成
         int mid =0;
         if (totleSize > 1){
@@ -102,6 +107,20 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
 
         if (isAutoPlay && totleSize > 1){
             myHandler.sendEmptyMessageDelayed(0,delayedTime);
+        }
+    }
+
+    private void addPoints() {
+        pointLL.removeAllViews();
+        points=new ArrayList<>();
+        View point=null;
+        LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(DensityUtil.dip2px(context,6),DensityUtil.dip2px(context,6));
+        params.leftMargin=DensityUtil.dip2px(context,8);
+        for (int i=0;i<totleSize;i++){
+            point=new View(context);
+            point.setLayoutParams(params);
+            points.add(point);
+            pointLL.addView(point);
         }
     }
 
@@ -166,6 +185,18 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
     @Override
     public void onPageSelected(int position) {
         currentViewPagerItem = position;
+        checkPoint();
+    }
+
+    private void checkPoint() {
+        int select=currentViewPagerItem%totleSize;
+        for (int i=0;i<totleSize;i++){
+            if (i==select){
+                points.get(i).setBackgroundResource(R.drawable.circle_wihit_bg);
+            }else {
+                points.get(i).setBackgroundResource(R.drawable.circle_gray_broder_bg);
+            }
+        }
     }
 
     @Override
@@ -188,12 +219,10 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
 
             //对ViewPager页号求摸取出View列表中要显示的项
             position %= totleSize;
-            String url=data.get(position);
+            String url= data.get(position).getImg();
 
             ImageView ret = new ImageView(context);
-            int width= ScreenUtils.getScreenWidth(context);
-            int height= (int) (width/750.0*411);
-            LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(width,height);
+            LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             ret.setLayoutParams(params);
             ret.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
@@ -258,18 +287,14 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
             switch (msg.what) {
                 case 0:
                     OnGetAdsViewPager parent = mWeakReference.get();
-                    if (null == parent){
+                    if (null == parent.getAdsViewPager()){
                         return;
                     }
                     if (null == parent.getAdsViewPager().getHandler()){
                         return;
                     }
-                    if (parent.getAdsViewPager().isTouch) {
-                        parent.getAdsViewPager().mViewPager.setCurrentItem(++parent.getAdsViewPager().currentViewPagerItem);
-                        parent.getAdsViewPager().myHandler.sendEmptyMessageDelayed(0,parent.getAdsViewPager().delayedTime);
-                    }else {
-                        parent.getAdsViewPager().getHandler().removeMessages(0);
-                    }
+                    parent.getAdsViewPager().mViewPager.setCurrentItem(++parent.getAdsViewPager().currentViewPagerItem);
+                    parent.getAdsViewPager().myHandler.sendEmptyMessageDelayed(0,parent.getAdsViewPager().delayedTime);
                     break;
             }
 

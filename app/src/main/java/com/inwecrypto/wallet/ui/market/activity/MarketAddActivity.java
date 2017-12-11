@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -13,6 +14,9 @@ import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -50,7 +54,7 @@ public class MarketAddActivity extends BaseActivity {
     @BindView(R.id.search)
     EditText search;
 
-    private ArrayList<MarketAddBean.DataBean> marketBeens=new ArrayList<>();
+    private ArrayList<MarketAddBean> marketBeens=new ArrayList<>();
     private MarketAddAdapter adapter;
     private int position=-1;
     private boolean move;
@@ -76,28 +80,46 @@ public class MarketAddActivity extends BaseActivity {
                 finish();
             }
         });
-        txtRightTitle.setText(R.string.save);
+        txtRightTitle.setText(R.string.baocun_space);
         txtRightTitle.setCompoundDrawables(null,null,null,null);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringBuilder sb=new StringBuilder();
-                sb.append("[");
-                for (int i=0;i<marketBeens.size();i++){
-                    if (marketBeens.get(i).getRelation_user_count()==1){
-                        sb.append(marketBeens.get(i).getId()+",");
+                JSONArray jsonArray=new JSONArray();
+
+                try {
+                    for (int i=0;i<marketBeens.size();i++){
+                        if (null!=marketBeens.get(i).getUser_ticker()){
+                            if (marketBeens.get(i).getUser_ticker().getIco_id()==0){
+                                JSONObject market=new JSONObject();
+                                market.putOpt("id",marketBeens.get(i).getId());
+                                market.putOpt("sort",-1);
+                                jsonArray.put(market);
+                            }else {
+                                JSONObject market=new JSONObject();
+                                market.putOpt("id",marketBeens.get(i).getUser_ticker().getIco_id());
+                                market.putOpt("sort",marketBeens.get(i).getUser_ticker().getSort());
+                                jsonArray.put(market);
+                            }
+                        }
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                if(sb.length()!=1){
-                    sb.delete(sb.length() - 1, sb.length());
-                }
-                sb.append("]");
-                MarketApi.market(mActivity,sb.toString(), new JsonCallback<LzyResponse<Object>>() {
+                showFixLoading();
+                MarketApi.setMarket(mActivity,jsonArray.toString(), new JsonCallback<LzyResponse<Object>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<Object>> response) {
+                        hideFixLoading();
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFRESH));
                         ToastUtil.show("添加成功");
                         finish();
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<Object>> response) {
+                        super.onError(response);
+                        hideFixLoading();
                     }
                 });
             }
@@ -134,13 +156,10 @@ public class MarketAddActivity extends BaseActivity {
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (marketBeens.get(position).getType()==2){
-                    return;
-                }
-                if (0==marketBeens.get(position).getRelation_user_count()){
-                    marketBeens.get(position).setRelation_user_count(1);
+                if (null!=marketBeens.get(position).getUser_ticker()){
+                    marketBeens.get(position).setUser_ticker(null);
                 }else {
-                    marketBeens.get(position).setRelation_user_count(0);
+                    marketBeens.get(position).setUser_ticker(new MarketAddBean.UserTickerBean());
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -187,16 +206,18 @@ public class MarketAddActivity extends BaseActivity {
                 swipeRefresh.setRefreshing(true);
             }
         });
-        MarketApi.marketAdd(mActivity,1, new JsonCallback<LzyResponse<CommonListBean<MarketAddBean>>>() {
+        MarketApi.getAllMarket(mActivity, new JsonCallback<LzyResponse<ArrayList<MarketAddBean>>>() {
             @Override
-            public void onSuccess(Response<LzyResponse<CommonListBean<MarketAddBean>>> response) {
+            public void onSuccess(Response<LzyResponse<ArrayList<MarketAddBean>>> response) {
                 LoadSuccess(response);
-                swipeRefresh.setEnabled(false);
             }
 
             @Override
-            public void onError(Response<LzyResponse<CommonListBean<MarketAddBean>>> response) {
+            public void onError(Response<LzyResponse<ArrayList<MarketAddBean>>> response) {
                 super.onError(response);
+                if (swipeRefresh==null){
+                    return;
+                }
                 ToastUtil.show(getString(R.string.load_error));
                 swipeRefresh.setRefreshing(false);
             }
@@ -208,18 +229,12 @@ public class MarketAddActivity extends BaseActivity {
 
     }
 
-    private void LoadSuccess(Response<LzyResponse<CommonListBean<MarketAddBean>>> response) {
-        marketBeens.clear();
-        ArrayList<MarketAddBean> list = response.body().data.getList();
-        if (null!=list&&list.size()>0){
-            for (int i=0;i<list.size();i++){
-                MarketAddBean.DataBean title=new MarketAddBean.DataBean();
-                title.setName(list.get(i).getName());
-                title.setType(2);
-                marketBeens.add(title);
-                marketBeens.addAll(list.get(i).getData());
-            }
+    private void LoadSuccess(Response<LzyResponse<ArrayList<MarketAddBean>>> response) {
+        if (adapter==null||swipeRefresh==null){
+            return;
         }
+        marketBeens.clear();
+        marketBeens.addAll(response.body().data);
         adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
     }

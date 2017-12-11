@@ -59,12 +59,11 @@ public class AddEthWalletActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        txtMainTitle.setText(getString(R.string.add_wallet_title));
+        txtMainTitle.setText(getString(R.string.tianjiaqianbao));
         txtRightTitle.setVisibility(View.GONE);
     }
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-
     }
 }

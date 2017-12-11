@@ -33,7 +33,7 @@ public class MarketRemindAddAdapter extends CommonAdapter<MarketRemindBean> {
         if (null!=marketBean.getRelationCap()){
             holder.setText(R.id.price,"￥"+new BigDecimal(marketBean.getRelationCap().getPrice_cny()).setScale(2,BigDecimal.ROUND_HALF_UP));
         }else {
-            holder.setText(R.id.price,"暂无数据");
+            holder.setText(R.id.price,mContext.getString(R.string.zanwushuju));
 
         }
 

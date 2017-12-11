@@ -5,16 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.zxing.WriterException;
+import com.inwecrypto.wallet.common.Constant;
 import com.lzy.okgo.model.Response;
 
 import java.math.BigDecimal;
@@ -29,16 +23,11 @@ import com.inwecrypto.wallet.bean.TokenBean;
 import com.inwecrypto.wallet.bean.TransferABIBean;
 import com.inwecrypto.wallet.bean.TransferBean;
 import com.inwecrypto.wallet.bean.WalletBean;
-import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
-import com.inwecrypto.wallet.common.util.QuanCodeUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.event.KeyEvent;
-import com.inwecrypto.wallet.ui.ScanActivity;
-import me.drakeet.materialdialog.MaterialDialog;
 import me.grantland.widget.AutofitTextView;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -50,6 +39,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 
 public class WatchTokenTransferAccountsConfirmActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
@@ -73,21 +63,20 @@ public class WatchTokenTransferAccountsConfirmActivity extends BaseActivity impl
     private String price;
     private String gas;
     private String hit;
-    private MaterialDialog mMaterialDialog;
     private String data;
+    private String nonce;
 
     private String oxPrice;
     private String oxGas;
-    private BigDecimal pEther = new BigDecimal("1000000000000000000");
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         gnt= (TokenBean.ListBean) extras.getSerializable("gnt");
         address = extras.getString("address");
         price = extras.getString("price");
-        oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
+        oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
         gas = extras.getString("gas");
-        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(pEther).divide(new BigDecimal(gnt.getGnt_category().getGas()), 0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
+        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(Constant.pEther).divide(new BigDecimal(gnt.getGnt_category().getGas()), 0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
         hit = extras.getString("hit");
         wallet = (WalletBean) extras.getSerializable("wallet");
     }
@@ -105,7 +94,7 @@ public class WatchTokenTransferAccountsConfirmActivity extends BaseActivity impl
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.transfer_confirm);
+        txtMainTitle.setText(R.string.zhuanzhuangqueren);
         txtRightTitle.setVisibility(View.GONE);
         tvTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,14 +108,10 @@ public class WatchTokenTransferAccountsConfirmActivity extends BaseActivity impl
     @Override
     protected void initData() {
         tvPrice.setText(new BigDecimal(price).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
-        tvServiceCharge.setText(getString(R.string.transfer_hit1) + gas);
+        tvServiceCharge.setText(getString(R.string.lingfushouxufei) + gas);
         etAddress.setText(address);
         etHit.setText(hit);
     }
-
-    private String nonce;
-    private String hash;
-    private Bitmap bitmap;
 
     private void transferWatch() {
 
@@ -142,8 +127,8 @@ public class WatchTokenTransferAccountsConfirmActivity extends BaseActivity impl
                         if (EasyPermissions.hasPermissions(mActivity, Manifest.permission.NFC)) {
                             goNext();
                         } else {
-                            EasyPermissions.requestPermissions(mActivity, "为了您能够创建钱包，需要获得NFC权限",
-                                    0, Manifest.permission.CAMERA);
+                            EasyPermissions.requestPermissions(mActivity, getString(R.string.nfc_hit),
+                                    0, Manifest.permission.NFC);
                         }
                     }
 
@@ -151,7 +136,7 @@ public class WatchTokenTransferAccountsConfirmActivity extends BaseActivity impl
                     public void onError(Response<LzyResponse<TransferABIBean>> response) {
                         super.onError(response);
                         hideLoading();
-                        ToastUtil.show("转账失败请重试");
+                        ToastUtil.show(getString(R.string.zhuanzhang_error));
                     }
                 });
             }
@@ -187,82 +172,11 @@ public class WatchTokenTransferAccountsConfirmActivity extends BaseActivity impl
                 ,2);
         intent.putExtra("code",codeJson);
         finshTogo(intent);
-        //transfer(response.body().data.getData());
-    }
-
-    private void transfer(String data) {
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.view_dialog_watch_code, null, false);
-        final ImageView code= (ImageView) view.findViewById(R.id.code);
-        TextView ok= (TextView) view.findViewById(R.id.ok);
-        code.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) code.getLayoutParams();
-                params.height=code.getMeasuredWidth();
-                code.setLayoutParams(params);
-            }
-        });
-        final TransferBean codeJson=new TransferBean(wallet.getAddress()
-                ,nonce
-                ,oxGas
-                ,gnt.getGnt_category().getAddress()
-                ,data
-                ,price
-                ,gas
-                ,"0x"+new BigInteger(gnt.getGnt_category().getGas(),10).toString(16)
-                ,hit
-                ,2);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //文本类型
-                try {
-                    bitmap = QuanCodeUtils.createQuanCode(mActivity,new Gson().toJson(codeJson));
-                    code.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            code.setImageBitmap(bitmap);
-                        }
-                    });
-                } catch (WriterException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                keepTogo(ScanActivity.class);
-            }
-        });
-
-        mMaterialDialog = new MaterialDialog(mActivity).setView(view);
-        mMaterialDialog.setBackgroundResource(R.drawable.trans_bg);
-        mMaterialDialog.setCanceledOnTouchOutside(true);
-        mMaterialDialog.show();
     }
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode()== Constant.EVENT_KEY){
-            KeyEvent key= (KeyEvent) event.getData();
-                if (null==key.getKey()||key.getKey().length()==0||!key.getKey().contains("0x")){
-                    ToastUtil.show("请扫描正确的二维码");
-                    return;
-                }
-                mMaterialDialog.dismiss();
-            Intent intent=new Intent(this,WatchTransferAccountsConfirmActivity.class);
-            intent.putExtra("isGnt",true);
-            intent.putExtra("wallet",wallet);
-            intent.putExtra("data",key.getKey());
-            intent.putExtra("payAddress",gnt.getGnt_category().getAddress());
-            intent.putExtra("address",address);
-            intent.putExtra("hint",hit);
-            intent.putExtra("price",price);
-            intent.putExtra("gas",gas);
-            intent.putExtra("gnt",gnt.getName());
-            finshTogo(intent);
-        }
+
     }
 
     @Override
@@ -273,7 +187,7 @@ public class WatchTokenTransferAccountsConfirmActivity extends BaseActivity impl
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Toast.makeText(this,"权限请求成功！",Toast.LENGTH_SHORT).show();
+        ToastUtil.show(R.string.quanxianqingqiuchenggong);
         goNext();
     }
 

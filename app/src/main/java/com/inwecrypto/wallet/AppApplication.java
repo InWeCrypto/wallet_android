@@ -1,9 +1,8 @@
 package com.inwecrypto.wallet;
 
 import android.app.Application;
-import android.content.ComponentCallbacks2;
 import android.content.Context;
-import android.content.Intent;
+import android.os.StrictMode;
 
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
@@ -13,17 +12,14 @@ import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import com.inwecrypto.wallet.bean.LoginBean;
 import com.inwecrypto.wallet.common.Constant;
-import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.SPUtils;
-import com.inwecrypto.wallet.service.AutoUpdateService;
 import okhttp3.OkHttpClient;
 
 /**
@@ -43,43 +39,57 @@ public class AppApplication extends Application{
     public void onCreate() {
         super.onCreate();
         this.app=this;
+
+        //初始化SP
         sp=new SPUtils(this, Constant.SP_NAME);
         isMain=sp.getBoolean(Constant.NET,true);
-        initHttp();
-        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType. E_UM_NORMAL);
-        CrashReport.initCrashReport(getApplicationContext(), "383376bf9a", false);
+        //初始化bugly
+        CrashReport.initCrashReport(getApplicationContext(), Constant.CRASH_ID, false);
+        //初始化阿里云推送
         initCloudChannel(this);
+        //初始化网络请求
+        initHttp();
+
     }
+
+    public static AppApplication get(){
+        return app;
+    }
+
+    public LoginBean getLoginBean() {
+        if (null==loginBean){
+            String json=sp.getString(Constant.USER_INFO);
+            loginBean= GsonUtils.jsonToObj(json,LoginBean.class);
+        }
+        return loginBean;
+    }
+
+    public void setLoginBean(LoginBean loginBean) {
+        this.loginBean = loginBean;
+    }
+
+    public SPUtils getSp() {
+        return sp;
+    }
+
+    public int getUnit() {//1.人民币  2.美元
+        return sp.getInt(Constant.UNIT_TYPE,1);
+    }
+
 
     /**
-     * 初始化云推送通道
-     * @param applicationContext
+     * 初始化网络请求
      */
-    private void initCloudChannel(Context applicationContext) {
-        PushServiceFactory.init(applicationContext);
-        final CloudPushService pushService = PushServiceFactory.getCloudPushService();
-        pushService.register(applicationContext, new CommonCallback() {
-            @Override
-            public void onSuccess(String response) {
-                sp.putString(Constant.OPEN_ID,pushService.getDeviceId());
-            }
-            @Override
-            public void onFailed(String errorCode, String errorMessage) {
-            }
-        });
-    }
-
-
     private void initHttp() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-//        //设置log信息
-//        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("wallet");
-//        //log打印级别，决定了log显示的详细程度
-//        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
-//        //log颜色级别，决定了log在控制台显示的颜色
-//        loggingInterceptor.setColorLevel(Level.INFO);
-//        builder.addInterceptor(loggingInterceptor);
+        //设置log信息
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("wallet");
+        //log打印级别，决定了log显示的详细程度
+        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
+        //log颜色级别，决定了log在控制台显示的颜色
+        loggingInterceptor.setColorLevel(Level.INFO);
+        builder.addInterceptor(loggingInterceptor);
         builder.connectTimeout(30, TimeUnit.SECONDS);
         builder.readTimeout(30, TimeUnit.SECONDS);
         builder.writeTimeout(30, TimeUnit.SECONDS);
@@ -114,37 +124,44 @@ public class AppApplication extends Application{
 //                .addCommonParams(params);                       //全局公共参数
     }
 
-    public static AppApplication get(){
-        return app;
+    /**
+     * 初始化云推送通道
+     * @param applicationContext
+     */
+    private void initCloudChannel(Context applicationContext) {
+        PushServiceFactory.init(applicationContext);
+        final CloudPushService pushService = PushServiceFactory.getCloudPushService();
+        pushService.register(applicationContext, new CommonCallback() {
+            @Override
+            public void onSuccess(String response) {
+                if (AppApplication.isMain) {
+                    sp.putString(Constant.OPEN_ID,pushService.getDeviceId());
+                }else {
+                    sp.putString(Constant.TEST_OPEN_ID,pushService.getDeviceId());
+                }
+            }
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+            }
+        });
     }
 
-    public LoginBean getLoginBean() {
-        if (null==loginBean){
-            String json=sp.getString(Constant.USER_INFO);
-            loginBean= GsonUtils.jsonToObj(json,LoginBean.class);
-        }
-        return loginBean;
-    }
+//
+//    protected void setupLeakCanary() {
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
+//        enabledStrictMode();
+//        LeakCanary.install(this);
+//    }
 
-    public void setLoginBean(LoginBean loginBean) {
-        this.loginBean = loginBean;
-    }
-
-    public SPUtils getSp() {
-        return sp;
-    }
-
-    public int getUnit() {//1.人民币  2.美元
-        return sp.getInt(Constant.UNIT_TYPE,1);
-    }
-
-    @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
-        if (level>=ComponentCallbacks2.TRIM_MEMORY_MODERATE){
-            stopService(new Intent(this, AutoUpdateService.class));
-            AppManager.getAppManager().finishAllActivity();
-            System.exit(0);
-        }
+    private static void enabledStrictMode() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
+                .detectAll() //
+                .penaltyLog() //
+                .penaltyDeath() //
+                .build());
     }
 }

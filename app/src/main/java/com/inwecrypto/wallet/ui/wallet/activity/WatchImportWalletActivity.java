@@ -23,7 +23,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.ui.ScanActivity;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.event.KeyEvent;
-import me.drakeet.materialdialog.MaterialDialog;
+import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import unichain.ETHWallet;
 import unichain.Unichain;
 
@@ -34,6 +34,7 @@ import unichain.Unichain;
  */
 
 public class WatchImportWalletActivity extends BaseActivity {
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
@@ -90,7 +91,7 @@ public class WatchImportWalletActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (etInfo.getText().toString().length() == 0) {
-                    ToastUtil.show("填写内容不能为空");
+                    ToastUtil.show(R.string.tianxieneirongbunengweikong);
                     return;
                 }
                 switch (type){
@@ -103,36 +104,22 @@ public class WatchImportWalletActivity extends BaseActivity {
                     case 3:
                         impotKey(etInfo.getText().toString());
                         break;
-//                    case 4:
-//                        impotWatch(etInfo.getText().toString());
-//                        break;
-//                    case 5:
-//                        impotSeed(etInfo.getText().toString());
-//                        break;
                 }
             }
         });
         switch (type){
             case 1:
-                txtMainTitle.setText("添加结果");
-                hit.setText(R.string.wallet_hit21);
+                txtMainTitle.setText(R.string.tianjiakeystore);
+                hit.setText(R.string.keystore_hit);
                 break;
             case 2:
-                txtMainTitle.setText("添加助记词");
-                hit.setText(R.string.wallet_hit22);
+                txtMainTitle.setText(R.string.tianjiazhujici);
+                hit.setText(R.string.zhujici_hit);
                 break;
             case 3:
-                txtMainTitle.setText("添加明文私钥");
-                hit.setText(R.string.wallet_hit23);
+                txtMainTitle.setText(R.string.tianjiamingwensiyao);
+                hit.setText(R.string.siyao_hit);
                 break;
-//            case 4:
-//                txtMainTitle.setText("添加观察钱包");
-//                hit.setText(R.string.wallet_hit24);
-//                break;
-//            case 5:
-//                txtMainTitle.setText("添加种子");
-//                hit.setText(R.string.wallet_hit25);
-//                break;
         }
     }
 
@@ -214,7 +201,7 @@ public class WatchImportWalletActivity extends BaseActivity {
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ToastUtil.show("请检查钱包密码是否输入正确");
+                            ToastUtil.show(getString(R.string.qingjianchaqianbaomimashifoushuruzhengque));
                             hideLoading();
                         }
                     });
@@ -238,9 +225,6 @@ public class WatchImportWalletActivity extends BaseActivity {
             wallets=wallets+address+",";
             AppApplication.get().getSp().putString(Constant.WALLETS,wallets);
         }
-    }
-
-    private void impotSeed(String key) {
     }
 
     @Override

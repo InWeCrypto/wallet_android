@@ -10,15 +10,18 @@
 
     <RadioGroup
         android:id="@+id/rg"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="14dp"
         android:layout_marginTop="14dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
         android:orientation="horizontal">
         <RadioButton
             android:id="@+id/rb_eth"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="ETH"
@@ -27,13 +30,12 @@
             android:checked="true"
             android:textSize="14sp"
             android:textColor="@drawable/group_text_selector"
-            android:paddingLeft="48dp"
-            android:paddingRight="48dp"
             android:paddingBottom="11dp"
             android:paddingTop="11dp"/>
         <RadioButton
             android:id="@+id/rb_btc"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="BTC"
@@ -41,8 +43,19 @@
             android:button="@null"
             android:textSize="14sp"
             android:textColor="@drawable/group_text_selector"
-            android:paddingLeft="48dp"
-            android:paddingRight="48dp"
+            android:paddingBottom="11dp"
+            android:paddingTop="11dp"/>
+        <RadioButton
+            android:id="@+id/rb_neo"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="NEO"
+            android:background="@drawable/group_right_selector"
+            android:button="@null"
+            android:textSize="14sp"
+            android:textColor="@drawable/group_text_selector"
             android:paddingBottom="11dp"
             android:paddingTop="11dp"/>
     </RadioGroup>

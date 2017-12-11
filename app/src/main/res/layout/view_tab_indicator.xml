@@ -3,21 +3,34 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="false"
-    android:focusable="false"
+    android:clickable="true"
     android:gravity="center">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="6dp" />
+
     <ImageView
-        android:id="@+id/iv_tab"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:padding="4dp"/>
+        android:id="@+id/img"
+        android:layout_width="20dp"
+        android:layout_height="20dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <TextView
-        android:id="@+id/tv_tab"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
-        android:textColor="@color/c_afafb0"/>
+        android:layout_centerInParent="true"
+        android:includeFontPadding="false"
+        android:textColor="@color/c_afafb0"
+        android:textSize="10sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
 
 </LinearLayout>

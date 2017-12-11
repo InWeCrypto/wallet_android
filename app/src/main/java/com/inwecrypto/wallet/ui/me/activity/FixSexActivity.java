@@ -69,8 +69,8 @@ public class FixSexActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.fixsex_title);
-        txtRightTitle.setText(R.string.baocun2);
+        txtMainTitle.setText(R.string.xiugaixingbie);
+        txtRightTitle.setText(R.string.baocun);
         txtRightTitle.setCompoundDrawables(null, null, null, null);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +83,7 @@ public class FixSexActivity extends BaseActivity {
                         AppApplication.get().getLoginBean().getUser().setSex(sex);
                         AppApplication.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(user));
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_USERINFO));
-                        ToastUtil.show(getString(R.string.xiugaichenggong));
+                        ToastUtil.show(R.string.xiugaichenggong);
                         finish();
                     }
 
@@ -91,7 +91,7 @@ public class FixSexActivity extends BaseActivity {
                     public void onError(Response<LzyResponse<Object>> response) {
                         super.onError(response);
                         hideLoading();
-                        ToastUtil.show(getString(R.string.xiugaishibai));
+                        ToastUtil.show(R.string.xiugaishibai);
                     }
                 });
             }

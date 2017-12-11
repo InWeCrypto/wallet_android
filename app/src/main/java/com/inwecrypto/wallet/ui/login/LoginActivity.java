@@ -3,13 +3,14 @@ package com.inwecrypto.wallet.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
 import butterknife.BindView;
@@ -28,8 +29,6 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.MainTabActivity;
 import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
-import me.drakeet.materialdialog.MaterialDialog;
-
 /**
  * Created by Administrator on 2017/7/15.
  * 功能描述：
@@ -37,14 +36,12 @@ import me.drakeet.materialdialog.MaterialDialog;
  */
 
 public class LoginActivity extends BaseActivity {
+
     @BindView(R.id.hot_qianbao)
     TextView hotQianbao;
-    @BindView(R.id.cold_qianbao)
-    TextView coldQianbao;
     @BindView(R.id.tiaokuan)
     TextView tiaokuan;
 
-    private MaterialDialog mMaterialDialog;
     private CloudPushService pushService;
     private String openID="";
 
@@ -61,138 +58,116 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+
         hotQianbao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!NetworkUtils.isConnected(mActivity)){
-                    ToastUtil.show("请检查网络是否连接");
+                    ToastUtil.show(R.string.qingjianchawangluoshifoulianjie);
                     return;
                 }
                 login();
             }
         });
 
-        tiaokuan.setText(Html.fromHtml("<u>《服务协议》、《隐私协议》</u>"));
+        tiaokuan.setText(Html.fromHtml(getString(R.string.fuwuxieyi_yingsixieyi_underline)));
         tiaokuan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, CommonWebActivity.class);
-                intent.putExtra("title", "服务协议和隐私条款");
+                intent.putExtra("title", getString(R.string.fuwuxieyiheyinsixieyi));
                 intent.putExtra("url", Url.EULA);
                 keepTogo(intent);
-            }
-        });
-
-        coldQianbao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                coldLogin();
             }
         });
 
     }
 
     private void login() {
-        showLoading();
+
+        showFixLoading();
+
         pushService = PushServiceFactory.getCloudPushService();
+
         if (null==pushService.getDeviceId()||pushService.getDeviceId().equals("")){
-            openID=AppApplication.get().getSp().getString(Constant.OPEN_ID);
+            if (AppApplication.isMain) {
+                openID=AppApplication.get().getSp().getString(Constant.OPEN_ID);
+            }else {
+                openID=AppApplication.get().getSp().getString(Constant.TEST_OPEN_ID);
+            }
         }else {
             openID= pushService.getDeviceId();
         }
+
         if (null==openID||openID.equals("")){
             pushService = PushServiceFactory.getCloudPushService();
             pushService.register(mActivity, new CommonCallback() {
                 @Override
                 public void onSuccess(String response) {
-                    AppApplication.get().getSp().putString(Constant.OPEN_ID,pushService.getDeviceId());
+                    if (AppApplication.isMain) {
+                        AppApplication.get().getSp().putString(Constant.OPEN_ID,pushService.getDeviceId());
+                    }else {
+                        AppApplication.get().getSp().putString(Constant.TEST_OPEN_ID,pushService.getDeviceId());
+                    }
                     login();
                 }
                 @Override
                 public void onFailed(String errorCode, String errorMessage) {
-                    ToastUtil.show("ID获取失败，请检查网络后重试");
+                    ToastUtil.show(R.string.idhuoqushibai);
+                    hideFixLoading();
                     return;
+                }
+
+            });
+        }else {
+            UserApi.login(mActivity, openID, new JsonCallback<LzyResponse<LoginBean>>() {
+                @Override
+                public void onSuccess(Response<LzyResponse<LoginBean>> response) {
+                    pushService.bindAccount(pushService.getDeviceId(), new CommonCallback() {
+                        @Override
+                        public void onSuccess(String s) {
+                        }
+
+                        @Override
+                        public void onFailed(String s, String s1) {
+                        }
+                    });
+                    if (null==response.body().data.getUser().getNickname()){
+                        response.body().data.getUser().setNickname(response.body().data.getUser().getOpen_id().substring(0,12));
+                    }
+                    if (null==response.body().data.getUser().getImg()){
+                        response.body().data.getUser().setImg("1");
+                    }
+
+                    if (AppApplication.isMain) {
+                        AppApplication.get().getSp().putString(Constant.OPEN_ID,openID);
+                        AppApplication.get().getSp().putString(Constant.TOKEN, response.body().data.getToken());
+
+                    }else {
+                        AppApplication.get().getSp().putString(Constant.TEST_OPEN_ID,openID);
+                        AppApplication.get().getSp().putString(Constant.TEST_TOKEN, response.body().data.getToken());
+                    }
+                    AppApplication.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(response.body().data));
+                    AppApplication.get().setLoginBean(response.body().data);
+                    Intent intent=new Intent(mActivity,MainTabActivity.class);
+                    //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
+                    //将参数取出，传递到MainActivity中
+                    if(getIntent().getStringExtra("pushInfo") != null){
+                        intent.putExtra("pushInfo",
+                                getIntent().getStringExtra("pushInfo"));
+                    }
+                    finshTogo(intent);
+                    hideFixLoading();
+                }
+
+                @Override
+                public void onError(Response<LzyResponse<LoginBean>> response) {
+                    super.onError(response);
+                    ToastUtil.show(R.string.denglushibai);
+                    hideFixLoading();
                 }
             });
-            return;
         }
-        UserApi.login(mActivity, openID, new JsonCallback<LzyResponse<LoginBean>>() {
-            @Override
-            public void onSuccess(Response<LzyResponse<LoginBean>> response) {
-                hideLoading();
-                pushService.bindAccount(pushService.getDeviceId(), new CommonCallback() {
-                    @Override
-                    public void onSuccess(String s) {
-                    }
-
-                    @Override
-                    public void onFailed(String s, String s1) {
-                    }
-                });
-                AppApplication.get().getSp().putString(Constant.TOKEN, response.body().data.getToken());
-                if (null==response.body().data.getUser().getNickname()){
-                    response.body().data.getUser().setNickname(response.body().data.getUser().getOpen_id().substring(0,12));
-                }
-                if (null==response.body().data.getUser().getImg()){
-                    response.body().data.getUser().setImg("1");
-                }
-                AppApplication.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(response.body().data));
-                AppApplication.get().setLoginBean(response.body().data);
-                Intent intent=new Intent(mActivity,MainTabActivity.class);
-                //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
-                //将参数取出，传递到MainActivity中
-                if(getIntent().getStringExtra("pushInfo") != null){
-                    intent.putExtra("pushInfo",
-                            getIntent().getStringExtra("pushInfo"));
-                }
-                finshTogo(intent);
-            }
-
-            @Override
-            public void onError(Response<LzyResponse<LoginBean>> response) {
-                super.onError(response);
-                ToastUtil.show(getString(R.string.login_error));
-                hideLoading();
-            }
-        });
-    }
-
-    private void coldLogin() {
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.view_dialog_login_clode, null, false);
-        TextView cancle = (TextView) view.findViewById(R.id.cancle);
-        TextView ok = (TextView) view.findViewById(R.id.ok);
-        cancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMaterialDialog.dismiss();
-            }
-        });
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NetworkUtils.isConnected(mActivity)) {
-                    ToastUtil.show("请确保手机处于飞行模式！");
-                    return;
-                } else {
-                    mMaterialDialog.dismiss();
-                    AppApplication.get().getSp().putBoolean(Constant.NEED_RESTART, true);
-                    AppApplication.get().getSp().putBoolean(Constant.IS_CLOD, true);
-                    finshTogo(MainTabActivity.class);
-                }
-            }
-        });
-
-        cancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mMaterialDialog.dismiss();
-            }
-        });
-
-        mMaterialDialog = new MaterialDialog(mActivity).setView(view);
-        mMaterialDialog.setBackgroundResource(R.drawable.trans_bg);
-        mMaterialDialog.setCanceledOnTouchOutside(true);
-        mMaterialDialog.show();
     }
 
     @Override
@@ -203,6 +178,21 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void EventBean(BaseEventBusBean event) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //1.点击返回键条件成立
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getRepeatCount() == 0) {
+            if (isFixLoadingShow()){
+                OkGo.getInstance().cancelTag(this);
+                return true;
+            }
+
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

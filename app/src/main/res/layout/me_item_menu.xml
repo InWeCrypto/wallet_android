@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/img"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:src="@mipmap/btn_cantacts"/>
 
         <TextView
@@ -29,7 +29,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/img"
-            android:text="@string/me_hit2"
             android:textColor="@color/c_333333"
             android:textSize="12sp" />
 

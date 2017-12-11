@@ -74,7 +74,7 @@ public class MarketRemindEditActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (up.getText().toString().length()==0||down.getText().toString().length()==0){
-                    ToastUtil.show(getString(R.string.remind_hit));
+                    ToastUtil.show(getString(R.string.shurujigebunengweikong));
                     return;
                 }
                 MarketApi.marketNotification(mActivity, up.getText().toString(), down.getText().toString(), market.getRelation_notification().get(0).getId(), new JsonCallback<LzyResponse<Object>>() {
@@ -104,7 +104,7 @@ public class MarketRemindEditActivity extends BaseActivity {
         if (null!=market.getRelationCap()){
             price.setText("￥"+new BigDecimal(market.getRelationCap().getPrice_cny()).setScale(2,BigDecimal.ROUND_HALF_UP));
         }else {
-            price.setText("暂无数据");
+            price.setText(R.string.zanwushuju);
         }
 
         up.setText(market.getRelation_notification().get(0).getUpper_limit());

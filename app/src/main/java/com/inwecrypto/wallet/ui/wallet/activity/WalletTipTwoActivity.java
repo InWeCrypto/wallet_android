@@ -81,7 +81,7 @@ public class WalletTipTwoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (showData.size()>0){
-                    ToastUtil.show("请将全部的助记词选择完毕");
+                    ToastUtil.show(getString(R.string.qingjiangquanbudezhujicixuanzewanbi));
                     return;
                 }
                 boolean isRight=true;
@@ -92,7 +92,7 @@ public class WalletTipTwoActivity extends BaseActivity {
                     }
                 }
                 if (isRight){
-                    ToastUtil.show("助记词备份成功！");
+                    ToastUtil.show(getString(R.string.zhujicibeifenchenggong));
 
                     String wallets = AppApplication.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
                     if (!wallets.contains(wallet.getAddress())) {
@@ -104,7 +104,7 @@ public class WalletTipTwoActivity extends BaseActivity {
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_TIP_SUCCESS));
                     finish();
                 }else {
-                    ToastUtil.show("助记词顺序错误，请重新检查");
+                    ToastUtil.show(getString(R.string.zhujicishunxucuowu_qingchongxinjiancha));
                 }
             }
         });
@@ -157,14 +157,13 @@ public class WalletTipTwoActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        txtMainTitle.setText("备份助记词");
+        txtMainTitle.setText(R.string.beifenzhujici);
         txtRightTitle.setVisibility(View.GONE);
 
     }
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-
     }
 
 }

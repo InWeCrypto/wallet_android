@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,7 +28,7 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import me.drakeet.materialdialog.MaterialDialog;
+import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import me.grantland.widget.AutofitTextView;
 import unichain.ETHWallet;
 import unichain.Unichain;
@@ -39,6 +40,7 @@ import unichain.Unichain;
  */
 
 public class TransferAccountsConfirmActivity extends BaseActivity {
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
@@ -66,16 +68,14 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
     private String nonce;
     private String oxPrice;
     private String oxGas;
-    private BigDecimal pEther = new java.math.BigDecimal("1000000000000000000");
-    private String hash;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         address = extras.getString("address");
         price = extras.getString("price");
-        oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
+        oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
         gas = extras.getString("gas");
-        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(pEther).divide(new BigDecimal(Constant.GAS_LIMIT), 0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
+        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(Constant.pEther).divide(new BigDecimal(Constant.GAS_LIMIT), 0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
         hit = extras.getString("hit");
         wallet = (WalletBean) extras.getSerializable("wallet");
     }
@@ -93,7 +93,7 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.transfer_confirm);
+        txtMainTitle.setText(R.string.zhuanzhangqueren);
         txtRightTitle.setVisibility(View.GONE);
         tvTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +121,7 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
     @Override
     protected void initData() {
         tvPrice.setText(new BigDecimal(price).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
-        tvServiceCharge.setText(getString(R.string.transfer_hit1) + gas);
+        tvServiceCharge.setText(getString(R.string.lingfushouxufei) + gas);
         etAddress.setText(address);
         etHit.setText(hit);
     }
@@ -165,7 +165,7 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtil.show(getString(R.string.wallet_hit27));
+                                    ToastUtil.show(getString(R.string.mimacuowuqingchongshi));
                                     hideFixLoading();
                                 }
                             });
@@ -173,12 +173,12 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                         }
                         String data = "";
                         try {
-                            data = "0x" + conver16HexStr(wallet.transferCurrency(nonce, oxGas,"0x" + new BigInteger(new BigDecimal(Constant.GAS_LIMIT).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), address, oxPrice));
+                            data = "0x" + AppUtil.conver16HexStr(wallet.transferCurrency(nonce, oxGas,"0x" + new BigInteger(new BigDecimal(Constant.GAS_LIMIT).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), address, oxPrice));
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtil.show("转账失败！请稍后重试");
+                                    ToastUtil.show( R.string.zhuanzhangshibaiqingchongshi);
                                     hideFixLoading();
                                 }
                             });
@@ -207,11 +207,11 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
 
     private void getOrderInfo(String data) {
         showFixLoading();
-        WalletApi.walletOrder(mActivity, wallet.getId(), data, wallet.getAddress(), address, hit, new BigDecimal(price).multiply(pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(), new BigDecimal(gas).multiply(pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(), wallet.getCategory().getName(), new JsonCallback<LzyResponse<Object>>() {
+        WalletApi.walletOrder(mActivity, wallet.getId(), data, wallet.getAddress(), address, hit, new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(), new BigDecimal(gas).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(), wallet.getCategory().getName(), new JsonCallback<LzyResponse<Object>>() {
             @Override
             public void onSuccess(Response<LzyResponse<Object>> response) {
                 hideFixLoading();
-                ToastUtil.show("转账成功");
+                ToastUtil.show(R.string.zhuanzhangchenggong);
                 EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
                 AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
                 finish();
@@ -222,7 +222,7 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                 super.onError(response);
                 hideFixLoading();
                 if (response.getException().getMessage().contains("wallet_error")){
-                    ToastUtil.show("服务器内部错误");
+                    ToastUtil.show(R.string.inner_error);
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
                     AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
                     finish();
@@ -238,16 +238,4 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
 
     }
 
-    /**
-     * byte数组转换为十六进制的字符串
-     **/
-    public static String conver16HexStr(byte[] b) {
-        StringBuffer result = new StringBuffer();
-        for (int i = 0; i < b.length; i++) {
-            if ((b[i] & 0xff) < 0x10)
-                result.append("0");
-            result.append(Long.toString(b[i] & 0xff, 16));
-        }
-        return result.toString().toUpperCase();
-    }
 }

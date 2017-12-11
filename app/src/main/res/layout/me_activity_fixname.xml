@@ -24,7 +24,7 @@
         android:paddingRight="8dp"
         android:paddingTop="20dp"
         android:layout_marginTop="20dp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/c_333333"
         android:textCursorDrawable='@null'
         android:textSize="14sp" />
 

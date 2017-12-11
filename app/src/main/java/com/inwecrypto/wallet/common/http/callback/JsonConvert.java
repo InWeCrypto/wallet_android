@@ -1,18 +1,3 @@
-/*
- * Copyright 2016 jeasonlzy(廖子尧)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.inwecrypto.wallet.common.http.callback;
 
 import com.google.gson.stream.JsonReader;
@@ -34,15 +19,6 @@ import com.inwecrypto.wallet.event.BaseEventBusBean;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-/**
- * ================================================
- * 作    者：jeasonlzy（廖子尧）Github地址：https://github.com/jeasonlzy
- * 版    本：1.0
- * 创建日期：16/9/11
- * 描    述：
- * 修订历史：
- * ================================================
- */
 public class JsonConvert<T> implements Converter<T> {
 
     private Type type;
@@ -71,9 +47,6 @@ public class JsonConvert<T> implements Converter<T> {
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
 
-        // 如果你对这里的代码原理不清楚，可以看这里的详细原理说明: https://github.com/jeasonlzy/okhttp-OkGo/wiki/JsonCallback
-        // 如果你对这里的代码原理不清楚，可以看这里的详细原理说明: https://github.com/jeasonlzy/okhttp-OkGo/wiki/JsonCallback
-        // 如果你对这里的代码原理不清楚，可以看这里的详细原理说明: https://github.com/jeasonlzy/okhttp-OkGo/wiki/JsonCallback
 
         if (type == null) {
             if (clazz == null) {
@@ -154,30 +127,30 @@ public class JsonConvert<T> implements Converter<T> {
                     LzyResponse lzyResponse = Convert.fromJson(bodys, type);
                     response.close();
                     return (T) lzyResponse;
-                }else if (bodys.contains(" 4001")) {
+                }else if (bodys.contains("4001")) {
                     EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_TOKEN));
-                    throw new IllegalStateException("未登陆");
+                    throw new IllegalStateException("Please login");
                 } else if (bodys.contains("4002")) {
-                    ToastUtil.show("暂无权限访问");
-                    throw new IllegalStateException("wallet_error:无权限");
+                    ToastUtil.show("Privilege access");
+                    throw new IllegalStateException("wallet_error:No permission");
                 } else if (bodys.contains("4003")) {
-                    throw new IllegalStateException("wallet_error:路由不存在");
+                    throw new IllegalStateException("wallet_error:Routing does not exist");
                 }else if (bodys.contains("4004")) {
-                    throw new IllegalStateException("wallet_error:验证不通过");
+                    throw new IllegalStateException("wallet_error:Validation does not pass");
                 }else if (bodys.contains("4005")) {
-                    throw new IllegalStateException("wallet_error:查询数据不存在");
+                    throw new IllegalStateException("wallet_error:Query data does not exist");
                 }else if (bodys.contains("4006")) {
-                    throw new IllegalStateException("wallet_error:请求执行失败");
+                    throw new IllegalStateException("wallet_error:Request execution failure");
                 }else if (bodys.contains("4007")) {
-                    throw new IllegalStateException("wallet_error:请求执行成功,即将跳转");
+                    throw new IllegalStateException("wallet_error:The request succeeds and is about to jump");
                 }else if (bodys.contains("4008")) {
-                    throw new IllegalStateException("wallet_error:未注册");
+                    throw new IllegalStateException("wallet_error:unregistered");
                 }else if (bodys.contains("4009")) {
                     EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_TOKEN));
-                    throw new IllegalStateException("token过期");
+                    throw new IllegalStateException("Token expired");
                 }else {
                     //直接将服务端的错误信息抛出，onError中可以获取
-                    throw new IllegalStateException("wallet_error:未知错误");
+                    throw new IllegalStateException("wallet_error:unknown error");
                 }
             }
         }

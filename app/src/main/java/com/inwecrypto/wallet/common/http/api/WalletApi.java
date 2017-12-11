@@ -1,5 +1,8 @@
 package com.inwecrypto.wallet.common.http.api;
 
+import com.inwecrypto.wallet.bean.ClaimUtxoBean;
+import com.inwecrypto.wallet.bean.NeoOderBean;
+import com.inwecrypto.wallet.bean.UtxoBean;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
@@ -27,6 +30,11 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
+import com.lzy.okgo.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2017/8/4.
@@ -40,7 +48,7 @@ public class WalletApi {
         OkGo.<LzyResponse<CommonListBean<WalletBean>>>get(Url.WALLET)
                 .tag(object)
                 .cacheKey(Constant.WALLETS+AppApplication.isMain)
-                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .execute(callback);
     }
 
@@ -125,6 +133,19 @@ public class WalletApi {
                 .execute(callback);
     }
 
+    public static void neoWalletOrder(Object object,int page,int wallet_id,String flag,String asset,JsonCallback<LzyResponse<NeoOderBean>> callback){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("wallet_id",wallet_id+"");
+        params.put("flag",flag);
+        params.put("asset_id",asset);
+        params.put("page",page+"");
+        OkGo.<LzyResponse<NeoOderBean>>get(Url.WALLET_ORDER)
+                .tag(object)
+                .cacheKey(Constant.WALLET_ORDER+wallet_id+flag+asset+AppApplication.isMain)
+                .params(params)
+                .execute(callback);
+    }
+
     public static void gas(Object object,JsonCallback<LzyResponse<GasBean>> callback){
         OkGo.<LzyResponse<GasBean>>get(Url.ETH_GASPRICE)
                 .tag(object)
@@ -177,7 +198,7 @@ public class WalletApi {
         OkGo.<LzyResponse<CommonListBean<WalletCountBean>>>get(Url.CONVERSION)
                 .tag(object)
                 .cacheKey(Constant.CONVERSION+AppApplication.isMain)
-                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .params(params)
                 .execute(callback);
     }
@@ -196,6 +217,7 @@ public class WalletApi {
     public static void conversion(Object object,int id,JsonCallback<LzyResponse<TokenBean>> callback){
         OkGo.<LzyResponse<TokenBean>>get(Url.CONVERSION+"/"+id)
                 .tag(object)
+                .cacheKey(Url.CONVERSION+"/"+id+AppApplication.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
@@ -225,6 +247,35 @@ public class WalletApi {
         params.put("fee",fee);
         params.put("handle_fee",handle_fee);
         params.put("flag",flag);
+        OkGo.<LzyResponse<Object>>post(Url.WALLET_ORDER)
+                .tag(object)
+                .params(params)
+                .execute(callback);
+    }
+
+    public static void neoWalletOrder(Object object
+            ,int wallet_id
+            ,String data
+            ,String pay_address
+            ,String receive_address
+            ,String remark
+            ,String fee
+            ,String handle_fee
+            ,String flag
+            ,String trade_no
+            ,String asset_id
+            ,JsonCallback<LzyResponse<Object>> callback){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("wallet_id",wallet_id+"");
+        params.put("data",data);
+        params.put("pay_address",pay_address);
+        params.put("receive_address",receive_address);
+        params.put("remark",remark);
+        params.put("fee",fee);
+        params.put("handle_fee",handle_fee);
+        params.put("flag",flag);
+        params.put("trade_no",trade_no);
+        params.put("asset_id",asset_id);
         OkGo.<LzyResponse<Object>>post(Url.WALLET_ORDER)
                 .tag(object)
                 .params(params)
@@ -291,6 +342,20 @@ public class WalletApi {
 
     public static void blockPerSecond(Object object,JsonCallback<LzyResponse<BpsBean>> callback){
         OkGo.<LzyResponse<BpsBean>>post(Url.BLOCK_PER_SECOND)
+                .tag(object)
+                .execute(callback);
+    }
+
+    public static void getUtxo(Object object,String address,String type, JsonCallback<LzyResponse<UtxoBean>> callback){
+
+        OkGo.<LzyResponse<UtxoBean>>get(Url.GET_NEO_UTXO+address+"&type="+type)
+                .tag(object)
+                .execute(callback);
+    }
+
+    public static void getClaimUtxo(Object object, String address, JsonCallback<LzyResponse<ClaimUtxoBean>> callback){
+
+        OkGo.<LzyResponse<ClaimUtxoBean>>get(Url.GET_CLAIM_UTXO+address)
                 .tag(object)
                 .execute(callback);
     }

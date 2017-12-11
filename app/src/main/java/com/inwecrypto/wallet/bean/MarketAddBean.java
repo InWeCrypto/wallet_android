@@ -1,7 +1,6 @@
 package com.inwecrypto.wallet.bean;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by Administrator on 2017/8/15.
@@ -12,12 +11,46 @@ import java.util.List;
 public class MarketAddBean implements Serializable {
 
     /**
-     * name : coinmarket
-     * data : [{"id":3,"name":"NEO","flag":"NEO","token":null,"url":null,"created_at":"2017-08-14 17:45:42","updated_at":"2017-08-14 17:45:42","source":"coinmarket","icon":null,"relation_user_count":0}]
+     * id : 1
+     * name : 量子链
+     * long_name : 量子链
+     * en_name : qtum
+     * en_long_name : qtum
+     * unit : QTUM
+     * img : https://whalewallet.oss-cn-hongkong.aliyuncs.com/ico_icon/project_icon_Qtum.png
+     * web_site : https://qtum.org
+     * desc : null
+     * created_at : 2017-11-21 11:03:06
+     * updated_at : 2017-11-21 11:03:07
+     * enable : 1
+     * sort : 0
+     * key : qtum
+     * user_ticker : {"ico_id":1,"sort":0}
      */
 
+    private int id;
     private String name;
-    private List<DataBean> data;
+    private String long_name;
+    private String en_name;
+    private String en_long_name;
+    private String unit;
+    private String img;
+    private String web_site;
+    private String desc;
+    private String created_at;
+    private String updated_at;
+    private int enable;
+    private int sort;
+    private String key;
+    private UserTickerBean user_ticker;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -27,126 +60,133 @@ public class MarketAddBean implements Serializable {
         this.name = name;
     }
 
-    public List<DataBean> getData() {
-        return data;
+    public String getLong_name() {
+        return long_name;
     }
 
-    public void setData(List<DataBean> data) {
-        this.data = data;
+    public void setLong_name(String long_name) {
+        this.long_name = long_name;
     }
 
-    public static class DataBean implements Serializable{
+    public String getEn_name() {
+        return en_name;
+    }
+
+    public void setEn_name(String en_name) {
+        this.en_name = en_name;
+    }
+
+    public String getEn_long_name() {
+        return en_long_name;
+    }
+
+    public void setEn_long_name(String en_long_name) {
+        this.en_long_name = en_long_name;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getWeb_site() {
+        return web_site;
+    }
+
+    public void setWeb_site(String web_site) {
+        this.web_site = web_site;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public int getEnable() {
+        return enable;
+    }
+
+    public void setEnable(int enable) {
+        this.enable = enable;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public UserTickerBean getUser_ticker() {
+        return user_ticker;
+    }
+
+    public void setUser_ticker(UserTickerBean user_ticker) {
+        this.user_ticker = user_ticker;
+    }
+
+    public static class UserTickerBean implements Serializable{
         /**
-         * id : 3
-         * name : NEO
-         * flag : NEO
-         * token : null
-         * url : null
-         * created_at : 2017-08-14 17:45:42
-         * updated_at : 2017-08-14 17:45:42
-         * source : coinmarket
-         * icon : null
-         * relation_user_count : 0
+         * ico_id : 1
+         * sort : 0
          */
 
-        private int id;
-        private String name;
-        private String flag;
-        private String token;
-        private String url;
-        private String created_at;
-        private String updated_at;
-        private String source;
-        private String icon;
-        private int relation_user_count;
-        private int type;
+        private int ico_id;
+        private int sort;
 
-        public int getId() {
-            return id;
+        public int getIco_id() {
+            return ico_id;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public void setIco_id(int ico_id) {
+            this.ico_id = ico_id;
         }
 
-        public String getName() {
-            return name;
+        public int getSort() {
+            return sort;
         }
 
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getFlag() {
-            return flag;
-        }
-
-        public void setFlag(String flag) {
-            this.flag = flag;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public String getCreated_at() {
-            return created_at;
-        }
-
-        public void setCreated_at(String created_at) {
-            this.created_at = created_at;
-        }
-
-        public String getUpdated_at() {
-            return updated_at;
-        }
-
-        public void setUpdated_at(String updated_at) {
-            this.updated_at = updated_at;
-        }
-
-        public String getSource() {
-            return source;
-        }
-
-        public void setSource(String source) {
-            this.source = source;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public int getRelation_user_count() {
-            return relation_user_count;
-        }
-
-        public void setRelation_user_count(int relation_user_count) {
-            this.relation_user_count = relation_user_count;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
+        public void setSort(int sort) {
+            this.sort = sort;
         }
     }
 }

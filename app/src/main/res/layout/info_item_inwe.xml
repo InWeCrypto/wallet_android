@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="14dp"
+    android:paddingRight="14dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="dsfsdf"
+                android:textColor="@color/c_FF7043"
+                android:textSize="10sp" />
+            
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="6dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="dsfsdf"
+                android:textColor="@color/c_333333"
+                android:textSize="8sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="dsfsdf"
+                android:textColor="@color/c_333333"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/c_e6e6e6" />
+
+
+</LinearLayout>

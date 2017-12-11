@@ -69,8 +69,6 @@ public class TokenTransferAccountsActivity extends BaseActivity {
     private BigDecimal low;
     private BigDecimal high;
     private BigDecimal distance;
-    private BigDecimal p100 = new BigDecimal(100);
-    private BigDecimal pEther = new BigDecimal("1000000000000000000");
     private float position;
     private String price;
 
@@ -97,7 +95,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.transfer_title);
+        txtMainTitle.setText(R.string.zhuanzhang);
         Drawable drawableInfo = getResources().getDrawable(R.mipmap.nav_scan);
         /// 这一步必须要做,否则不会显示.
         drawableInfo.setBounds(0, 0, drawableInfo.getMinimumWidth(), drawableInfo.getMinimumHeight());
@@ -108,7 +106,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 keepTogo(ScanActivity.class);
             }
         });
-        tvCurrentPrice.setText("(当前余额：" + price + ")");
+        tvCurrentPrice.setText("("+getString(R.string.dangqianyue)+"：" + price + ")");
         ivMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,17 +119,17 @@ public class TokenTransferAccountsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (!AppUtil.isAddress(etAddress.getText().toString())) {
-                    ToastUtil.show("请填写转账钱包地址");
+                    ToastUtil.show(R.string.qingtianxiezhuanzhangqianbaodizhi);
                     return;
                 }
                 if (etPrice.getText().toString().length() == 0) {
-                    ToastUtil.show("请填写转账金额");
+                    ToastUtil.show(R.string.qingtianxiezhuanzhangjine);
                     return;
                 }
                 try {
                     new BigDecimal(etPrice.getText().toString());
                 } catch (Exception e) {
-                    ToastUtil.show("请填写正确的金额");
+                    ToastUtil.show(R.string.qingtianxiezhengquedejine);
                     return;
                 }
                 showFixLoading();
@@ -141,14 +139,14 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<LzyResponse<ValueBean>> response) {
                         BigDecimal currentPrice = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
-                        BigDecimal price = new BigDecimal(gas.getText().toString()).multiply(pEther);
+                        BigDecimal price = new BigDecimal(gas.getText().toString()).multiply(Constant.pEther);
                         if (currentPrice.subtract(price).doubleValue() >= 0) {
                             //再判断转账余额是否足以支付相应的代币
                             WalletApi.balanceof(this, gnt.getGnt_category().getAddress(), wallet.getAddress(), new JsonCallback<LzyResponse<ValueBean>>() {
                                 @Override
                                 public void onSuccess(Response<LzyResponse<ValueBean>> response) {
                                     BigDecimal currentPrice = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
-                                    BigDecimal price = new BigDecimal(etPrice.getText().toString()).multiply(pEther);
+                                    BigDecimal price = new BigDecimal(etPrice.getText().toString()).multiply(Constant.pEther);
                                     hideFixLoading();
                                     if (currentPrice.subtract(price).doubleValue() >= 0) {
                                         Intent intent = new Intent(mActivity, TokenTransferAccountsConfirmActivity.class);
@@ -161,7 +159,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                                         intent.putExtra("gnt", gnt);
                                         keepTogo(intent);
                                     } else {
-                                        ToastUtil.show(gnt.getName() + "余额不足！");
+                                        ToastUtil.show(gnt.getName() + getString(R.string.qianbaoyuebuzu));
                                         hideLoading();
                                         return;
                                     }
@@ -170,12 +168,12 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                                 @Override
                                 public void onError(Response<LzyResponse<ValueBean>> response) {
                                     super.onError(response);
-                                    ToastUtil.show("余额获取失败");
+                                    ToastUtil.show(R.string.yuehuoqushibai);
                                     hideFixLoading();
                                 }
                             });
                         } else {
-                            ToastUtil.show("钱包余额不足！");
+                            ToastUtil.show(R.string.qianbaoyuebuzu);
                             hideFixLoading();
                             return;
                         }
@@ -184,13 +182,13 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                     @Override
                     public void onError(Response<LzyResponse<ValueBean>> response) {
                         super.onError(response);
-                        ToastUtil.show("余额获取失败");
+                        ToastUtil.show(R.string.yuehuoqushibai);
                         hideFixLoading();
                     }
                 });
             }
         });
-        gas.setText(low.divide(pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+        gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
     }
 
     @Override
@@ -204,22 +202,22 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 if (currentGas.subtract(low).longValue() <= 0) {
                     position = 0;
                     gasBar.setProgress(position);
-                    gas.setText(low.divide(pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
                 } else if (currentGas.subtract(high).longValue() >= 0) {
                     position = 100;
                     gasBar.setProgress(position);
-                    gas.setText(high.divide(pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(high.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
                 } else {
-                    position = currentGas.subtract(low).divide(distance, 0, BigDecimal.ROUND_HALF_DOWN).setScale(0, BigDecimal.ROUND_HALF_DOWN).multiply(p100).floatValue();
+                    position = currentGas.subtract(low).divide(distance, 0, BigDecimal.ROUND_HALF_DOWN).setScale(0, BigDecimal.ROUND_HALF_DOWN).multiply(Constant.p100).floatValue();
                     gasBar.setProgress(position);
-                    gas.setText(new BigDecimal(position).divide(p100).multiply(distance).add(low).divide(pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
+                    gas.setText(new BigDecimal(position).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
                 }
             }
 
             @Override
             public void onError(Response<LzyResponse<GasBean>> response) {
                 super.onError(response);
-                gas.setText(low.divide(pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
             }
 
             @Override
@@ -228,7 +226,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 gasBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
                     @Override
                     public void onProgressChanged(int progress, float progressFloat) {
-                        gas.setText(new BigDecimal(progressFloat).divide(p100).multiply(distance).add(low).divide(pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
+                        gas.setText(new BigDecimal(progressFloat).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
                     }
 
                     @Override
@@ -251,7 +249,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
             if (AppUtil.isAddress(key.getKey().toLowerCase())) {
                 etAddress.setText(key.getKey().toLowerCase());
             } else {
-                ToastUtil.show("请输入正确的钱包地址");
+                ToastUtil.show(R.string.qingshuruzhengquedeqianbaodizhi);
             }
         }
     }

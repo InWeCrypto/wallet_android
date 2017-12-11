@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoTokenWalletActivity;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -41,11 +42,11 @@ public class RecordAdapter extends CommonAdapter<OrderBean> {
         if (orderBean.getPay_address().equals(address)){
             if (orderBean.getStatus()==0){//交易失败
                 Glide.with(mContext).load(R.mipmap.tishi).crossFade().into((ImageView) holder.getView(R.id.img));
-                holder.setText(R.id.hit,"交易失败");
+                holder.setText(R.id.hit,mContext.getString(R.string.jiaoyishibai));
                 holder.setVisible(R.id.progess,false);
             }else if (orderBean.getStatus()==1){//准备打包
                 Glide.with(mContext).load(R.mipmap.zhuanchu).crossFade().into((ImageView) holder.getView(R.id.img));
-                holder.setText(R.id.hit,"准备打包");
+                holder.setText(R.id.hit,mContext.getString(R.string.zhunbeidabao));
                 holder.setVisible(R.id.progess,true);
                 ProgressBar bar=holder.getView(R.id.progess);
                 bar.setProgress(0);
@@ -60,7 +61,7 @@ public class RecordAdapter extends CommonAdapter<OrderBean> {
                 if (current<0){
                     current=0;
                 }
-                holder.setText(R.id.hit,"已经确认"+current+"/"+activity.minBlock);
+                holder.setText(R.id.hit,mContext.getString(R.string.yijingqueren)+current+"/"+activity.minBlock);
                 ProgressBar bar=holder.getView(R.id.progess);
                 bar.setProgress((int) (current*1.0f/activity.minBlock*100.f));
                 if (current>=activity.minBlock){
@@ -79,11 +80,11 @@ public class RecordAdapter extends CommonAdapter<OrderBean> {
         }else {
             if (orderBean.getStatus()==0){//交易失败
                 Glide.with(mContext).load(R.mipmap.tishi).crossFade().into((ImageView) holder.getView(R.id.img));
-                holder.setText(R.id.hit,"交易失败");
+                holder.setText(R.id.hit,mContext.getString(R.string.jiaoyishibai));
                 holder.setVisible(R.id.progess,false);
             }else if (orderBean.getStatus()==1){//准备打包
                 Glide.with(mContext).load(R.mipmap.zhuanru).crossFade().into((ImageView) holder.getView(R.id.img));
-                holder.setText(R.id.hit,"准备打包");
+                holder.setText(R.id.hit,mContext.getString(R.string.zhunbeidabao));
                 holder.setVisible(R.id.progess,true);
                 ProgressBar bar=holder.getView(R.id.progess);
                 bar.setProgress(0);
@@ -98,7 +99,7 @@ public class RecordAdapter extends CommonAdapter<OrderBean> {
                 if (current<0){
                     current=0;
                 }
-                holder.setText(R.id.hit,"已经确认"+current+"/"+activity.minBlock);
+                holder.setText(R.id.hit,mContext.getString(R.string.yijingqueren)+current+"/"+activity.minBlock);
                 ProgressBar bar=holder.getView(R.id.progess);
                 bar.setProgress((int) (current*1.0f/activity.minBlock*100.f));
                 if (current>=activity.minBlock){

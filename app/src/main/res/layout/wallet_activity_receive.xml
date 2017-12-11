@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:background="@drawable/round_6dp_bule_sing_bg"
+        android:background="@color/c_008c55"
         android:gravity="center"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"

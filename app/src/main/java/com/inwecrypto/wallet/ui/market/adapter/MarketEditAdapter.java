@@ -16,15 +16,15 @@ import com.inwecrypto.wallet.bean.MarkeListBean;
  * 版本：@version
  */
 
-public class MarketEditAdapter extends CommonAdapter<MarkeListBean.DataBean> {
+public class MarketEditAdapter extends CommonAdapter<MarkeListBean> {
 
-    public MarketEditAdapter(Context context, int layoutId, List<MarkeListBean.DataBean> datas) {
+    public MarketEditAdapter(Context context, int layoutId, List<MarkeListBean> datas) {
         super(context, layoutId, datas);
     }
 
     @Override
-    protected void convert(ViewHolder holder, MarkeListBean.DataBean marketBean, int position) {
-        holder.setText(R.id.name,marketBean.getName());
-        holder.setText(R.id.net_name,marketBean.getSource());
+    protected void convert(ViewHolder holder, MarkeListBean marketBean, int position) {
+        holder.setText(R.id.name,marketBean.getEn_name().toUpperCase());
+        holder.setText(R.id.net_name,"");
     }
 }

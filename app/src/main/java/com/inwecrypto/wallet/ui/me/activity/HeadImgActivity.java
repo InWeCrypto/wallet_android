@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.ClientException;
@@ -86,7 +85,7 @@ public class HeadImgActivity extends BaseActivity implements EasyPermissions.Per
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.headimg);
+        txtMainTitle.setText(R.string.gerentouxiang);
         txtRightTitle.setText(R.string.xiangce);
         txtRightTitle.setCompoundDrawables(null,null,null,null);
 
@@ -101,7 +100,7 @@ public class HeadImgActivity extends BaseActivity implements EasyPermissions.Per
                         startActivityForResult(intent, 1111);
                     }
                 } else {
-                    EasyPermissions.requestPermissions(mActivity, "为了您能够修改头像，需要获取查看相册权限",
+                    EasyPermissions.requestPermissions(mActivity, getString(R.string.xiangcequanxiantishi),
                             RC_CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE);
                 }
             }
@@ -110,19 +109,22 @@ public class HeadImgActivity extends BaseActivity implements EasyPermissions.Per
 
     @Override
     protected void initData() {
-        if (null!=user){
+
+        if (null != user.getUser().getImg() && user.getUser().getImg().length() > 0) {
             Glide.with(this)
                     .load(user.getUser().getImg())
                     .crossFade()
-                    .placeholder(R.mipmap.clod_icon)
+                    .into(photoView);
+        }else {
+            Glide.with(this)
+                    .load(R.mipmap.clod_icon)
+                    .crossFade()
                     .into(photoView);
         }
     }
 
     public Uri uritempFile;
     private String protraitPath = "";// 选择图片地址
-    private int time = 50 * 365 * 24 * 60 * 60 * 1000;
-    private Uri uri;
     String path;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -246,7 +248,7 @@ public class HeadImgActivity extends BaseActivity implements EasyPermissions.Per
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Toast.makeText(this,"权限请求成功！",Toast.LENGTH_SHORT).show();
+        ToastUtil.show(R.string.quanxianqingqiuchenggong);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         ComponentName componentName = intent.resolveActivity(getPackageManager());

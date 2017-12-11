@@ -1,5 +1,7 @@
 package com.inwecrypto.wallet.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -55,8 +57,11 @@ public class TokenBean implements Serializable{
         private String address;
         private String created_at;
         private String updated_at;
-        private Object deleted_at;
+        private String deleted_at;
+        private String balance;
+        private CapBean cap;
         private List<GntBean> gnt;
+        private CategoryBean category;
 
         public int getId() {
             return id;
@@ -114,11 +119,11 @@ public class TokenBean implements Serializable{
             this.updated_at = updated_at;
         }
 
-        public Object getDeleted_at() {
+        public String getDeleted_at() {
             return deleted_at;
         }
 
-        public void setDeleted_at(Object deleted_at) {
+        public void setDeleted_at(String deleted_at) {
             this.deleted_at = deleted_at;
         }
 
@@ -128,6 +133,244 @@ public class TokenBean implements Serializable{
 
         public void setGnt(List<GntBean> gnt) {
             this.gnt = gnt;
+        }
+
+        public String getBalance() {
+            return balance;
+        }
+
+        public void setBalance(String balance) {
+            this.balance = balance;
+        }
+
+        public CapBean getCap() {
+            return cap;
+        }
+
+        public void setCap(CapBean cap) {
+            this.cap = cap;
+        }
+
+        public CategoryBean getCategory() {
+            return category;
+        }
+
+        public void setCategory(CategoryBean category) {
+            this.category = category;
+        }
+
+        public static class CategoryBean implements Serializable{
+
+            /**
+             * id : 1
+             * name : ETH
+             */
+
+            private int id;
+            private String name;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+        }
+
+        public static class CapBean implements Serializable{
+
+            /**
+             * id : 160355199
+             * asset_id : neo
+             * name : NEO
+             * symbol : NEO
+             * rank : 11
+             * price_usd : 39.5524
+             * price_btc : 0.00401056
+             * volume_usd_24h : 83149400.0
+             * market_cap_usd : 2570906000.0
+             * available_supply : 65000000.0
+             * total_supply : 100000000.0
+             * percent_change_1h : -0.21
+             * percent_change_24h : -2.78
+             * percent_change_7d : 10.7
+             * last_updated : 1511850553
+             * price_cny : 261.2040496
+             * volume_cny_24h : 549118637.6
+             * market_cap_cny : 16978263224.0
+             */
+
+            private String id;
+            private String asset_id;
+            private String name;
+            private String symbol;
+            private String rank;
+            private String price_usd;
+            private String price_btc;
+            private String volume_usd_24h;
+            private String market_cap_usd;
+            private String available_supply;
+            private String total_supply;
+            private String percent_change_1h;
+            private String percent_change_24h;
+            private String percent_change_7d;
+            private String last_updated;
+            private String price_cny;
+            private String volume_cny_24h;
+            private String market_cap_cny;
+
+            public String getId() {
+                return id;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public String getAsset_id() {
+                return asset_id;
+            }
+
+            public void setAsset_id(String asset_id) {
+                this.asset_id = asset_id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getSymbol() {
+                return symbol;
+            }
+
+            public void setSymbol(String symbol) {
+                this.symbol = symbol;
+            }
+
+            public String getRank() {
+                return rank;
+            }
+
+            public void setRank(String rank) {
+                this.rank = rank;
+            }
+
+            public String getPrice_usd() {
+                return price_usd;
+            }
+
+            public void setPrice_usd(String price_usd) {
+                this.price_usd = price_usd;
+            }
+
+            public String getPrice_btc() {
+                return price_btc;
+            }
+
+            public void setPrice_btc(String price_btc) {
+                this.price_btc = price_btc;
+            }
+
+            public String getVolume_usd_24h() {
+                return volume_usd_24h;
+            }
+
+            public void setVolume_usd_24h(String volume_usd_24h) {
+                this.volume_usd_24h = volume_usd_24h;
+            }
+
+            public String getMarket_cap_usd() {
+                return market_cap_usd;
+            }
+
+            public void setMarket_cap_usd(String market_cap_usd) {
+                this.market_cap_usd = market_cap_usd;
+            }
+
+            public String getAvailable_supply() {
+                return available_supply;
+            }
+
+            public void setAvailable_supply(String available_supply) {
+                this.available_supply = available_supply;
+            }
+
+            public String getTotal_supply() {
+                return total_supply;
+            }
+
+            public void setTotal_supply(String total_supply) {
+                this.total_supply = total_supply;
+            }
+
+            public String getPercent_change_1h() {
+                return percent_change_1h;
+            }
+
+            public void setPercent_change_1h(String percent_change_1h) {
+                this.percent_change_1h = percent_change_1h;
+            }
+
+            public String getPercent_change_24h() {
+                return percent_change_24h;
+            }
+
+            public void setPercent_change_24h(String percent_change_24h) {
+                this.percent_change_24h = percent_change_24h;
+            }
+
+            public String getPercent_change_7d() {
+                return percent_change_7d;
+            }
+
+            public void setPercent_change_7d(String percent_change_7d) {
+                this.percent_change_7d = percent_change_7d;
+            }
+
+            public String getLast_updated() {
+                return last_updated;
+            }
+
+            public void setLast_updated(String last_updated) {
+                this.last_updated = last_updated;
+            }
+
+            public String getPrice_cny() {
+                return price_cny;
+            }
+
+            public void setPrice_cny(String price_cny) {
+                this.price_cny = price_cny;
+            }
+
+            public String getVolume_cny_24h() {
+                return volume_cny_24h;
+            }
+
+            public void setVolume_cny_24h(String volume_cny_24h) {
+                this.volume_cny_24h = volume_cny_24h;
+            }
+
+            public String getMarket_cap_cny() {
+                return market_cap_cny;
+            }
+
+            public void setMarket_cap_cny(String market_cap_cny) {
+                this.market_cap_cny = market_cap_cny;
+            }
         }
 
         public static class GntBean implements Serializable{
@@ -143,7 +386,8 @@ public class TokenBean implements Serializable{
              * gnt_category : {"id":1,"category_id":1,"name":"SNT","created_at":"2017-07-30 23:01:27","updated_at":"2017-08-15 18:55:59","icon":"http://cryptobox.oss-cn-shenzhen.aliyuncs.com/7071bdd3-1366-3866-932b-6893a2e03a07.png","address":"0xd9d700125b05f26df706f7190fa3be40c29af2fa","gas":"11","cap":{"id":12831458,"asset_id":"omisego","name":"OmiseGo","symbol":"OMG","rank":"14","price_usd":"6.49145","price_btc":"0.00152059","volume_usd_24h":"82698400.0","market_cap_usd":"638187588.0","available_supply":"98312024.0","total_supply":"140245398.0","percent_change_1h":"-0.37","percent_change_24h":"-8.19","percent_change_7d":"116.54","last_updated":"1502738361","price_cny":"43.28888347","volume_cny_24h":"551482550.24","market_cap_cny":"4255817751.0"}}
              */
 
-            private int id;
+
+            private String id;
             private int user_id;
             private int gnt_category_id;
             private String name;
@@ -151,13 +395,40 @@ public class TokenBean implements Serializable{
             private String updated_at;
             private int wallet_id;
             private String balance;
+            private String unavailable;
+            private String available;
             private GntCategoryBean gnt_category;
+            private CapBean cap;
 
-            public int getId() {
+            public String getUnavailable() {
+                return unavailable;
+            }
+
+            public void setUnavailable(String unavailable) {
+                this.unavailable = unavailable;
+            }
+
+            public String getAvailable() {
+                return available;
+            }
+
+            public void setAvailable(String available) {
+                this.available = available;
+            }
+
+            public CapBean getCap() {
+                return cap;
+            }
+
+            public void setCap(CapBean cap) {
+                this.cap = cap;
+            }
+
+            public String getId() {
                 return id;
             }
 
-            public void setId(int id) {
+            public void setId(String id) {
                 this.id = id;
             }
 
@@ -225,6 +496,193 @@ public class TokenBean implements Serializable{
                 this.gnt_category = gnt_category;
             }
 
+            public static class CapBean implements Serializable{
+
+                /**
+                 * id : 160403338
+                 * asset_id : gas
+                 * name : Gas
+                 * symbol : GAS
+                 * rank : 50
+                 * price_usd : 22.2248
+                 * price_btc : 0.00225256
+                 * volume_usd_24h : 1532410.0
+                 * market_cap_usd : 191067392.0
+                 * available_supply : 8597035.0
+                 * total_supply : 11822072.0
+                 * percent_change_1h : -2.01
+                 * percent_change_24h : -3.31
+                 * percent_change_7d : 0.4
+                 * last_updated : 1511855363
+                 * price_cny : 146.7725792
+                 * volume_cny_24h : 10120035.64
+                 * market_cap_cny : 1261809059.0
+                 */
+
+                private String id;
+                private String asset_id;
+                private String name;
+                private String symbol;
+                private String rank;
+                private String price_usd;
+                private String price_btc;
+                private String volume_usd_24h;
+                private String market_cap_usd;
+                private String available_supply;
+                private String total_supply;
+                private String percent_change_1h;
+                private String percent_change_24h;
+                private String percent_change_7d;
+                private String last_updated;
+                private String price_cny;
+                private String volume_cny_24h;
+                private String market_cap_cny;
+
+                public String getId() {
+                    return id;
+                }
+
+                public void setId(String id) {
+                    this.id = id;
+                }
+
+                public String getAsset_id() {
+                    return asset_id;
+                }
+
+                public void setAsset_id(String asset_id) {
+                    this.asset_id = asset_id;
+                }
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                public String getSymbol() {
+                    return symbol;
+                }
+
+                public void setSymbol(String symbol) {
+                    this.symbol = symbol;
+                }
+
+                public String getRank() {
+                    return rank;
+                }
+
+                public void setRank(String rank) {
+                    this.rank = rank;
+                }
+
+                public String getPrice_usd() {
+                    return price_usd;
+                }
+
+                public void setPrice_usd(String price_usd) {
+                    this.price_usd = price_usd;
+                }
+
+                public String getPrice_btc() {
+                    return price_btc;
+                }
+
+                public void setPrice_btc(String price_btc) {
+                    this.price_btc = price_btc;
+                }
+
+                public String getVolume_usd_24h() {
+                    return volume_usd_24h;
+                }
+
+                public void setVolume_usd_24h(String volume_usd_24h) {
+                    this.volume_usd_24h = volume_usd_24h;
+                }
+
+                public String getMarket_cap_usd() {
+                    return market_cap_usd;
+                }
+
+                public void setMarket_cap_usd(String market_cap_usd) {
+                    this.market_cap_usd = market_cap_usd;
+                }
+
+                public String getAvailable_supply() {
+                    return available_supply;
+                }
+
+                public void setAvailable_supply(String available_supply) {
+                    this.available_supply = available_supply;
+                }
+
+                public String getTotal_supply() {
+                    return total_supply;
+                }
+
+                public void setTotal_supply(String total_supply) {
+                    this.total_supply = total_supply;
+                }
+
+                public String getPercent_change_1h() {
+                    return percent_change_1h;
+                }
+
+                public void setPercent_change_1h(String percent_change_1h) {
+                    this.percent_change_1h = percent_change_1h;
+                }
+
+                public String getPercent_change_24h() {
+                    return percent_change_24h;
+                }
+
+                public void setPercent_change_24h(String percent_change_24h) {
+                    this.percent_change_24h = percent_change_24h;
+                }
+
+                public String getPercent_change_7d() {
+                    return percent_change_7d;
+                }
+
+                public void setPercent_change_7d(String percent_change_7d) {
+                    this.percent_change_7d = percent_change_7d;
+                }
+
+                public String getLast_updated() {
+                    return last_updated;
+                }
+
+                public void setLast_updated(String last_updated) {
+                    this.last_updated = last_updated;
+                }
+
+                public String getPrice_cny() {
+                    return price_cny;
+                }
+
+                public void setPrice_cny(String price_cny) {
+                    this.price_cny = price_cny;
+                }
+
+                public String getVolume_cny_24h() {
+                    return volume_cny_24h;
+                }
+
+                public void setVolume_cny_24h(String volume_cny_24h) {
+                    this.volume_cny_24h = volume_cny_24h;
+                }
+
+                public String getMarket_cap_cny() {
+                    return market_cap_cny;
+                }
+
+                public void setMarket_cap_cny(String market_cap_cny) {
+                    this.market_cap_cny = market_cap_cny;
+                }
+            }
+
             public static class GntCategoryBean implements Serializable{
                 /**
                  * id : 1
@@ -238,7 +696,7 @@ public class TokenBean implements Serializable{
                  * cap : {"id":12831458,"asset_id":"omisego","name":"OmiseGo","symbol":"OMG","rank":"14","price_usd":"6.49145","price_btc":"0.00152059","volume_usd_24h":"82698400.0","market_cap_usd":"638187588.0","available_supply":"98312024.0","total_supply":"140245398.0","percent_change_1h":"-0.37","percent_change_24h":"-8.19","percent_change_7d":"116.54","last_updated":"1502738361","price_cny":"43.28888347","volume_cny_24h":"551482550.24","market_cap_cny":"4255817751.0"}
                  */
 
-                private int id;
+                private String id;
                 private int category_id;
                 private String name;
                 private String created_at;
@@ -248,11 +706,11 @@ public class TokenBean implements Serializable{
                 private String gas;
                 private CapBean cap;
 
-                public int getId() {
+                public String getId() {
                     return id;
                 }
 
-                public void setId(int id) {
+                public void setId(String id) {
                     this.id = id;
                 }
 
@@ -342,7 +800,7 @@ public class TokenBean implements Serializable{
                      * market_cap_cny : 4255817751.0
                      */
 
-                    private int id;
+                    private String id;
                     private String asset_id;
                     private String name;
                     private String symbol;
@@ -361,11 +819,11 @@ public class TokenBean implements Serializable{
                     private String volume_cny_24h;
                     private String market_cap_cny;
 
-                    public int getId() {
+                    public String getId() {
                         return id;
                     }
 
-                    public void setId(int id) {
+                    public void setId(String id) {
                         this.id = id;
                     }
 
@@ -700,60 +1158,55 @@ public class TokenBean implements Serializable{
             }
 
             public static class CapBeanX implements Serializable{
+
                 /**
-                 * id : 12831458
-                 * asset_id : omisego
-                 * name : OmiseGo
+                 * id : omisego
+                 * name : OmiseGO
                  * symbol : OMG
-                 * rank : 14
-                 * price_usd : 6.49145
-                 * price_btc : 0.00152059
-                 * volume_usd_24h : 82698400.0
-                 * market_cap_usd : 638187588.0
-                 * available_supply : 98312024.0
+                 * rank : 21
+                 * price_usd : 8.60111
+                 * price_btc : 0.00057797
+                 * 24h_volume_usd : 61617900.0
+                 * market_cap_usd : 877679212.0
+                 * available_supply : 102042552.0
                  * total_supply : 140245398.0
-                 * percent_change_1h : -0.37
-                 * percent_change_24h : -8.19
-                 * percent_change_7d : 116.54
-                 * last_updated : 1502738361
-                 * price_cny : 43.28888347
-                 * volume_cny_24h : 551482550.24
-                 * market_cap_cny : 4255817751.0
+                 * max_supply : null
+                 * percent_change_1h : 2.14
+                 * percent_change_24h : -5.39
+                 * percent_change_7d : 8.34
+                 * last_updated : 1512652479
+                 * price_cny : 56.911824648
+                 * 24h_volume_cny : 407713320.72
+                 * market_cap_cny : 5807427813.0
                  */
 
-                private int id;
-                private String asset_id;
+                private String id;
                 private String name;
                 private String symbol;
                 private String rank;
                 private String price_usd;
                 private String price_btc;
-                private String volume_usd_24h;
+                @SerializedName("24h_volume_usd")
+                private String _$24h_volume_usd;
                 private String market_cap_usd;
                 private String available_supply;
                 private String total_supply;
+                private String max_supply;
                 private String percent_change_1h;
                 private String percent_change_24h;
                 private String percent_change_7d;
                 private String last_updated;
                 private String price_cny;
-                private String volume_cny_24h;
+                @SerializedName("24h_volume_cny")
+                private String _$24h_volume_cny;
                 private String market_cap_cny;
 
-                public int getId() {
+                public String getId() {
                     return id;
                 }
 
-                public void setId(int id) {
+                public void setId(String id) {
                     this.id = id;
-                }
-
-                public String getAsset_id() {
-                    return asset_id;
-                }
-
-                public void setAsset_id(String asset_id) {
-                    this.asset_id = asset_id;
                 }
 
                 public String getName() {
@@ -796,12 +1249,12 @@ public class TokenBean implements Serializable{
                     this.price_btc = price_btc;
                 }
 
-                public String getVolume_usd_24h() {
-                    return volume_usd_24h;
+                public String get_$24h_volume_usd() {
+                    return _$24h_volume_usd;
                 }
 
-                public void setVolume_usd_24h(String volume_usd_24h) {
-                    this.volume_usd_24h = volume_usd_24h;
+                public void set_$24h_volume_usd(String _$24h_volume_usd) {
+                    this._$24h_volume_usd = _$24h_volume_usd;
                 }
 
                 public String getMarket_cap_usd() {
@@ -826,6 +1279,14 @@ public class TokenBean implements Serializable{
 
                 public void setTotal_supply(String total_supply) {
                     this.total_supply = total_supply;
+                }
+
+                public String getMax_supply() {
+                    return max_supply;
+                }
+
+                public void setMax_supply(String max_supply) {
+                    this.max_supply = max_supply;
                 }
 
                 public String getPercent_change_1h() {
@@ -868,12 +1329,12 @@ public class TokenBean implements Serializable{
                     this.price_cny = price_cny;
                 }
 
-                public String getVolume_cny_24h() {
-                    return volume_cny_24h;
+                public String get_$24h_volume_cny() {
+                    return _$24h_volume_cny;
                 }
 
-                public void setVolume_cny_24h(String volume_cny_24h) {
-                    this.volume_cny_24h = volume_cny_24h;
+                public void set_$24h_volume_cny(String _$24h_volume_cny) {
+                    this._$24h_volume_cny = _$24h_volume_cny;
                 }
 
                 public String getMarket_cap_cny() {

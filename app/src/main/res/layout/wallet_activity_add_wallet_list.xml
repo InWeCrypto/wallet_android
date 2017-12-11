@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="32dp"
@@ -31,12 +31,12 @@
             android:layout_toRightOf="@id/img"
             android:text="ETH"
             android:textColor="@color/c_333333"
-            android:textSize="19sp" />
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/eth_select"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="26dp"
@@ -58,8 +58,8 @@
 
         <ImageView
             android:id="@+id/img1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginTop="32dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="32dp"
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/c_333333"
-            android:textSize="19sp"
+            android:textSize="18sp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/img1"
             android:layout_marginLeft="18dp"
@@ -78,8 +78,8 @@
 
         <ImageView
             android:id="@+id/btc_select"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_marginRight="26dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -90,6 +90,49 @@
             android:layout_height="8dp"
             android:layout_marginTop="32dp"
             android:layout_below="@+id/img1"
+            android:background="@color/c_efefef"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_neo"
+        android:background="@color/c_ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="42dp"
+            android:src="@mipmap/project_icon_neo"/>
+
+        <TextView
+            android:id="@+id/name2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_333333"
+            android:textSize="18sp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/img2"
+            android:layout_marginLeft="22dp"
+            android:text="NEO"/>
+
+        <ImageView
+            android:id="@+id/neo_select"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginRight="26dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/list_btn_default"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_below="@+id/img2"
             android:background="@color/c_efefef"/>
     </RelativeLayout>
 

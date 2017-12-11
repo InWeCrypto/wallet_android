@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.inwecrypto.wallet.base.BaseFragment;
 import com.lzy.okgo.model.Response;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import com.inwecrypto.wallet.R;
-import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MessageBean;
 import com.inwecrypto.wallet.common.Constant;
@@ -66,6 +66,7 @@ public class MessageListFragment extends BaseFragment {
             type=bundle.getInt("type");
         }
         isOpenEventBus=true;
+        setLazyOpen(true);
         adapter=new MessageAdapter(mContext,R.layout.wallet_item_message,mails);
         loadMoreWrapper=new LoadMoreWrapper(adapter);
         mailList.setLayoutManager(new LinearLayoutManager(mContext));
@@ -73,7 +74,7 @@ public class MessageListFragment extends BaseFragment {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
-                deleteItem.setText(getString(R.string.delete));
+                deleteItem.setText(getString(R.string.shanchu));
                 deleteItem.setTextSize(14);
                 deleteItem.setTextColorResource(R.color.c_ffffff);
                 deleteItem.setBackgroundColorResource(R.color.c_E86438);

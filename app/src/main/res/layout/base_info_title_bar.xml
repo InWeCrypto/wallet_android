@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inwecrypto.wallet.common.widget.SimpleToolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    android:paddingTop="@dimen/status_bar_height">
+
+
+    <FrameLayout
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/space"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:paddingLeft="9dp"
+        android:paddingRight="12dp">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="17dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/icon_market_menu" />
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/serch"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@+id/space"
+        android:layout_gravity="right"
+        android:layout_toLeftOf="@+id/menu"
+        android:clickable="true"
+        android:paddingLeft="12dp"
+        android:paddingRight="9dp">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/icon_market_search" />
+    </FrameLayout>
+
+
+</com.inwecrypto.wallet.common.widget.SimpleToolbar>

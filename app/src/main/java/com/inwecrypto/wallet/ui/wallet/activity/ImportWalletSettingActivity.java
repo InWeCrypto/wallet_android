@@ -95,7 +95,7 @@ public class ImportWalletSettingActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(getString(R.string.add_wallet_title));
+        txtMainTitle.setText(getString(R.string.tianjiaqianbao));
         txtRightTitle.setVisibility(View.GONE);
         etPst.addTextChangedListener(new TextWatcher() {
             @Override
@@ -111,13 +111,13 @@ public class ImportWalletSettingActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (etPs.getText().toString().length() == 0) {
-                    ToastUtil.show("请先填写密码");
+                    ToastUtil.show(R.string.qingxiantianxiemima);
                 } else {
                     if (etPs.getText().toString().length() < 8) {
-                        ToastUtil.show("密码长度不得少于8位");
+                        ToastUtil.show(R.string.mimachangdu);
                     } else {
-                        if (!isContainAll(etPs.getText().toString())) {
-                            ToastUtil.show(getString(R.string.wallet_hit15));
+                        if (!AppUtil.isContainAll(etPs.getText().toString())) {
+                            ToastUtil.show(getString(R.string.mimayaoqiu));
                         }
                     }
                 }
@@ -127,19 +127,19 @@ public class ImportWalletSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (etName.getText().toString().length() == 0) {
-                    ToastUtil.show(getString(R.string.wallet_hit18));
+                    ToastUtil.show(getString(R.string.qingtianxiemingcheng));
                     return;
                 }
                 if (type!=1&&type!=4&&etPs.getText().toString().length() == 0) {
-                    ToastUtil.show(getString(R.string.wallet_hit_19));
+                    ToastUtil.show(getString(R.string.qingtianxiemima));
                     return;
                 }
-                if (type!=1&&type!=4&&!isContainAll(etPs.getText().toString())) {
-                    ToastUtil.show(getString(R.string.wallet_hit15));
+                if (type!=1&&type!=4&&!AppUtil.isContainAll(etPs.getText().toString())) {
+                    ToastUtil.show(getString(R.string.mimayaoqiu));
                     return;
                 }
                 if (type!=1&&type!=4&&!etPs.getText().toString().equals(etPst.getText().toString())) {
-                    ToastUtil.show(getString(R.string.wallet_hit_20));
+                    ToastUtil.show(getString(R.string.liangcimiamshurubuyiyang));
                     return;
                 }
 
@@ -182,7 +182,7 @@ public class ImportWalletSettingActivity extends BaseActivity {
                                         mActivity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                ToastUtil.show("该钱包已添加，不能重复添加");
+                                                ToastUtil.show(R.string.wallet_has_add_error);
                                                 hideLoading();
                                             }
                                         });
@@ -234,7 +234,7 @@ public class ImportWalletSettingActivity extends BaseActivity {
                                         @Override
                                         public void run() {
                                             hideLoading();
-                                            ToastUtil.show("钱包创建失败！请检查网络后重试");
+                                            ToastUtil.show(R.string.wallet_creat_error);
                                         }
                                     });
                                 }
@@ -246,13 +246,13 @@ public class ImportWalletSettingActivity extends BaseActivity {
                                 public void run() {
                                     switch (type) {
                                         case 1:
-                                            ToastUtil.show("请检查钱包密码是否输入正确");
+                                            ToastUtil.show(R.string.jianchamima);
                                             break;
                                         case 2:
-                                            ToastUtil.show("请检查助记词是否输入正确");
+                                            ToastUtil.show(R.string.jianchazhujici);
                                             break;
                                         case 3:
-                                            ToastUtil.show("请检查私钥是否输入正确");
+                                            ToastUtil.show(R.string.jianchasiyao);
                                             break;
                                     }
                                     hideLoading();
@@ -315,30 +315,4 @@ public class ImportWalletSettingActivity extends BaseActivity {
     protected void EventBean(BaseEventBusBean event) {
 
     }
-
-    /**
-     * 规则3：必须同时包含大小写字母及数字
-     * 是否包含
-     *
-     * @param str
-     * @return
-     */
-    public static boolean isContainAll(String str) {
-        boolean isDigit = false;//定义一个boolean值，用来表示是否包含数字
-        boolean isLowerCase = false;//定义一个boolean值，用来表示是否包含字母
-        boolean isUpperCase = false;
-        for (int i = 0; i < str.length(); i++) {
-            if (Character.isDigit(str.charAt(i))) {   //用char包装类中的判断数字的方法判断每一个字符
-                isDigit = true;
-            } else if (Character.isLowerCase(str.charAt(i))) {  //用char包装类中的判断字母的方法判断每一个字符
-                isLowerCase = true;
-            } else if (Character.isUpperCase(str.charAt(i))) {
-                isUpperCase = true;
-            }
-        }
-        String regex = "^[a-zA-Z0-9]+$";
-        boolean isRight = isDigit && isLowerCase && isUpperCase && str.matches(regex);
-        return isRight;
-    }
-
 }

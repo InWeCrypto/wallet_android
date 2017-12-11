@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
-                android:text="@string/anquanma"
+                android:text="@string/zhujici"
                 android:textSize="13sp"
                 android:textColor="@color/c_333333"/>
         </LinearLayout>
@@ -100,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
-                android:text="@string/key"
+                android:text="@string/siyao"
                 android:textColor="@color/c_333333"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -127,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
-                android:text="@string/watch"
+                android:text="@string/guancha"
                 android:textSize="13sp"
                 android:textColor="@color/c_333333"/>
         </LinearLayout>
@@ -165,7 +165,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="13dp"
-                android:text="@string/seed"
+                android:text="@string/zhongzi"
                 android:textColor="@color/c_333333"
                 android:textSize="13sp" />
         </LinearLayout>

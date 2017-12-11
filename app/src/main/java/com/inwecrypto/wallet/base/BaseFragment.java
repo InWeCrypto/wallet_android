@@ -4,16 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.inwecrypto.wallet.common.util.NetworkUtils;
+import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.lzy.okgo.OkGo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,9 +21,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.inwecrypto.wallet.common.util.NetworkUtils;
-import com.inwecrypto.wallet.common.util.StringUtils;
-import com.inwecrypto.wallet.event.BaseEventBusBean;
 
 /**
  * Created by xiaoji on 2017/4/11.
@@ -32,19 +28,21 @@ import com.inwecrypto.wallet.event.BaseEventBusBean;
 
 public abstract class BaseFragment extends Fragment {
 
-    private static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
+    protected final String TAG=this.getClass().getSimpleName();
 
-    private View viewContent;// 缓存视图
-    private boolean isInit;
-    protected Activity mActivity;
-    protected boolean isFirst;
-    private Unbinder mUnbinder;
-    protected boolean isOpenLazy=true;// 是否打开懒加载,打开的话将isOpenLazy设为true
-    protected boolean isOpenEventBus;
+    public boolean isShow;
+    private View rootView;
+    protected BaseActivity mActivity;
     protected Context mContext;
+    private Unbinder mUnbinder;
+    protected boolean isOpenEventBus;
     protected boolean isPullDown = true;
     protected int curentPage=1;
-    protected Fragment mFragment;
+    protected Fragment mFragment=this;
+
+    private boolean isViewInit;
+    private boolean isLoadDate;
+    protected boolean isLazyOpen;
 
 
     /**
@@ -54,65 +52,81 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.mActivity = (Activity)context;
-        mContext = getContext();
-        isFirst=true;
-
+        this.mActivity = (BaseActivity) context;
+        this.mContext=context;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mFragment=this;
-        if (savedInstanceState != null) {
-            boolean isSupportHidden = savedInstanceState.getBoolean(STATE_SAVE_IS_HIDDEN);
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            if (isSupportHidden) {
-                ft.hide(this);
-            } else {
-                ft.show(this);
-            }
-            ft.commit();
+        if (null==savedInstanceState){
+            isShow=true;
+        }else {
+            isShow=savedInstanceState.getBoolean("isShow");
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(STATE_SAVE_IS_HIDDEN, isHidden());
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        if (viewContent == null) {
-            viewContent = inflater.inflate(setLayoutID(), container, false);
-            mUnbinder=  ButterKnife.bind(this, viewContent);
-            initView();
-            if (getUserVisibleHint()&&!isInit&&isAdded()) {
+        rootView=inflater.inflate(setLayoutID(),null,false);
+        mUnbinder=  ButterKnife.bind(this, rootView);
+        initView();
+        isViewInit=true;
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (isLazyOpen){
+            if (isShow&&isViewInit&&getUserVisibleHint()&&!isLoadDate){
                 loadData();
-                isInit = true;
+                isLoadDate=true;
+            }
+        }else {
+            if (isShow){
+                loadData();
             }
         }
+    }
 
-        // 判断Fragment对应的Activity是否存在这个视图
-        ViewGroup parent = (ViewGroup) viewContent.getParent();
-        if (parent != null) {
-            // 删除缓存视图
-            parent.removeView(viewContent);
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden){
+            isShow=true;
+            initShow();
+        }else {
+            isShow=false;
+            initHide();
         }
-        return viewContent;
+    }
+
+    protected void initHide() {
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser &&!isInit && isOpenLazy&&isAdded()) {
+        if (isLazyOpen&&isViewInit&&isVisibleToUser&&!isLoadDate){
             loadData();
-            isInit=true;
+            isLoadDate=true;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.e(TAG,TAG+"==onSaveInstanceState");
+        outState.putBoolean("isShow",isShow);
+    }
+
+    public BaseFragment setLazyOpen(boolean lazyOpen) {
+        isLazyOpen = lazyOpen;
+        return this;
     }
 
 
@@ -149,17 +163,6 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void EventBean(BaseEventBusBean event);
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        if(null!=mUnbinder&&mUnbinder != Unbinder.EMPTY){
-            mUnbinder.unbind();
-        }
-
-        OkGo.getInstance().cancelTag(this);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         if (isOpenEventBus){
@@ -175,18 +178,17 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    protected void initShow() {}
+
     @Override
-    public void onResume() {
-        super.onResume();
-        if (!isFirst){
-            initShow();
-        }else {
-            isFirst=false;
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(null!=mUnbinder&&mUnbinder != Unbinder.EMPTY){
+            mUnbinder.unbind();
         }
-    }
 
-    protected void initShow() {
-
+        OkGo.getInstance().cancelTag(this);
     }
 
     /**
@@ -213,42 +215,4 @@ public abstract class BaseFragment extends Fragment {
         this.startActivity(intent);
     }
 
-
-    /**
-     * 显示Toast消息
-     *
-     * @param message 消息文本字符串
-     */
-    public final void showToast(@NonNull String message) {
-        if (StringUtils.isEmpty(message)){return;}
-        Toast.makeText(mActivity,message,Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * 显示Toast消息
-     *
-     * @param resId 消息文本字符串资源ID
-     */
-    public final void showToast(@StringRes int resId) {
-        Toast.makeText(mActivity,resId,Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * 显示Toast消息
-     *
-     * @param message 消息文本字符串
-     */
-    public final void showLongToast(@NonNull String message) {
-        if (StringUtils.isEmpty(message)){return;}
-        Toast.makeText(mActivity,message,Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * 显示Toast消息
-     *
-     * @param resId 消息文本字符串资源ID
-     */
-    public final void showLongToast(@StringRes int resId) {
-        Toast.makeText(mActivity,resId,Toast.LENGTH_LONG).show();
-    }
 }

@@ -38,6 +38,7 @@ import unichain.ETHWallet;
  */
 
 public class AddWalletSettingActivity extends BaseActivity {
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
@@ -54,10 +55,13 @@ public class AddWalletSettingActivity extends BaseActivity {
     EditText etPst;
 
     private int type_id;
+    private ArrayList<WalletBean> wallets;
+
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         type_id=extras.getInt("type_id");
+        wallets= (ArrayList<WalletBean>) extras.getSerializable("wallets");
     }
 
     @Override
@@ -73,7 +77,7 @@ public class AddWalletSettingActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(getString(R.string.add_wallet_title));
+        txtMainTitle.setText(getString(R.string.tianjiaqianbao));
         txtRightTitle.setVisibility(View.GONE);
         etPst.addTextChangedListener(new TextWatcher() {
             @Override
@@ -89,13 +93,13 @@ public class AddWalletSettingActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (etPs.getText().toString().length() == 0) {
-                    ToastUtil.show("请先填写密码");
+                    ToastUtil.show(R.string.qingxiantianxiemima);
                 }else {
                     if (etPs.getText().toString().length()<8){
-                        ToastUtil.show("密码长度不得少于8位");
+                        ToastUtil.show(R.string.mimachangdu);
                     }else {
-                        if (!isContainAll(etPs.getText().toString())){
-                            ToastUtil.show(getString(R.string.wallet_hit15));
+                        if (!AppUtil.isContainAll(etPs.getText().toString())){
+                            ToastUtil.show(getString(R.string.mimayaoqiu));
                         }
                     }
                 }
@@ -105,19 +109,19 @@ public class AddWalletSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (etName.getText().toString().length()==0){
-                    ToastUtil.show(getString(R.string.wallet_hit18));
+                    ToastUtil.show(getString(R.string.qingtianxiemingcheng));
                     return;
                 }
                 if (etPs.getText().toString().length()==0){
-                    ToastUtil.show(getString(R.string.wallet_hit_19));
+                    ToastUtil.show(getString(R.string.qingtianxiemima));
                     return;
                 }
-                if (!isContainAll(etPs.getText().toString())){
-                    ToastUtil.show(getString(R.string.wallet_hit15));
+                if (!AppUtil.isContainAll(etPs.getText().toString())){
+                    ToastUtil.show(getString(R.string.mimayaoqiu));
                     return;
                 }
                 if (!etPs.getText().toString().equals(etPst.getText().toString())){
-                    ToastUtil.show(getString(R.string.wallet_hit_20));
+                    ToastUtil.show(getString(R.string.liangcimiamshurubuyiyang));
                     return;
                 }
                 showLoading();
@@ -129,10 +133,23 @@ public class AddWalletSettingActivity extends BaseActivity {
                             String address="";
                             final byte[] json;
                             json=wallet.encrypt(etPs.getText().toString());
-                            ToastUtil.show("长度："+json.length+"");
                             address=wallet.address();
                             final String finalAddress = address.toLowerCase();
-                            WalletApi.wallet(mActivity,type_id,etName.getText().toString() , address, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+                            if (null!=wallets){
+                                for (WalletBean walletBean:wallets){
+                                    if (address.contains(walletBean.getAddress().toLowerCase())){
+                                        mActivity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                ToastUtil.show(R.string.wallet_has_add_error);
+                                                hideLoading();
+                                            }
+                                        });
+                                        return;
+                                    }
+                                }
+                            }
+                            WalletApi.wallet(mActivity,type_id,etName.getText().toString() , finalAddress, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
                                 @Override
                                 public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
                                     //将钱包保存到ACCOUNTMANAGER
@@ -150,7 +167,7 @@ public class AddWalletSettingActivity extends BaseActivity {
                                             mailId.add(new MailIconBean(walletBean.getId(),icon));
                                             AppApplication.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
                                             walletBean.setIcon(AppUtil.getIcon(icon));
-                                            WalletBean.Category category=new WalletBean.Category();
+                                            WalletBean.CategoryBean category=new WalletBean.CategoryBean();
                                             category.setName("ETH");
                                             walletBean.setCategory(category);
                                             intent.putExtra("wallet",walletBean);
@@ -165,7 +182,7 @@ public class AddWalletSettingActivity extends BaseActivity {
                                     mActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            ToastUtil.show("钱包创建失败，请检查网络后重试");
+                                            ToastUtil.show(R.string.wallet_creat_error);
                                             hideLoading();
                                         }
                                     });
@@ -176,7 +193,7 @@ public class AddWalletSettingActivity extends BaseActivity {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtil.show("钱包创建失败");
+                                    ToastUtil.show(R.string.wallet_inner_creat_error);
                                     hideLoading();
                                 }
                             });
@@ -212,28 +229,4 @@ public class AddWalletSettingActivity extends BaseActivity {
 
     }
 
-    /**
-     * 规则3：必须同时包含大小写字母及数字
-     * 是否包含
-     *
-     * @param str
-     * @return
-     */
-    public static boolean isContainAll(String str) {
-        boolean isDigit = false;//定义一个boolean值，用来表示是否包含数字
-        boolean isLowerCase = false;//定义一个boolean值，用来表示是否包含字母
-        boolean isUpperCase = false;
-        for (int i = 0; i < str.length(); i++) {
-            if (Character.isDigit(str.charAt(i))) {   //用char包装类中的判断数字的方法判断每一个字符
-                isDigit = true;
-            } else if (Character.isLowerCase(str.charAt(i))) {  //用char包装类中的判断字母的方法判断每一个字符
-                isLowerCase = true;
-            } else if (Character.isUpperCase(str.charAt(i))) {
-                isUpperCase = true;
-            }
-        }
-        String regex = "^[a-zA-Z0-9]+$";
-        boolean isRight = isDigit && isLowerCase && isUpperCase && str.matches(regex);
-        return isRight;
-    }
 }

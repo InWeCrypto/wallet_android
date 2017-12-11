@@ -8,15 +8,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
-import java.util.ArrayList;
-
-import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+
+import java.util.ArrayList;
+import butterknife.BindView;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -43,16 +42,22 @@ public class AddWalletListActivity extends BaseActivity {
     RelativeLayout rlBtc;
     @BindView(R.id.tv_save)
     TextView tvSave;
+    @BindView(R.id.img1)
+    ImageView img1;
+    @BindView(R.id.name1)
+    TextView name1;
+    @BindView(R.id.neo_select)
+    ImageView neoSelect;
+    @BindView(R.id.rl_neo)
+    RelativeLayout rlNeo;
     private int type;
-    private int type_id=1;
+    private int type_id = 1;
     private ArrayList<WalletBean> wallets;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         type = extras.getInt("type");
-        if (type==2){
-            wallets= (ArrayList<WalletBean>) extras.getSerializable("wallets");
-        }
+        wallets = (ArrayList<WalletBean>) extras.getSerializable("wallets");
     }
 
     @Override
@@ -62,7 +67,7 @@ public class AddWalletListActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        txtMainTitle.setText(R.string.add_wallet_title);
+        txtMainTitle.setText(R.string.tianjiaqianbao);
         txtLeftTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,8 +79,8 @@ public class AddWalletListActivity extends BaseActivity {
         tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (type_id==3){
-                    ToastUtil.show("暂时无法添加BTC");
+                if (type_id == 3) {
+                    ToastUtil.show(getString(R.string.zanshiwufatianjiabtc));
                     return;
                 }
                 Intent intent;
@@ -83,8 +88,8 @@ public class AddWalletListActivity extends BaseActivity {
                     intent = new Intent(mActivity, AddWalletTypeActivity.class);
                 } else {
                     intent = new Intent(mActivity, ImportWalletTypeActivity.class);
-                    intent.putExtra("wallets",wallets);
                 }
+                intent.putExtra("wallets", wallets);
                 intent.putExtra("type_id", type_id);
                 keepTogo(intent);
             }
@@ -93,20 +98,30 @@ public class AddWalletListActivity extends BaseActivity {
         rlEth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Glide.with(mActivity).load(R.mipmap.list_btn_selected).crossFade().into(ethSelect);
-                Glide.with(mActivity).load(R.mipmap.list_btn_default).crossFade().into(btcSelect);
-                type_id=1;
+                selectType(1,ethSelect,neoSelect,btcSelect);
             }
         });
 
         rlBtc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Glide.with(mActivity).load(R.mipmap.list_btn_selected).crossFade().into(btcSelect);
-                Glide.with(mActivity).load(R.mipmap.list_btn_default).crossFade().into(ethSelect);
-                type_id=3;
+                selectType(3,btcSelect,neoSelect,ethSelect);
             }
         });
+
+        rlNeo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectType(2,neoSelect,ethSelect,btcSelect);
+            }
+        });
+    }
+
+    private void selectType(int id, ImageView select,ImageView default1,ImageView default2) {
+        Glide.with(mActivity).load(R.mipmap.list_btn_selected).into(select);
+        Glide.with(mActivity).load(R.mipmap.list_btn_default).into(default1);
+        Glide.with(mActivity).load(R.mipmap.list_btn_default).into(default2);
+        type_id = id;
     }
 
     @Override
@@ -117,4 +132,5 @@ public class AddWalletListActivity extends BaseActivity {
     protected void EventBean(BaseEventBusBean event) {
 
     }
+
 }

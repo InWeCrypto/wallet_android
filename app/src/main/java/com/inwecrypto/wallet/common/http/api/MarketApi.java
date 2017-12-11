@@ -1,8 +1,11 @@
 package com.inwecrypto.wallet.common.http.api;
 
+import com.inwecrypto.wallet.bean.KLBean;
+import com.inwecrypto.wallet.bean.PriceBean;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.inwecrypto.wallet.AppApplication;
@@ -14,7 +17,7 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
-import com.inwecrypto.wallet.ui.market.adapter.MarketChartBean;
+import com.inwecrypto.wallet.bean.MarketChartBean;
 
 /**
  * Created by Administrator on 2017/8/4.
@@ -24,8 +27,8 @@ import com.inwecrypto.wallet.ui.market.adapter.MarketChartBean;
 
 public class MarketApi {
 
-    public static void market(Object object, JsonCallback<LzyResponse<CommonListBean<MarkeListBean>>> callback){
-        OkGo.<LzyResponse<CommonListBean<MarkeListBean>>>get(Url.MARKET_CATEGORY)
+    public static void market(Object object, JsonCallback<LzyResponse<ArrayList<MarkeListBean>>> callback){
+        OkGo.<LzyResponse<ArrayList<MarkeListBean>>>get(Url.USER_TICKER)
                 .tag(object)
                 .cacheKey(Constant.MARKET+ AppApplication.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
@@ -99,6 +102,55 @@ public class MarketApi {
                 .cacheKey(Constant.MARKET+id+""+type+AppApplication.isMain)
                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .params(params)
+                .execute(callback);
+    }
+
+    public static void getMarket(Object object, JsonCallback<LzyResponse<CommonListBean<MarkeListBean>>> callback){
+        OkGo.<LzyResponse<CommonListBean<MarkeListBean>>>get(Url.USER_TICKER)
+                .tag(object)
+                .cacheKey(Constant.MARKET+Url.USER_TICKER+AppApplication.isMain)
+                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                .execute(callback);
+    }
+
+    public static void selectMarket(Object object, JsonCallback<LzyResponse<CommonListBean<MarketAddBean>>> callback){
+        OkGo.<LzyResponse<CommonListBean<MarketAddBean>>>get(Url.USER_TICKER_OPTIONS)
+                .tag(object)
+                .cacheKey(Constant.MARKET+Url.USER_TICKER_OPTIONS+AppApplication.isMain)
+                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                .execute(callback);
+    }
+
+    public static void setMarket(Object object, String markets, JsonCallback<LzyResponse<Object>> callback){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("market_ids",markets);
+        OkGo.<LzyResponse<Object>>put(Url.USER_TICKER)
+                .tag(object)
+                .params(params)
+                .execute(callback);
+    }
+
+    public static void getAllMarket(Object object, JsonCallback<LzyResponse<ArrayList<MarketAddBean>>> callback){
+        HashMap<String,String> params=new HashMap<>();
+        OkGo.<LzyResponse<ArrayList<MarketAddBean>>>get(Url.USER_TICKER_OPTIONS)
+                .tag(object)
+                .params(params)
+                .execute(callback);
+    }
+
+    public static void getMarketKLine(Object object,String ico_type,String interval, JsonCallback<LzyResponse<ArrayList<KLBean>>> callback){
+        OkGo.<LzyResponse<ArrayList<KLBean>>>get(Url.K_LINE+ico_type+"/usdt/"+interval)
+                .tag(object)
+                .cacheKey(Constant.MARKET+ico_type+interval+AppApplication.isMain)
+                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                .execute(callback);
+    }
+
+    public static void getCurrentPrice(Object object,String ico_type, JsonCallback<LzyResponse<PriceBean>> callback){
+        OkGo.<LzyResponse<PriceBean>>get(Url.CURRENT_PRICE+ico_type)
+                .tag(object)
+                .cacheKey(Constant.MARKET+ico_type+AppApplication.isMain)
+                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .execute(callback);
     }
 

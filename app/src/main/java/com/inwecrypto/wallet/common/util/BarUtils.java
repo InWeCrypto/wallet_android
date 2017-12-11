@@ -1,5 +1,6 @@
 package com.inwecrypto.wallet.common.util;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -705,7 +706,7 @@ public class BarUtils {
      */
     private static void invokePanels(Context context, String methodName) {
         try {
-            Object service = context.getSystemService("statusbar");
+            @SuppressLint("WrongConstant") Object service = context.getSystemService("statusbar");
             Class<?> statusBarManager = Class.forName("android.app.StatusBarManager");
             Method expand = statusBarManager.getMethod(methodName);
             expand.invoke(service);
@@ -723,17 +724,21 @@ public class BarUtils {
      * @param activity
      * @return 1:MIUUI 2:Flyme 3:android6.0 0:设置失败
      */
-    public static int statusBarLightMode(Activity activity) {
+    public static int statusBarLightMode(Activity activity,boolean isLight) {
         int result = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (setMIUISetStatusBarLightMode(activity.getWindow(), true)) {
+            if (setMIUISetStatusBarLightMode(activity.getWindow(), isLight)) {
                 result = 1;
-            } else if (setFlymeSetStatusBarLightMode(activity.getWindow(), true)) {
+            } else if (setFlymeSetStatusBarLightMode(activity.getWindow(), isLight)) {
                 result = 2;
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                result = 3;
+                if (isLight){
+                    activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                }else {
+                    activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                }
+                 result = 3;
             }
         }
         return result;

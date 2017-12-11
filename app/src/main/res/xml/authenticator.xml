@@ -3,4 +3,4 @@
     android:accountType="com.inwecrypto.wallet"
     android:icon="@mipmap/logo"
     android:smallIcon="@mipmap/logo"
-    android:label="@string/account_label"/>
+    android:label="@string/wallet"/>

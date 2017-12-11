@@ -70,7 +70,7 @@ public class MarketRemindAddActivity extends BaseActivity {
             }
         });
         txtMainTitle.setText(R.string.tixing);
-        txtRightTitle.setText("完成");
+        txtRightTitle.setText(R.string.wancheng);
         txtRightTitle.setCompoundDrawables(null,null,null,null);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,12 +81,12 @@ public class MarketRemindAddActivity extends BaseActivity {
                         if (market.getRelation_notification_count()==1){
                             if (market.getRelation_notification().size()==0){
                                 if (null==market.getUp()||null==market.getLow()||market.getLow().length()==0||market.getLow().length()==0){
-                                    ToastUtil.show("请填写提醒价格！");
+                                    ToastUtil.show(R.string.qingtianxietixingjiage);
                                     return;
                                 }
                             }else {
                                 if (market.getRelation_notification().get(0).getUpper_limit().length()==0||market.getRelation_notification().get(0).getLower_limit().length()==0){
-                                    ToastUtil.show("请填写提醒价格！");
+                                    ToastUtil.show(R.string.qingtianxietixingjiage);
                                     return;
                                 }
                             }
@@ -122,7 +122,7 @@ public class MarketRemindAddActivity extends BaseActivity {
                         @Override
                         public void onError(Response<LzyResponse<Object>> response) {
                             super.onError(response);
-                            ToastUtil.show(getString(R.string.mail_hit7));
+                            ToastUtil.show(getString(R.string.tianjiashibai));
                         }
                     });
             }

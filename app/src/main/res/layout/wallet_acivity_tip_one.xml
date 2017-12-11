@@ -111,7 +111,7 @@
                 android:layout_marginRight="25dp"
                 android:gravity="center"
                 android:background="@drawable/round_6dp_bule_bg"
-                android:text="@string/wallet_hit3"/>
+                android:text="@string/jinruqianbaokaishibeifen"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"

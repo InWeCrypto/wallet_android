@@ -59,18 +59,18 @@ public class FixNameActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.fixname_title);
-        txtRightTitle.setText(R.string.baocun2);
+        txtMainTitle.setText(R.string.xiugainicheng);
+        txtRightTitle.setText(R.string.baocun);
         txtRightTitle.setCompoundDrawables(null,null,null,null);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (etName.getText().toString().length()==0){
-                    ToastUtil.show(getString(R.string.fixname_hit1));
+                    ToastUtil.show(R.string.nichengbunengweikong);
                     return;
                 }
                 if (etName.getText().toString().length()>12){
-                    ToastUtil.show("昵称不能超过12个字符");
+                    ToastUtil.show(R.string.nichengbunengchaoguo12gezifu);
                     return;
                 }
                 showLoading();
@@ -81,7 +81,7 @@ public class FixNameActivity extends BaseActivity {
                         AppApplication.get().getLoginBean().getUser().setNickname(etName.getText().toString());
                         AppApplication.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(user));
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_USERINFO));
-                        ToastUtil.show(getString(R.string.xiugaichenggong));
+                        ToastUtil.show(R.string.xiugaichenggong);
                         finish();
                     }
 
@@ -89,7 +89,7 @@ public class FixNameActivity extends BaseActivity {
                     public void onError(Response<LzyResponse<Object>> response) {
                         super.onError(response);
                         hideLoading();
-                        ToastUtil.show(getString(R.string.xiugaishibai));
+                        ToastUtil.show(R.string.xiugaishibai);
                     }
                 });
             }

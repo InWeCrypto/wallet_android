@@ -10,12 +10,25 @@ import java.io.Serializable;
 
 public class MailBean implements Serializable {
 
+    /**
+     * id : 1
+     * user_id : 78
+     * ico_id : 6
+     * name : name test
+     * address : address test123
+     * remark : null
+     * created_at : 2017-11-23 03:48:37
+     * updated_at : 2017-11-23 04:13:22
+     */
+
     private int id;
-    private int category_id;
+    private int user_id;
+    private int ico_id;
     private String name;
     private String address;
     private String remark;
-    private Wallet wallet;
+    private String created_at;
+    private String updated_at;
     private int headImg;
 
     public int getId() {
@@ -26,12 +39,20 @@ public class MailBean implements Serializable {
         this.id = id;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public int getIco_id() {
+        return ico_id;
+    }
+
+    public void setIco_id(int ico_id) {
+        this.ico_id = ico_id;
     }
 
     public String getName() {
@@ -58,36 +79,20 @@ public class MailBean implements Serializable {
         this.remark = remark;
     }
 
-    public Wallet getWallet() {
-        return wallet;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
-    public static class Wallet implements Serializable{
-        private User user;
-
-        public User getUser() {
-            return user;
-        }
-
-        public void setUser(User user) {
-            this.user = user;
-        }
+    public String getUpdated_at() {
+        return updated_at;
     }
 
-    public static class User implements Serializable{
-        private String img;
-
-        public String getImg() {
-            return img;
-        }
-
-        public void setImg(String img) {
-            this.img = img;
-        }
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 
     public int getHeadImg() {

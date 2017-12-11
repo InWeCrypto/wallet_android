@@ -10,13 +10,33 @@ import com.inwecrypto.wallet.AppApplication;
 
 public class Url {
 
-    private static final String MAIN_URL = "https://app.inwecrypto.com/api/";
+    private static final String MAIN_1_URL = "https://china.inwecrypto.com:4430/api/";
 
-    private static final String TEST_URL = "https://app.inwecrypto.com/api/";
+    public static final String MAIN_2_URL="https://china.inwecrypto.com:4431";
 
-    private static String BASE = AppApplication.isMain ? MAIN_URL : TEST_URL;
+    private static final String TEST_1_URL = "https://dev.inwecrypto.com:4430/api/";
 
-    public static String ORDER_ULR = AppApplication.isMain ? " https://etherscan.io/tx/" : "https://ropsten.etherscan.io/tx/";
+    public static final String TEST_2_URL = "https://dev.inwecrypto.com:4431";
+
+    public static final String WEB_ROOT="http://inwecrypto.com/";
+
+
+
+    private static String BASE = AppApplication.isMain ? MAIN_1_URL : TEST_1_URL;
+
+    private static String BASE_2 = AppApplication.isMain ? MAIN_2_URL : TEST_2_URL;
+
+    public static String ORDER_ULR = "https://etherscan.io/tx/";
+
+    public static String ORDER_TEST_ULR = "https://ropsten.etherscan.io/tx/";
+
+    public static String NEO_ORDER_ULR = "https://neoscan.io/transaction/";
+
+    public static String NEO_ORDER_TEST_ULR = "https://neoscan-testnet.io/transaction/";
+
+    public static String WEB_ULR = "http://inwecrypto.com";
+
+    public static String WEB_TEST_ULR = "http://testnet.inwecrypto.com";
 
     public static String EULA = BASE.replace("/api", "") + "EULA.html";
 
@@ -86,11 +106,17 @@ public class Url {
 
     public static String BLOCK_PER_SECOND = BASE + "extend/blockPerSecond";
 
+    public static String GET_NEO_UTXO=BASE+"extend/getNeoUtxo?address=";
+
+    public static String GET_CLAIM_UTXO=BASE+"extend/getNeoClaimUtxo?address=";
+
     public static void changeNet(boolean isMain) {
         if (isMain) {
-            BASE = MAIN_URL;
+            BASE = MAIN_1_URL;
+            BASE_2 = MAIN_2_URL;
         } else {
-            BASE = TEST_URL;
+            BASE = TEST_1_URL;
+            BASE_2 = TEST_2_URL;
         }
 
         ORDER_ULR = AppApplication.isMain ? " https://etherscan.io/tx/" : "https://ropsten.etherscan.io/tx/";
@@ -162,6 +188,74 @@ public class Url {
         EXTEND_BLOCKNUMBER = BASE + "extend/blockNumber";
 
         BLOCK_PER_SECOND = BASE + "extend/blockPerSecond";
+
+        GET_NEO_UTXO=BASE+"extend/getNeoUtxo?address=";
+
+        GET_CLAIM_UTXO=BASE+"extend/getNeoClaimUtxo?address=";
+
+        changeNet2();
+    }
+
+    public static String HOME_AD = BASE_2+"/home/ad";
+
+    public static String HOME_NEWS = BASE_2+"/home/news";
+
+    public static String ARTICLE_ALL = BASE_2+"/article/";
+
+    public static String ARTICLE_ICO = BASE_2+"/article/ico";
+
+    public static String HOME_PROJECT = BASE_2+"/home/project/is_mobile";
+
+    public static String CATEGORY = BASE_2+"/category/";
+
+    public static String TEAM_INFO = BASE_2+"/article/";
+
+    public static String SEARCH = BASE_2+"/search/";
+
+    public static String USER_CONTACT=BASE_2+"/user/contact?ico_id=";
+
+    public static String USER_CONTACT_ADD=BASE_2+"/user/contact";
+
+    //用户行情列表(添加行情和编辑行情 put)
+    public static String USER_TICKER = BASE_2+"/user/ticker";
+
+    //所有行情列表(用户已添加行情被标记)
+    public static String USER_TICKER_OPTIONS = BASE_2+"/user/ticker/options";
+
+    public static String K_LINE = BASE_2+"/ico/currencies/";
+
+    public static String CURRENT_PRICE = BASE_2+"/ico/time_price/";
+
+    private static void changeNet2() {
+        HOME_AD = BASE_2+"/home/ad";
+
+        HOME_NEWS = BASE_2+"/home/news";
+
+        ARTICLE_ALL = BASE_2+"/article/";
+
+        ARTICLE_ICO = BASE_2+"/article/ico";
+
+        HOME_PROJECT = BASE_2+"/home/project/is_mobile";
+
+        CATEGORY = BASE_2+"/category/";
+
+        TEAM_INFO = BASE_2+"/article/";
+
+        SEARCH = BASE_2+"/search/";
+
+        USER_CONTACT=BASE_2+"/user/contact?ico_id=";
+
+        USER_CONTACT_ADD=BASE_2+"/user/contact";
+
+        //用户行情列表(添加行情和编辑行情 put)
+        USER_TICKER = BASE_2+"/user/ticker";
+
+        //所有行情列表(用户已添加行情被标记)
+        USER_TICKER_OPTIONS = BASE_2+"/user/ticker/options";
+
+        K_LINE = BASE_2+"/ico/currencies/";
+
+        CURRENT_PRICE = BASE_2+"/ico/time_price/";
     }
 
 }

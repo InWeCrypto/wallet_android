@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="14dp"
-            android:text="另付手续费：0.0000062"
+            android:text="另付手续费："
             android:textColor="@color/c_EA642F"
             android:textSize="12dp" />
     </LinearLayout>
@@ -71,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:text="@string/wallet_hit13"
+        android:text="@string/zhuanzhangqianbaodizhi"
         android:textColor="@color/c_333333"
         android:textSize="12sp" />
 

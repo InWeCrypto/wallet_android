@@ -1,305 +1,439 @@
 package com.inwecrypto.wallet.ui.info;
 
-import android.annotation.TargetApi;
-import android.graphics.Bitmap;
-import android.net.http.SslError;
-import android.os.Build;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
-
-import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseFragment;
-import com.inwecrypto.wallet.common.util.NetworkUtils;
+import com.inwecrypto.wallet.bean.AdsBean;
+import com.inwecrypto.wallet.bean.InfoPriceBean;
+import com.inwecrypto.wallet.bean.NewsBean;
+import com.inwecrypto.wallet.bean.ProjectBean;
+import com.inwecrypto.wallet.bean.ProjectShowBean;
+import com.inwecrypto.wallet.common.Constant;
+import com.inwecrypto.wallet.common.http.LzyResponse;
+import com.inwecrypto.wallet.common.http.Url;
+import com.inwecrypto.wallet.common.http.api.InfoApi;
+import com.inwecrypto.wallet.common.http.callback.JsonCallback;
+import com.inwecrypto.wallet.common.util.AppUtil;
+import com.inwecrypto.wallet.common.util.BarUtils;
+import com.inwecrypto.wallet.common.util.DensityUtil;
+import com.inwecrypto.wallet.common.util.ScreenUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
-import com.inwecrypto.wallet.common.widget.WebView4Scroll;
+import com.inwecrypto.wallet.common.widget.AutoLoopViewPager;
+import com.inwecrypto.wallet.common.widget.BetterRecyclerView;
+import com.inwecrypto.wallet.common.widget.MultiItemTypeSupport;
+import com.inwecrypto.wallet.common.widget.SpaceItemDecoration;
+import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.info.activity.ProjectOnlineActivity;
+import com.inwecrypto.wallet.ui.info.activity.ProjectUnderlineActivity;
+import com.inwecrypto.wallet.ui.info.activity.SearchActivity;
+import com.inwecrypto.wallet.ui.info.adapter.ProjectAdapter;
+import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
+import com.lzy.okgo.model.Response;
+import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by donghaijun on 2017/10/24.
  */
 
-public class InfoFragment extends BaseFragment {
+public class InfoFragment extends BaseFragment implements AutoLoopViewPager.OnGetAdsViewPager {
 
 
+    @BindView(R.id.list)
+    BetterRecyclerView list;
     @BindView(R.id.swipeRefresh)
-    SwipeRefreshLayout swipeRefresh;
-    @BindView(R.id.web)
-    FrameLayout web;
-    @BindView(R.id.progress)
-    MaterialProgressBar progress;
-    @BindView(R.id.reload)
-    TextView reload;
-    @BindView(R.id.txt_left_title)
-    TextView txtLeftTitle;
-    @BindView(R.id.txt_main_title)
-    TextView txtMainTitle;
-    @BindView(R.id.txt_right_title)
-    TextView txtRightTitle;
+    SwipeRefreshLayoutCompat swipeRefresh;
+    @BindView(R.id.menu)
+    FrameLayout menu;
+    @BindView(R.id.serch)
+    FrameLayout serch;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.titleFL)
+    FrameLayout titleFL;
 
-    private WebView4Scroll mWebView = null;
-    private final ReferenceQueue<WebView4Scroll> WEB_VIEW_QUEUE = new ReferenceQueue<>();
-    private String mUrl = "http://inwecrypto.com/";
+    AutoLoopViewPager ads;
+    ViewFlipper news;
+
+    private HeaderAndFooterWrapper headerAdapter;
+    private View header;
+    private ArrayList<AdsBean.ListBean> adsBeans = new ArrayList<>();
+    private ArrayList<NewsBean> newsBeans = new ArrayList<>();
+
+    private ArrayList<ProjectShowBean> projectBeans = new ArrayList<>();
+    private ProjectAdapter projectAdapter;
+    private GridLayoutManager manager;
 
     @Override
     protected int setLayoutID() {
-        return R.layout.info_fragment;
+        return R.layout.info_activity_main_info;
     }
 
     @Override
     protected void initView() {
-        initWebView();
+
+        isOpenEventBus = true;
+
+        initHeader();
+
+        initList();
     }
 
-    private void initWebView() {
+    private void initList() {
 
-        txtLeftTitle.setVisibility(View.INVISIBLE);
-        txtRightTitle.setVisibility(View.INVISIBLE);
-        txtMainTitle.setText("资讯");
-
-        if (mWebView != null) {
-            mWebView.removeAllViews();
-            mWebView.destroy();
-        } else {
-            final WeakReference<WebView4Scroll> webViewWeakReference =
-                    new WeakReference<>(new WebView4Scroll(mActivity.getApplicationContext(),swipeRefresh), WEB_VIEW_QUEUE);
-            mWebView = webViewWeakReference.get();
-            mWebView = createWebView(mWebView);
-            mWebView.setWebViewClient(initWebViewClient());
-            mWebView.setWebChromeClient(initWebChromeClient());
-        }
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mWebView.setLayoutParams(params);
-        web.addView(mWebView);
-
-        reload.setOnClickListener(new View.OnClickListener() {
+        list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onClick(View view) {
-                if (NetworkUtils.isConnected(mActivity.getApplicationContext())) {
-                    if (null != mWebView) {
-                        mWebView.reload();
-                    }
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                if (manager.findFirstVisibleItemPosition() == 0 && manager.getChildAt(0).getY() == 0) {
+                    swipeRefresh.setEnabled(true);
                 } else {
-                    ToastUtil.show("请检查网络是否连接！");
+                    swipeRefresh.setEnabled(false);
                 }
             }
+
         });
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mWebView!=null){
-                    mWebView.reload();
-                    mWebView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeRefresh.setRefreshing(false);
-                        }
-                    },1000);
-                }
+                loadData();
             }
         });
+
+        MultiItemTypeSupport multiItemSupport = new MultiItemTypeSupport<ProjectShowBean>() {
+            @Override
+            public int getLayoutId(int itemType) {
+                //根据itemType返回item布局文件id
+                switch (itemType) {
+                    case 1:
+                        return R.layout.info_item_card_4_small;
+                    case 2:
+                        return R.layout.info_item_card_big;
+                }
+                return 0;
+            }
+
+            @Override
+            public int getItemViewType(int postion, ProjectShowBean projectBean) {
+                return projectBean.getType();
+            }
+        };
+        projectAdapter = new ProjectAdapter(getContext(), projectBeans, multiItemSupport);
+        headerAdapter = new HeaderAndFooterWrapper(projectAdapter);
+        headerAdapter.addHeaderView(header);
+        manager = new GridLayoutManager(getContext(), 2);
+        list.setLayoutManager(manager);
+        list.addItemDecoration(new SpaceItemDecoration(DensityUtil.dip2px(getContext(), 3), DensityUtil.dip2px(getContext(), 5)));
+        list.setAdapter(headerAdapter);
+        list.getItemAnimator().setChangeDuration(0);
     }
 
-    private WebViewClient initWebViewClient() {
-        return new WebViewClient() {
+    private void initHeader() {
+        header = LayoutInflater.from(getActivity()).inflate(R.layout.info_view_main_info_header, null, false);
+        header.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+
+        ads= (AutoLoopViewPager) header.findViewById(R.id.ads);
+        news= (ViewFlipper) header.findViewById(R.id.news);
+
+        menu.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+            public void onClick(View v) {
+                AppUtil.showMainMenu(menu, mActivity, false);
             }
+        });
 
-
+        serch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed();    //表示等待证书响应
-                // handler.cancel();      //表示挂起连接，为默认方式
-                // handler.handleMessage(null);    //可做其他处理
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, SearchActivity.class);
+                intent.putExtra("type", 0);
+                keepTogo(intent);
             }
+        });
 
+        int width = ScreenUtils.getScreenWidth(getContext());
+        ads.setLayoutParams(new LinearLayout.LayoutParams(width, (int) (width / 750.0 * 368)));
+        ads.setOnItemClickListener(new AutoLoopViewPager.OnItemClickListener() {
             @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                if (progress!=null){
-                    if (progress.getVisibility() == View.GONE) {
-                        progress.setVisibility(View.VISIBLE);
-                    }
-                }
-                if (reload!=null){
-                    reload.setVisibility(View.GONE);
-                }
-            }
-
-            // 旧版本，会在新版本中也可能被调用，所以加上一个判断，防止重复显示
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            public void onClick(int position) {
+                if (null == adsBeans || adsBeans.size() == 0) {
                     return;
                 }
-                if (reload!=null){
-                    reload.setVisibility(View.VISIBLE);
+                if (null != adsBeans.get(position).getUrl()) {
+                    Intent intent = new Intent(mActivity, CommonWebActivity.class);
+                    intent.putExtra("title", adsBeans.get(position).getName());
+                    intent.putExtra("url", adsBeans.get(position).getUrl().startsWith("http") ? adsBeans.get(position).getUrl() : Url.WEB_ROOT + adsBeans.get(position).getUrl().replace("../", ""));
+                    keepTogo(intent);
                 }
-            }
-
-            // 新版本，只会在Android6及以上调用
-            @TargetApi(Build.VERSION_CODES.M)
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-                if (request.isForMainFrame()){ // 或者： if(request.getUrl().toString() .equals(getUrl()))
-                    if (reload!=null){
-                        reload.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-
-        };
-    }
-
-
-    public WebChromeClient initWebChromeClient(){
-        return new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress == 100) {
-                    if (progress!=null){
-                        progress.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setVisibility(View.GONE);
-                            }
-                        }, 600);
-                    }
-                }
-            }
-
-
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-                if (title.contains("404")){
-                    if (reload!=null){
-                        reload.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        };
-    }
-
-    public WebView4Scroll createWebView(WebView4Scroll webView) {
-
-        WebView.setWebContentsDebuggingEnabled(true);
-        //不能横向滚动
-        webView.setHorizontalScrollBarEnabled(false);
-        //不能纵向滚动
-        webView.setVerticalScrollBarEnabled(false);
-        //允许截图
-        webView.setDrawingCacheEnabled(true);
-        //屏蔽长按事件
-        webView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
             }
         });
-        //初始化WebSettings
-        final WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        //隐藏缩放控件
-        settings.setBuiltInZoomControls(false);
-        settings.setDisplayZoomControls(false);
-        //禁止缩放
-        settings.setSupportZoom(false);
-        //文件权限
-        settings.setAllowFileAccess(true);
-        settings.setAllowFileAccessFromFileURLs(true);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        settings.setAllowContentAccess(true);
 
-        if (NetworkUtils.isConnected(mActivity.getApplicationContext())) {
-            settings.setCacheMode(WebSettings.LOAD_DEFAULT);//根据cache-control决定是否从网络上取数据。
-        } else {
-            settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//没网，则从本地获取，即离线加载
-        }
+        list.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =
+                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefresh.setEnabled(topRowVerticalPosition >= 0);
+            }
+        });
 
-        //缓存相关
-        settings.setAppCacheEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setDatabaseEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
-        return webView;
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mWebView != null) {
-            mWebView.onPause();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mWebView != null) {
-            mWebView.onResume();
-        }
-    }
-
-
-    @Override
-    public void onDestroy() {
-        if (mWebView != null) {
-            mWebView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-            mWebView.clearHistory();
-
-            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
-            mWebView.removeAllViews();
-            mWebView.destroy();
-            mWebView = null;
-        }
-        super.onDestroy();
-    }
-
 
     @Override
     protected void loadData() {
-        mWebView.loadUrl(mUrl);
+        swipeRefresh.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefresh.setRefreshing(true);
+            }
+        });
+
+        //请求 ads
+        InfoApi.getAds(this, new JsonCallback<LzyResponse<AdsBean>>() {
+            @Override
+            public void onSuccess(Response<LzyResponse<AdsBean>> response) {
+                if (null != response.body()) {
+                    List<AdsBean.ListBean> adsList = response.body().data.getList();
+                    if (null != adsList || adsList.size() > 0) {
+                        adsBeans.clear();
+                        adsBeans.addAll(adsList);
+                        ads.setPagerAdapter(InfoFragment.this, adsBeans);
+                    }
+                }
+            }
+
+            @Override
+            public void onCacheSuccess(Response<LzyResponse<AdsBean>> response) {
+                super.onCacheSuccess(response);
+                onSuccess(response);
+            }
+        });
+        //请求 news
+        InfoApi.getNews(this, new JsonCallback<LzyResponse<ArrayList<NewsBean>>>() {
+            @Override
+            public void onSuccess(Response<LzyResponse<ArrayList<NewsBean>>> response) {
+                if (null != response.body()) {
+                    List<NewsBean> newsList = response.body().data;
+                    if (null != newsList || newsList.size() > 0) {
+                        newsBeans.clear();
+                        newsBeans.addAll(newsList);
+                        initNews();
+                    }
+                }
+            }
+
+            @Override
+            public void onCacheSuccess(Response<LzyResponse<ArrayList<NewsBean>>> response) {
+                super.onCacheSuccess(response);
+                onSuccess(response);
+            }
+        });
+        //请求 project
+        InfoApi.getProject(this, new JsonCallback<LzyResponse<ArrayList<ProjectBean>>>() {
+            @Override
+            public void onSuccess(Response<LzyResponse<ArrayList<ProjectBean>>> response) {
+                if (null != response.body()) {
+                    ArrayList<ProjectBean> bfList = response.body().data;
+                    if (null != bfList || bfList.size() > 0) {
+                        //排序
+                        sort(bfList);
+                        //添加
+                        headerAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                if (!response.isFromCache()) {
+                    swipeRefresh.setRefreshing(false);
+                }
+            }
+
+            @Override
+            public void onCacheSuccess(Response<LzyResponse<ArrayList<ProjectBean>>> response) {
+                super.onCacheSuccess(response);
+                onSuccess(response);
+            }
+
+            @Override
+            public void onError(Response<LzyResponse<ArrayList<ProjectBean>>> response) {
+                super.onError(response);
+                swipeRefresh.setRefreshing(false);
+                ToastUtil.show(R.string.load_error);
+            }
+        });
+
+    }
+
+    private void initNews() {
+
+        int count = newsBeans.size();
+        int i = 0;
+        for (; i < count; i = i + 2) {
+            final View ll_content = View.inflate(getContext(), R.layout.info_view_news_item, null);
+            View news1 = ll_content.findViewById(R.id.news1);
+            TextView title1 = (TextView) ll_content.findViewById(R.id.title1);
+            View news2 = ll_content.findViewById(R.id.news2);
+            TextView title2 = (TextView) ll_content.findViewById(R.id.title2);
+
+            title1.setText(newsBeans.get(i).getTitle());
+            final int finalI = i;
+            news1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoNews(finalI);
+                }
+            });
+
+            if (count <= (i + 1)) {
+                news2.setVisibility(View.GONE);
+                news.addView(ll_content);
+                if (count == 1) {
+                    news.stopFlipping();
+                }
+                return;
+            }
+            title2.setText(newsBeans.get(i + 1).getTitle());
+
+            news2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoNews(finalI + 1);
+                }
+            });
+            news.addView(ll_content);
+        }
+    }
+
+    private void gotoNews(int position) {
+        if (null == newsBeans || newsBeans.size() == 0) {
+            return;
+        }
+        if (null != newsBeans.get(position).getUrl()) {
+            Intent intent = new Intent(mActivity, CommonWebActivity.class);
+            intent.putExtra("title", newsBeans.get(position).getTitle());
+            intent.putExtra("url", newsBeans.get(position).getUrl().startsWith("http") ? newsBeans.get(position).getUrl() : Url.WEB_ROOT + newsBeans.get(position).getUrl().replace("../", ""));
+            keepTogo(intent);
+        }
+    }
+
+    private void sort(ArrayList<ProjectBean> bfList) {
+        projectBeans.clear();
+        int size = bfList.size();
+        byte[] use = new byte[size];
+        boolean isFull = true;
+        int current = 0;
+        ProjectShowBean projectShowBean = null;
+        int type = 0;
+
+        for (int i = 0; i < size; i++) {
+            type = bfList.get(i).getGrid_type();
+            if (type == 0) {
+                continue;
+            }
+            if (use[i] == 0 && 4 != type) {
+                isFull = false;
+                current = 1;
+                projectShowBean = new ProjectShowBean();
+                projectShowBean.setType(1);
+                projectShowBean.setProject1(bfList.get(i));
+                use[i] = 1;
+                int innerType = -1;
+                for (int j = (i + 1); j < size && current < 4; j++) {
+                    innerType = bfList.get(j).getGrid_type();
+                    if (use[j] == 0 && 4 != innerType) {
+                        current++;
+                        switch (current) {
+                            case 2:
+                                projectShowBean.setProject2(bfList.get(j));
+                                break;
+                            case 3:
+                                projectShowBean.setProject3(bfList.get(j));
+                                break;
+                            case 4:
+                                projectShowBean.setProject4(bfList.get(j));
+                                break;
+                        }
+                        use[j] = 1;
+
+                        if (current == 4) {
+                            isFull = true;
+                            projectBeans.add(projectShowBean);
+                        }
+                    }
+                }
+
+            } else if (4 == type) {
+                use[i] = 1;
+                projectShowBean = new ProjectShowBean();
+                projectShowBean.setType(2);
+                projectShowBean.setProject1(bfList.get(i));
+                projectBeans.add(projectShowBean);
+            }
+        }
+
+        if (!isFull) {
+            projectBeans.add(projectShowBean);
+        }
+
     }
 
     @Override
-    protected void EventBean(BaseEventBusBean event) {
+    protected void EventBean(final BaseEventBusBean event) {
 
-    }
-
-    public boolean needBack() {
-
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-            return true;
+        if (event.getEventCode() == Constant.EVENT_PROJECT) {
+            if (null != projectBeans) {
+                ProjectBean projectBean = null;
+                switch (event.getKey2()) {
+                    case 1:
+                        projectBean = projectBeans.get(event.getKey1()).getProject1();
+                        break;
+                    case 2:
+                        projectBean = projectBeans.get(event.getKey1()).getProject2();
+                        break;
+                    case 3:
+                        projectBean = projectBeans.get(event.getKey1()).getProject3();
+                        break;
+                    case 4:
+                        projectBean = projectBeans.get(event.getKey1()).getProject4();
+                        break;
+                }
+                Intent intent = null;
+                if (projectBean.getType() == 5 || projectBean.getType() == 6) {
+                    intent = new Intent(mActivity, ProjectOnlineActivity.class);
+                } else {
+                    intent = new Intent(mActivity, ProjectUnderlineActivity.class);
+                }
+                intent.putExtra("project", projectBean);
+                keepTogo(intent);
+            }
         }
-
-        return false;
     }
+
+
+    @Override
+    public AutoLoopViewPager getAdsViewPager() {
+        return ads;
+    }
+
 }

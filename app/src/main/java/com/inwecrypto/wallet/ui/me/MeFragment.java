@@ -2,13 +2,11 @@ package com.inwecrypto.wallet.ui.me;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,10 +22,9 @@ import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.service.AutoUpdateService;
-import com.inwecrypto.wallet.ui.browser.BrowserActivity;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.me.activity.AboutUsActivity;
-import com.inwecrypto.wallet.ui.me.activity.IcoOrderActivity;
+import com.inwecrypto.wallet.ui.me.activity.BrowserActivity;
 import com.inwecrypto.wallet.ui.me.activity.MailListActivity;
 import com.inwecrypto.wallet.ui.me.activity.UnitActivity;
 import com.inwecrypto.wallet.ui.me.activity.UserInfoActivity;
@@ -37,10 +34,7 @@ import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import me.drakeet.materialdialog.MaterialDialog;
-
+import com.inwecrypto.wallet.common.widget.MaterialDialog;
 /**
  * Created by Administrator on 2017/7/15.
  * 功能描述：
@@ -70,7 +64,7 @@ public class MeFragment extends BaseFragment {
     private MeAdapter adapter;
     private ArrayList<MeMenuBean> data = new ArrayList<>();
 
-    private String[] title = {"浏览器", "通讯录", "货币单位", "网络切换", "关于我们"};
+    private String[] title;
     private int[] ico = {R.mipmap.btn_browser, R.mipmap.btn_cantacts, R.mipmap.btn_currency, R.mipmap.netchange, R.mipmap.aboutus};
     private int[] type = {6, 1, 3, 4, 5};
 
@@ -85,6 +79,7 @@ public class MeFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        title = new String[] {getString(R.string.liulanqi),getString(R.string.tongxunlu), getString(R.string.huobidanwei), getString(R.string.wangluoqiehuan), getString(R.string.guanyuwomen)};
         isOpenEventBus = true;
         txtLeftTitle.setVisibility(View.GONE);
         Drawable drawable = getResources().getDrawable(R.mipmap.btn_edit);
@@ -133,7 +128,7 @@ public class MeFragment extends BaseFragment {
                         keepTogo(MailListActivity.class);
                         break;
                     case 2:
-                        keepTogo(IcoOrderActivity.class);
+                        //keepTogo(IcoOrderActivity.class);
                         break;
                     case 3:
                         keepTogo(UnitActivity.class);
@@ -166,7 +161,12 @@ public class MeFragment extends BaseFragment {
                         .load(loginBean.getUser().getImg())
                         .crossFade()
                         .transform(new GlideCircleTransform(mContext))
-                        .placeholder(R.mipmap.clod_icon)
+                        .into(ivImg);
+            }else{
+                Glide.with(this)
+                        .load(R.mipmap.clod_icon)
+                        .crossFade()
+                        .transform(new GlideCircleTransform(mContext))
                         .into(ivImg);
             }
             tvName.setText(loginBean.getUser().getNickname());
@@ -193,14 +193,12 @@ public class MeFragment extends BaseFragment {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.show("暂时无法切换测试网");
-                return;
-//                if (!net) {
-//                    return;
-//                }
-//                net = false;
-//                testImg.setImageResource(R.mipmap.list_btn_selected);
-//                mainImg.setImageResource(R.mipmap.list_btn_default);
+                if (!net) {
+                    return;
+                }
+                net = false;
+                testImg.setImageResource(R.mipmap.list_btn_selected);
+                mainImg.setImageResource(R.mipmap.list_btn_default);
             }
         });
         main.setOnClickListener(new View.OnClickListener() {

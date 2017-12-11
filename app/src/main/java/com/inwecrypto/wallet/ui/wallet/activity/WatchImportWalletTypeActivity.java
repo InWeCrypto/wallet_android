@@ -11,6 +11,7 @@ import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.wallet.activity.neowallet.WatchImportNeoWalletActivity;
 
 /**
  * Created by Administrator on 2017/8/9.
@@ -57,53 +58,50 @@ public class WatchImportWalletTypeActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText("转化钱包");
+        txtMainTitle.setText(R.string.zhuanhuaqianbao);
         txtRightTitle.setVisibility(View.GONE);
         keystore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,WatchImportWalletActivity.class);
-                intent.putExtra("type",1);
-                intent.putExtra("wallet",wallet);
-                keepTogo(intent);
+                gotoImprot(1);
             }
         });
         anquanma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,WatchImportWalletActivity.class);
-                intent.putExtra("type",2);
-                intent.putExtra("wallet",wallet);
-                keepTogo(intent);
+                gotoImprot(2);
             }
         });
         key.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,WatchImportWalletActivity.class);
-                intent.putExtra("type",3);
-                intent.putExtra("wallet",wallet);
-                keepTogo(intent);
+                gotoImprot(3);
             }
         });
         watch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,WatchImportWalletActivity.class);
-                intent.putExtra("type",4);
-                intent.putExtra("wallet",wallet);
-                keepTogo(intent);
+                gotoImprot(4);
             }
         });
         seed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,WatchImportWalletActivity.class);
-                intent.putExtra("type",5);
-                intent.putExtra("wallet",wallet);
-                keepTogo(intent);
+                gotoImprot(5);
             }
         });
+    }
+
+    private void gotoImprot(int type) {
+        Intent intent=null;
+        if (wallet.getCategory_id()==2){
+            intent=new Intent(mActivity,WatchImportNeoWalletActivity.class);
+        }else {
+            intent=new Intent(mActivity,WatchImportWalletActivity.class);
+        }
+        intent.putExtra("type",type);
+        intent.putExtra("wallet",wallet);
+        keepTogo(intent);
     }
 
     @Override

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.inwecrypto.wallet.common.widget.AutoLoopViewPager
+        android:id="@+id/ads"
+        android:layout_width="match_parent"
+        android:layout_height="180dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c_ffffff"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:background="@color/c_DA521C" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="NEWS"
+            android:textColor="@color/c_97BDDB"
+            android:textSize="11sp" />
+
+        <ViewFlipper
+            android:id="@+id/news"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autoStart="true"
+            android:background="@android:color/white"
+            android:flipInterval="3000"
+            android:inAnimation="@anim/push_up_in"
+            android:outAnimation="@anim/push_up_out" />
+
+        <Space
+            android:layout_width="12dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/c_eeeeee" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingTop="10dp"
+        android:gravity="center">
+        <View
+            android:layout_width="44dp"
+            android:layout_height="0.5dp"
+            android:background="@color/c_333333" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:text="项目"
+            android:textColor="@color/c_333333"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="44dp"
+            android:layout_height="0.5dp"
+            android:background="@color/c_333333" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -2,7 +2,6 @@ package com.inwecrypto.wallet.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ViewGroup;
 
 import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
@@ -18,6 +17,7 @@ import com.inwecrypto.wallet.ui.login.LoginActivity;
  */
 
 public class WelcomeActivity extends BaseActivity {
+
     @Override
     protected void getBundleExtras(Bundle extras) {
     }
@@ -34,34 +34,30 @@ public class WelcomeActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        ((ViewGroup)findViewById(android.R.id.content)).postDelayed(new Runnable() {
+        findViewById(android.R.id.content).postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (AppApplication.get().getSp().getBoolean(Constant.IS_CLOD,false)){
-                    finshTogo(MainTabActivity.class);
-                }else {
-                    if (null==AppApplication.get().getSp().getString(Constant.TOKEN)||"".equals(AppApplication.get().getSp().getString(Constant.TOKEN))){
-                        Intent intent=new Intent(WelcomeActivity.this,LoginActivity.class);
-                        //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
-                        //将参数取出，传递到MainActivity中
-                        if(getIntent().getStringExtra("pushInfo") != null){
-                            intent.putExtra("pushInfo",
-                                    getIntent().getStringExtra("pushInfo"));
-                        }
-                        finshTogo(intent);
-                    }else {
-                        Intent intent=new Intent(WelcomeActivity.this,MainTabActivity.class);
-                        //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
-                        //将参数取出，传递到MainActivity中
-                        if(getIntent().getStringExtra("pushInfo") != null){
-                            intent.putExtra("pushInfo",
-                                    getIntent().getStringExtra("pushInfo"));
-                        }
-                        finshTogo(intent);
+                if (null == AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN) || "".equals(AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN))) {
+                    Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                    //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
+                    //将参数取出，传递到MainActivity中
+                    if (getIntent().getStringExtra("pushInfo") != null) {
+                        intent.putExtra("pushInfo",
+                                getIntent().getStringExtra("pushInfo"));
                     }
+                    finshTogo(intent);
+                } else {
+                    Intent intent = new Intent(WelcomeActivity.this, MainTabActivity.class);
+                    //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
+                    //将参数取出，传递到MainActivity中
+                    if (getIntent().getStringExtra("pushInfo") != null) {
+                        intent.putExtra("pushInfo",
+                                getIntent().getStringExtra("pushInfo"));
+                    }
+                    finshTogo(intent);
                 }
             }
-        },2000);
+        }, 2000);
     }
 
     @Override

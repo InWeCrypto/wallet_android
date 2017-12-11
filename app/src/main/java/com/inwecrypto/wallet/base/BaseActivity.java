@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
 
@@ -21,17 +18,15 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.BarUtils;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
-import com.inwecrypto.wallet.common.util.StringUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
-import me.drakeet.materialdialog.MaterialDialog;
+import com.inwecrypto.wallet.common.widget.MaterialDialog;
 
 /**
  * Created by Administrator on 2017/7/14.
@@ -41,12 +36,9 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     private static final int SLIDE_TRANSITION_TIME = 1 * 1000;//滑动转场的时间
     protected Fade mFadeTransition;
-    protected Activity mActivity;
+    protected BaseActivity mActivity;
 
     private Unbinder mUnbinder;
-
-    protected boolean isPullDown = true;
-    protected int curentPage=1;
 
     private MaterialDialog dialog;
     private View dialogView;
@@ -54,10 +46,9 @@ public abstract class BaseActivity extends AppCompatActivity{
     private MaterialDialog fixDialog;
     private View fixDialogView;
 
-    protected MaterialDialog netDialog;
-    private View netView;
-
     protected boolean isOpenEventBus;
+
+    private boolean isLightMode=true;
 
 
     /** 日志输出标志 **/
@@ -75,11 +66,14 @@ public abstract class BaseActivity extends AppCompatActivity{
         setContentView(setLayoutID());
         EventBus.getDefault().register(this);
         mUnbinder=ButterKnife.bind(this);
-        setPresenter();
         initView();
+        initView(savedInstanceState);
         initData();
         setupWindowAnimation();//5.0以上的动画
-        BarUtils.statusBarLightMode(this);
+        BarUtils.statusBarLightMode(this,isLightMode());
+    }
+
+    protected void initView(Bundle savedInstanceState) {
     }
 
     /**
@@ -96,11 +90,6 @@ public abstract class BaseActivity extends AppCompatActivity{
     protected abstract int setLayoutID();
 
     /**
-     * 初始化presenter
-     */
-    protected void setPresenter() {}
-
-    /**
      * 初始化布局
      */
     protected abstract void initView();
@@ -110,6 +99,13 @@ public abstract class BaseActivity extends AppCompatActivity{
      */
     protected abstract void initData();
 
+    public boolean isLightMode() {
+        return isLightMode;
+    }
+
+    public void setLightMode(boolean lightMode) {
+        isLightMode = lightMode;
+    }
 
     /**
      * eventbus在主线程接收方法
@@ -123,44 +119,9 @@ public abstract class BaseActivity extends AppCompatActivity{
                 ToastUtil.show("验证过期，请重新登录");
                 keepTogo(LoginActivity.class);
             }else {
-                if (AppApplication.get().getSp().getBoolean(Constant.IS_CLOD,false)){
-                    if (event.getEventCode() == Constant.EVENT_CLOD_NET){
-                        //启动dialog
-                        if (null==netDialog){
-                            showNetDialog();
-                        }
-                    }
-                    if (event.getEventCode() == Constant.EVENT_CLOD_UNNET){
-                        //隐藏dialog
-                        if (null!=netDialog){
-                            netDialog.dismiss();
-                            netDialog=null;
-                        }
-                    }
-                }
                 EventBean(event);
             }
         }
-    }
-
-    protected void showNetDialog() {
-        netView= LayoutInflater.from(this).inflate(R.layout.view_dialog_net,null);
-        View ok=netView.findViewById(R.id.ok);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NetworkUtils.isConnected(mActivity)) {
-                    ToastUtil.show("请确保手机处于飞行模式！");
-                    return;
-                }else {
-                    netDialog.dismiss();
-                }
-            }
-        });
-        netDialog = new MaterialDialog(mActivity).setView(netView);
-        netDialog.setBackgroundResource(R.drawable.trans_bg);
-        netDialog.setCanceledOnTouchOutside(false);
-        netDialog.show();
     }
 
     /**
@@ -207,6 +168,13 @@ public abstract class BaseActivity extends AppCompatActivity{
         }
     }
 
+    protected boolean isFixLoadingShow(){
+        if (null!=fixDialog){
+            return fixDialog.isShow();
+        }
+        return false;
+    }
+
     protected void hideFixLoading(){
         if (null!=fixDialog){
             fixDialog.dismiss();
@@ -246,27 +214,10 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     /**
      * 关闭当前页面跳转
-     * @param cls 要跳转的Activity
-     */
-    public void finshTogo(Class<?> cls) {
-        keepTogo(cls);
-        this.finish();
-    }
-    /**
-     * 关闭当前页面跳转
      * @param intent intent活动
      */
     public void finshTogo(Intent intent) {
         keepTogo(intent);
-        this.finish();
-    }
-    /**
-     * 关闭当前页面跳转
-     * @param cls 要跳转的Activity
-     * @param bundle Bundle对象
-     */
-    public void finshTogo(Class<?> cls, Bundle bundle) {
-        keepTogo(cls, bundle);
         this.finish();
     }
     /**
@@ -296,52 +247,4 @@ public abstract class BaseActivity extends AppCompatActivity{
         intent.setClass(this, cls);
         this.startActivity(intent);
     }
-    /**
-     * 返回结果页面跳转
-     * @param intent Intent对象
-     * @param requestCode 访问代码
-     */
-    public void forResultTogo(Intent intent, int requestCode) {
-        this.startActivityForResult(intent,requestCode);
-    }
-
-    /**
-     * 显示Toast消息
-     *
-     * @param message 消息文本字符串
-     */
-    public final void showToast(@NonNull String message) {
-        if (StringUtils.isEmpty(message)){return;}
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * 显示Toast消息
-     *
-     * @param resId 消息文本字符串资源ID
-     */
-    public final void showToast(@StringRes int resId) {
-        Toast.makeText(this,resId,Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * 显示Toast消息
-     *
-     * @param message 消息文本字符串
-     */
-    public final void showLongToast(@NonNull String message) {
-        if (StringUtils.isEmpty(message)){return;}
-        Toast.makeText(this,message,Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * 显示Toast消息
-     *
-     * @param resId 消息文本字符串资源ID
-     */
-    public final void showLongToast(@StringRes int resId) {
-        Toast.makeText(this,resId,Toast.LENGTH_LONG).show();
-    }
-
-
 }

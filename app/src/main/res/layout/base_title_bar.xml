@@ -31,6 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:singleLine="true"
+        android:ellipsize="end"
+        android:maxWidth="240dp"
         android:textColor="@color/c_333333"
         android:textSize="18sp"
         android:visibility="visible"/>

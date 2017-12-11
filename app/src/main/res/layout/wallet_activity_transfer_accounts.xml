@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="24dp"
-        android:text="@string/wallet_hit12"
+        android:text="@string/zhuanzhangqianbaodizhi"
         android:textColor="@color/c_333333"
         android:textSize="12sp" />
 

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_eeeeee"
+    android:orientation="vertical">
+
+    <include layout="@layout/info_view_project_common_title_layout" />
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/c_ffffff"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/c_FF7800"
+                    android:padding="12dp"
+                    android:text="@string/xiangmukuaixun"
+                    android:textColor="@color/c_ffffff"
+                    android:textSize="10sp" />
+
+                <Space
+                    android:layout_width="6dp"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/bg_circle_orage" />
+
+                <TextView
+                    android:id="@+id/title1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:ellipsize="end"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="true"
+                    android:textColor="@color/c_333333"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/c_ffffff"
+                android:orientation="vertical"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="8dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="ICO详情"
+                        android:textColor="@color/c_333333"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/guanwang"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:background="@drawable/round_2dp_black_bg"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="4dp"
+                        android:text="@string/guanwang_fuhao"
+                        android:textColor="@color/c_333333"
+                        android:textSize="12sp" />
+                </FrameLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/c_ffffff"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="8dp">
+
+                <TextView
+                    android:id="@+id/pingfen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="评分:"
+                    android:textColor="@color/c_333333"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:id="@+id/tuijianLL"
+                    android:layout_below="@+id/pingfen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="推荐等级:"
+                        android:textColor="@color/c_333333"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:id="@+id/tuijianView"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp" />
+
+                    <TextView
+                        android:id="@+id/tuijainTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/c_333333"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fengxianLL"
+                    android:layout_below="@+id/tuijianLL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="风险等级:"
+                        android:textColor="@color/c_333333"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:id="@+id/fengxianView"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp" />
+
+                    <TextView
+                        android:id="@+id/fengxianTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/c_333333"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/chakanpingce"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignBottom="@+id/fengxianLL"
+                    android:background="@drawable/round_2dp_black_bg"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/chakanpingce_fuhao"
+                    android:textColor="@color/c_333333"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+
+
+            <include layout="@layout/info_view_project_common_layout" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

@@ -14,17 +14,19 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.base.BaseFragment;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.db.CacheManager;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
-import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MarkeListBean;
 import com.inwecrypto.wallet.common.Constant;
@@ -58,7 +60,7 @@ public class MarketFragment extends BaseFragment {
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout swipeRefresh;
 
-    private ArrayList<MarkeListBean.DataBean> markets=new ArrayList<>();
+    private List<MarkeListBean> markets= Collections.synchronizedList(new ArrayList<MarkeListBean>());
     private MarketAdapter adapter;
 
     @Override
@@ -68,6 +70,7 @@ public class MarketFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+
         txtLeftTitle.setVisibility(View.GONE);
         txtMainTitle.setText(getString(R.string.hangqing));
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
@@ -120,35 +123,33 @@ public class MarketFragment extends BaseFragment {
                 return false;
             }
         });
-    }
 
-    @Override
-    protected void loadData() {
-        if (AppApplication.get().getSp().getBoolean(Constant.IS_CLOD,false)){
-            return;
-        }
         swipeRefresh.post(new Runnable() {
             @Override
             public void run() {
                 swipeRefresh.setRefreshing(true);
             }
         });
-        MarketApi.market(mFragment, new JsonCallback<LzyResponse<CommonListBean<MarkeListBean>>>() {
+    }
+
+    @Override
+    protected void loadData() {
+        MarketApi.market(mFragment, new JsonCallback<LzyResponse<ArrayList<MarkeListBean>>>() {
             @Override
-            public void onSuccess(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+            public void onSuccess(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
                 LoadSuccess(response);
             }
 
             @Override
-            public void onCacheSuccess(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+            public void onCacheSuccess(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
                 super.onCacheSuccess(response);
                 onSuccess(response);
             }
 
             @Override
-            public void onError(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+            public void onError(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
                 super.onError(response);
-                ToastUtil.show(getString(R.string.load_error));
+                ToastUtil.show(R.string.load_error);
             }
 
             @Override
@@ -162,13 +163,10 @@ public class MarketFragment extends BaseFragment {
 
     }
 
-    private void LoadSuccess(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+    private void LoadSuccess(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
         markets.clear();
-        ArrayList<MarkeListBean> list = response.body().data.getList();
-        if (null!=list&&list.size()>0){
-            for (int i=0;i<list.size();i++){
-                markets.addAll(list.get(i).getData());
-            }
+        if ( null!=response.body().data){
+            markets.addAll(response.body().data);
         }
         adapter.notifyDataSetChanged();
     }
@@ -232,50 +230,40 @@ public class MarketFragment extends BaseFragment {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode()==Constant.EVENT_MARKET){
-            refershData();
+        if (event.getEventCode()==Constant.EVENT_MARKET||event.getEventCode()==Constant.EVENT_REFRESH){
+            swipeRefresh.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefresh.setRefreshing(true);
+                }
+            });
+            loadData();
         }
     }
 
     @Override
     protected void initShow() {
         super.initShow();
-        refershData();
         //获取数据
-        MarketApi.market(mFragment, new JsonCallback<LzyResponse<CommonListBean<MarkeListBean>>>() {
+        MarketApi.market(mFragment, new JsonCallback<LzyResponse<ArrayList<MarkeListBean>>>() {
             @Override
-            public void onSuccess(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+            public void onSuccess(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
                 LoadSuccess(response);
             }
 
             @Override
-            public void onCacheSuccess(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+            public void onCacheSuccess(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
                 super.onCacheSuccess(response);
                 onSuccess(response);
             }
 
             @Override
-            public void onError(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+            public void onError(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
                 super.onError(response);
-                ToastUtil.show(getString(R.string.load_error));
+                ToastUtil.show(R.string.load_error);
                 swipeRefresh.setRefreshing(false);
             }
         });
     }
 
-    private void refershData() {
-        //获取缓存数据
-        CacheEntity<LzyResponse<CommonListBean<MarkeListBean>>> cacheBean = (CacheEntity<LzyResponse<CommonListBean<MarkeListBean>>>) CacheManager.getInstance().get(Constant.MARKET);
-        if (null!=cacheBean&&null!=cacheBean.getData()&&null!=cacheBean.getData().data.getList()&&cacheBean.getData().data.getList().size()>0){
-            //刷新
-            markets.clear();
-            ArrayList<MarkeListBean> list = cacheBean.getData().data.getList();
-            if (null!=list&&list.size()>0){
-                for (int i=0;i<list.size();i++){
-                    markets.addAll(list.get(i).getData());
-                }
-            }
-            adapter.notifyDataSetChanged();
-        }
-    }
 }

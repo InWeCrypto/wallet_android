@@ -12,6 +12,9 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yanzhenjie.recyclerview.swipe.touch.OnItemMoveListener;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +51,7 @@ public class MarketEditActivity extends BaseActivity {
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout swipeRefresh;
 
-    private ArrayList<MarkeListBean.DataBean> marketBeens=new ArrayList<>();
+    private ArrayList<MarkeListBean> marketBeens=new ArrayList<>();
     private MarketEditAdapter adapter;
 
     @Override
@@ -70,21 +73,25 @@ public class MarketEditActivity extends BaseActivity {
                 finish();
             }
         });
-        txtRightTitle.setText(R.string.save);
+        txtRightTitle.setText(R.string.baocun_space);
         txtRightTitle.setCompoundDrawables(null,null,null,null);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringBuilder sb=new StringBuilder();
-                sb.append("[");
-                for (int i=0;i<marketBeens.size();i++){
-                    sb.append(marketBeens.get(i).getId()+",");
+                JSONArray jsonArray=new JSONArray();
+                try {
+                    int size=marketBeens.size();
+                    for (int i=0;i<size;i++){
+                        JSONObject market=new JSONObject();
+                        market.putOpt("id",marketBeens.get(i).getId());
+                        market.putOpt("sort",(size-i)+"");
+                        jsonArray.put(market);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                if(sb.length()!=1){
-                    sb.delete(sb.length() - 1, sb.length());
-                }
-                sb.append("]");
-                MarketApi.market(mActivity,sb.toString(), new JsonCallback<LzyResponse<Object>>() {
+
+                MarketApi.setMarket(mActivity,jsonArray.toString(), new JsonCallback<LzyResponse<Object>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<Object>> response) {
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFRESH));
@@ -132,14 +139,14 @@ public class MarketEditActivity extends BaseActivity {
                 swipeRefresh.setRefreshing(true);
             }
         });
-        MarketApi.market(mActivity, new JsonCallback<LzyResponse<CommonListBean<MarkeListBean>>>() {
+        MarketApi.market(mActivity, new JsonCallback<LzyResponse<ArrayList<MarkeListBean>>>() {
             @Override
-            public void onSuccess(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+            public void onSuccess(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
                 LoadSuccess(response);
             }
 
             @Override
-            public void onError(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+            public void onError(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
                 super.onError(response);
                 ToastUtil.show(getString(R.string.load_error));
                 swipeRefresh.setRefreshing(false);
@@ -173,14 +180,9 @@ public class MarketEditActivity extends BaseActivity {
 
     }
 
-    private void LoadSuccess(Response<LzyResponse<CommonListBean<MarkeListBean>>> response) {
+    private void LoadSuccess(Response<LzyResponse<ArrayList<MarkeListBean>>> response) {
         marketBeens.clear();
-        ArrayList<MarkeListBean> list = response.body().data.getList();
-        if (null!=list&&list.size()>0){
-            for (int i=0;i<list.size();i++){
-                marketBeens.addAll(list.get(i).getData());
-            }
-        }
+        marketBeens.addAll(response.body().data);
         adapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
     }

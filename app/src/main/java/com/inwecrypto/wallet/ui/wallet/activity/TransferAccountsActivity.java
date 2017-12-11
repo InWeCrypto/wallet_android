@@ -30,8 +30,6 @@ import com.inwecrypto.wallet.ui.ScanActivity;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.event.KeyEvent;
 import com.inwecrypto.wallet.ui.me.activity.MailListActivity;
-import me.drakeet.materialdialog.MaterialDialog;
-
 /**
  * Created by Administrator on 2017/7/27.
  * 功能描述：
@@ -66,15 +64,8 @@ public class TransferAccountsActivity extends BaseActivity {
     private WalletBean wallet;
     private boolean isClod;
 
-    private BigDecimal low=new BigDecimal("25200000000000").multiply(new BigDecimal(Constant.GAS_LIMIT)).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
-    private BigDecimal high=new BigDecimal("2520120000000000").multiply(new BigDecimal(Constant.GAS_LIMIT)).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
-    private BigDecimal distance= high.subtract(low);
-    private BigDecimal p100= new BigDecimal(100);
-    private BigDecimal pEther= new BigDecimal("1000000000000000000");
+    private BigDecimal distance= Constant.high.subtract(Constant.low);
     private float position;
-    private MaterialDialog mMaterialDialog;
-
-    private String coldData;
     private String price;
 
     @Override
@@ -97,7 +88,7 @@ public class TransferAccountsActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.transfer_title);
+        txtMainTitle.setText(R.string.zhuanzhang);
         Drawable drawableInfo= getResources().getDrawable(R.mipmap.nav_scan);
         /// 这一步必须要做,否则不会显示.
         drawableInfo.setBounds(0, 0, drawableInfo.getMinimumWidth(), drawableInfo.getMinimumHeight());
@@ -109,7 +100,7 @@ public class TransferAccountsActivity extends BaseActivity {
             }
         });
 
-        tvCurrentPrice.setText("(当前余额："+price+")");
+        tvCurrentPrice.setText("("+getString(R.string.dangqianyue)+"："+price+")");
 
         ivMail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,18 +114,18 @@ public class TransferAccountsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (!AppUtil.isAddress(etAddress.getText().toString())){
-                    ToastUtil.show("请填写正确的转账钱包地址");
+                    ToastUtil.show(R.string.qingtianxiezhuanzhangqianbaodizhi);
                     return;
                 }
 
                 if (etPrice.getText().toString().length()==0){
-                    ToastUtil.show("请填写转账金额");
+                    ToastUtil.show(R.string.qingtianxiezhuanzhangjine);
                     return;
                 }
                 try{
                     new BigDecimal(etPrice.getText().toString());
                 }catch (Exception e){
-                    ToastUtil.show("请填写正确的金额");
+                    ToastUtil.show(R.string.qingtianxiezhengquedejine);
                     return;
                 }
                 showLoading();
@@ -143,7 +134,7 @@ public class TransferAccountsActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<LzyResponse<ValueBean>> response) {
                         BigDecimal currentPrice = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
-                        BigDecimal price = new BigDecimal(etPrice.getText().toString()).add(new BigDecimal(gas.getText().toString())).multiply(pEther);
+                        BigDecimal price = new BigDecimal(etPrice.getText().toString()).add(new BigDecimal(gas.getText().toString())).multiply(Constant.pEther);
                             hideLoading();
                         if (currentPrice.subtract(price).doubleValue()>=0){
                             if (isClod){
@@ -164,7 +155,7 @@ public class TransferAccountsActivity extends BaseActivity {
                                 keepTogo(intent);
                             }
                         }else {
-                            ToastUtil.show("余额不足！");
+                            ToastUtil.show(R.string.qianbaoyuebuzu);
                             return;
                         }
                     }
@@ -172,13 +163,13 @@ public class TransferAccountsActivity extends BaseActivity {
                     @Override
                     public void onError(Response<LzyResponse<ValueBean>> response) {
                         super.onError(response);
-                        ToastUtil.show("余额获取失败");
+                        ToastUtil.show(R.string.yuehuoqushibai);
                         hideLoading();
                     }
                 });
             }
         });
-        gas.setText(low.divide(pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+        gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
     }
 
     @Override
@@ -191,29 +182,29 @@ public class TransferAccountsActivity extends BaseActivity {
                 try{
                     parseLong=new BigDecimal(AppUtil.toD(response.body().data.getGasPrice().replace("0x", "0")));
                 }catch (Exception e){
-                    gas.setText(low.divide(pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
                     return;
                 }
                 BigDecimal currentGas = parseLong.multiply(new BigDecimal(Constant.GAS_LIMIT));
-                if (currentGas.subtract(low).longValue()<=0){
+                if (currentGas.subtract(Constant.low).longValue()<=0){
                     position=0;
                     gasBar.setProgress(position);
-                    gas.setText(low.divide(pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
-                }else if (currentGas.subtract(high).longValue()>=0){
+                    gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                }else if (currentGas.subtract(Constant.high).longValue()>=0){
                     position=100;
                     gasBar.setProgress(position);
-                    gas.setText(high.divide(pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(Constant.high.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
                 }else {
-                    position=currentGas.subtract(low).divide(distance,2,BigDecimal.ROUND_HALF_DOWN).multiply(p100).setScale(0,BigDecimal.ROUND_HALF_DOWN).floatValue();
+                    position=currentGas.subtract(Constant.low).divide(distance,2,BigDecimal.ROUND_HALF_DOWN).multiply(Constant.p100).setScale(0,BigDecimal.ROUND_HALF_DOWN).floatValue();
                     gasBar.setProgress(position);
-                    gas.setText(new BigDecimal(position).divide(p100).multiply(distance).add(low).divide(pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
+                    gas.setText(new BigDecimal(position).divide(Constant.p100).multiply(distance).add(Constant.low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
                 }
             }
 
             @Override
             public void onError(Response<LzyResponse<GasBean>> response) {
                 super.onError(response);
-                gas.setText(low.divide(pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
             }
 
             @Override
@@ -222,7 +213,7 @@ public class TransferAccountsActivity extends BaseActivity {
                 gasBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
                     @Override
                     public void onProgressChanged(int progress, float progressFloat) {
-                        gas.setText(new BigDecimal(progressFloat).divide(p100).multiply(distance).add(low).divide(pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
+                        gas.setText(new BigDecimal(progressFloat).divide(Constant.p100).multiply(distance).add(Constant.low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
                     }
 
                     @Override
@@ -242,13 +233,13 @@ public class TransferAccountsActivity extends BaseActivity {
             @Override
             public void onSuccess(Response<LzyResponse<ValueBean>> response) {
                 BigDecimal currentPrice = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
-                tvCurrentPrice.setText("(当前余额："+currentPrice.divide(pEther,4,BigDecimal.ROUND_HALF_UP).toString()+")");
+                tvCurrentPrice.setText("("+getString(R.string.dangqianyue)+"："+currentPrice.divide(Constant.pEther,4,BigDecimal.ROUND_HALF_UP).toString()+")");
             }
 
             @Override
             public void onError(Response<LzyResponse<ValueBean>> response) {
                 super.onError(response);
-                ToastUtil.show("余额获取失败");
+                ToastUtil.show(R.string.yuehuoqushibai);
                 hideLoading();
             }
         });
@@ -262,7 +253,7 @@ public class TransferAccountsActivity extends BaseActivity {
             if (key.getKey().startsWith("0x")&&key.getKey().length()==42){
                 etAddress.setText(key.getKey());
             }else {
-                ToastUtil.show("请输入正确的钱包地址");
+                ToastUtil.show(R.string.qingshuruzhengquedizhi);
             }
         }
     }

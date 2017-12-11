@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/info_view_project_common_title_layout"/>
+
+    <RadioGroup
+        android:id="@+id/rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/suoyou"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/suoyou"
+            android:textColor="@color/c_333333"
+            android:textSize="12sp" />
+        <RadioButton
+            android:id="@+id/tuwen"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingBottom="12dp"
+            android:paddingTop="7dp"
+            android:text="@string/tuwen"
+            android:textColor="@color/c_333333"
+            android:textSize="12sp" />
+        <RadioButton
+            android:id="@+id/shipin"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingBottom="12dp"
+            android:paddingTop="7dp"
+            android:text="@string/shipin"
+            android:textColor="@color/c_333333"
+            android:textSize="12sp" />
+        <RadioButton
+            android:id="@+id/kuaixun"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:paddingBottom="12dp"
+            android:paddingTop="7dp"
+            android:text="@string/kuaixuntext"
+            android:textColor="@color/c_333333"
+            android:textSize="12sp" />
+    </RadioGroup>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp">
+        <LinearLayout
+            android:id="@+id/line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <View
+                android:layout_width="18dp"
+                android:layout_height="2dp"
+                android:background="@color/c_FF7800"/>
+        </LinearLayout>
+    </FrameLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/c_ececec"
+        android:layout_marginTop="0.5dp"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

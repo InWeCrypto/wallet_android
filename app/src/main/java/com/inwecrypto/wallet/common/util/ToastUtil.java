@@ -18,4 +18,12 @@ public class ToastUtil {
         toast.setText(msg);
         toast.show();
     }
+
+    public static void show(int msgId) {
+        if (toast == null) {
+            toast = Toast.makeText(AppApplication.get(),msgId, Toast.LENGTH_SHORT);
+        }
+        toast.setText(msgId);
+        toast.show();
+    }
 }

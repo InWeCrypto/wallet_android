@@ -1,5 +1,7 @@
 package com.inwecrypto.wallet.common;
 
+import java.math.BigDecimal;
+
 /**
  * 菜鸟窝http://www.cniao5.com 一个高端的互联网技能学习平台
  *
@@ -12,13 +14,31 @@ package com.inwecrypto.wallet.common;
 
 public class Constant {
 
-    public static final long GAS_LIMIT=90000L;
+    public static final String CRASH_ID="383376bf9a";
 
-    public static final String IS_CLOD="isClod";
+    public static final String MAIN_WEB="http://inwecrypto.com";
+
+    public static final String BLOCKCHAIN="https://blockchain.info";
+
+    public static final String ETHERSCAN="https://ethscan.io";
+
+    public static final String NEO_TRACKER="https://neotracker.io";
+
+    public static final String NEO_ASSETS="0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b";
+
+    public static final String GAS_ASSETS="0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7";
+
+    public static final long GAS_LIMIT=90000L;
 
     public static final int OPEN_CLOSE_MENU = 10001;
 
-    public static final String WX_APP_ID="";
+    public static final BigDecimal pEther = new BigDecimal("1000000000000000000");
+
+    public static final BigDecimal p100 = new BigDecimal(100);
+
+    public static final BigDecimal low=new BigDecimal("25200000000000").multiply(new BigDecimal(Constant.GAS_LIMIT)).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
+
+    public static final BigDecimal high=new BigDecimal("2520120000000000").multiply(new BigDecimal(Constant.GAS_LIMIT)).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
 
     public static final String NET="net";
 
@@ -41,6 +61,8 @@ public class Constant {
     public static final String WALLETS_CLOD_BEIFEN="wallets_clod_beifen";
 
     public static final String TOKEN="token";
+
+    public static final String TEST_TOKEN="test_token";
 
     public static final String USER_INFO="user";
 
@@ -71,6 +93,20 @@ public class Constant {
     public static final String NEED_RESTART="need_restart";
 
     public static final String OPEN_ID="open_id";
+
+    public static final String TEST_OPEN_ID="test_open_id";
+
+    public static final String ETH_LIST="eth_list";
+
+    public static final String ETH_TEST_LIST="eth_test_list";
+
+    public static final String NEO_LIST="neo_list";
+
+    public static final String NEO_TEST_LIST="neo_test_list";
+
+    public static final String TOTAL_PRICE="total_price";
+
+    public static final String TOTAL_TEST_PRICE="total_test_price";
 
     public static final int EVENT_REFRESH=0;
 
@@ -107,6 +143,20 @@ public class Constant {
     public static final int EVENT_MESSAGE = 15;
 
     public static final int EVENT_DRAWLAYOUT = 16;
+
+    public static final int EVENT_PROJECT = 17;
+
+    public static final int EVENT_POPUP_MARKET = 18;
+
+    public static final int EVENT_WALLET_INFO = 19;
+
+    public static final int EVENT_CARD_OPEN = 20;
+
+    public static final int EVENT_START_REFRESH = 21;
+
+    public static final int EVENT_JIEDONG_DIALOG = 22;
+
+    public static final int EVENT_WALLET_DAIBI = 23;
 
     public static final int EVENT_TOKEN = 4009;
 

@@ -80,20 +80,11 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ColdWalletActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/SwipeTheme"
-            android:screenOrientation="portrait"/>
-
         <activity android:name="com.inwecrypto.wallet.ui.market.activity.MarketDetaileActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.market.MarketActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.browser.BrowserActivity"
+        <activity android:name="com.inwecrypto.wallet.ui.me.activity.BrowserActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
@@ -105,18 +96,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.me.activity.BtcRateActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.me.activity.IcoOrderActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.me.activity.IcoOrderDetaileActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
         <activity android:name="com.inwecrypto.wallet.ui.me.activity.MailListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
@@ -125,19 +104,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.me.activity.SignatureActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
         <activity android:name="com.inwecrypto.wallet.ui.me.activity.UnitActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.AddBtcSuccessActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.AddBtcWalletActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
@@ -161,10 +128,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ReceiveConfirmActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
         <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ReceiveDetaileActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
@@ -181,23 +144,13 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.discover.activity.ArticleDetailActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.discover.activity.IcoListActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
 
         <activity android:name="com.inwecrypto.wallet.ui.me.activity.UserInfoActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
         <activity android:name="com.inwecrypto.wallet.ui.me.activity.HeadImgActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.discover.activity.IcoPaySuccesActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
@@ -234,38 +187,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodAddEthSuccessActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodTokenWalletActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodReceiveActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodAddWalletListActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodAddWalletSettingActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodImportWalletActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodImportWalletSettingActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodImportWalletTypeActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
         <activity android:name="com.inwecrypto.wallet.ui.market.activity.MarketRemindAddActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
@@ -274,15 +195,8 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.discover.activity.IcoDetailActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
 
         <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ImportWalletSettingActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodTransferAccountsConfirmActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
@@ -329,23 +243,11 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodWalletTipOneActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ClodWalletTipTwoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
         <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.WalletTipOneActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
         <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.WalletTipTwoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.WatchTransferAccountsConfirmActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
@@ -370,6 +272,99 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name=".ui.wallet.activity.WarchEthTransferAccountsNfcActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.info.activity.AllInfoActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.info.activity.IcoActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.info.activity.ProjectOnlineActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.info.activity.ProjectUnderlineActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.info.activity.SearchActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.AddNeoSuccessActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.AddNeoWalletSettingActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.GetGasActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.ImportNeoWalletSettingActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.NeoTokenWalletActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.NeoTransferAccountsActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.NeoWalletActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.WatchImportNeoWalletActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.WatchImportNeoWalletSettingActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.AddNeoWalletClodSettingActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.AddNeoWalletClodNfcActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.NeoReceiveDetaileActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.wallet.activity.neowallet.NeoTransferAccountsDetaileActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.info.activity.InfoWebActivity"
+            android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 

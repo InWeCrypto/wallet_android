@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="8dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="8dp">
+
+    <FrameLayout
+        android:layout_width="136dp"
+        android:layout_height="78dp">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/buofang"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="12dp">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/c_FF7043"
+            android:textSize="14sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/c_333333"
+            android:textSize="12sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/shijian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/c_333333"
+            android:textSize="12sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
+    </LinearLayout>
+
+</LinearLayout>

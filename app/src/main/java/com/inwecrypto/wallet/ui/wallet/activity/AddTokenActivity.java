@@ -34,6 +34,7 @@ import com.inwecrypto.wallet.ui.wallet.adapter.AllGntAdapter;
  */
 
 public class AddTokenActivity extends BaseActivity {
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
@@ -49,7 +50,6 @@ public class AddTokenActivity extends BaseActivity {
     private ArrayList<GntBean> data=new ArrayList<>();
 
     private int id;
-
     private int walletId;
 
     @Override
@@ -71,7 +71,7 @@ public class AddTokenActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.add_token_title);
+        txtMainTitle.setText(R.string.tianjiadaibi);
         txtRightTitle.setText(R.string.wancheng);
         txtRightTitle.setCompoundDrawables(null,null,null,null);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {

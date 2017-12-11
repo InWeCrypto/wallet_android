@@ -2,6 +2,8 @@ package com.inwecrypto.wallet.ui.wallet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.AppManager;
+import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 
 /**
@@ -22,6 +25,7 @@ import com.inwecrypto.wallet.event.BaseEventBusBean;
  */
 
 public class AddEthSuccessActivity extends BaseActivity {
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
@@ -48,23 +52,26 @@ public class AddEthSuccessActivity extends BaseActivity {
         txtLeftTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                gotoWallet();
             }
         });
-        txtMainTitle.setText(getString(R.string.add_wallet_title));
+        txtMainTitle.setText(R.string.tianjiaqianbao);
         txtRightTitle.setVisibility(View.GONE);
         tvGo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppManager.getAppManager().finishActivity(AddWalletSettingActivity.class);
-                AppManager.getAppManager().finishActivity(AddEthWalletActivity.class);
-                AppManager.getAppManager().finishActivity(AddWalletListActivity.class);
-                EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
-                Intent intent=new Intent(mActivity,HotWalletActivity.class);
-                intent.putExtra("wallet",wallet);
-                finshTogo(intent);
+                gotoWallet();
             }
         });
+    }
+
+    private void gotoWallet() {
+        AppManager.getAppManager().finishActivity(AddWalletTypeActivity.class);
+        AppManager.getAppManager().finishActivity(AddWalletListActivity.class);
+        EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+        Intent intent=new Intent(mActivity,HotWalletActivity.class);
+        intent.putExtra("wallet",wallet);
+        finshTogo(intent);
     }
 
     @Override
@@ -73,7 +80,17 @@ public class AddEthSuccessActivity extends BaseActivity {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //1.点击返回键条件成立
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getRepeatCount() == 0) {
+            gotoWallet();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

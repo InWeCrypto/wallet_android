@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.lzy.okgo.model.Response;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
@@ -63,7 +63,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.wallet.adapter.GntAdapter;
-import me.drakeet.materialdialog.MaterialDialog;
+import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import unichain.ETHWallet;
 import unichain.Unichain;
 
@@ -87,12 +87,6 @@ public class HotWalletActivity extends BaseActivity {
     TextView tvPrice;
     @BindView(R.id.tv_ch_price)
     TextView tvChPrice;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.eth_img)
-    ImageView ethImg;
-    @BindView(R.id.name)
-    TextView name;
     @BindView(R.id.eth_price)
     TextView ethPrice;
     @BindView(R.id.tv_eth_ch_price)
@@ -133,7 +127,6 @@ public class HotWalletActivity extends BaseActivity {
     private BigDecimal ETHEther = new BigDecimal("0.00");
     private BigDecimal ETHPrice = new BigDecimal("0.00");
     private BigDecimal TOKENPrice = new BigDecimal("0.00");
-    private BigDecimal pEther = new BigDecimal("1000000000000000000");
     private boolean isFinish;
 
     private Timer timer;
@@ -187,12 +180,12 @@ public class HotWalletActivity extends BaseActivity {
                     if (!isFinish) {
                         title.setVisibility(View.INVISIBLE);
                         titlell.setVisibility(View.VISIBLE);
-                        startShowAnimation();
+                        AnimUtil.startShowAnimation(titlell);
                         isFinish = true;
                     }
                 } else {
                     if (isFinish) {
-                        startHideAnimation();
+                        AnimUtil.startHideAnimation(titlell);
                         isFinish = false;
                     }
                 }
@@ -204,7 +197,7 @@ public class HotWalletActivity extends BaseActivity {
                 finish();
             }
         });
-        title.setText("我的资产");
+        title.setText(R.string.wodezichan);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,7 +227,7 @@ public class HotWalletActivity extends BaseActivity {
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 // 将文本内容放到系统剪贴板里。
                 cm.setText(wallet.getAddress());
-                ToastUtil.show(getString(R.string.copyaddress));
+                ToastUtil.show(getString(R.string.gaidizhiyifuzhi));
                 return false;
             }
         });
@@ -254,7 +247,7 @@ public class HotWalletActivity extends BaseActivity {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
-                deleteItem.setText(getString(R.string.delete));
+                deleteItem.setText(getString(R.string.shanchu));
                 deleteItem.setTextSize(14);
                 deleteItem.setTextColorResource(R.color.c_ffffff);
                 deleteItem.setBackgroundColorResource(R.color.c_E86438);
@@ -318,7 +311,7 @@ public class HotWalletActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (null==wallet){
-                    ToastUtil.show("钱包数据错误，请退出重试");
+                    ToastUtil.show(R.string.wallet_data_error);
                     return;
                 }
                 Intent intent = new Intent(mActivity, TokenWalletActivity.class);
@@ -331,7 +324,7 @@ public class HotWalletActivity extends BaseActivity {
             @Override
             public void onItemClick(View view, int position) {
                 if (null==wallet){
-                    ToastUtil.show("钱包数据错误，请退出重试");
+                    ToastUtil.show(R.string.wallet_data_error);
                     return;
                 }
                 Intent intent = new Intent(mActivity, TokenWalletActivity.class);
@@ -350,9 +343,9 @@ public class HotWalletActivity extends BaseActivity {
         });
 
         if (1 == AppApplication.get().getUnit()) {
-            tvChPrice.setText("总资产(￥)");
+            tvChPrice.setText(getString(R.string.zongzichan)+"(￥)");
         } else {
-            tvChPrice.setText("总资产($)");
+            tvChPrice.setText(getString(R.string.zongzichan)+"总资产($)");
         }
 
         tvName.setText(wallet.getName());
@@ -424,13 +417,13 @@ public class HotWalletActivity extends BaseActivity {
                 ETHPrice = ETHPrice.multiply(new BigDecimal(0));
                 ArrayList<WalletCountBean> walletPrices = response.body().data.getList();
                 BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
-                ETHEther = ETHEther.add(currentPrice).divide(pEther, 4, BigDecimal.ROUND_HALF_UP);
+                ETHEther = ETHEther.add(currentPrice).divide(Constant.pEther, 4, BigDecimal.ROUND_HALF_UP);
                 if (1 == AppApplication.get().getUnit()) {
-                    ETHPrice = ETHPrice.add(currentPrice.divide(pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_cny())));
+                    ETHPrice = ETHPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_cny())));
                     ethPrice.setText(ETHEther.toString());
                     tvEthChPrice.setText("≈￥" + ETHPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toString());
                 } else {
-                    ETHPrice = ETHPrice.add(currentPrice.divide(pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_usd())));
+                    ETHPrice = ETHPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_usd())));
                     ethPrice.setText(ETHEther.toString());
                     tvEthChPrice.setText("≈$" + ETHPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toString());
                 }
@@ -472,10 +465,13 @@ public class HotWalletActivity extends BaseActivity {
                 //计算金额
                 for (TokenBean.ListBean token:data){
                     BigDecimal currentPrice = new BigDecimal(AppUtil.toD(token.getBalance().replace("0x", "0")));
-                    if (1 == AppApplication.get().getUnit()) {
-                        TOKENPrice=TOKENPrice.add(currentPrice.divide(pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_cny())));
-                    }else {
-                        TOKENPrice=TOKENPrice.add(currentPrice.divide(pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_usd())));
+                    if (null!=token.getGnt_category().getCap()){
+
+                        if (1 == AppApplication.get().getUnit()) {
+                         TOKENPrice=TOKENPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_cny())));
+                        }else {
+                           TOKENPrice=TOKENPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_usd())));
+                        }
                     }
                 }
                 isToken=true;
@@ -500,7 +496,7 @@ public class HotWalletActivity extends BaseActivity {
             @Override
             public void onError(Response<LzyResponse<TokenBean>> response) {
                 super.onError(response);
-                ToastUtil.show(getString(R.string.jiazaishibi));
+                ToastUtil.show(getString(R.string.load_error));
             }
 
             @Override
@@ -564,13 +560,30 @@ public class HotWalletActivity extends BaseActivity {
             zhujici.setVisibility(View.GONE);
         }
 
-        final PopupWindow window = new PopupWindow(selectPopupWin, DensityUtil.dip2px(this, 140), WindowManager.LayoutParams.WRAP_CONTENT);
+        final PopupWindow window = new PopupWindow(selectPopupWin, DensityUtil.dip2px(this, 100), WindowManager.LayoutParams.WRAP_CONTENT);
+        // 产生背景变暗效果
+        WindowManager.LayoutParams lp = getWindow()
+                .getAttributes();
+        lp.alpha = 0.4f;
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        getWindow().setAttributes(lp);
         window.setFocusable(true);
         window.setOutsideTouchable(true);
         window.setTouchable(true);
         window.setBackgroundDrawable(new BitmapDrawable());
         window.update();
-        window.showAsDropDown(txtRightTitle);
+        window.showAsDropDown(txtRightTitle, 0,-DensityUtil.dip2px(this,10));
+        window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            // 在dismiss中恢复透明度
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = mActivity.getWindow()
+                        .getAttributes();
+                lp.alpha = 1f;
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                mActivity.getWindow().setAttributes(lp);
+            }
+        });
 
         zhujici.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -615,7 +628,7 @@ public class HotWalletActivity extends BaseActivity {
                                     mActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            ToastUtil.show(getString(R.string.wallet_hit27));
+                                            ToastUtil.show(getString(R.string.mimacuowuqingchongshi));
                                             hideLoading();
                                         }
                                     });
@@ -629,7 +642,7 @@ public class HotWalletActivity extends BaseActivity {
                                         @Override
                                         public void run() {
                                             hideLoading();
-                                            ToastUtil.show("备份助记词失败！请稍后重试");
+                                            ToastUtil.show(getString(R.string.beifenci_error));
                                         }
                                     });
                                     return;
@@ -705,7 +718,7 @@ public class HotWalletActivity extends BaseActivity {
                                         @Override
                                         public void run() {
                                             hideLoading();
-                                            ToastUtil.show(getString(R.string.wallet_hit27));
+                                            ToastUtil.show(getString(R.string.mimacuowuqingchongshi));
                                         }
                                     });
                                     return;
@@ -718,7 +731,7 @@ public class HotWalletActivity extends BaseActivity {
                                         @Override
                                         public void run() {
                                             hideLoading();
-                                            ToastUtil.show("备份keystory失败！请稍后重试");
+                                            ToastUtil.show(getString(R.string.keystory_error));
                                         }
                                     });
                                     return;
@@ -806,7 +819,7 @@ public class HotWalletActivity extends BaseActivity {
                                         @Override
                                         public void run() {
                                             hideLoading();
-                                            ToastUtil.show("密码输入错误！请重试");
+                                            ToastUtil.show(getString(R.string.password_error));
                                         }
                                     });
                                     return;
@@ -871,16 +884,34 @@ public class HotWalletActivity extends BaseActivity {
         hit.setVisibility(View.GONE);
 
         TextView keystore = (TextView) selectPopupWin.findViewById(R.id.keystore);
-        keystore.setText("转为热钱包");
+        keystore.setText(R.string.zhuanweierqianbao);
         TextView delete = (TextView) selectPopupWin.findViewById(R.id.delete);
 
-        final PopupWindow window = new PopupWindow(selectPopupWin, DensityUtil.dip2px(this, 140), WindowManager.LayoutParams.WRAP_CONTENT);
+        final PopupWindow window = new PopupWindow(selectPopupWin, DensityUtil.dip2px(this, 100), WindowManager.LayoutParams.WRAP_CONTENT);
+        // 产生背景变暗效果
+        WindowManager.LayoutParams lp = getWindow()
+                .getAttributes();
+        lp.alpha = 0.4f;
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        getWindow().setAttributes(lp);
         window.setFocusable(true);
         window.setOutsideTouchable(true);
         window.setTouchable(true);
         window.setBackgroundDrawable(new BitmapDrawable());
         window.update();
-        window.showAsDropDown(txtRightTitle);
+        window.showAsDropDown(txtRightTitle, 0,-DensityUtil.dip2px(this,10));
+        window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            // 在dismiss中恢复透明度
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = mActivity.getWindow()
+                        .getAttributes();
+                lp.alpha = 1f;
+                mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                mActivity.getWindow().setAttributes(lp);
+            }
+        });
+
 
         keystore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -951,38 +982,6 @@ public class HotWalletActivity extends BaseActivity {
             task.cancel();
             task = null;
         }
-    }
-
-    public void startHideAnimation() {
-        //清除动画
-        titlell.clearAnimation();
-        /**
-         * @param fromAlpha 开始的透明度，取值是0.0f~1.0f，0.0f表示完全透明， 1.0f表示和原来一样
-         * @param toAlpha 结束的透明度，同上
-         */
-        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        //设置动画持续时长
-        alphaAnimation.setDuration(300);
-        //设置动画结束之后的状态是否是动画的最终状态，true，表示是保持动画结束时的最终状态
-        alphaAnimation.setFillAfter(true);
-        //开始动画
-        titlell.startAnimation(alphaAnimation);
-    }
-
-    public void startShowAnimation() {
-        //清除动画
-        titlell.clearAnimation();
-        /**
-         * @param fromAlpha 开始的透明度，取值是0.0f~1.0f，0.0f表示完全透明， 1.0f表示和原来一样
-         * @param toAlpha 结束的透明度，同上
-         */
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        //设置动画持续时长
-        alphaAnimation.setDuration(300);
-        //设置动画结束之后的状态是否是动画的最终状态，true，表示是保持动画结束时的最终状态
-        alphaAnimation.setFillAfter(true);
-        //开始动画
-        titlell.startAnimation(alphaAnimation);
     }
 
 }

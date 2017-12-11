@@ -39,6 +39,7 @@
         android:gravity="center"
         android:text="@string/tixing"
         android:textSize="14sp"
+        android:visibility="gone"
         android:textColor="@color/c_333333"/>
 
 </LinearLayout>

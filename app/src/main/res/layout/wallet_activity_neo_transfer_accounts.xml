@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_ffffff"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/base_title_bar" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dp"
+        android:text="@string/zhuanzhangqianbaodizhi"
+        android:textColor="@color/c_333333"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/c_ffffff"
+            android:cursorVisible="true"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:textColorHint="@color/c_999999"
+            android:hint="请输入转账地址"
+            android:paddingBottom="9dp"
+            android:paddingTop="9dp"
+            android:textColor="@color/c_333333"
+            android:textCursorDrawable='@null'
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_mail"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="4dp"
+            android:src="@mipmap/home_btn_contacts" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/c_ececec" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="24dp"
+            android:text="转账金额"
+            android:textColor="@color/c_333333"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tv_currentPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="4dp"
+            android:text="(当前余额：0.00)"
+            android:textColor="@color/c_999999"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/c_ffffff"
+            android:cursorVisible="true"
+            android:gravity="center_vertical"
+            android:inputType="numberDecimal"
+            android:paddingBottom="9dp"
+            android:paddingTop="9dp"
+            android:textColorHint="@color/c_999999"
+            android:hint="转账金额"
+            android:textColor="@color/c_333333"
+            android:textCursorDrawable='@null'
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/c_ececec" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dp"
+        android:text="@string/beizhu"
+        android:textColor="@color/c_333333"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_hint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/c_ffffff"
+            android:cursorVisible="true"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:paddingBottom="20dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:textColor="@color/c_333333"
+            android:textCursorDrawable='@null'
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@color/c_ececec" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/round_6dp_bule_bg"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:text="@string/queding"
+        android:textColor="@color/c_ffffff"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="36dp" />
+</LinearLayout>

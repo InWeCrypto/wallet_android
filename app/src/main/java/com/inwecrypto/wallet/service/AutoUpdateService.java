@@ -8,6 +8,8 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 
+import com.inwecrypto.wallet.R;
+import com.inwecrypto.wallet.bean.TotlePriceBean;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
@@ -44,6 +46,15 @@ import com.inwecrypto.wallet.event.BaseEventBusBean;
  */
 
 public class AutoUpdateService extends IntentService {
+    private BigDecimal ETHEther = new BigDecimal("0.00");
+    private BigDecimal NEOEther = new BigDecimal("0.00");
+    private String ethCnyPrice="0.00";
+    private String ethUsdPrice="0.00";
+    private String neoCnyPrice="0.00";
+    private String neoUsdPrice="0.00";
+
+    private HashMap<String, TokenBean.ListBean> ethGnt = new HashMap<>();
+    private HashMap<String, TokenBean.ListBean> neoGnt = new HashMap<>();
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -96,7 +107,7 @@ public class AutoUpdateService extends IntentService {
         if (AppApplication.UPDATA_TYPE==1){
             try {
                 okhttp3.Response response = OkGo.<LzyResponse<CommonListBean<MarkeListBean>>>get(Url.MARKET_CATEGORY)
-                        .headers("ct", AppApplication.get().getSp().getString(Constant.TOKEN,""))
+                        .headers("ct", AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
                         .tag(this)
                         .cacheKey(Constant.MARKET+AppApplication.isMain)
                         .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
@@ -114,7 +125,7 @@ public class AutoUpdateService extends IntentService {
             try {
                 HashMap<String,TokenBean.ListBean> totleGnt=new HashMap<>();
                 okhttp3.Response response = OkGo.<LzyResponse<CommonListBean<WalletBean>>>get(Url.WALLET)
-                        .headers("ct", AppApplication.get().getSp().getString(Constant.TOKEN,""))
+                        .headers("ct", AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
                         .tag(this)
                         .cacheKey(Constant.WALLETS+AppApplication.isMain)
                         .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
@@ -123,6 +134,9 @@ public class AutoUpdateService extends IntentService {
                     String body = response.body().string().toString();
                     if (body.contains("4000")) {
                         LocalWalletBean localMarketBean = GsonUtils.jsonToObj(body, LocalWalletBean.class);
+                        if (localMarketBean.data.getList().size()==0){
+                            return;
+                        }
                         StringBuilder sb = new StringBuilder();
                         sb.append("[");
                         for (WalletBean wa : localMarketBean.data.getList()) {
@@ -139,69 +153,199 @@ public class AutoUpdateService extends IntentService {
                                 .tag(this)
                                 .cacheKey(Constant.CONVERSION+AppApplication.isMain)
                                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
-                                .headers("ct", AppApplication.get().getSp().getString(Constant.TOKEN,""))
+                                .headers("ct", AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
                                 .params(params)
                                 .execute();
 
                         if (priceResponse.code() == 200) {
                             String priceBody = priceResponse.body().string().toString();
                             if (priceBody.contains("4000")) {
-                                LocalWalletCountBean localWalletBean = GsonUtils.jsonToObj(priceBody, LocalWalletCountBean.class);
-                                BigDecimal pEther= new java.math.BigDecimal("1000000000000000000");
-                                ArrayList<WalletCountBean> walletCount = localWalletBean.data.getList();
-                                for (WalletCountBean count : walletCount) {
+                                LocalWalletCountBean walletCount = GsonUtils.jsonToObj(priceBody, LocalWalletCountBean.class);
+                                ETHEther = ETHEther.multiply(new BigDecimal(0));
+                                NEOEther = NEOEther.multiply(new BigDecimal(0));
+                                ethCnyPrice="0.00";
+                                ethUsdPrice="0.00";
+                                neoCnyPrice="0.00";
+                                neoUsdPrice="0.00";
+
+                                boolean hasEth=false;
+                                boolean hasNeo=false;
+                                ethGnt.clear();
+                                neoGnt.clear();
+                                //计算ethPrice
+                                for (WalletCountBean count : walletCount.data.getList()) {
+                                    //计算 eth 价格
+                                    if (count.getCategory_id()==1&&null != count.getBalance()) {
+                                        //进行计算
+                                        BigDecimal currentPrice = new BigDecimal(AppUtil.toD(count.getBalance().replace("0x", "0")));
+                                        ETHEther = ETHEther.divide(Constant.pEther).add(currentPrice);
+                                        ethCnyPrice=count.getCategory().getCap().getPrice_cny();
+                                        ethUsdPrice = count.getCategory().getCap().getPrice_usd();
+                                        hasEth=true;
+                                    }else if (count.getCategory_id()==2&&null != count.getBalance()){
+                                        BigDecimal currentPrice = new BigDecimal(count.getBalance());
+                                        NEOEther = NEOEther.add(currentPrice);
+                                        neoCnyPrice = count.getCategory().getCap().getPrice_cny();
+                                        neoUsdPrice = count.getCategory().getCap().getPrice_usd();
+                                        hasNeo=true;
+                                    }
+
                                     //请求代币列表
                                     okhttp3.Response tokenResponse = OkGo.<LzyResponse<TokenBean>>get(Url.CONVERSION + "/" + count.getId())
                                             .tag(this)
+                                            .cacheKey(Url.CONVERSION+"/"+count.getId()+AppApplication.isMain)
                                             .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
-                                            .headers("ct", AppApplication.get().getSp().getString(Constant.TOKEN,""))
+                                            .headers("ct", AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
                                             .execute();
                                     if (tokenResponse.code() == 200) {
                                         String tokenBody = tokenResponse.body().string().toString();
                                         if (tokenBody.contains("4000")) {
                                             LocalTokenBean localTokenBean = GsonUtils.jsonToObj(tokenBody, LocalTokenBean.class);
+                                            if (null!=localTokenBean.data.getRecord()){
+                                                if (localTokenBean.data.getRecord().getCategory_id()==2){
+                                                    TokenBean.RecordBean record = localTokenBean.data.getRecord();
+
+                                                    if (null != neoGnt.get(record.getGnt().get(0).getCap().getName())) {
+                                                        TokenBean.ListBean bfGnt = neoGnt.get(record.getGnt().get(0).getCap().getName());
+                                                        BigDecimal secPrice = new BigDecimal(record.getGnt().get(0).getBalance());
+
+                                                        bfGnt.setBalance(secPrice.add(new BigDecimal(bfGnt.getBalance())).toString());
+                                                        neoGnt.put(record.getGnt().get(0).getCap().getName(), bfGnt);
+                                                    } else {
+                                                        TokenBean.ListBean gasBean=new TokenBean.ListBean();
+                                                        TokenBean.ListBean.GntCategoryBeanX gasGntBean=new TokenBean.ListBean.GntCategoryBeanX();
+                                                        TokenBean.ListBean.GntCategoryBeanX.CapBeanX gasCapBean=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
+                                                        gasBean.setName(record.getGnt().get(0).getCap().getName());
+                                                        gasBean.setBalance(new BigDecimal(record.getGnt().get(0).getBalance()).toPlainString());
+                                                        gasCapBean.setPrice_cny(record.getGnt().get(0).getCap().getPrice_cny());
+                                                        gasCapBean.setPrice_usd(record.getGnt().get(0).getCap().getPrice_usd());
+                                                        gasGntBean.setCap(gasCapBean);
+                                                        gasGntBean.setIcon(R.mipmap.project_icon_gas+"");
+                                                        gasBean.setGnt_category(gasGntBean);
+                                                        neoGnt.put(record.getGnt().get(0).getCap().getName(), gasBean);
+                                                    }
+
+                                                    return;
+                                                }
+                                            }
                                             if (null != localTokenBean.data.getList()) {
                                                 for (TokenBean.ListBean gnt : localTokenBean.data.getList()) {
-                                                    if (null != totleGnt.get(gnt.getName())) {
-                                                        TokenBean.ListBean bfGnt = totleGnt.get(gnt.getName());
+                                                    if (null != ethGnt.get(gnt.getName())) {
+                                                        TokenBean.ListBean bfGnt = ethGnt.get(gnt.getName());
 
                                                         BigDecimal secPrice = new BigDecimal(AppUtil.toD(gnt.getBalance().replace("0x", "0")));
 
-                                                        gnt.setBalance(secPrice.divide(pEther).add(new BigDecimal(bfGnt.getBalance())).toString());
-                                                        totleGnt.put(gnt.getName(), gnt);
+                                                        gnt.setBalance(secPrice.divide(Constant.pEther).add(new BigDecimal(bfGnt.getBalance())).toString());
+                                                        ethGnt.put(gnt.getName(), gnt);
                                                     } else {
                                                         BigDecimal currentPrice = new BigDecimal(AppUtil.toD(gnt.getBalance().replace("0x", "0")));
-                                                        gnt.setBalance(currentPrice.divide(pEther).toString());
-                                                        totleGnt.put(gnt.getName(), gnt);
+                                                        gnt.setBalance(currentPrice.divide(Constant.pEther).toString());
+                                                        ethGnt.put(gnt.getName(), gnt);
                                                     }
                                                 }
                                             }
-                                            ;
                                         }
                                     }
                                 }
+                                if (hasEth){
+                                    //添加 eth
+                                    TokenBean.ListBean eth=new TokenBean.ListBean();
+                                    TokenBean.ListBean.GntCategoryBeanX ethCategory=new TokenBean.ListBean.GntCategoryBeanX();
+                                    TokenBean.ListBean.GntCategoryBeanX.CapBeanX ethCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
+                                    eth.setName("ETH");
+                                    eth.setBalance(ETHEther.toPlainString());
+                                    ethCategory.setIcon(R.mipmap.eth+"");
+                                    ethCap.setPrice_cny(ethCnyPrice);
+                                    ethCap.setPrice_usd(ethUsdPrice);
+                                    ethCategory.setCap(ethCap);
+                                    eth.setGnt_category(ethCategory);
+                                    ethGnt.put("ETH",eth);
+                                }
 
-                                TokenBean tokenBean=new TokenBean();
-                                ArrayList<TokenBean.ListBean> data=new ArrayList<>();
-                                Iterator iter = totleGnt.entrySet().iterator();
+                                if (hasNeo){
+                                    //添加 neo
+                                    TokenBean.ListBean neo=new TokenBean.ListBean();
+                                    TokenBean.ListBean.GntCategoryBeanX neoCategory=new TokenBean.ListBean.GntCategoryBeanX();
+                                    TokenBean.ListBean.GntCategoryBeanX.CapBeanX neoCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
+                                    neo.setName("NEO");
+                                    neo.setBalance(NEOEther.toPlainString());
+                                    neoCategory.setIcon(R.mipmap.project_icon_neo+"");
+                                    neoCap.setPrice_cny(neoCnyPrice);
+                                    neoCap.setPrice_usd(neoUsdPrice);
+                                    neoCategory.setCap(neoCap);
+                                    neo.setGnt_category(neoCategory);
+                                    neoGnt.put("NEO",neo);
+                                }
 
-                                while (iter.hasNext()) {
-                                    Map.Entry entry = (Map.Entry) iter.next();
+
+                                TotlePriceBean priceBean = new TotlePriceBean();
+                                BigDecimal ethCnyPrice = new BigDecimal("0.00");
+                                BigDecimal ethUsdPrice = new BigDecimal("0.00");
+                                BigDecimal neoCnyPrice = new BigDecimal("0.00");
+                                BigDecimal neoUsdPrice = new BigDecimal("0.00");
+                                BigDecimal totleCnyPrice = null;
+                                BigDecimal totleUsdPrice = null;
+
+
+                                //获取 eth 列表
+                                ArrayList<TokenBean.ListBean> ethList = new ArrayList<>();
+                                Iterator ethIter = ethGnt.entrySet().iterator();
+                                while (ethIter.hasNext()) {
+                                    Map.Entry entry = (Map.Entry) ethIter.next();
                                     TokenBean.ListBean val = (TokenBean.ListBean) entry.getValue();
-                                    data.add(val);
+                                    if (val.getName().equals("ETH")) {
+                                        ethList.add(0, val);
+                                    } else {
+                                        ethList.add(val);
+                                    }
+                                    ethCnyPrice=ethCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_cny())));
+                                    ethUsdPrice=ethUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_usd())));
                                 }
-                                tokenBean.setList(data);
-                                //将数据保存到sp中
-                                if (AppApplication.isMain){
-                                    AppApplication.get().getSp().putString(Constant.TOTOLE_GNT, GsonUtils.objToJson(tokenBean));
-                                }else {
-                                    AppApplication.get().getSp().putString(Constant.TOTOLE_GNT_TEST, GsonUtils.objToJson(tokenBean));
+
+                                //获取 neo 列表
+                                ArrayList<TokenBean.ListBean> neoList = new ArrayList<>();
+                                Iterator neoIter = neoGnt.entrySet().iterator();
+                                boolean hasGas = false;
+                                while (neoIter.hasNext()) {
+                                    Map.Entry entry = (Map.Entry) neoIter.next();
+                                    TokenBean.ListBean val = (TokenBean.ListBean) entry.getValue();
+                                    if (val.getName().equals("NEO")) {
+                                        neoList.add(0, val);
+                                        hasGas = true;
+                                    } else if (val.getName().equals("Gas")) {
+                                        if (!hasGas) {
+                                            neoList.add(0, val);
+                                        } else {
+                                            neoList.add(1, val);
+                                        }
+                                    } else {
+                                        neoList.add(val);
+                                    }
+                                    neoCnyPrice=neoCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_cny())));
+                                    neoUsdPrice=neoUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_usd())));
                                 }
+
+                                totleCnyPrice = ethCnyPrice.add(neoCnyPrice);
+                                totleUsdPrice = ethUsdPrice.add(neoUsdPrice);
+
+                                priceBean.ethCny = ethCnyPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+                                priceBean.ethUsd = ethUsdPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+                                priceBean.neoCny = neoCnyPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+                                priceBean.neoUsd = neoUsdPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+                                priceBean.totleCny = totleCnyPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+                                priceBean.totleUsd = totleUsdPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+
+                                //设置总资产
+                                AppApplication.get().getSp().putString(AppApplication.isMain ? Constant.TOTAL_PRICE : Constant.TOTAL_TEST_PRICE,  GsonUtils.objToJson(priceBean));
+                                //设置缓存列表
+                                //设置 eth 列表
+                                AppApplication.get().getSp().putString(AppApplication.isMain ? Constant.ETH_LIST : Constant.ETH_TEST_LIST, GsonUtils.objToJson(ethList));
+                                //设置 neo 列表
+                                AppApplication.get().getSp().putString(AppApplication.isMain ? Constant.NEO_LIST : Constant.NEO_TEST_LIST, GsonUtils.objToJson(neoList));
+
                                 EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_TOTLE_PRICE_SERVICE));
-                                ;
                             }
                         }
-                        ;
                     }
                 }
             } catch (IOException e) {

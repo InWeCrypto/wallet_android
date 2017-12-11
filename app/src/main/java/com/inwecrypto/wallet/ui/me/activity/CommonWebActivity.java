@@ -29,6 +29,7 @@ import java.lang.ref.WeakReference;
 import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
@@ -63,11 +64,13 @@ public class CommonWebActivity extends BaseActivity {
     private String url;
     private RotateAnimation rotate;
     private boolean isFinish=true;
+    private String content;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         title=extras.getString("title");
         url=extras.getString("url");
+        content=extras.getString("content");
     }
 
     @Override
@@ -107,7 +110,7 @@ public class CommonWebActivity extends BaseActivity {
             final WeakReference<WebView> webViewWeakReference =
                     new WeakReference<>(new WebView(mActivity.getApplicationContext()), WEB_VIEW_QUEUE);
             mWebView = webViewWeakReference.get();
-            mWebView = createWebView(mWebView);
+            mWebView = AppUtil.createWebView(mWebView,mActivity);
             mWebView.setWebViewClient(initWebViewClient());
             mWebView.setWebChromeClient(initWebChromeClient());
         }
@@ -124,7 +127,7 @@ public class CommonWebActivity extends BaseActivity {
                         mWebView.reload();
                     }
                 } else {
-                    ToastUtil.show("请检查网络是否连接！");
+                    ToastUtil.show(R.string.qingjianchawangluoshifoulianjie);
                 }
             }
         });
@@ -205,8 +208,10 @@ public class CommonWebActivity extends BaseActivity {
                         progress.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                progress.setVisibility(View.GONE);
-                                stopAnimat();
+                                if(progress!=null){
+                                    progress.setVisibility(View.GONE);
+                                    stopAnimat();
+                                }
                             }
                         }, 600);
                     }
@@ -224,51 +229,6 @@ public class CommonWebActivity extends BaseActivity {
                 }
             }
         };
-    }
-
-    public WebView createWebView(WebView webView) {
-
-        WebView.setWebContentsDebuggingEnabled(true);
-        //不能横向滚动
-        webView.setHorizontalScrollBarEnabled(false);
-        //不能纵向滚动
-        webView.setVerticalScrollBarEnabled(false);
-        //允许截图
-        webView.setDrawingCacheEnabled(true);
-        //屏蔽长按事件
-        webView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
-        //初始化WebSettings
-        final WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        //隐藏缩放控件
-        settings.setBuiltInZoomControls(false);
-        settings.setDisplayZoomControls(false);
-        //禁止缩放
-        settings.setSupportZoom(false);
-        //文件权限
-        settings.setAllowFileAccess(true);
-        settings.setAllowFileAccessFromFileURLs(true);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        settings.setAllowContentAccess(true);
-
-        if (NetworkUtils.isConnected(mActivity.getApplicationContext())) {
-            settings.setCacheMode(WebSettings.LOAD_DEFAULT);//根据cache-control决定是否从网络上取数据。
-        } else {
-            settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);//没网，则从本地获取，即离线加载
-        }
-
-        //缓存相关
-        settings.setAppCacheEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setDatabaseEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
-        return webView;
     }
 
     @Override
@@ -305,7 +265,13 @@ public class CommonWebActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mWebView.loadUrl(url);
+        if (null!=url){
+            mWebView.loadUrl(url);
+        }
+
+        if (null!=content){
+            mWebView.loadData(content, "text/html", "utf-8");
+        }
     }
 
     @Override

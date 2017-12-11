@@ -1,7 +1,5 @@
 package com.inwecrypto.wallet.ui.wallet.activity;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,13 +15,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
-import com.inwecrypto.wallet.bean.CommonRecordBean;
-import com.inwecrypto.wallet.bean.MailIconBean;
 import com.inwecrypto.wallet.bean.TransferBean;
 import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.Constant;
@@ -31,9 +25,6 @@ import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AppManager;
-import com.inwecrypto.wallet.common.util.AppUtil;
-import com.inwecrypto.wallet.common.util.GsonUtils;
-import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.lzy.okgo.model.Response;
@@ -43,11 +34,9 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 import butterknife.BindView;
-import me.drakeet.materialdialog.MaterialDialog;
+import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import unichain.ETHWallet;
 import unichain.Unichain;
 
@@ -89,12 +78,9 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
     private String address;
     private String price;
     private String gas;
-    private String payAddress;
     private String gnt;
-    private int type;
     private String data;
     private TransferBean transfer;
-    private String pass;
     private MaterialDialog mMaterialDialog;
     private byte[] json=new byte[489];
     private byte[] json1;
@@ -111,7 +97,6 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
         transfer= (TransferBean) extras.getSerializable("code");
 
         if (isGnt) {
-            payAddress = extras.getString("payAddress");
             gnt = extras.getString("gnt");
         }
     }
@@ -129,7 +114,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText("转账确认");
+        txtMainTitle.setText(R.string.zhuanzhangqueren);
         txtRightTitle.setVisibility(View.GONE);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -178,7 +163,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                         byte[] result = isodep.transceive(SELECT);
 
                         if (!(result[0] == (byte) 0x90 && result[1] == (byte) 0x00)){
-                            ToastUtil.show("没有此应用！");
+                            ToastUtil.show(R.string.nfc_card_error);
                             throw new IOException("could not select application");
                         }
 
@@ -194,7 +179,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                         json1 = isodep.transceive(GET_STRING);
 
                         if (!(json1[json1.length-2] == (byte) 0x90 && json1[json1.length-1] == (byte) 0x00)){
-                            ToastUtil.show("数据读取失败！请重试");
+                            ToastUtil.show(R.string.nfc_read_error);
                             throw new IOException("could not select application");
                         }
 
@@ -208,7 +193,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                         json2 = isodep.transceive(GET_STRING2);
 
                         if (!(json2[json2.length-2] == (byte) 0x90 && json2[json2.length-1] == (byte) 0x00)){
-                            ToastUtil.show("数据读取失败！请重试");
+                            ToastUtil.show(R.string.nfc_read_error);
                             throw new IOException("could not select application");
                         }
                         isodep.close(); // 关闭连接
@@ -225,11 +210,11 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                     }
 
                 }else {
-                    ToastUtil.show("读卡错误！请重试！");
+                    ToastUtil.show(R.string.nfc_read_error);
                     readCardError();
                 }
             }else {
-                ToastUtil.show("读卡错误！请重试！");
+                ToastUtil.show(R.string.nfc_read_error);
                 readCardError();
             }
         }
@@ -265,7 +250,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtil.show(getString(R.string.wallet_hit27));
+                                    ToastUtil.show(getString(R.string.mimacuowuqingchongshi));
                                     hideLoading();
                                 }
                             });
@@ -285,7 +270,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtil.show("转账失败！请稍后重试");
+                                    ToastUtil.show(R.string.zhuanzhangshibaiqingchongshi);
                                     hideLoading();
                                 }
                             });
@@ -329,7 +314,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                 @Override
                 public void onSuccess(Response<LzyResponse<Object>> response) {
                     hideFixLoading();
-                    ToastUtil.show("转账成功");
+                    ToastUtil.show(R.string.zhuanzhangchenggong);
                     AppManager.getAppManager().finishActivity(WatchTokenTransferAccountsActivity.class);
                     AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
@@ -341,7 +326,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                     super.onError(response);
                     hideFixLoading();
                     if (response.getException().getMessage().contains("wallet_error")) {
-                        ToastUtil.show("服务器内部错误");
+                        ToastUtil.show(R.string.fuwuqineibucuowu);
                         AppManager.getAppManager().finishActivity(WatchTokenTransferAccountsActivity.class);
                         AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
@@ -356,7 +341,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                 @Override
                 public void onSuccess(Response<LzyResponse<Object>> response) {
                     hideFixLoading();
-                    ToastUtil.show("转账成功");
+                    ToastUtil.show(R.string.zhuanzhangchenggong);
                     AppManager.getAppManager().finishActivity(WatchEthTransferAccountsConfirmActivity.class);
                     AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
@@ -368,7 +353,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                     super.onError(response);
                     hideFixLoading();
                     if (response.getException().getMessage().contains("wallet_error")) {
-                        ToastUtil.show("服务器内部错误");
+                        ToastUtil.show(R.string.fuwuqineibucuowu);
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
                         finish();
                     } else {

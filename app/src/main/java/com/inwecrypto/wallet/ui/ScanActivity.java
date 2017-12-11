@@ -48,12 +48,11 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 public final class ScanActivity extends BaseActivity implements ZBarScannerView.ResultHandler,EasyPermissions.PermissionCallbacks{
 
-    private static final String TAG = ScanActivity.class.getSimpleName();
-
     private ZBarScannerView mScannerView;
 
     private static final int RC_CAMERA = 222;
-    private String title="扫一扫";
+
+    private String title;
 
 
     @Override
@@ -74,6 +73,9 @@ public final class ScanActivity extends BaseActivity implements ZBarScannerView.
 
     @Override
     protected void initView() {
+        if (null==title){
+            title=getString(R.string.saoyisao);
+        }
         findViewById(R.id.txt_left_title).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,12 +92,10 @@ public final class ScanActivity extends BaseActivity implements ZBarScannerView.
 
     @Override
     protected void initData() {
-
     }
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-
     }
 
     @Override
@@ -106,7 +106,7 @@ public final class ScanActivity extends BaseActivity implements ZBarScannerView.
             mScannerView.startCamera();          // Start camera on resume
             mScannerView.setAutoFocus(true);
         } else {
-            EasyPermissions.requestPermissions(this, "为了您能够正常使用扫一扫功能，超级码需要获得相机权限",
+            EasyPermissions.requestPermissions(this, getString(R.string.xiangjiquanxiantishi),
                     RC_CAMERA, Manifest.permission.CAMERA);
         }
     }
@@ -121,7 +121,7 @@ public final class ScanActivity extends BaseActivity implements ZBarScannerView.
     public void handleResult(me.dm7.barcodescanner.zbar.Result rawResult) {
         //playBeepSoundAndVibrate(true, false);
         if (rawResult == null) {
-            ToastUtil.show(getString(R.string.no_qrcode));
+            ToastUtil.show(R.string.weifaxianerweima);
             mScannerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -144,7 +144,7 @@ public final class ScanActivity extends BaseActivity implements ZBarScannerView.
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Toast.makeText(this,"权限请求成功！",Toast.LENGTH_SHORT).show();
+        ToastUtil.show(R.string.quanxianqingqiuchenggong);
         Intent intent = getIntent();
         finish();
         startActivity(intent);

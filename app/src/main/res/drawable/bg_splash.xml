@@ -3,10 +3,4 @@
     <!-- 底层白色 -->
     <item android:drawable="@color/c_ffffff" />
 
-    <!--&lt;!&ndash; 顶层Logo居中 &ndash;&gt;-->
-    <!--<item android:bottom="8dp">-->
-        <!--<bitmap-->
-            <!--android:gravity="bottom|center_horizontal"-->
-            <!--android:src="@mipmap/splash" />-->
-    <!--</item>-->
 </layer-list>

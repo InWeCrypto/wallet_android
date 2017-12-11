@@ -53,14 +53,14 @@ public class AboutUsActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText("关于我们");
+        txtMainTitle.setText(R.string.guanyuwomen);
         txtRightTitle.setVisibility(View.GONE);
 
         rlUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(mActivity,CommonWebActivity.class);
-                intent.putExtra("title","服务协议");
+                intent.putExtra("title",getString(R.string.fuwuxieyi));
                 intent.putExtra("url", Url.EULA);
                 keepTogo(intent);
             }
@@ -70,7 +70,7 @@ public class AboutUsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(mActivity,CommonWebActivity.class);
-                intent.putExtra("title","隐私条款");
+                intent.putExtra("title",getString(R.string.yinsitiaokuan));
                 intent.putExtra("url",Url.EULA);
                 keepTogo(intent);
             }
@@ -80,7 +80,7 @@ public class AboutUsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(mActivity,CommonWebActivity.class);
-                intent.putExtra("title","开源协议");
+                intent.putExtra("title",getString(R.string.kaiyuanxieyi));
                 intent.putExtra("url",Url.OPENSOURCE);
                 keepTogo(intent);
             }
@@ -90,7 +90,7 @@ public class AboutUsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(mActivity,CommonWebActivity.class);
-                intent.putExtra("title","开发团队");
+                intent.putExtra("title",getString(R.string.kaifatuandui));
                 intent.putExtra("url",Url.TEAM);
                 keepTogo(intent);
             }

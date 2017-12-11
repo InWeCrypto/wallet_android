@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="12dp">
+
+    <TextView
+        android:id="@+id/pingtai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/c_333333"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/jiaoyidui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_toRightOf="@+id/pingtai"
+        android:layout_alignBaseline="@+id/pingtai"
+        android:textColor="@color/c_666666"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/jiage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/c_333333"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/chengjiaoliang24h"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pingtai"
+        android:layout_marginTop="12dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/c_333333"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/gengxinshijian"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/c_666666"
+        android:layout_alignBaseline="@+id/chengjiaoliang24h"
+        android:layout_alignParentRight="true"
+        android:textSize="10sp" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/c_e6e6e6"
+        android:layout_below="@+id/chengjiaoliang24h"
+        android:layout_marginTop="8dp"/>
+</RelativeLayout>

@@ -61,55 +61,46 @@ public class ImportWalletTypeActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.import_wallet);
+        txtMainTitle.setText(R.string.daoruqianbao);
         txtRightTitle.setVisibility(View.GONE);
         keystore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,ImportWalletActivity.class);
-                intent.putExtra("type",1);
-                intent.putExtra("type_id",type_id);
-                intent.putExtra("wallets",wallets);
-                keepTogo(intent);
+                gotoImport(1);
             }
         });
         anquanma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,ImportWalletActivity.class);
-                intent.putExtra("type",2);
-                intent.putExtra("type_id",type_id);
-                keepTogo(intent);
+                gotoImport(2);
             }
         });
         key.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,ImportWalletActivity.class);
-                intent.putExtra("type",3);
-                intent.putExtra("type_id",type_id);
-                keepTogo(intent);
+                gotoImport(3);
             }
         });
         watch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,ImportWalletActivity.class);
-                intent.putExtra("type",4);
-                intent.putExtra("type_id",type_id);
-                intent.putExtra("wallets",wallets);
-                keepTogo(intent);
+                gotoImport(4);
             }
         });
         seed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,ImportWalletActivity.class);
-                intent.putExtra("type",5);
-                intent.putExtra("type_id",type_id);
-                keepTogo(intent);
+                gotoImport(5);
             }
         });
+    }
+
+    private void gotoImport(int type) {
+        Intent intent=new Intent(mActivity,ImportWalletActivity.class);
+        intent.putExtra("type",type);
+        intent.putExtra("type_id",type_id);
+        intent.putExtra("wallets",wallets);
+        keepTogo(intent);
     }
 
     @Override
