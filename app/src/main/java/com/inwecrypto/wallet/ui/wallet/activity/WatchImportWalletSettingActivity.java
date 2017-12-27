@@ -151,11 +151,31 @@ public class WatchImportWalletSettingActivity extends BaseActivity {
                                     wallet=Unichain.ethWalletFromMnemonic(key);
                                     address=wallet.address().toLowerCase();
                                     json=wallet.encrypt(etPs.getText().toString());
+                                    if (!address.equals(watchWallet.getAddress())){
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                ToastUtil.show(getString(R.string.qingshurugaiqianbaodezhengquezhujici));
+                                                hideLoading();
+                                            }
+                                        });
+                                        return;
+                                    }
                                     break;
                                 case 3:
                                     wallet=Unichain.ethWalletFromPrivateKey(key);
                                     address=wallet.address().toLowerCase();
                                     json=wallet.encrypt(etPs.getText().toString());
+                                    if (!address.equals(watchWallet.getAddress())){
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                ToastUtil.show(getString(R.string.qingshurugaiqianbaodezhengquesiyao));
+                                                hideLoading();
+                                            }
+                                        });
+                                        return;
+                                    }
                                     break;
                                 case 4:
                                     address=key;

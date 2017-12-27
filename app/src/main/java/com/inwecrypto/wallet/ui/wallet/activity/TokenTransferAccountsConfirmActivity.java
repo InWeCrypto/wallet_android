@@ -223,7 +223,16 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
 
     private void getOrderInfo(String data) {
         showFixLoading();
-        WalletApi.walletOrder(mActivity, wallet.getId(), data, wallet.getAddress(), address, hit, new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(), new BigDecimal(gas).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(), gnt.getName(), new JsonCallback<LzyResponse<Object>>() {
+        WalletApi.walletOrder(mActivity
+                , wallet.getId()
+                , data
+                , wallet.getAddress()
+                , address, hit
+                , new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString()
+                , new BigDecimal(gas).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString()
+                , gnt.getName()
+                , gnt.getGnt_category().getAddress().toLowerCase()
+                , new JsonCallback<LzyResponse<Object>>() {
             @Override
             public void onSuccess(Response<LzyResponse<Object>> response) {
                 hideFixLoading();

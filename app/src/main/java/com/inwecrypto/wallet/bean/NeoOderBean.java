@@ -30,6 +30,7 @@ public class NeoOderBean implements Serializable {
          * value : 1
          * createTime : 2017-11-26T22:38:16.133121Z
          * confirmTime : 2017-11-26T22:38:50.41296Z
+         * remark:
          */
 
         private String tx;
@@ -39,6 +40,7 @@ public class NeoOderBean implements Serializable {
         private String value;
         private String createTime;
         private String confirmTime;
+        private String remark;
 
         public String getTx() {
             return tx;
@@ -94,6 +96,14 @@ public class NeoOderBean implements Serializable {
 
         public void setConfirmTime(String confirmTime) {
             this.confirmTime = confirmTime;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
+
+        public void setRemark(String remark) {
+            this.remark = remark;
         }
     }
 }

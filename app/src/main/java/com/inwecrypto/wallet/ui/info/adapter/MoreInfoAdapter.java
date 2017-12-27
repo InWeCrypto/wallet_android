@@ -5,7 +5,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.inwecrypto.wallet.R;
-import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.bean.ProjectBean;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;

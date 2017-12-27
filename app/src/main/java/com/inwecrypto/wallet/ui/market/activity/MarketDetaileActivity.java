@@ -63,7 +63,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -255,24 +254,24 @@ public class MarketDetaileActivity extends BaseActivity {
         if (null != market.getTime_data()) {
             usdPrice.setText("$" + decimalFormat.format(Float.parseFloat(market.getTime_data().getPrice_usd())));
             cnyPrice.setText("¥" + decimalFormat.format(Float.parseFloat(market.getTime_data().getPrice_cny())));
-            float liang = Float.parseFloat(market.getTime_data().getVolume_usd_24h());
+            float liang = Float.parseFloat(market.getTime_data().getVolume_cny_24h());
             if (liang < 10000) {
-                volume24.setText("$" +decimalFormat.format(liang));
+                volume24.setText("¥" +decimalFormat.format(liang));
             } else if (liang < 100000000) {
-                volume24.setText("$" +decimalFormat.format(liang / 10000) + getString(R.string.wan));
+                volume24.setText("¥" +decimalFormat.format(liang / 10000) + getString(R.string.wan));
             } else {
-                volume24.setText("$" +decimalFormat.format(liang / 10000 / 10000) + getString(R.string.yi));
+                volume24.setText("¥" +decimalFormat.format(liang / 10000 / 10000) + getString(R.string.yi));
             }
 
             if (market.getTime_data().getChange_24h().contains("-")) {
-                charge24.setText(market.getTime_data().getChange_24h() + "%");
+                charge24.setText(new BigDecimal(market.getTime_data().getChange_24h()).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
                 charge24.setTextColor(Color.parseColor("#e50370"));
             } else {
-                charge24.setText("+" + market.getTime_data().getChange_24h() + "%");
+                charge24.setText("+" + new BigDecimal(market.getTime_data().getChange_24h()).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
                 charge24.setTextColor(Color.parseColor("#74a700"));
             }
-            up24.setText("$" +new BigDecimal(market.getTime_data().getMax_price_usd_24h()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-            down24.setText("$" +new BigDecimal(market.getTime_data().getMin_price_usd_24h()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+            up24.setText("¥" +new BigDecimal(market.getTime_data().getMax_price_cny_24h()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+            down24.setText("¥" +new BigDecimal(market.getTime_data().getMin_price_cny_24h()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
         }
 
         getChart();
@@ -362,63 +361,63 @@ public class MarketDetaileActivity extends BaseActivity {
     }
 
 
-    TimerTask task = new TimerTask() {
-
-        @Override
-        public void run() {
-            //请求分时数据
-            MarketApi.getCurrentPrice(mActivity, market.getUnit(), new JsonCallback<LzyResponse<PriceBean>>() {
-                @Override
-                public void onSuccess(final Response<LzyResponse<PriceBean>> response) {
-                    if (null != response.body().data) {
-                        usdPrice.setText("$" + decimalFormat.format(Float.parseFloat(response.body().data.getPrice())));
-                        //cnyPrice.setText("¥" + decimalFormat.format(Float.parseFloat(market.getTime_data().getPrice_cny())));
-//                        float liang = Float.parseFloat(response.body().data.getVolume());
-//                        if (liang < 10000) {
-//                            volume24.setText(decimalFormat.format(liang));
-//                        } else if (liang < 100000000) {
-//                            volume24.setText(decimalFormat.format(liang / 10000) + getString(R.string.wan));
+//    TimerTask task = new TimerTask() {
+//
+//        @Override
+//        public void run() {
+//            //请求分时数据
+//            MarketApi.getCurrentPrice(mActivity, market.getUnit(), new JsonCallback<LzyResponse<PriceBean>>() {
+//                @Override
+//                public void onSuccess(final Response<LzyResponse<PriceBean>> response) {
+//                    if (null != response.body().data) {
+//                        usdPrice.setText("$" + decimalFormat.format(Float.parseFloat(response.body().data.getPrice())));
+//                        //cnyPrice.setText("¥" + decimalFormat.format(Float.parseFloat(market.getTime_data().getPrice_cny())));
+////                        float liang = Float.parseFloat(response.body().data.getVolume());
+////                        if (liang < 10000) {
+////                            volume24.setText(decimalFormat.format(liang));
+////                        } else if (liang < 100000000) {
+////                            volume24.setText(decimalFormat.format(liang / 10000) + getString(R.string.wan));
+////                        } else {
+////                            volume24.setText(decimalFormat.format(liang / 10000 / 10000) + getString(R.string.yi));
+////                        }
+//
+//                        if (response.body().data.get_$24h_change().contains("-")) {
+//                            charge24.setText(new BigDecimal(response.body().data.get_$24h_change()).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
+//                            charge24.setTextColor(Color.parseColor("#e50370"));
 //                        } else {
-//                            volume24.setText(decimalFormat.format(liang / 10000 / 10000) + getString(R.string.yi));
+//                            charge24.setText("+" + new BigDecimal(response.body().data.get_$24h_change()).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
+//                            charge24.setTextColor(Color.parseColor("#74a700"));
 //                        }
-
-                        if (response.body().data.get_$24h_change().contains("-")) {
-                            charge24.setText(response.body().data.get_$24h_change() + "%");
-                            charge24.setTextColor(Color.parseColor("#e50370"));
-                        } else {
-                            charge24.setText("+" + response.body().data.get_$24h_change() + "%");
-                            charge24.setTextColor(Color.parseColor("#74a700"));
-                        }
-                        up24.setText("$" +new BigDecimal(response.body().data.get_$24h_max_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-                        down24.setText("$" +new BigDecimal(response.body().data.get_$24h_min_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-                    }
-                }
-            });
-        }
-    };
+//                        up24.setText("$" +new BigDecimal(response.body().data.get_$24h_max_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+//                        down24.setText("$" +new BigDecimal(response.body().data.get_$24h_min_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+//                    }
+//                }
+//            });
+//        }
+//    };
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (timer == null) {
-            timer = new Timer(true);
-        } else {
-            timer.schedule(task, 10000, 10000);
-        }
+//        if (timer == null) {
+//            timer = new Timer(true);
+//        } else {
+//            timer.schedule(task, 10000, 10000);
+//        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (null != timer) {
-            timer.cancel();
-            timer = null;
-        }
-        if (null != task) {
-            task.cancel();
-            task = null;
-        }
+//        if (null != timer) {
+//            timer.cancel();
+//            timer = null;
+//        }
+//        if (null != task) {
+//            task.cancel();
+//            task = null;
+//        }
     }
 
     @Override
@@ -480,7 +479,7 @@ public class MarketDetaileActivity extends BaseActivity {
         xAxisKline.setValueFormatter(new XAxisValueFormatter() {
             @Override
             public String getXValue(String original, int index, ViewPortHandler viewPortHandler) {
-                Long time = new Long(Long.parseLong(original) * 1000);
+                Long time = Long.parseLong(original);
                 String d = "";
                 if (type.equals("1d") || type.equals("1w")) {
                     d = dayFormat.format(time);

@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
-import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MarketAddBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
@@ -178,7 +176,7 @@ public class MarketAddActivity extends BaseActivity {
                 if ((actionId == 0 || actionId == 3) && event != null) {
                     boolean has=false;
                     for (int i=0;i<marketBeens.size();i++){
-                        if (marketBeens.get(i).getName().toUpperCase().equals(search.getText().toString().toUpperCase())){
+                        if (marketBeens.get(i).getEn_name().toUpperCase().equals(search.getText().toString().toUpperCase())){
                             has=true;
                             position=i;
                             break;

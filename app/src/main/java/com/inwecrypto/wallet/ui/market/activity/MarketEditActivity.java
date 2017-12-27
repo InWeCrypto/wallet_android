@@ -22,7 +22,6 @@ import java.util.Collections;
 import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
-import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MarkeListBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;

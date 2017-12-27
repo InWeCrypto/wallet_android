@@ -1,5 +1,8 @@
 package com.inwecrypto.wallet.ui;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.webkit.WebView;
@@ -17,15 +21,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.inwecrypto.wallet.base.BaseFragment;
-import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
+import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import com.inwecrypto.wallet.ui.info.InfoWebFragment;
 import com.inwecrypto.wallet.ui.market.MarketFragment;
 import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoWalletActivity;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.cache.CacheEntity;
-import com.lzy.okgo.db.CacheManager;
+import com.inwecrypto.wallet.ui.wallet.adapter.WalletListAdapter;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
@@ -38,6 +39,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import butterknife.BindView;
+
 import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
@@ -54,17 +56,13 @@ import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.event.RefreshEvent;
 import com.inwecrypto.wallet.service.AutoUpdateService;
-import com.inwecrypto.wallet.ui.info.InfoFragment;
 import com.inwecrypto.wallet.ui.me.MeFragment;
 import com.inwecrypto.wallet.ui.wallet.WalletFragment;
 import com.inwecrypto.wallet.ui.wallet.activity.AddWalletListActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.HotWalletActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.MessageActivity;
 import com.inwecrypto.wallet.ui.wallet.adapter.WalletMenuAdapter;
-
-import static com.inwecrypto.wallet.common.Constant.EVENT_MAIN_PRICE;
 
 /**
  * Created by xiaoji on 2017/7/14.
@@ -85,32 +83,25 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
     @BindView(R.id.wallet_list)
     RecyclerView walletList;
 
-    private LinearLayout[] tabs= new LinearLayout[4];
-    private ImageView[] imgs=new ImageView[4];
-    private TextView[] titles=new TextView[4];
-    private int[] imgIds=new int[]{R.mipmap.tab_hangqing_nor,R.mipmap.tab_faxian_nor,R.mipmap.tab_qianbao_nor,R.mipmap.tab_wode_nor};
-    private int[] imgClickIds=new int[]{R.mipmap.tab_hangqing_pre,R.mipmap.tab_faxian_pre,R.mipmap.tab_qianbao_pre,R.mipmap.tab_wode_pre};
+    private LinearLayout[] tabs = new LinearLayout[4];
+    private ImageView[] imgs = new ImageView[4];
+    private TextView[] titles = new TextView[4];
+    private int[] imgIds = new int[]{R.mipmap.tab_hangqing_nor, R.mipmap.tab_faxian_nor, R.mipmap.tab_qianbao_nor, R.mipmap.tab_wode_nor};
+    private int[] imgClickIds = new int[]{R.mipmap.tab_hangqing_pre, R.mipmap.tab_faxian_pre, R.mipmap.tab_qianbao_pre, R.mipmap.tab_wode_pre};
     private String[] titleStrs;
-    private int[] colors=new int[]{Color.parseColor("#afafb0"),Color.parseColor("#008c55")};
-    private BaseFragment[] fragments=new BaseFragment[4];
-    private String[] tags=new String[]{"f1","f2","f3","f4"};
+    private int[] colors = new int[]{Color.parseColor("#afafb0"), Color.parseColor("#008c55")};
+    private BaseFragment[] fragments = new BaseFragment[4];
+    private String[] tags = new String[]{"f1", "f2", "f3", "f4"};
     private FragmentManager manager;
-    private int currentIndex=-1;
+    private int currentIndex = -1;
 
 
     private WalletMenuAdapter adapter;
 
     private ArrayList<WalletBean> wallet = new ArrayList<>();
 
-    private HashMap<String, TokenBean.ListBean> totleGnt = new HashMap<>();
-
-    private BigDecimal EthEther = new BigDecimal("0.00");
-    private BigDecimal EthPrice = new BigDecimal("0.00");
-
     private boolean isMainScan;
 
-    private int index;
-    private ArrayList<WalletCountBean> walletCount;
     private WebView mWebView;
     private String address;
     private boolean hasNeo;
@@ -143,19 +134,19 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void initView() {
-        titleStrs=new String[]{getResources().getString(R.string.hangqing),getResources().getString(R.string.zixun), getResources().getString(R.string.zichan),getResources().getString(R.string.dinzhi)};
+        titleStrs = new String[]{getResources().getString(R.string.hangqing), getResources().getString(R.string.zixun), getResources().getString(R.string.zichan), getResources().getString(R.string.dinzhi)};
     }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        tabs[0]= (LinearLayout) findViewById(R.id.tab1);
-        tabs[1]= (LinearLayout) findViewById(R.id.tab2);
-        tabs[2]= (LinearLayout) findViewById(R.id.tab3);
-        tabs[3]= (LinearLayout) findViewById(R.id.tab4);
-        for (int i=0;i<4;i++){
-            imgs[i]= (ImageView) tabs[i].findViewById(R.id.img);
+        tabs[0] = (LinearLayout) findViewById(R.id.tab1);
+        tabs[1] = (LinearLayout) findViewById(R.id.tab2);
+        tabs[2] = (LinearLayout) findViewById(R.id.tab3);
+        tabs[3] = (LinearLayout) findViewById(R.id.tab4);
+        for (int i = 0; i < 4; i++) {
+            imgs[i] = (ImageView) tabs[i].findViewById(R.id.img);
             imgs[i].setImageResource(imgIds[i]);
-            titles[i]= (TextView) tabs[i].findViewById(R.id.title);
+            titles[i] = (TextView) tabs[i].findViewById(R.id.title);
             titles[i].setText(titleStrs[i]);
         }
         initTab(savedInstanceState);
@@ -209,10 +200,10 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
                 importWallet.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                            Intent intent = new Intent(mActivity, AddWalletListActivity.class);
-                            intent.putExtra("type", 2);
-                            intent.putExtra("wallets",wallet);
-                            keepTogo(intent);
+                        Intent intent = new Intent(mActivity, AddWalletListActivity.class);
+                        intent.putExtra("type", 2);
+                        intent.putExtra("wallets", wallet);
+                        keepTogo(intent);
                     }
                 }, 600);
             }
@@ -239,20 +230,20 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, final int position) {
-                    drawerLayout.closeDrawers();
-                    walletList.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent =null;
-                            if (wallet.get(position).getCategory_id()==1){
-                                intent = new Intent(mActivity, HotWalletActivity.class);
-                            }else {
-                                intent = new Intent(mActivity, NeoWalletActivity.class);
-                            }
-                            intent.putExtra("wallet", wallet.get(position));
-                            keepTogo(intent);
+                drawerLayout.closeDrawers();
+                walletList.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = null;
+                        if (wallet.get(position).getCategory_id() == 1) {
+                            intent = new Intent(mActivity, HotWalletActivity.class);
+                        } else {
+                            intent = new Intent(mActivity, NeoWalletActivity.class);
                         }
-                    }, 400);
+                        intent.putExtra("wallet", wallet.get(position));
+                        keepTogo(intent);
+                    }
+                }, 400);
             }
 
             @Override
@@ -262,7 +253,7 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
         });
 
         //预加载网页
-        mWebView=new WebView(this);
+        mWebView = new WebView(this);
         mWebView.loadUrl(Constant.MAIN_WEB);
         mWebView.postDelayed(new Runnable() {
             @Override
@@ -271,20 +262,22 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
                 mWebView.destroy();
                 mWebView = null;
             }
-        },2000);
+        }, 2000);
     }
 
     private void initTab(Bundle savedInstanceState) {
-        manager=getSupportFragmentManager();
-        FragmentTransaction ft=manager.beginTransaction();
+        manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
 
-        int index=1;
-        if (null!=savedInstanceState){
-            for (int i=0;i<4;i++){
-                if (null!=manager.findFragmentByTag(tags[i])){
-                    fragments[i]= (BaseFragment) manager.findFragmentByTag(tags[i]);
+        int index = 1;
+        if (null != savedInstanceState) {
+            for (int i = 0; i < 4; i++) {
+                if (null != manager.findFragmentByTag(tags[i])) {
+                    fragments[i] = (BaseFragment) manager.findFragmentByTag(tags[i]);
                     fragments[i].setUserVisibleHint(false);
-                    if (fragments[i].isShow){index=i+1;}
+                    if (fragments[i].isShow) {
+                        index = i + 1;
+                    }
                     ft.hide(fragments[i]);
                 }
             }
@@ -295,52 +288,52 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initListener() {
-        for (int i=0;i<4;i++){
+        for (int i = 0; i < 4; i++) {
             tabs[i].setOnClickListener(this);
         }
     }
 
     private void changeTab(int i) {
 
-        if (currentIndex==i){
+        if (currentIndex == i) {
             return;
         }
 
-        int befer=currentIndex;
+        int befer = currentIndex;
 
-        FragmentTransaction ft=manager.beginTransaction();
+        FragmentTransaction ft = manager.beginTransaction();
 
-        if (currentIndex!=-1&&null!=fragments[currentIndex-1]){
-            ft.hide(fragments[currentIndex-1]);
-            fragments[currentIndex-1].setUserVisibleHint(false);
+        if (currentIndex != -1 && null != fragments[currentIndex - 1]) {
+            ft.hide(fragments[currentIndex - 1]);
+            fragments[currentIndex - 1].setUserVisibleHint(false);
         }
 
-        switch (i){
+        switch (i) {
             case 1:
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                addTab(ft,1,null==fragments[0]?new MarketFragment():null);
+                addTab(ft, 1, null == fragments[0] ? new MarketFragment() : null);
                 break;
             case 2:
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                addTab(ft,2,null==fragments[1]?new InfoWebFragment():null);
+                addTab(ft, 2, null == fragments[1] ? new InfoWebFragment() : null);
                 break;
             case 3:
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                addTab(ft,3,null==fragments[2]?new WalletFragment():null);
+                addTab(ft, 3, null == fragments[2] ? new WalletFragment() : null);
                 break;
             case 4:
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                addTab(ft,4,null==fragments[3]?new MeFragment():null);
+                addTab(ft, 4, null == fragments[3] ? new MeFragment() : null);
                 break;
         }
 
         ft.commitAllowingStateLoss();
 
-        changeIcon(befer-1,i-1);
+        changeIcon(befer - 1, i - 1);
     }
 
     private void changeIcon(int current, int i) {
-        if (current!=-2){
+        if (current != -2) {
             imgs[current].setImageResource(imgIds[current]);
             titles[current].setTextColor(colors[0]);
         }
@@ -348,20 +341,20 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
         titles[i].setTextColor(colors[1]);
     }
 
-    private void addTab(FragmentTransaction ft,int index,BaseFragment fragment) {
-        int position=index-1;
-        if (fragments[position]==null){
-            fragments[position]=fragment;
-            ft.add(R.id.content,fragment,tags[position]);
+    private void addTab(FragmentTransaction ft, int index, BaseFragment fragment) {
+        int position = index - 1;
+        if (fragments[position] == null) {
+            fragments[position] = fragment;
+            ft.add(R.id.content, fragment, tags[position]);
         }
         ft.show(fragments[position]);
         fragments[position].setUserVisibleHint(true);
-        currentIndex=index;
+        currentIndex = index;
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tab1:
                 changeTab(1);
                 break;
@@ -385,7 +378,7 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void getInfoOnNet() {
-        hasNeo=false;
+        hasNeo = false;
         WalletApi.wallet(mActivity, new JsonCallback<LzyResponse<CommonListBean<WalletBean>>>() {
             @Override
             public void onSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
@@ -412,7 +405,7 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
                         }
 
                         if (wallets.contains(response.body().data.getList().get(i).getAddress())) {
-                            if (wallets_beifen.contains(response.body().data.getList().get(i).getAddress())||walletsZjc.contains(response.body().data.getList().get(i).getAddress())) {
+                            if (wallets_beifen.contains(response.body().data.getList().get(i).getAddress()) || walletsZjc.contains(response.body().data.getList().get(i).getAddress())) {
                                 response.body().data.getList().get(i).setType(Constant.BEIFEN);
                             } else {
                                 response.body().data.getList().get(i).setType(Constant.ZHENGCHANG);
@@ -420,8 +413,8 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
                         } else {
                             response.body().data.getList().get(i).setType(Constant.GUANCHA);
                         }
-                        if (!hasNeo && response.body().data.getList().get(i).getCategory().getName().equals("NEO")){
-                            hasNeo=true;
+                        if (!hasNeo && response.body().data.getList().get(i).getCategory().getName().equals("NEO")) {
+                            hasNeo = true;
                         }
                     }
 
@@ -441,15 +434,15 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
 
                 adapter.notifyDataSetChanged();
 
-                if (!response.isFromCache()){
+                if (!response.isFromCache()) {
                     setInit(true);
                 }
 
-                InfoWebFragment fragment= (InfoWebFragment) manager.findFragmentByTag(tags[1]);
-                if (!response.isFromCache()&&(isRefresh||(null!=fragment&&fragment.isShow))){
+                InfoWebFragment fragment = (InfoWebFragment) manager.findFragmentByTag(tags[1]);
+                if (!response.isFromCache() && (isRefresh || (null != fragment && fragment.isShow))) {
                     //获取代币列表
-                    EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET_DAIBI));
-                    isRefresh=false;
+                    EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET_DAIBI));
+                    isRefresh = false;
                 }
             }
 
@@ -495,15 +488,70 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
             com.inwecrypto.wallet.event.KeyEvent keyEvent = (com.inwecrypto.wallet.event.KeyEvent) event.getData();
             if (AppUtil.isAddress(keyEvent.getKey().trim())) {
                 address = keyEvent.getKey().trim().toLowerCase();
+                //弹出钱包选择框
+                showWalletList();
             } else {
                 ToastUtil.show("请输入正确的钱包地址");
             }
         }
 
-        if (event.getEventCode() == Constant.EVENT_WALLET){
+        if (event.getEventCode() == Constant.EVENT_WALLET) {
             setRefresh(true);
             getInfoOnNet();
         }
+    }
+
+    private MaterialDialog mMaterialDialog;
+
+    private void showWalletList() {
+        if (null==wallet||wallet.size()==0){
+            ToastUtil.show("您暂时没有钱包!请先添加钱包");
+            return;
+        }
+        View view = LayoutInflater.from(mActivity).inflate(R.layout.view_dialog_ico_wallet, null, false);
+        RecyclerView walletList = (RecyclerView) view.findViewById(R.id.wallet_list);
+        WalletListAdapter walletListAdapter=new WalletListAdapter(this,R.layout.wallet_item_wallet_list,wallet);
+        walletList.setLayoutManager(new LinearLayoutManager(this));
+        walletList.setAdapter(walletListAdapter);
+        walletListAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                mMaterialDialog.dismiss();
+
+                Intent intent = null;
+                if (AppUtil.isEthAddress(address)) {
+                    if (wallet.get(position).getCategory_id()!=1){
+                        ToastUtil.show("当前地址为ETH钱包地址,请选择ETH钱包");
+                        return;
+                    }
+                    intent = new Intent(mActivity, HotWalletActivity.class);
+                } else if (AppUtil.isNeoAddress(address)){
+                    if (wallet.get(position).getCategory_id()!=2){
+                        ToastUtil.show("当前地址为NEO钱包地址,请选择NEO钱包");
+                        return;
+                    }
+                    intent = new Intent(mActivity, NeoWalletActivity.class);
+                }
+                // 从API11开始android推荐使用android.content.ClipboardManager
+                // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                // 将文本内容放到系统剪贴板里。
+                cm.setPrimaryClip(ClipData.newPlainText(null, address));
+                ToastUtil.show("已将该地址复制到剪切板中!");
+
+                intent.putExtra("wallet", wallet.get(position));
+                keepTogo(intent);
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
+        mMaterialDialog = new MaterialDialog(mActivity).setView(view);
+        mMaterialDialog.setBackgroundResource(R.drawable.trans_bg);
+        mMaterialDialog.setCanceledOnTouchOutside(true);
+        mMaterialDialog.show();
     }
 
     private long mExitTime;
@@ -519,9 +567,9 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
                 return true;
             }
 
-            InfoWebFragment fragment= (InfoWebFragment) manager.findFragmentByTag(tags[1]);
-            if (null!=fragment){
-                if (fragment.isShow&&fragment.canBack()){
+            InfoWebFragment fragment = (InfoWebFragment) manager.findFragmentByTag(tags[1]);
+            if (null != fragment) {
+                if (fragment.isShow && fragment.canBack()) {
                     return true;
                 }
             }

@@ -1,7 +1,6 @@
 package com.inwecrypto.wallet.ui.info;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import android.widget.ViewFlipper;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.bean.AdsBean;
-import com.inwecrypto.wallet.bean.InfoPriceBean;
 import com.inwecrypto.wallet.bean.NewsBean;
 import com.inwecrypto.wallet.bean.ProjectBean;
 import com.inwecrypto.wallet.bean.ProjectShowBean;
@@ -26,7 +24,6 @@ import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.api.InfoApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AppUtil;
-import com.inwecrypto.wallet.common.util.BarUtils;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.ScreenUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
@@ -48,8 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by donghaijun on 2017/10/24.

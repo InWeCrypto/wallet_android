@@ -20,7 +20,7 @@ import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.OrderBean;
 import com.inwecrypto.wallet.common.Constant;
-import com.inwecrypto.wallet.common.http.Url;
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
@@ -92,7 +92,7 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
     protected void initData() {
         BigDecimal b = new BigDecimal(order.getFee());
         price.setText("-" + b.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
-        BigDecimal s = new BigDecimal(order.getHandle_fee());
+        BigDecimal s = new BigDecimal(null==order.getHandle_fee()?"0.0000":order.getHandle_fee());
         shouxufei.setText(getString(R.string.lingfushouxufei) + s.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
 
         if (order.getStatus() == 0) {
@@ -104,8 +104,8 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
         }
         tvWalletAddress.setText(null != order.getPay_address() ? order.getPay_address() : "");
         tvGetAddress.setText(null != order.getReceive_address() ? order.getReceive_address() : "");
-        tvTime.setText(order.getCreated_at());
-        tvGetTime.setText(order.getRemark());
+        tvTime.setText(order.getCreated_at().contains("T")? AppUtil.getTime(order.getCreated_at()):order.getCreated_at());
+        tvGetTime.setText(null==order.getRemark()?"":order.getRemark());
 
         tvWalletAddress.setOnClickListener(new View.OnClickListener() {
             @Override

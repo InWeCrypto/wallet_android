@@ -10,45 +10,45 @@ import java.io.Serializable;
 
 public class OrderBean implements Serializable {
 
-    private int id;
-    private int user_id;
-    private int wallet_id;
+    /**
+     * remark : eth
+     * handle_fee : 2246500000000000
+     * trade_no : 0x43e7a6a92d35bd52bbf9368600815d2e30d9487983138493704db3bf40d2840b
+     * hash : 0x43e7a6a92d35bd52bbf9368600815d2e30d9487983138493704db3bf40d2840b
+     * pay_address : 0x8214b824927a28dc16581cd22e460fe0f7e31994
+     * receive_address : 0x21d6c1bebb4e8141d4784f30a7877bd8c38d5bf8
+     * block_number : 2293980
+     * fee : 1000000000000000000
+     * confirm_at : 2017-12-19T06:17:00Z
+     * created_at : 2017-12-19T06:16:45Z
+     */
+
+    private String remark;
+    private String handle_fee;
     private String trade_no;
+    private String hash;
     private String pay_address;
     private String receive_address;
-    private String remark;
+    private int block_number;
     private String fee;
-    private String handle_fee;
-    private String hash;
-    private int status;
-    private String finished_at;
+    private String confirm_at;
     private String created_at;
-    private String updated_at;
-    private String flag;
-    private String block_number;
+    private int status;
 
-    public int getId() {
-        return id;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public String getHandle_fee() {
+        return handle_fee;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
-    public int getWallet_id() {
-        return wallet_id;
-    }
-
-    public void setWallet_id(int wallet_id) {
-        this.wallet_id = wallet_id;
+    public void setHandle_fee(String handle_fee) {
+        this.handle_fee = handle_fee;
     }
 
     public String getTrade_no() {
@@ -57,6 +57,14 @@ public class OrderBean implements Serializable {
 
     public void setTrade_no(String trade_no) {
         this.trade_no = trade_no;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public String getPay_address() {
@@ -75,12 +83,12 @@ public class OrderBean implements Serializable {
         this.receive_address = receive_address;
     }
 
-    public String getRemark() {
-        return remark;
+    public int getBlock_number() {
+        return block_number;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setBlock_number(int block_number) {
+        this.block_number = block_number;
     }
 
     public String getFee() {
@@ -91,36 +99,12 @@ public class OrderBean implements Serializable {
         this.fee = fee;
     }
 
-    public String getHandle_fee() {
-        return handle_fee;
+    public String getConfirm_at() {
+        return confirm_at;
     }
 
-    public void setHandle_fee(String handle_fee) {
-        this.handle_fee = handle_fee;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getFinished_at() {
-        return finished_at;
-    }
-
-    public void setFinished_at(String finished_at) {
-        this.finished_at = finished_at;
+    public void setConfirm_at(String confirm_at) {
+        this.confirm_at = confirm_at;
     }
 
     public String getCreated_at() {
@@ -131,27 +115,11 @@ public class OrderBean implements Serializable {
         this.created_at = created_at;
     }
 
-    public String getUpdated_at() {
-        return updated_at;
+    public int getStatus() {
+        return status;
     }
 
-    public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
-    }
-
-    public String getFlag() {
-        return flag;
-    }
-
-    public void setFlag(String flag) {
-        this.flag = flag;
-    }
-
-    public String getBlock_number() {
-        return block_number;
-    }
-
-    public void setBlock_number(String block_number) {
-        this.block_number = block_number;
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

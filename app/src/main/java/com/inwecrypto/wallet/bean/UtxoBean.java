@@ -21,6 +21,7 @@ public class UtxoBean implements Serializable {
     private String jsonrpc;
     private int id;
     private List<ResultBean> result;
+    private ErrorBean error;
 
     public String getJsonrpc() {
         return jsonrpc;
@@ -44,6 +45,14 @@ public class UtxoBean implements Serializable {
 
     public void setResult(List<ResultBean> result) {
         this.result = result;
+    }
+
+    public ErrorBean getError() {
+        return error;
+    }
+
+    public void setError(ErrorBean error) {
+        this.error = error;
     }
 
     public static class ResultBean implements Serializable{
@@ -155,6 +164,43 @@ public class UtxoBean implements Serializable {
             public void setValue(String Value) {
                 this.Value = Value;
             }
+        }
+    }
+
+    public static class ErrorBean implements Serializable{
+
+        /**
+         * code : -32603
+         * message : get AMpupnF6QweQXLfCtF4dR45FDdKbTXkLsr balance 0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b err: pq: there is no parameter $1
+         * data : null
+         */
+
+        private int code;
+        private String message;
+        private String data;
+
+        public int getCode() {
+            return code;
+        }
+
+        public void setCode(int code) {
+            this.code = code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
         }
     }
 }

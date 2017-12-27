@@ -13,11 +13,9 @@ import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.wallet.activity.AddWalletClodNfcActivity;
 
 import butterknife.BindView;
 import neomobile.Neomobile;
-import unichain.ETHWallet;
 
 /**
  * Created by Administrator on 2017/7/27.

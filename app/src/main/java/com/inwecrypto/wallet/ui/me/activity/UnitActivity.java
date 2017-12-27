@@ -71,7 +71,7 @@ public class UnitActivity extends BaseActivity {
                     finish();
                 } else {
                     AppApplication.get().getSp().putInt(Constant.UNIT_TYPE,selectPosition);
-                    EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_UNIT_CHANGE));
+                    EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_UNIT_CHANGE));
                     finish();
                 }
             }

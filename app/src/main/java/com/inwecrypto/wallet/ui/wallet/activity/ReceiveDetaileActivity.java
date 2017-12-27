@@ -1,6 +1,5 @@
 package com.inwecrypto.wallet.ui.wallet.activity;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +18,7 @@ import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.OrderBean;
 import com.inwecrypto.wallet.common.Constant;
-import com.inwecrypto.wallet.common.http.Url;
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
@@ -46,6 +45,8 @@ public class ReceiveDetaileActivity extends BaseActivity {
     TextView tvHeyueAddress;
     @BindView(R.id.tv_time)
     TextView tvTime;
+    @BindView(R.id.tv_get_time)
+    TextView tvGetTime;
     @BindView(R.id.tv_order)
     TextView tvOrder;
     @BindView(R.id.price)
@@ -87,7 +88,8 @@ public class ReceiveDetaileActivity extends BaseActivity {
 
         tvWalletAddress.setText(null!=order.getPay_address()?order.getPay_address():"");
         tvHeyueAddress.setText(null!=order.getReceive_address()?order.getReceive_address():"");
-        tvTime.setText(order.getRemark());
+        tvTime.setText(null==order.getRemark()?"":order.getRemark());
+        tvGetTime.setText(order.getCreated_at().contains("T")? AppUtil.getTime(order.getCreated_at()):order.getCreated_at());
 
         tvWalletAddress.setOnClickListener(new View.OnClickListener() {
             @Override

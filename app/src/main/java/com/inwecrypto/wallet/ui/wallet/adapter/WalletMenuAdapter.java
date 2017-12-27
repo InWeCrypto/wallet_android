@@ -9,10 +9,8 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import java.util.List;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.WalletBean;
-import com.inwecrypto.wallet.common.Constant;
 
 /**
  * Created by Administrator on 2017/8/9.

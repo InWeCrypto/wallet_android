@@ -35,6 +35,7 @@ public class NeoRecordAdapter extends CommonAdapter<NeoOderBean.ListBean> {
             Glide.with(mContext).load(R.mipmap.icon_toself).crossFade().into((ImageView) holder.getView(R.id.img));
             holder.setText(R.id.price,new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
             holder.setTextColor(R.id.price, Color.parseColor("#000000"));
+            holder.setTextColor(R.id.hit,Color.parseColor("#333333"));
         }else if (neoOderBean.getFrom().equals(address)){
             Glide.with(mContext).load(R.mipmap.zhuanchu).crossFade().into((ImageView) holder.getView(R.id.img));
             holder.setText(R.id.price,"-"+new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
@@ -44,12 +45,12 @@ public class NeoRecordAdapter extends CommonAdapter<NeoOderBean.ListBean> {
             Glide.with(mContext).load(R.mipmap.zhuanru).crossFade().into((ImageView) holder.getView(R.id.img));
             holder.setText(R.id.price,"+"+new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
             holder.setTextColor(R.id.price, Color.parseColor("#000000"));
+            holder.setTextColor(R.id.hit,Color.parseColor("#333333"));
         }
         if (null==neoOderBean.getConfirmTime()||neoOderBean.getConfirmTime().equals("")) {//确认中
-            holder.setText(R.id.hit,"确认中");
-            holder.setVisible(R.id.hit,true);
+            holder.setText(R.id.hit,mContext.getString(R.string.querenzhong));
         }else {
-            holder.setVisible(R.id.hit,false);
+            holder.setText(R.id.hit,mContext.getString(R.string.jiaoyichenggong));
         }
         holder.setText(R.id.time,"".equals(neoOderBean.getCreateTime())?"": AppUtil.getTime(neoOderBean.getCreateTime()));
         holder.setText(R.id.order,neoOderBean.getTx());

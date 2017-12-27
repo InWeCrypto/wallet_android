@@ -147,6 +147,14 @@
                             android:textSize="14sp"
                             android:textColor="@color/c_333333"
                             android:text="总资产()" />
+
+                        <ImageView
+                            android:id="@+id/add_gnt"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@mipmap/tianjia"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"/>
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -200,192 +208,12 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+            android:id="@+id/wallet_list"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:background="@color/c_ffffff">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <RelativeLayout
-                    android:id="@+id/neo_rl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:paddingLeft="34dp"
-                    android:paddingRight="34dp"
-                    android:paddingTop="24dp">
-
-                    <ImageView
-                        android:id="@+id/neo_img"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/project_icon_neo" />
-
-                    <TextView
-                        android:id="@+id/neo_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="19sp"
-                        android:layout_marginLeft="20dp"
-                        android:text="NEO"
-                        android:textColor="@color/c_333333"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/neo_img"/>
-
-                    <TextView
-                        android:id="@+id/neo_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/neo_name"
-                        android:layout_marginLeft="8dp"
-                        android:gravity="right"
-                        android:layout_alignParentRight="true"
-                        android:textColor="@color/c_333333"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/tv_neo_ch_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_alignLeft="@+id/neo_price"
-                        android:layout_below="@+id/neo_price"
-                        android:layout_marginTop="6dp"
-                        android:textColor="@color/c_999999"
-                        android:textSize="14dp" />
-
-                    <View
-                        android:layout_below="@+id/tv_neo_ch_price"
-                        android:layout_width="match_parent"
-                        android:layout_marginTop="24dp"
-                        android:layout_height="0.5dp"
-                        android:background="@color/c_efefef" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/gas_rl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:paddingLeft="34dp"
-                    android:paddingRight="34dp"
-                    android:paddingTop="24dp">
-
-                    <ImageView
-                        android:id="@+id/gas_img"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/project_icon_gas" />
-
-                    <TextView
-                        android:id="@+id/gas_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="19sp"
-                        android:layout_marginLeft="20dp"
-                        android:text="Gas"
-                        android:textColor="@color/c_333333"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/gas_img"/>
-
-                    <TextView
-                        android:id="@+id/gas_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/gas_name"
-                        android:layout_marginLeft="8dp"
-                        android:gravity="right"
-                        android:layout_alignParentRight="true"
-                        android:textColor="@color/c_333333"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/tv_gas_ch_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_alignLeft="@+id/gas_price"
-                        android:layout_below="@+id/gas_price"
-                        android:layout_marginTop="6dp"
-                        android:textColor="@color/c_999999"
-                        android:textSize="14dp" />
-
-                    <View
-                        android:layout_below="@+id/tv_gas_ch_price"
-                        android:layout_width="match_parent"
-                        android:layout_marginTop="24dp"
-                        android:layout_height="0.5dp"
-                        android:background="@color/c_efefef" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/getgas_rl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:paddingLeft="34dp"
-                    android:paddingRight="34dp"
-                    android:paddingTop="24dp">
-
-                    <ImageView
-                        android:id="@+id/getgas_img"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_centerVertical="true"
-                        android:src="@mipmap/project_icon_get_gas" />
-
-                    <TextView
-                        android:id="@+id/getgas_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="19sp"
-                        android:layout_marginLeft="20dp"
-                        android:text=" 可提取Gas"
-                        android:textColor="@color/c_333333"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/getgas_img"/>
-
-                    <TextView
-                        android:id="@+id/getgas_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/getgas_name"
-                        android:layout_marginLeft="8dp"
-                        android:gravity="right"
-                        android:layout_alignParentRight="true"
-                        android:textColor="@color/c_333333"
-                        android:textSize="18dp" />
-
-                    <TextView
-                        android:id="@+id/tv_getgas_ch_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:layout_alignLeft="@+id/getgas_price"
-                        android:layout_below="@+id/getgas_price"
-                        android:layout_marginTop="6dp"
-                        android:textColor="@color/c_999999"
-                        android:textSize="14dp" />
-
-                    <View
-                        android:layout_below="@+id/tv_getgas_ch_price"
-                        android:layout_width="match_parent"
-                        android:layout_marginTop="24dp"
-                        android:layout_height="0.5dp"
-                        android:background="@color/c_efefef" />
-                </RelativeLayout>
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
+            android:background="@color/c_ffffff"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat>

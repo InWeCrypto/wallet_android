@@ -151,7 +151,7 @@
                                     android:singleLine="true"
                                     android:ellipsize="middle"
                                     android:maxLines="1"
-                                    android:text="￥0.00"
+                                    android:text="≈￥0.00"
                                     android:layout_marginTop="4dp"
                                     android:textColor="@color/c_E86438"
                                     android:textSize="14dp" />
@@ -207,7 +207,7 @@
                                         android:id="@+id/tv_neo_price"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="￥0.00"
+                                        android:text="≈￥0.00"
                                         android:layout_marginTop="4dp"
                                         android:textColor="@color/c_E86438"
                                         android:textSize="14dp" />

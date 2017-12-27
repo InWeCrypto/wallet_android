@@ -150,9 +150,14 @@ public class ImportWalletActivity extends BaseActivity {
                     ToastUtil.show(getString(R.string.qingshurumima));
                     return;
                 }
+
                 if (null!=wallets){
                     for (WalletBean wallet:wallets){
-                        if (key.contains(wallet.getAddress().replace("0x","").toLowerCase())){
+                        if (key.toLowerCase().contains(wallet.getAddress().replace("0x","").toLowerCase())){
+                            ToastUtil.show(getString(R.string.wallet_has_add_error));
+                            return;
+                        }
+                        if (key.contains(wallet.getAddress())){
                             ToastUtil.show(getString(R.string.wallet_has_add_error));
                             return;
                         }
@@ -178,16 +183,20 @@ public class ImportWalletActivity extends BaseActivity {
     }
 
     private void impotWatch(String key) {
-        if (AppUtil.isAddress(key.toLowerCase())){
+        if (AppUtil.isAddress(key.trim())){
             if (null!=wallets){
                 for (WalletBean wallet:wallets){
-                    if (key.toLowerCase().contains(wallet.getAddress().replace("0x","").toLowerCase())){
+                    if (type_id==1&&key.trim().toLowerCase().contains(wallet.getAddress().replace("0x","").toLowerCase())){
+                        ToastUtil.show(R.string.wallet_has_add_error);
+                        return;
+                    }
+                    if (type_id==2&&key.trim().contains(wallet.getAddress())){
                         ToastUtil.show(R.string.wallet_has_add_error);
                         return;
                     }
                 }
             }
-            gotoImport("", key.toLowerCase().trim());
+            gotoImport("", type_id==2?key.trim():key.toLowerCase().trim());
         }else {
             ToastUtil.show(getString(R.string.qingshuruzhengquedizhi));
         }

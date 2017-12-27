@@ -278,7 +278,7 @@ public class NeoTokenWalletActivity extends BaseActivity {
             @Override
             public void onLoadMore() {
                 if (isEnd){
-                    if (!isShow){
+                    if (!isShow&&page!=0){
                         ToastUtil.show(getString(R.string.zanwugengduoshuju));
                         isShow=true;
                     }
@@ -380,6 +380,9 @@ public class NeoTokenWalletActivity extends BaseActivity {
             public void onError(Response<LzyResponse<NeoOderBean>> response) {
                 super.onError(response);
                 ToastUtil.show(getString(R.string.load_error));
+                if (page!=0){
+                    page--;
+                }
             }
 
             @Override
@@ -422,7 +425,7 @@ public class NeoTokenWalletActivity extends BaseActivity {
                 mails.addAll(response.body().data.getList());
             }
         }
-        adapter.notifyDataSetChanged();
+        emptyWrapper.notifyDataSetChanged();
     }
 
     @Override

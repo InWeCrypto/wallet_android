@@ -20,7 +20,6 @@ import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.info.adapter.IcoAdapter;
-import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 

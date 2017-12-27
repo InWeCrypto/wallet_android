@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.inwecrypto.wallet.R;
@@ -36,7 +37,10 @@ public class MyLeftMarkerView extends MarkerView {
     }
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        markerTv.setText(mFormat.format(num));
+        if (e instanceof CandleEntry){
+            CandleEntry entry= (CandleEntry) e;
+            markerTv.setText(mFormat.format(entry.getClose()));
+        }
     }
 
     @Override

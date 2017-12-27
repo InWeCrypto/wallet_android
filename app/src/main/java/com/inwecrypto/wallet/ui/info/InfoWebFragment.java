@@ -1,16 +1,11 @@
 package com.inwecrypto.wallet.ui.info;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -26,17 +21,12 @@ import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.util.AppUtil;
-import com.inwecrypto.wallet.common.widget.ScrollSwipeRefreshLayout;
-import com.inwecrypto.wallet.common.widget.WebView4Scroll;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 /**

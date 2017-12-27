@@ -42,24 +42,24 @@ public class MarketAdapter extends CommonAdapter<MarkeListBean> {
                 holder.setText(R.id.pers,"+"+marketBean.getTime_data().getChange_24h()+"%");
                 holder.setBackgroundColor(R.id.pers, Color.parseColor("#008C55"));
             }
-            holder.setText(R.id.gao,"$"+decimalFormat.format(Float.parseFloat(marketBean.getTime_data().getMax_price_cny_24h())));
-            holder.setText(R.id.di,"$"+decimalFormat.format(Float.parseFloat(marketBean.getTime_data().getMin_price_cny_24h())));
-            float liang=Float.parseFloat(marketBean.getTime_data().getVolume_usd_24h());
+            holder.setText(R.id.gao,"￥"+decimalFormat.format(Float.parseFloat(marketBean.getTime_data().getMax_price_cny_24h())));
+            holder.setText(R.id.di,"￥"+decimalFormat.format(Float.parseFloat(marketBean.getTime_data().getMin_price_cny_24h())));
+            float liang=Float.parseFloat(marketBean.getTime_data().getVolume_cny_24h());
             if (liang<10000){
-                holder.setText(R.id.liang,"$"+decimalFormat.format(liang));
+                holder.setText(R.id.liang,"￥"+decimalFormat.format(liang));
             }else if (liang<100000000){
-                holder.setText(R.id.liang,"$"+decimalFormat.format(liang/10000)+mContext.getString(R.string.wan));
+                holder.setText(R.id.liang,"￥"+decimalFormat.format(liang/10000)+mContext.getString(R.string.wan));
             }else {
-                holder.setText(R.id.liang,"$"+decimalFormat.format(liang/10000/10000)+mContext.getString(R.string.yi));
+                holder.setText(R.id.liang,"￥"+decimalFormat.format(liang/10000/10000)+mContext.getString(R.string.yi));
             }
         }else {
             holder.setText(R.id.pers,"0%");
             holder.setBackgroundColor(R.id.pers, Color.parseColor("#008C55"));
             holder.setText(R.id.price_us,"$0.00");
             holder.setText(R.id.price_cn,"￥0.00");
-            holder.setText(R.id.gao,"$0.00");
-            holder.setText(R.id.di,"$0.00");
-            holder.setText(R.id.liang,"$0.00");
+            holder.setText(R.id.gao,"￥0.00");
+            holder.setText(R.id.di,"￥0.00");
+            holder.setText(R.id.liang,"￥0.00");
         }
 
     }

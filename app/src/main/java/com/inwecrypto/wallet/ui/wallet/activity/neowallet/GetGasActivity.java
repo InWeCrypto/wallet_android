@@ -4,11 +4,13 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.ClaimUtxoBean;
@@ -26,7 +28,6 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.wallet.activity.TransferAccountsActivity;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,6 +66,8 @@ public class GetGasActivity extends BaseActivity {
     TextView fanwei;
     @BindView(R.id.jiedong_gas)
     TextView jiedongGas;
+    @BindView(R.id.swipeRefresh)
+    SwipeRefreshLayout swipeRefresh;
 
     private WalletBean wallet;
     private TokenBean.RecordBean neoBean;
@@ -91,11 +94,22 @@ public class GetGasActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.zhuanzhangqueren);
+        txtMainTitle.setText(R.string.tiqugas);
         txtRightTitle.setVisibility(View.GONE);
         getBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (wallet.getType().equals(Constant.GUANCHA)) {
+//                    PackageManager pm = getPackageManager();
+//                    boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
+//                    if (!nfc) {
+//                        ToastUtil.show(R.string.no_nfc_hit);
+//                        return;
+//                    }
+                    ToastUtil.show("暂时不支持冷钱包提取Gas!请转换为热钱包");
+                    return;
+                }
+
                 showFixLoading();
 
                 //先获取订单列表检查是否有未完成的订单
@@ -138,8 +152,53 @@ public class GetGasActivity extends BaseActivity {
         jiedongGas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //自己向自己转一次账
-                transferSelf();
+                if (wallet.getType().equals(Constant.GUANCHA)) {
+//                    PackageManager pm = getPackageManager();
+//                    boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
+//                    if (!nfc) {
+//                        ToastUtil.show(R.string.no_nfc_hit);
+//                        return;
+//                    }
+                    ToastUtil.show("暂时不支持冷钱包解冻Gas!请转换为热钱包");
+                    return;
+                }
+                if (new BigDecimal(neoBean.getBalance()).intValue()==0){
+                    ToastUtil.show("当前NEO余额为0!不可解冻!");
+                    return;
+                }
+                showFixLoading();
+                //请求交易记录
+                WalletApi.neoWalletOrder(this,0, wallet.getId(), "NEO",Constant.NEO_ASSETS, new JsonCallback<LzyResponse<NeoOderBean>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<NeoOderBean>> response) {
+                        if (null != response && null != response.body().data.getList()) {
+                            boolean canGetGas = true;
+                            for (int i = 0; i < response.body().data.getList().size(); i++) {
+                                if (response.body().data.getList().get(i).getConfirmTime().equals("")) {
+                                    canGetGas = false;
+                                    break;
+                                }
+                            }
+                            if (canGetGas) {
+                                //自己向自己转一次账
+                                transferSelf();
+                            } else {
+                                hideFixLoading();
+                                ToastUtil.show(getString(R.string.ninhaiyouweiwanchengdedingdan));
+                            }
+                        } else {
+                            //自己向自己转一次账
+                            transferSelf();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<LzyResponse<NeoOderBean>> response) {
+                        super.onError(response);
+                        hideFixLoading();
+                        ToastUtil.show(getString(R.string.load_error));
+                    }
+                });
             }
         });
 
@@ -152,14 +211,63 @@ public class GetGasActivity extends BaseActivity {
             }
         });
 
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refershData();
+            }
+        });
+
         gasTv.setText(neoBean.getGnt().get(0).getAvailable());
         cannotGetGas.setText(getResources().getString(R.string.buketiqugas) + neoBean.getGnt().get(0).getUnavailable());
         gasNum.setText(neoBean.getGnt().get(0).getAvailable());
-        fanwei.setText(getResources().getString(R.string.ketiqu)+"1.0000-"+neoBean.getGnt().get(0).getAvailable());
+        //fanwei.setText(getResources().getString(R.string.ketiqu)+"1.0000-"+neoBean.getGnt().get(0).getAvailable());
     }
 
     @Override
     protected void initData() {
+
+    }
+
+    private void refershData() {
+
+        //请求资产
+        WalletApi.conversion(this, wallet.getId(), new JsonCallback<LzyResponse<TokenBean>>() {
+            @Override
+            public void onSuccess(Response<LzyResponse<TokenBean>> response) {
+                if (null==gasTv||null==cannotGetGas||null==gasNum){
+                    return;
+                }
+                if (null!=response.body().data&&null!=response.body().data.getRecord()){
+                    neoBean=response.body().data.getRecord();
+                    gasTv.setText(neoBean.getGnt().get(0).getAvailable());
+                    cannotGetGas.setText(getResources().getString(R.string.buketiqugas) + neoBean.getGnt().get(0).getUnavailable());
+                    gasNum.setText(neoBean.getGnt().get(0).getAvailable());
+                }
+            }
+
+            @Override
+            public void onCacheSuccess(Response<LzyResponse<TokenBean>> response) {
+                super.onCacheSuccess(response);
+                onSuccess(response);
+            }
+
+            @Override
+            public void onError(Response<LzyResponse<TokenBean>> response) {
+                super.onError(response);
+                ToastUtil.show(getString(R.string.load_error));
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                if (null!=swipeRefresh){
+                    swipeRefresh.setRefreshing(false);
+                }
+            }
+        });
+
     }
 
     private void getGas() {
@@ -167,7 +275,7 @@ public class GetGasActivity extends BaseActivity {
         WalletApi.getClaimUtxo(this, wallet.getAddress(), new JsonCallback<LzyResponse<ClaimUtxoBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<ClaimUtxoBean>> response) {
-                if (null==response){
+                if (null==response||null==response.body().data.getResult()){
                     ToastUtil.show(getString(R.string.tiqugasshibaiqingshaohouchongshi));
                     return;
                 }
@@ -320,13 +428,6 @@ public class GetGasActivity extends BaseActivity {
 
     private void transferSelf() {
 
-        if (new BigDecimal(neoBean.getBalance()).intValue()==0){
-            ToastUtil.show("当前NEO余额为0!不可解冻!");
-            return;
-        }
-
-        showFixLoading();
-
         WalletApi.getUtxo(this, wallet.getAddress(), "neo-asset-id", new JsonCallback<LzyResponse<UtxoBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<UtxoBean>> response) {
@@ -340,16 +441,25 @@ public class GetGasActivity extends BaseActivity {
                         intent.putExtra("unspent",response.body());
                         keepTogo(intent);
                     }else {
-                        String utxo=GsonUtils.objToJson(response.body().data.getResult());
-                        srartTransfer(utxo);
+                        if (null!=response.body().data.getResult()){
+                            String utxo=GsonUtils.objToJson(response.body().data.getResult());
+                            srartTransfer(utxo);
+                        }else {
+                            ToastUtil.show(getString(R.string.huoquyueshibaiqingshaohouchognshi));
+                        }
                     }
                 }
-                hideFixLoading();
             }
 
             @Override
             public void onError(Response<LzyResponse<UtxoBean>> response) {
                 super.onError(response);
+                ToastUtil.show(getString(R.string.huoquyueshibaiqingshaohouchognshi));
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
                 hideFixLoading();
             }
         });

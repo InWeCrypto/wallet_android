@@ -285,4 +285,14 @@
     <string name="ninhaiyouweiwanchengdedingdan">您还有未完成的订单!请稍后重试!</string>
     <string name="zhuanzhangtishi">当前余额不足!请重新填写转账余额</string>
     <string name="zanwugengduoshuju">暂无更多数据!</string>
+    <string name="qingshurugaiqianbaodezhengquesiyao">请输入该钱包的正确私钥</string>
+    <string name="qingshurugaiqianbaodezhengquezhujici">请输入该钱包的正确助记词</string>
+    <string name="qingshurugaiqianbaodezhengquekeystore">请输入该钱包的正确KeyStore</string>
+    <string name="tiqugas">提取Gas</string>
+    <string name="huoquyueshibaiqingshaohouchognshi">获取余额失败,请稍后重试!</string>
+    <string name="jiaoyichenggong">交易成功</string>
+    <string name="querenzhong">确认中</string>
+    <string name="jiaoyishijian">交易时间</string>
+    <string name="qingshuruzhengquedeethdizhi">请输入正确的ETH钱包地址</string>
+    <string name="qingshuruzhengquedeneodizhi">请输入正确的NEO钱包地址</string>
 </resources>

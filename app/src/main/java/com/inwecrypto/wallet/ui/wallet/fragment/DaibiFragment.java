@@ -8,7 +8,6 @@ import android.support.v7.widget.SimpleItemAnimator;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.bean.TokenBean;
-import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.wallet.adapter.MainGntAdapter;
 
@@ -32,8 +31,6 @@ public class DaibiFragment extends BaseFragment {
     private MainGntAdapter adapter;
 
     private SwipRefershCanUseListener listener;
-
-    private String jsonData="[]";
 
 
     @Override

@@ -158,6 +158,15 @@ public class ImportWalletSettingActivity extends BaseActivity {
                                     wallet=Unichain.openETHWallet(key.getBytes("utf-8"),pass);
                                     json=key.getBytes();
                                     address=wallet.address().toLowerCase();
+                                    if (!key.toLowerCase().contains(address.replace("0x",""))){
+                                        mActivity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                ToastUtil.show("请填写正确的KeyStore");
+                                                hideLoading();
+                                            }});
+                                        return;
+                                    }
                                     break;
                                 case 2:
                                     wallet=Unichain.ethWalletFromMnemonic(key);
@@ -178,14 +187,8 @@ public class ImportWalletSettingActivity extends BaseActivity {
 
                             if (null!=wallets){
                                 for (WalletBean walletBean:wallets){
-                                    if (address.contains(walletBean.getAddress().toLowerCase())){
-                                        mActivity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                ToastUtil.show(R.string.wallet_has_add_error);
-                                                hideLoading();
-                                            }
-                                        });
+                                    if (key.toLowerCase().contains(walletBean.getAddress().replace("0x","").toLowerCase())){
+                                        ToastUtil.show(getString(R.string.wallet_has_add_error));
                                         return;
                                     }
                                 }

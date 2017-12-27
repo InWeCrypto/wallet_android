@@ -16,7 +16,6 @@ import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.MailBean;
-import com.inwecrypto.wallet.bean.CommonRecordBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.MeApi;
@@ -246,8 +245,18 @@ public class MailDetaileActivity extends BaseActivity {
         if (event.getEventCode()==Constant.EVENT_KEY){
             if (null!=event.getData()){
                 com.inwecrypto.wallet.event.KeyEvent key= (com.inwecrypto.wallet.event.KeyEvent) event.getData();
-                if (AppUtil.isAddress(key.getKey().trim())){
-                    etAddress.setText(key.getKey().trim());
+                if (type==6){
+                    if (AppUtil.isEthAddress(key.getKey().trim())){
+                        etAddress.setText(key.getKey().trim());
+                    }else {
+                        ToastUtil.show(R.string.qingshuruzhengquedeethdizhi);
+                    }
+                }else if (type == 7){
+                    if (AppUtil.isNeoAddress(key.getKey().trim())){
+                        etAddress.setText(key.getKey().trim());
+                    }else {
+                        ToastUtil.show(R.string.qingshuruzhengquedeneodizhi);
+                    }
                 }else {
                     ToastUtil.show(R.string.qingshuruzhengquedeqianbaodizhi);
                 }

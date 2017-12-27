@@ -9,159 +9,168 @@
 
     <include layout="@layout/base_title_bar" />
 
-
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/c_158A1B"
-        android:padding="10dp"
-        android:orientation="vertical">
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="24dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textSize="12sp"
-            android:textColor="@color/c_D7D7D7"
-            android:text="@string/zuigaoketiqugas"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <TextView
-            android:id="@+id/gas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textSize="32sp"
-            android:textColor="@color/c_F7F7F7"
-            android:text="3300.0100"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/cannot_get_gas"
-                android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="10sp"
-                android:textColor="@color/c_D7D7D7"/>
+                android:background="@color/c_158A1B"
+                android:padding="10dp"
+                android:orientation="vertical">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textSize="12sp"
+                    android:textColor="@color/c_D7D7D7"
+                    android:text="@string/zuigaoketiqugas"/>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:id="@+id/gas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textSize="32sp"
+                    android:textColor="@color/c_F7F7F7" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/cannot_get_gas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textColor="@color/c_D7D7D7"/>
+                    <TextView
+                        android:id="@+id/jiedong_gas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp"
+                        android:layout_marginLeft="6dp"
+                        android:textSize="10sp"
+                        android:text="解冻"
+                        android:textColor="@color/c_D7D7D7"
+                        android:background="@drawable/round_999dp_white_bg"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="36dp"/>
+
             <TextView
-                android:id="@+id/jiedong_gas"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:layout_marginLeft="6dp"
-                android:textSize="10sp"
-                android:text="解冻"
-                android:textColor="@color/c_D7D7D7"
-                android:background="@drawable/round_999dp_white_bg"/>
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:textColor="@color/c_000000"
+                android:text="@string/shenqingtiqu"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+
+            <TextView
+                android:id="@+id/gas_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:background="@color/c_ffffff"
+                android:cursorVisible="true"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:paddingBottom="14dp"
+                android:paddingTop="14dp"
+                android:textColor="@color/c_333333"
+                android:textCursorDrawable='@null'
+                android:textSize="24sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:background="@color/c_FB7B33"/>
+
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fanwei"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/c_A8A8A8"
+                    android:textSize="10sp"/>
+
+                <TextView
+                    android:id="@+id/get_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="全部提取"
+                    android:textColor="@color/c_F95A00"
+                    android:textSize="10sp"/>
+
+            </LinearLayout>
+
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/get_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:background="@drawable/round_6dp_bule_bg"
+                android:gravity="center"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:text="@string/queding"
+                android:textColor="@color/c_ffffff"
+                android:textSize="14sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="36dp" />
         </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="36dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textSize="14sp"
-        android:textColor="@color/c_000000"
-        android:text="@string/shenqingtiqu"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
-
-    <TextView
-        android:id="@+id/gas_num"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:background="@color/c_ffffff"
-        android:cursorVisible="true"
-        android:gravity="center"
-        android:inputType="numberDecimal"
-        android:paddingBottom="14dp"
-        android:paddingTop="14dp"
-        android:textColor="@color/c_333333"
-        android:textCursorDrawable='@null'
-        android:textSize="24sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:background="@color/c_FB7B33"/>
-
-    <LinearLayout
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/fanwei"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:textColor="@color/c_A8A8A8"
-            android:textSize="10sp"/>
-
-        <TextView
-            android:id="@+id/get_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingLeft="8dp"
-            android:paddingBottom="8dp"
-            android:text="全部提取"
-            android:textColor="@color/c_F95A00"
-            android:textSize="10sp"/>
-
-    </LinearLayout>
-
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <TextView
-        android:id="@+id/get_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:background="@drawable/round_6dp_bule_bg"
-        android:gravity="center"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
-        android:text="@string/queding"
-        android:textColor="@color/c_ffffff"
-        android:textSize="14sp" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="36dp" />
 </LinearLayout>

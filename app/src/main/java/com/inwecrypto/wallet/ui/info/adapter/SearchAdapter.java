@@ -3,7 +3,6 @@ package com.inwecrypto.wallet.ui.info.adapter;
 import android.content.Context;
 
 import com.inwecrypto.wallet.R;
-import com.inwecrypto.wallet.base.BaseActivity;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 

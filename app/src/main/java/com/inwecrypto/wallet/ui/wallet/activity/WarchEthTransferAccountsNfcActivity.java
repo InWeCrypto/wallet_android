@@ -80,6 +80,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
     private String gas;
     private String gnt;
     private String data;
+    private String asset_id;
     private TransferBean transfer;
     private MaterialDialog mMaterialDialog;
     private byte[] json=new byte[489];
@@ -98,6 +99,7 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
 
         if (isGnt) {
             gnt = extras.getString("gnt");
+            asset_id= extras.getString("asset_id");
         }
     }
 
@@ -310,7 +312,17 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
     private void transfer() {
         showFixLoading();
         if (isGnt) {
-            WalletApi.walletOrder(mActivity, wallet.getId(), data, wallet.getAddress(), address, hint, new BigDecimal(price.toString()).multiply(pEther).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString(), new BigDecimal(gas).multiply(pEther).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString(), gnt, new JsonCallback<LzyResponse<Object>>() {
+            WalletApi.walletOrder(mActivity
+                    , wallet.getId()
+                    , data
+                    , wallet.getAddress()
+                    , address
+                    , hint
+                    , new BigDecimal(price.toString()).multiply(pEther).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString()
+                    , new BigDecimal(gas).multiply(pEther).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString()
+                    , gnt
+                    , asset_id
+                    , new JsonCallback<LzyResponse<Object>>() {
                 @Override
                 public void onSuccess(Response<LzyResponse<Object>> response) {
                     hideFixLoading();
@@ -337,7 +349,16 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                 }
             });
         } else {
-            WalletApi.walletOrder(mActivity, wallet.getId(), data, wallet.getAddress(), address, hint, new BigDecimal(price.toString()).multiply(pEther).toPlainString(), new BigDecimal(gas).multiply(pEther).toPlainString(), wallet.getCategory().getName(), new JsonCallback<LzyResponse<Object>>() {
+            WalletApi.walletOrder(mActivity
+                    , wallet.getId()
+                    , data
+                    , wallet.getAddress()
+                    , address
+                    , hint
+                    , new BigDecimal(price.toString()).multiply(pEther).toPlainString()
+                    , new BigDecimal(gas).multiply(pEther).toPlainString(), wallet.getCategory().getName()
+                    , Constant.ETH_ORDER_ASSET_ID
+                    , new JsonCallback<LzyResponse<Object>>() {
                 @Override
                 public void onSuccess(Response<LzyResponse<Object>> response) {
                     hideFixLoading();

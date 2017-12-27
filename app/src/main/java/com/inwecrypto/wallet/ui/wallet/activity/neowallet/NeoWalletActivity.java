@@ -8,15 +8,15 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -30,20 +30,29 @@ import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AnimUtil;
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.wallet.activity.AddTokenActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.ReceiveActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.WalletTipOneActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.WatchImportWalletTypeActivity;
 import com.lzy.okgo.model.Response;
+import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.math.BigDecimal;
-import java.util.IllegalFormatCodePointException;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -89,26 +98,15 @@ public class NeoWalletActivity extends BaseActivity {
     LinearLayout titlell;
     @BindView(R.id.appbarlayout)
     AppBarLayout appbarlayout;
-    @BindView(R.id.neo_price)
-    TextView neoPrice;
-    @BindView(R.id.tv_neo_ch_price)
-    TextView tvNeoChPrice;
-    @BindView(R.id.neo_rl)
-    RelativeLayout neoRl;
-    @BindView(R.id.gas_price)
-    TextView gasPrice;
-    @BindView(R.id.tv_gas_ch_price)
-    TextView tvGasChPrice;
-    @BindView(R.id.gas_rl)
-    RelativeLayout gasRl;
-    @BindView(R.id.getgas_price)
-    TextView getgasPrice;
-    @BindView(R.id.tv_getgas_ch_price)
-    TextView tvGetgasChPrice;
-    @BindView(R.id.getgas_rl)
-    RelativeLayout getgasRl;
+    @BindView(R.id.wallet_list)
+    SwipeMenuRecyclerView walletList;
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayoutCompat swipeRefresh;
+    @BindView(R.id.add_gnt)
+    ImageView addGnt;
+
+    private ArrayList<TokenBean.ListBean> data = new ArrayList<>();
+    private NeoGntAdapter adapter;
 
     private WalletBean wallet;
 
@@ -200,55 +198,117 @@ public class NeoWalletActivity extends BaseActivity {
             }
         });
 
-        neoRl.setOnClickListener(new View.OnClickListener() {
+        addGnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null == wallet||null==neoBean) {
-                    ToastUtil.show(R.string.wallet_data_error);
-                    return;
-                }
-                Intent intent = new Intent(mActivity, NeoTokenWalletActivity.class);
-                intent.putExtra("type", 0);
-                intent.putExtra("wallet", wallet);
-                intent.putExtra("neo",neoBean);
+                Intent intent = new Intent(mActivity, AddTokenActivity.class);
+                intent.putExtra("id", wallet.getCategory_id());
+                intent.putExtra("walletId", wallet.getId());
                 keepTogo(intent);
             }
         });
 
-        gasRl.setOnClickListener(new View.OnClickListener() {
+        adapter = new NeoGntAdapter(this, R.layout.wallet_item, data);
+        walletList.setLayoutManager(new LinearLayoutManager(this));
+        walletList.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
-            public void onClick(View v) {
-                if (null == wallet||null==neoBean) {
-                    ToastUtil.show(R.string.wallet_data_error);
-                    return;
-                }
-                Intent intent = new Intent(mActivity, NeoTokenWalletActivity.class);
-                intent.putExtra("type", 1);
-                intent.putExtra("wallet", wallet);
-                intent.putExtra("neo",neoBean);
-                keepTogo(intent);
+            public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
+                SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
+                deleteItem.setText(getString(R.string.shanchu));
+                deleteItem.setTextSize(14);
+                deleteItem.setTextColorResource(R.color.c_ffffff);
+                deleteItem.setBackgroundColorResource(R.color.c_E86438);
+                deleteItem.setWidth(DensityUtil.dip2px(mActivity, 72));
+                deleteItem.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+                // 各种文字和图标属性设置。
+                swipeRightMenu.addMenuItem(deleteItem); // 在Item左侧添加一个菜单。
+
+                SwipeMenuItem upItem = new SwipeMenuItem(mActivity);
+                upItem.setText(getString(R.string.dingzhi));
+                upItem.setTextSize(14);
+                upItem.setTextColorResource(R.color.c_ffffff);
+                upItem.setBackgroundColorResource(R.color.c_bababb);
+                upItem.setWidth(DensityUtil.dip2px(mActivity, 72));
+                upItem.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+                // 各种文字和图标属性设置。
+                swipeRightMenu.addMenuItem(upItem); // 在Item右侧添加一个菜单。
             }
         });
 
-        getgasRl.setOnClickListener(new View.OnClickListener() {
+        walletList.setAdapter(adapter);
+        walletList.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
             @Override
-            public void onClick(View v) {
-                if (null == wallet||null==neoBean) {
-                    ToastUtil.show(R.string.wallet_data_error);
-                    return;
+            public void onItemClick(SwipeMenuBridge menuBridge) {
+                if (menuBridge.getPosition() == 0) {//删除
+                    WalletApi.userGntDelete(mActivity, data.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
+                        @Override
+                        public void onSuccess(Response<LzyResponse<Object>> response) {
+                            walletList.smoothCloseMenu();
+                            ToastUtil.show(getString(R.string.shanchuchenggong));
+                            initData();
+                            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
+                        }
+
+                        @Override
+                        public void onError(Response<LzyResponse<Object>> response) {
+                            super.onError(response);
+                            ToastUtil.show(getString(R.string.shanchushibai));
+                        }
+                    });
+
+                } else if (menuBridge.getPosition() == 1) {//顶置
+                    WalletApi.userGnt(mActivity, data.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
+                        @Override
+                        public void onSuccess(Response<LzyResponse<Object>> response) {
+                            walletList.smoothCloseMenu();
+                            ToastUtil.show(getString(R.string.dingzhichenggong));
+                            initData();
+                        }
+
+                        @Override
+                        public void onError(Response<LzyResponse<Object>> response) {
+                            super.onError(response);
+                            ToastUtil.show(getString(R.string.dingzhishibai));
+                        }
+                    });
                 }
-                Intent intent = new Intent(mActivity, GetGasActivity.class);
-                intent.putExtra("wallet", wallet);
-                intent.putExtra("neo",neoBean);
-                keepTogo(intent);
             }
         });
-
-        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        walletList.setSwipeItemClickListener(new SwipeItemClickListener() {
             @Override
-            public void onRefresh() {
-                initData();
+            public void onItemClick(View itemView, int position) {
+                if (position==0){
+                    if (null == wallet||null==neoBean) {
+                        ToastUtil.show(R.string.wallet_data_error);
+                        return;
+                    }
+                    Intent intent = new Intent(mActivity, NeoTokenWalletActivity.class);
+                    intent.putExtra("type", 0);
+                    intent.putExtra("wallet", wallet);
+                    intent.putExtra("neo",neoBean);
+                    keepTogo(intent);
+                }else if (position==1){
+                    if (null == wallet||null==neoBean) {
+                        ToastUtil.show(R.string.wallet_data_error);
+                        return;
+                    }
+                    Intent intent = new Intent(mActivity, NeoTokenWalletActivity.class);
+                    intent.putExtra("type", 1);
+                    intent.putExtra("wallet", wallet);
+                    intent.putExtra("neo",neoBean);
+                    keepTogo(intent);
+                }else if (position==2){
+                    if (null == wallet||null==neoBean) {
+                        ToastUtil.show(R.string.wallet_data_error);
+                        return;
+                    }
+                    Intent intent = new Intent(mActivity, GetGasActivity.class);
+                    intent.putExtra("wallet", wallet);
+                    intent.putExtra("neo",neoBean);
+                    keepTogo(intent);
+                }else {
+
+                }
             }
         });
 
@@ -322,38 +382,94 @@ public class NeoWalletActivity extends BaseActivity {
                 if (null==tvPrice||null==titlePrice){
                     return;
                 }
+                data.clear();
+                TOKENPrice=new BigDecimal("0.00");
+                TokenBean.ListBean neo=new TokenBean.ListBean();
+                TokenBean.ListBean.GntCategoryBeanX neoGnt=new TokenBean.ListBean.GntCategoryBeanX();
+                TokenBean.ListBean.GntCategoryBeanX.CapBeanX neoCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
+                neo.setName("NEO");
+                neoGnt.setIcon(R.mipmap.project_icon_neo+"");
+
+                TokenBean.ListBean gas=new TokenBean.ListBean();
+                TokenBean.ListBean.GntCategoryBeanX gasGnt=new TokenBean.ListBean.GntCategoryBeanX();
+                TokenBean.ListBean.GntCategoryBeanX.CapBeanX gasCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
+                gas.setName("Gas");
+                gasGnt.setIcon(R.mipmap.project_icon_gas+"");
+
+                TokenBean.ListBean getGas=new TokenBean.ListBean();
+                TokenBean.ListBean.GntCategoryBeanX getGasGnt=new TokenBean.ListBean.GntCategoryBeanX();
+                TokenBean.ListBean.GntCategoryBeanX.CapBeanX getGasCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
+                getGas.setName("可提取Gas");
+                getGasGnt.setIcon(R.mipmap.project_icon_get_gas+"");
+
+
                 if (null!=response.body().data&&null!=response.body().data.getRecord()){
                     neoBean=response.body().data.getRecord();
-                    neoPrice.setText(new BigDecimal(neoBean.getBalance()).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    gasPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    getgasPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    if (1 == AppApplication.get().getUnit()){
-                        tvNeoChPrice.setText("￥"+new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                        tvGasChPrice.setText("￥"+new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                        tvGetgasChPrice.setText("￥"+new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    }else {
-                        tvNeoChPrice.setText("$"+new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                        tvGasChPrice.setText("$"+new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                        tvGetgasChPrice.setText("$"+new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    }
+                    neo.setBalance(new BigDecimal(neoBean.getBalance()).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString());
+
+                    gas.setBalance(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
+
+                    getGas.setBalance(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
+
+                    neoCap.setPrice_cny(new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    gasCap.setPrice_cny(new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    getGasCap.setPrice_cny(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    neoCap.setPrice_usd(new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    gasCap.setPrice_usd(new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    getGasCap.setPrice_usd(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+
                     //计算总值
                     if (1 == AppApplication.get().getUnit()) {
-                        BigDecimal neo=new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny()));
-                        BigDecimal gas=new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
-                        BigDecimal getGas = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
-                        TOKENPrice=neo.add(gas).add(getGas).setScale(2,BigDecimal.ROUND_HALF_UP);
-
-                        tvPrice.setText(TOKENPrice.toPlainString());
-                        titlePrice.setText("(￥" + TOKENPrice.toPlainString() + ")");
+                        BigDecimal neoBd=new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny()));
+                        BigDecimal gasBd=new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
+                        BigDecimal getGasBd = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
+                        TOKENPrice=neoBd.add(gasBd).add(getGasBd).setScale(2,BigDecimal.ROUND_HALF_UP);
                     } else {
-                        BigDecimal neo=new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd()));
-                        BigDecimal gas=new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
-                        BigDecimal getGas = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
-                        TOKENPrice=neo.add(gas).add(getGas).setScale(2,BigDecimal.ROUND_HALF_UP);
-
-                        tvPrice.setText(TOKENPrice.toPlainString());
-                        titlePrice.setText("($" + TOKENPrice.toPlainString() + ")");
+                        BigDecimal neoBd=new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd()));
+                        BigDecimal gasBd=new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
+                        BigDecimal getGasBd = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
+                        TOKENPrice=neoBd.add(gasBd).add(getGasBd).setScale(2,BigDecimal.ROUND_HALF_UP);
                     }
+
+                    neoGnt.setCap(neoCap);
+                    neo.setGnt_category(neoGnt);
+
+                    gasGnt.setCap(gasCap);
+                    gas.setGnt_category(gasGnt);
+
+                    getGasGnt.setCap(getGasCap);
+                    getGas.setGnt_category(getGasGnt);
+
+                    data.add(neo);
+                    data.add(gas);
+                    data.add(getGas);
+                }
+
+                if (null != response.body().data.getList() && response.body().data.getList().size() > 0) {
+                    data.addAll(response.body().data.getList());
+                }
+
+                adapter.notifyDataSetChanged();
+                //计算金额
+                for (TokenBean.ListBean token:data){
+                    BigDecimal currentPrice = new BigDecimal(AppUtil.toD(token.getBalance().replace("0x", "0")));
+                    if (null!=token.getGnt_category().getCap()){
+
+                        if (1 == AppApplication.get().getUnit()) {
+                            TOKENPrice=TOKENPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_cny())));
+                        }else {
+                            TOKENPrice=TOKENPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_usd())));
+                        }
+                    }
+                }
+
+                //计算总金额
+                if (1 == AppApplication.get().getUnit()) {
+                    tvPrice.setText(TOKENPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    titlePrice.setText("(￥" + TOKENPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                } else {
+                    tvPrice.setText(TOKENPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    titlePrice.setText("($" + TOKENPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
                 }
             }
 
@@ -377,18 +493,17 @@ public class NeoWalletActivity extends BaseActivity {
                 }
             }
         });
-
     }
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
         if (event.getEventCode() == Constant.EVENT_PRICE || event.getEventCode() == Constant.EVENT_REFRESH) {
             initData();
-            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
         if (event.getEventCode() == Constant.EVENT_TIP_SUCCESS) {
             tvWatch.setVisibility(View.GONE);
-            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
         if (event.getEventCode() == Constant.EVENT_WATCH_TRANSFER) {
             wallet.setType("0");
@@ -413,7 +528,7 @@ public class NeoWalletActivity extends BaseActivity {
                     tvWatch.setBackgroundResource(R.drawable.round_999dp_bule_bg);
                     break;
             }
-            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
 
         if (event.getEventCode() == Constant.EVENT_JIEDONG_DIALOG){

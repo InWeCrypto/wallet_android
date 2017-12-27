@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
-import com.inwecrypto.wallet.bean.BpsBean;
 import com.inwecrypto.wallet.bean.TokenBean;
 import com.inwecrypto.wallet.bean.UtxoBean;
 import com.inwecrypto.wallet.bean.WalletBean;
@@ -31,7 +30,6 @@ import com.inwecrypto.wallet.event.KeyEvent;
 import com.inwecrypto.wallet.ui.ScanActivity;
 import com.inwecrypto.wallet.ui.me.activity.MailListActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.TransferAccountsActivity;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,7 +46,7 @@ import neomobile.Tx;
  * 版本：@version
  */
 
-public class NeoTransferAccountsActivity extends BaseActivity {
+public class  NeoTransferAccountsActivity extends BaseActivity {
 
 
     @BindView(R.id.txt_left_title)
@@ -182,8 +180,12 @@ public class NeoTransferAccountsActivity extends BaseActivity {
                                 intent.putExtra("unspent",response.body());
                                 keepTogo(intent);
                             }else {
-                                String utxo=GsonUtils.objToJson(response.body().data.getResult());
-                                transfer(utxo);
+                                if (null!=response.body().data.getResult()){
+                                    String utxo=GsonUtils.objToJson(response.body().data.getResult());
+                                    transfer(utxo);
+                                }else {
+                                    ToastUtil.show(getString(R.string.huoquyueshibaiqingshaohouchognshi));
+                                }
                             }
                         }
                         hideFixLoading();
@@ -193,6 +195,7 @@ public class NeoTransferAccountsActivity extends BaseActivity {
                     public void onError(Response<LzyResponse<UtxoBean>> response) {
                         super.onError(response);
                         hideFixLoading();
+                        ToastUtil.show(getString(R.string.huoquyueshibaiqingshaohouchognshi));
                     }
                 });
             }

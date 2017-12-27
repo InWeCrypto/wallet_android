@@ -1,8 +1,6 @@
 package com.inwecrypto.wallet.ui.wallet.activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -14,7 +12,6 @@ import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.wallet.activity.neowallet.AddNeoWalletClodSettingActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.neowallet.AddNeoWalletSettingActivity;
 
 import java.util.ArrayList;

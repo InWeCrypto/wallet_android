@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
-import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoTokenWalletActivity;
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -39,84 +39,79 @@ public class RecordAdapter extends CommonAdapter<OrderBean> {
 
     @Override
     protected void convert(ViewHolder holder, OrderBean orderBean, int position) {
+        BigDecimal currentPrice = new BigDecimal(orderBean.getBlock_number());
+        int current= (int) (activity.currentBlock-currentPrice.doubleValue())+1;
+        if (current<0){
+                current=0;
+        }
         if (orderBean.getPay_address().equals(address)){
-            if (orderBean.getStatus()==0){//交易失败
+            if ("".equals(orderBean.getConfirm_at())&&current>=activity.minBlock){//交易失败
                 Glide.with(mContext).load(R.mipmap.tishi).crossFade().into((ImageView) holder.getView(R.id.img));
                 holder.setText(R.id.hit,mContext.getString(R.string.jiaoyishibai));
                 holder.setVisible(R.id.progess,false);
-            }else if (orderBean.getStatus()==1){//准备打包
+                orderBean.setStatus(0);
+            }else if ("".equals(orderBean.getConfirm_at())&&current<activity.minBlock){//准备打包
                 Glide.with(mContext).load(R.mipmap.zhuanchu).crossFade().into((ImageView) holder.getView(R.id.img));
                 holder.setText(R.id.hit,mContext.getString(R.string.zhunbeidabao));
                 holder.setVisible(R.id.progess,true);
                 ProgressBar bar=holder.getView(R.id.progess);
                 bar.setProgress(0);
-            }else if (orderBean.getStatus()==2){//打包中
+                orderBean.setStatus(1);
+            }else if ((!"".equals(orderBean.getConfirm_at()))&&current<activity.minBlock){//打包中
                 Glide.with(mContext).load(R.mipmap.zhuanchu).crossFade().into((ImageView) holder.getView(R.id.img));
                 holder.setVisible(R.id.progess,true);
-                BigDecimal currentPrice=new BigDecimal(0);
-                if (null!=orderBean.getBlock_number()){
-                    currentPrice = new BigDecimal(orderBean.getBlock_number());
-                }
-                int current= (int) (activity.currentBlock-currentPrice.doubleValue())+1;
-                if (current<0){
-                    current=0;
-                }
                 holder.setText(R.id.hit,mContext.getString(R.string.yijingqueren)+current+"/"+activity.minBlock);
                 ProgressBar bar=holder.getView(R.id.progess);
                 bar.setProgress((int) (current*1.0f/activity.minBlock*100.f));
                 if (current>=activity.minBlock){
-                    orderBean.setStatus(3);
                     Glide.with(mContext).load(R.mipmap.zhuanchu).crossFade().into((ImageView) holder.getView(R.id.img));
-                    holder.setText(R.id.hit,"");
+                    holder.setText(R.id.hit,mContext.getString(R.string.jiaoyichenggong));
                     holder.setVisible(R.id.progess,false);
                 }
-            }else if (orderBean.getStatus()==3){//交易成功
+                orderBean.setStatus(1);
+            }else if ((!"".equals(orderBean.getConfirm_at()))&&current>=activity.minBlock){//交易成功
                 Glide.with(mContext).load(R.mipmap.zhuanchu).crossFade().into((ImageView) holder.getView(R.id.img));
-                holder.setText(R.id.hit,"");
+                holder.setText(R.id.hit,mContext.getString(R.string.jiaoyichenggong));
                 holder.setVisible(R.id.progess,false);
+                orderBean.setStatus(0);
             }
             holder.setText(R.id.price,"-"+new BigDecimal(orderBean.getFee()).divide(pEther,4,BigDecimal.ROUND_HALF_UP).toPlainString()+unit);
             holder.setTextColor(R.id.price, Color.parseColor("#F81A1A"));
         }else {
-            if (orderBean.getStatus()==0){//交易失败
+            if ("".equals(orderBean.getConfirm_at())&&current>=activity.minBlock){//交易失败
                 Glide.with(mContext).load(R.mipmap.tishi).crossFade().into((ImageView) holder.getView(R.id.img));
                 holder.setText(R.id.hit,mContext.getString(R.string.jiaoyishibai));
                 holder.setVisible(R.id.progess,false);
-            }else if (orderBean.getStatus()==1){//准备打包
+                orderBean.setStatus(0);
+            }else if ("".equals(orderBean.getConfirm_at())&&current<activity.minBlock){//准备打包
                 Glide.with(mContext).load(R.mipmap.zhuanru).crossFade().into((ImageView) holder.getView(R.id.img));
                 holder.setText(R.id.hit,mContext.getString(R.string.zhunbeidabao));
                 holder.setVisible(R.id.progess,true);
                 ProgressBar bar=holder.getView(R.id.progess);
                 bar.setProgress(0);
-            }else if (orderBean.getStatus()==2){//打包中
+                orderBean.setStatus(1);
+            }else if ((!"".equals(orderBean.getConfirm_at()))&&current<activity.minBlock){//打包中
                 Glide.with(mContext).load(R.mipmap.zhuanru).crossFade().into((ImageView) holder.getView(R.id.img));
                 holder.setVisible(R.id.progess,true);
-                BigDecimal currentPrice=new BigDecimal(0);
-                if (null!=orderBean.getBlock_number()){
-                    currentPrice = new BigDecimal(orderBean.getBlock_number());
-                }
-                int current=(int) (activity.currentBlock-currentPrice.doubleValue())+1;
-                if (current<0){
-                    current=0;
-                }
                 holder.setText(R.id.hit,mContext.getString(R.string.yijingqueren)+current+"/"+activity.minBlock);
                 ProgressBar bar=holder.getView(R.id.progess);
                 bar.setProgress((int) (current*1.0f/activity.minBlock*100.f));
                 if (current>=activity.minBlock){
-                    orderBean.setStatus(3);
                     Glide.with(mContext).load(R.mipmap.zhuanru).crossFade().into((ImageView) holder.getView(R.id.img));
-                    holder.setText(R.id.hit,"");
+                    holder.setText(R.id.hit,mContext.getString(R.string.jiaoyichenggong));
                     holder.setVisible(R.id.progess,false);
                 }
-            }else if (orderBean.getStatus()==3){//交易成功
+                orderBean.setStatus(1);
+            }else if ((!"".equals(orderBean.getConfirm_at()))&&current>=activity.minBlock){//交易成功
                 Glide.with(mContext).load(R.mipmap.zhuanru).crossFade().into((ImageView) holder.getView(R.id.img));
-                holder.setText(R.id.hit,"");
+                holder.setText(R.id.hit,mContext.getString(R.string.jiaoyichenggong));
                 holder.setVisible(R.id.progess,false);
+                orderBean.setStatus(0);
             }
             holder.setText(R.id.price,"+"+new BigDecimal(orderBean.getFee()).divide(pEther,4,BigDecimal.ROUND_HALF_UP).toPlainString()+unit);
             holder.setTextColorRes(R.id.price,R.color.c_232772);
         }
         holder.setText(R.id.order,orderBean.getTrade_no());
-        holder.setText(R.id.time,orderBean.getCreated_at());
+        holder.setText(R.id.time, orderBean.getCreated_at().contains("T")?AppUtil.getTime(orderBean.getCreated_at()):orderBean.getCreated_at());
     }
 }

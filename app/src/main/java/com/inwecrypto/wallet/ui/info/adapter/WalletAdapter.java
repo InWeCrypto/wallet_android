@@ -6,8 +6,6 @@ import android.view.View;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.ProjectBean;
 import com.inwecrypto.wallet.common.Constant;
-import com.inwecrypto.wallet.common.widget.MultiItemCommonAdapter;
-import com.inwecrypto.wallet.common.widget.MultiItemTypeSupport;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;

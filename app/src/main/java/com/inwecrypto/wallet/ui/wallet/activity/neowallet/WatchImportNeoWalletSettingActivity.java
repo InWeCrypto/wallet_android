@@ -18,15 +18,12 @@ import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.wallet.activity.WatchImportWalletActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.WatchImportWalletTypeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import neomobile.Neomobile;
-import unichain.ETHWallet;
-import unichain.Unichain;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -155,11 +152,31 @@ public class WatchImportNeoWalletSettingActivity extends BaseActivity {
                                     wallet=Neomobile.fromMnemonic(key.trim());
                                     address=wallet.address();
                                     json=wallet.toKeyStore(etPs.getText().toString());
+                                    if (!address.equals(watchWallet.getAddress())){
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                ToastUtil.show(R.string.qingshurugaiqianbaodezhengquezhujici);
+                                                hideLoading();
+                                            }
+                                        });
+                                        return;
+                                    }
                                     break;
                                 case 3:
                                     wallet=Neomobile.fromWIF(key.trim());
                                     address=wallet.address();
                                     json=wallet.toKeyStore(etPs.getText().toString());
+                                    if (!address.equals(watchWallet.getAddress())){
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                ToastUtil.show(R.string.qingshurugaiqianbaodezhengquesiyao);
+                                                hideLoading();
+                                            }
+                                        });
+                                        return;
+                                    }
                                     break;
                                 case 4:
                                     address=key;

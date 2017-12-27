@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -278,7 +277,7 @@ public class HotWalletActivity extends BaseActivity {
                             walletList.smoothCloseMenu();
                             ToastUtil.show(getString(R.string.shanchuchenggong));
                             initData();
-                            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+                            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
                         }
 
                         @Override
@@ -295,7 +294,6 @@ public class HotWalletActivity extends BaseActivity {
                             walletList.smoothCloseMenu();
                             ToastUtil.show(getString(R.string.dingzhichenggong));
                             initData();
-                            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
                         }
 
                         @Override
@@ -513,11 +511,11 @@ public class HotWalletActivity extends BaseActivity {
     protected void EventBean(BaseEventBusBean event) {
         if (event.getEventCode() == Constant.EVENT_PRICE || event.getEventCode() == Constant.EVENT_REFRESH) {
             initData();
-            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
         if (event.getEventCode() == Constant.EVENT_TIP_SUCCESS) {
             tvWatch.setVisibility(View.GONE);
-            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
         if (event.getEventCode() == Constant.EVENT_WATCH_TRANSFER){
             wallet.setType("0");
@@ -542,7 +540,7 @@ public class HotWalletActivity extends BaseActivity {
                     tvWatch.setBackgroundResource(R.drawable.round_999dp_bule_bg);
                     break;
             }
-            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
     }
 

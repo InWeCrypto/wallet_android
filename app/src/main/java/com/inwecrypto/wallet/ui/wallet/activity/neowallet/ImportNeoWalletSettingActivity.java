@@ -178,6 +178,18 @@ public class ImportNeoWalletSettingActivity extends BaseActivity {
                                     break;
                             }
 
+
+                            if (!AppUtil.isNeoAddress(address)){
+                                mActivity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                       ToastUtil.show("请填写正确的NEO钱包");
+                                       hideLoading();
+                                    }
+                                    });
+                                return;
+                            }
+
                             if (null!=wallets){
                                 for (WalletBean walletBean:wallets){
                                     if (address.contains(walletBean.getAddress().toLowerCase())){

@@ -14,9 +14,6 @@ import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.NeoOderBean;
-import com.inwecrypto.wallet.bean.OrderBean;
-import com.inwecrypto.wallet.common.Constant;
-import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
@@ -107,6 +104,7 @@ public class NeoTransferAccountsDetaileActivity extends BaseActivity {
         tvWalletAddress.setText(null != order.getFrom() ? order.getFrom() : "");
         tvGetAddress.setText(null != order.getTo() ? order.getTo() : "");
         tvTime.setText("".equals(order.getCreateTime())?"":AppUtil.getTime(order.getCreateTime()));
+        tvGetTime.setText(null==order.getRemark()?"":order.getRemark());
 
         tvWalletAddress.setOnClickListener(new View.OnClickListener() {
             @Override

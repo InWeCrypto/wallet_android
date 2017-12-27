@@ -48,7 +48,7 @@ public class WalletApi {
         OkGo.<LzyResponse<CommonListBean<WalletBean>>>get(Url.WALLET)
                 .tag(object)
                 .cacheKey(Constant.WALLETS+AppApplication.isMain)
-                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
 
@@ -122,10 +122,12 @@ public class WalletApi {
                 .execute(callback);
     }
 
-    public static void walletOrder(Object object,int wallet_id,String flag,JsonCallback<LzyResponse<CommonListBean<OrderBean>>> callback){
+    public static void walletOrder(Object object,int page,int wallet_id,String flag,String asset_id,JsonCallback<LzyResponse<CommonListBean<OrderBean>>> callback){
         HashMap<String,String> params=new HashMap<>();
         params.put("wallet_id",wallet_id+"");
         params.put("flag",flag);
+        params.put("asset_id",asset_id);
+        params.put("page",page+"");
         OkGo.<LzyResponse<CommonListBean<OrderBean>>>get(Url.WALLET_ORDER)
                 .tag(object)
                 .cacheKey(Constant.WALLET_ORDER+wallet_id+flag+AppApplication.isMain)
@@ -237,7 +239,9 @@ public class WalletApi {
             ,String remark
             ,String fee
             ,String handle_fee
-            ,String flag,JsonCallback<LzyResponse<Object>> callback){
+            ,String flag
+            ,String asset_id
+            ,JsonCallback<LzyResponse<Object>> callback){
         HashMap<String,String> params=new HashMap<>();
         params.put("wallet_id",wallet_id+"");
         params.put("data",data);
@@ -246,6 +250,7 @@ public class WalletApi {
         params.put("remark",remark);
         params.put("fee",fee);
         params.put("handle_fee",handle_fee);
+        params.put("asset_id",asset_id);
         params.put("flag",flag);
         OkGo.<LzyResponse<Object>>post(Url.WALLET_ORDER)
                 .tag(object)

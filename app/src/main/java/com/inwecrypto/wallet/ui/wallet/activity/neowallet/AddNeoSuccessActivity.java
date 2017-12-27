@@ -12,11 +12,8 @@ import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.wallet.activity.AddEthWalletActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.AddWalletListActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.AddWalletSettingActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.AddWalletTypeActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.HotWalletActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -71,7 +68,7 @@ public class AddNeoSuccessActivity extends BaseActivity {
     private void gotoWallet() {
         AppManager.getAppManager().finishActivity(AddWalletTypeActivity.class);
         AppManager.getAppManager().finishActivity(AddWalletListActivity.class);
-        EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+        EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
         Intent intent=new Intent(mActivity,NeoWalletActivity.class);
         intent.putExtra("wallet",wallet);
         finshTogo(intent);

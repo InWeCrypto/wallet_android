@@ -2,15 +2,6 @@ package com.inwecrypto.wallet.common;
 
 import java.math.BigDecimal;
 
-/**
- * 菜鸟窝http://www.cniao5.com 一个高端的互联网技能学习平台
- *
- * @author Ivan
- * @version V1.0
- * @Package com.cniao5.cniao5play.common
- * @Description: ${TODO}(用一句话描述该文件做什么)
- * @date
- */
 
 public class Constant {
 
@@ -27,6 +18,8 @@ public class Constant {
     public static final String NEO_ASSETS="0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b";
 
     public static final String GAS_ASSETS="0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7";
+
+    public static final String ETH_ORDER_ASSET_ID="0x0000000000000000000000000000000000000000";
 
     public static final long GAS_LIMIT=90000L;
 
@@ -107,6 +100,10 @@ public class Constant {
     public static final String TOTAL_PRICE="total_price";
 
     public static final String TOTAL_TEST_PRICE="total_test_price";
+
+    public static final String MIN_BLOCK="min_block";
+
+    public static final String CURRENT_BLOCK="current_block";
 
     public static final int EVENT_REFRESH=0;
 

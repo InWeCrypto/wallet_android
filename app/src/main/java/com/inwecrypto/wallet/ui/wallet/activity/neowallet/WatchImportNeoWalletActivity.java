@@ -21,15 +21,12 @@ import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.event.KeyEvent;
 import com.inwecrypto.wallet.ui.ScanActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.WatchImportWalletSettingActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.WatchImportWalletTypeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import neomobile.Neomobile;
-import unichain.ETHWallet;
-import unichain.Unichain;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -100,13 +97,13 @@ public class WatchImportNeoWalletActivity extends BaseActivity {
                 }
                 switch (type){
                     case 1:
-                        impotKeystore(etInfo.getText().toString());
+                        impotKeystore(etInfo.getText().toString().trim());
                         break;
                     case 2:
-                        impotAnquanma(etInfo.getText().toString());
+                        impotAnquanma(etInfo.getText().toString().trim());
                         break;
                     case 3:
-                        impotKey(etInfo.getText().toString());
+                        impotKey(etInfo.getText().toString().trim());
                         break;
                 }
             }
@@ -145,7 +142,7 @@ public class WatchImportNeoWalletActivity extends BaseActivity {
                     ToastUtil.show(getString(R.string.qingshurumima));
                     return;
                 }
-                importKey(pass.getText().toString());
+                importKey(pass.getText().toString().trim());
             }
         });
 
@@ -182,6 +179,17 @@ public class WatchImportNeoWalletActivity extends BaseActivity {
 
                     neomobile.Wallet wallet= Neomobile.fromKeyStore(etInfo.getText().toString().trim(),pass.trim());
 
+                    if (!wallet.address().equals(watchWallet.getAddress())){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.show(R.string.qingshurugaiqianbaodezhengquekeystore);
+                                hideLoading();
+                            }
+                        });
+                        return;
+                    }
+
                     //将钱包保存到ACCOUNTMANAGER
                     saveWallet(etInfo.getText().toString().trim()
                             , wallet.address()
@@ -193,6 +201,7 @@ public class WatchImportNeoWalletActivity extends BaseActivity {
                         @Override
                         public void run() {
                             hideLoading();
+                            ToastUtil.show(getString(R.string.qianbaozhuanhuachenggong));
                             AppManager.getAppManager().finishActivity(WatchImportWalletTypeActivity.class);
                             EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WATCH_TRANSFER));
                             EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));

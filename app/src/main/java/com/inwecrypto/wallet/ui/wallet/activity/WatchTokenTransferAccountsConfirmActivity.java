@@ -2,7 +2,6 @@ package com.inwecrypto.wallet.ui.wallet.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -154,7 +153,7 @@ public class WatchTokenTransferAccountsConfirmActivity extends BaseActivity impl
         Intent intent=new Intent(mActivity,WarchEthTransferAccountsNfcActivity.class);
         intent.putExtra("isGnt",true);
         intent.putExtra("wallet",wallet);
-        intent.putExtra("payAddress",gnt.getGnt_category().getAddress());
+        intent.putExtra("asset_id",gnt.getGnt_category().getAddress().toLowerCase());
         intent.putExtra("address",address);
         intent.putExtra("hint",hit);
         intent.putExtra("price",price);

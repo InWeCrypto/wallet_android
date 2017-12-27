@@ -21,7 +21,6 @@ import java.util.Map;
 import butterknife.BindView;
 import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
-import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MailBean;
 import com.inwecrypto.wallet.bean.MailIconBean;
 import com.inwecrypto.wallet.common.Constant;

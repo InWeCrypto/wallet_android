@@ -129,6 +129,7 @@ public class DataParse {
                 KLBean dayData = list.get(i);
                 KLineBean kLineData = new KLineBean();
                 kLineData.date = dayData.getTime()+"";
+
                 kLineData.open = Float.parseFloat(dayData.getOpened_price());
                 kLineData.close = Float.parseFloat( dayData.getClosed_price());
                 kLineData.high = Float.parseFloat( dayData.getMax_price());

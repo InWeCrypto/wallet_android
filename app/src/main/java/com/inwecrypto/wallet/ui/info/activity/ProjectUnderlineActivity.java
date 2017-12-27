@@ -2,7 +2,6 @@ package com.inwecrypto.wallet.ui.info.activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;

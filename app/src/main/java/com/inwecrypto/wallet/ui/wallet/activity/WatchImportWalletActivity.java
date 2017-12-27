@@ -96,13 +96,13 @@ public class WatchImportWalletActivity extends BaseActivity {
                 }
                 switch (type){
                     case 1:
-                        impotKeystore(etInfo.getText().toString());
+                        impotKeystore(etInfo.getText().toString().trim());
                         break;
                     case 2:
-                        impotAnquanma(etInfo.getText().toString());
+                        impotAnquanma(etInfo.getText().toString().trim());
                         break;
                     case 3:
-                        impotKey(etInfo.getText().toString());
+                        impotKey(etInfo.getText().toString().trim());
                         break;
                 }
             }
@@ -141,7 +141,7 @@ public class WatchImportWalletActivity extends BaseActivity {
                     ToastUtil.show(getString(R.string.qingshurumima));
                     return;
                 }
-                importKey(pass.getText().toString());
+                importKey(pass.getText().toString().trim());
             }
         });
 
@@ -177,7 +177,16 @@ public class WatchImportWalletActivity extends BaseActivity {
                 try {
 
                     ETHWallet wallet= Unichain.openETHWallet(etInfo.getText().toString().getBytes("utf-8"),pass);
-
+                    if (!wallet.address().toLowerCase().equals(watchWallet.getAddress().toLowerCase())){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.show(getString(R.string.qingshurugaiqianbaodezhengquekeystore));
+                                hideLoading();
+                            }
+                        });
+                        return;
+                    }
                     //将钱包保存到ACCOUNTMANAGER
                     saveWallet(etInfo.getText().toString().getBytes("utf-8")
                             , wallet.address().toLowerCase()

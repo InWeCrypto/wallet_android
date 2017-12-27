@@ -55,6 +55,8 @@ public class AutoUpdateService extends IntentService {
 
     private HashMap<String, TokenBean.ListBean> ethGnt = new HashMap<>();
     private HashMap<String, TokenBean.ListBean> neoGnt = new HashMap<>();
+
+    private boolean isFirst=true;
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -104,6 +106,10 @@ public class AutoUpdateService extends IntentService {
     }
 
     private void update() {
+        if (isFirst){
+            isFirst=false;
+            return;
+        }
         if (AppApplication.UPDATA_TYPE==1){
             try {
                 okhttp3.Response response = OkGo.<LzyResponse<CommonListBean<MarkeListBean>>>get(Url.MARKET_CATEGORY)
@@ -123,7 +129,6 @@ public class AutoUpdateService extends IntentService {
             }
         }else {
             try {
-                HashMap<String,TokenBean.ListBean> totleGnt=new HashMap<>();
                 okhttp3.Response response = OkGo.<LzyResponse<CommonListBean<WalletBean>>>get(Url.WALLET)
                         .headers("ct", AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
                         .tag(this)
@@ -178,7 +183,7 @@ public class AutoUpdateService extends IntentService {
                                     if (count.getCategory_id()==1&&null != count.getBalance()) {
                                         //进行计算
                                         BigDecimal currentPrice = new BigDecimal(AppUtil.toD(count.getBalance().replace("0x", "0")));
-                                        ETHEther = ETHEther.divide(Constant.pEther).add(currentPrice);
+                                        ETHEther = ETHEther.add(currentPrice.divide(Constant.pEther));
                                         ethCnyPrice=count.getCategory().getCap().getPrice_cny();
                                         ethUsdPrice = count.getCategory().getCap().getPrice_usd();
                                         hasEth=true;
@@ -298,8 +303,8 @@ public class AutoUpdateService extends IntentService {
                                     } else {
                                         ethList.add(val);
                                     }
-                                    ethCnyPrice=ethCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_cny())));
-                                    ethUsdPrice=ethUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_usd())));
+                                    ethCnyPrice=ethCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(null==val.getGnt_category()?"0.00":null==val.getGnt_category().getCap()?"0.00":val.getGnt_category().getCap().getPrice_cny())));
+                                    ethUsdPrice=ethUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(null==val.getGnt_category()?"0.00":null==val.getGnt_category().getCap()?"0.00":val.getGnt_category().getCap().getPrice_usd())));
                                 }
 
                                 //获取 neo 列表
@@ -321,8 +326,8 @@ public class AutoUpdateService extends IntentService {
                                     } else {
                                         neoList.add(val);
                                     }
-                                    neoCnyPrice=neoCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_cny())));
-                                    neoUsdPrice=neoUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_usd())));
+                                    neoCnyPrice=neoCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(null==val.getGnt_category()?"0.00":null==val.getGnt_category().getCap()?"0.00":val.getGnt_category().getCap().getPrice_cny())));
+                                    neoUsdPrice=neoUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(null==val.getGnt_category()?"0.00":null==val.getGnt_category().getCap()?"0.00":val.getGnt_category().getCap().getPrice_usd())));
                                 }
 
                                 totleCnyPrice = ethCnyPrice.add(neoCnyPrice);
@@ -343,7 +348,7 @@ public class AutoUpdateService extends IntentService {
                                 //设置 neo 列表
                                 AppApplication.get().getSp().putString(AppApplication.isMain ? Constant.NEO_LIST : Constant.NEO_TEST_LIST, GsonUtils.objToJson(neoList));
 
-                                EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_TOTLE_PRICE_SERVICE));
+                                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_TOTLE_PRICE_SERVICE));
                             }
                         }
                     }

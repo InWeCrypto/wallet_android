@@ -24,8 +24,6 @@ import com.inwecrypto.wallet.common.util.AppUtil;
 
 public class GntAdapter extends CommonAdapter<TokenBean.ListBean> {
 
-    private BigDecimal totleEther=new BigDecimal("0.00");
-    private BigDecimal totlePrice=new BigDecimal("0.00");
     private BigDecimal pEther= new java.math.BigDecimal("1000000000000000000");
 
     public GntAdapter(Context context, int layoutId, List<TokenBean.ListBean> datas) {

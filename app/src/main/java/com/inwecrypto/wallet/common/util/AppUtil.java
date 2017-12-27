@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.TimeZone;
 
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
@@ -150,9 +151,6 @@ public class AppUtil {
         }
     }
 
-    /**
-     * 验证手机格式
-     */
     public static boolean isAddress(String address) {
         String num = "0x[0-9a-zA-Z]{40}";
         String neo = "[0-9a-zA-Z]{34}";
@@ -161,6 +159,26 @@ public class AppUtil {
         } else {
             //matches():字符串是否在给定的正则表达式匹配
             return address.matches(num)||address.matches(neo);
+        }
+    }
+
+    public static boolean isEthAddress(String address) {
+        String num = "0x[0-9a-zA-Z]{40}";
+        if (TextUtils.isEmpty(address)) {
+            return false;
+        } else {
+            //matches():字符串是否在给定的正则表达式匹配
+            return address.matches(num);
+        }
+    }
+
+    public static boolean isNeoAddress(String address) {
+        String neo = "[0-9a-zA-Z]{34}";
+        if (TextUtils.isEmpty(address)) {
+            return false;
+        } else {
+            //matches():字符串是否在给定的正则表达式匹配
+            return address.matches(neo);
         }
     }
 
@@ -611,7 +629,13 @@ public class AppUtil {
     }
 
     public static String getTime(String time){
-        SimpleDateFormat dff = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH);//输入的被转化的时间格式
+        SimpleDateFormat dff =null;
+        if (time.contains(".")){
+            dff = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");//输入的被转化的时间格式
+        }else {
+            dff= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");//输入的被转化的时间格式
+        }
+        dff.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//需要转化成的时间格式
         Date date1 = null;
         try {
@@ -619,6 +643,6 @@ public class AppUtil {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return df1.format(date1);
+        return null==date1?"":df1.format(date1);
     }
 }

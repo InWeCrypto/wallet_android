@@ -12,9 +12,6 @@ import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.NeoOderBean;
-import com.inwecrypto.wallet.bean.OrderBean;
-import com.inwecrypto.wallet.common.Constant;
-import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
@@ -26,8 +23,6 @@ import butterknife.BindView;
 
 import static com.inwecrypto.wallet.common.http.Url.NEO_ORDER_TEST_ULR;
 import static com.inwecrypto.wallet.common.http.Url.NEO_ORDER_ULR;
-import static com.inwecrypto.wallet.common.http.Url.ORDER_TEST_ULR;
-import static com.inwecrypto.wallet.common.http.Url.ORDER_ULR;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -48,6 +43,8 @@ public class NeoReceiveDetaileActivity extends BaseActivity {
     TextView tvHeyueAddress;
     @BindView(R.id.tv_time)
     TextView tvTime;
+    @BindView(R.id.tv_get_time)
+    TextView tvGetTime;
     @BindView(R.id.tv_order)
     TextView tvOrder;
     @BindView(R.id.price)
@@ -89,6 +86,8 @@ public class NeoReceiveDetaileActivity extends BaseActivity {
 
         tvWalletAddress.setText(null!=order.getFrom()?order.getFrom():"");
         tvHeyueAddress.setText(null!=order.getTo()?order.getTo():"");
+        tvTime.setText(null==order.getRemark()?"":order.getRemark());
+        tvGetTime.setText("".equals(order.getCreateTime())?"":AppUtil.getTime(order.getCreateTime()));
 
         tvWalletAddress.setOnClickListener(new View.OnClickListener() {
             @Override

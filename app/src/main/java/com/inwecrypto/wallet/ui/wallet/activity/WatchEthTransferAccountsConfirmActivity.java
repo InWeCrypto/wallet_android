@@ -2,19 +2,11 @@ package com.inwecrypto.wallet.ui.wallet.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.zxing.WriterException;
 import com.lzy.okgo.model.Response;
 
 import java.math.BigDecimal;
@@ -31,13 +23,8 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
-import com.inwecrypto.wallet.common.util.AppManager;
-import com.inwecrypto.wallet.common.util.QuanCodeUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.event.KeyEvent;
-import com.inwecrypto.wallet.ui.ScanActivity;
-import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import me.grantland.widget.AutofitTextView;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;

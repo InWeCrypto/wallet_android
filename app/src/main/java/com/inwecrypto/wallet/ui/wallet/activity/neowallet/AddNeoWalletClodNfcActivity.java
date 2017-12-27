@@ -29,11 +29,8 @@ import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.wallet.activity.AddWalletClodNfcActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.AddWalletClodSettingActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.AddWalletListActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.AddWalletTypeActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.HotWalletActivity;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;

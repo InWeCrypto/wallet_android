@@ -19,7 +19,6 @@ import com.inwecrypto.wallet.bean.MeMenuBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
-import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.service.AutoUpdateService;
 import com.inwecrypto.wallet.ui.login.LoginActivity;

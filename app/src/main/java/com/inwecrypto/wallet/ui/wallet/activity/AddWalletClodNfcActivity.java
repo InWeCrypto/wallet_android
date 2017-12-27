@@ -30,7 +30,6 @@ import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.wallet.activity.neowallet.AddNeoWalletClodNfcActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoWalletActivity;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;

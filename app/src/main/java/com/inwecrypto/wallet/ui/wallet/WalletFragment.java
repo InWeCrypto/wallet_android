@@ -157,7 +157,7 @@ public class WalletFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 ((MainTabActivity)mActivity).setRefresh(true);
-                EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
             }
         });
 
@@ -293,15 +293,15 @@ public class WalletFragment extends BaseFragment {
         TotlePriceBean priceBean = GsonUtils.jsonToObj(totlePrice, TotlePriceBean.class);
 
         if (1 == AppApplication.get().getUnit()) {
-            tvEthPrice.setText("￥" + (null==priceBean.ethCny?"0.00":priceBean.ethCny));
-            tvNeoPrice.setText("￥"+(null==priceBean.neoCny?"0.00":priceBean.neoCny));
+            tvEthPrice.setText("≈￥" + (null==priceBean.ethCny?"0.00":priceBean.ethCny));
+            tvNeoPrice.setText("≈￥"+(null==priceBean.neoCny?"0.00":priceBean.neoCny));
             price.setText("￥" +  (null==priceBean.totleCny?"0.00":priceBean.totleCny));
-            titlePrice.setText("(￥" + (null==priceBean.totleCny?"0.00":priceBean.totleCny)+ ")");
+            titlePrice.setText("(≈￥" + (null==priceBean.totleCny?"0.00":priceBean.totleCny)+ ")");
         } else {
-            tvEthPrice.setText("$" + (null==priceBean.ethUsd?"0.00":priceBean.ethUsd));
-            tvNeoPrice.setText("$"+(null==priceBean.neoUsd?"0.00":priceBean.neoUsd));
+            tvEthPrice.setText("≈$" + (null==priceBean.ethUsd?"0.00":priceBean.ethUsd));
+            tvNeoPrice.setText("≈$"+(null==priceBean.neoUsd?"0.00":priceBean.neoUsd));
             price.setText("$" + (null==priceBean.totleUsd?"0.00":priceBean.totleUsd));
-            titlePrice.setText("($" + (null==priceBean.totleUsd?"0.00":priceBean.totleUsd) + ")");
+            titlePrice.setText("(≈$" + (null==priceBean.totleUsd?"0.00":priceBean.totleUsd) + ")");
         }
     }
 
@@ -314,14 +314,6 @@ public class WalletFragment extends BaseFragment {
     protected void EventBean(BaseEventBusBean event) {
         if (event.getEventCode() == Constant.EVENT_MAIN_REFERSH_COMP) {
             swipeRefresh.setRefreshing(false);
-        }
-        if (event.getEventCode() == Constant.EVENT_START_REFRESH) {
-            swipeRefresh.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefresh.setRefreshing(true);
-                }
-            });
         }
 
         if (event.getEventCode() == Constant.EVENT_WALLET_DAIBI
@@ -343,17 +335,20 @@ public class WalletFragment extends BaseFragment {
     }
 
     private void getInfoOnNet() {
-        if (((MainTabActivity)mActivity).getWallet().size()==0&&((MainTabActivity)mActivity).isInit()){
+        if (!((MainTabActivity)mActivity).isInit()){
+            return;
+        }
+        if (((MainTabActivity)mActivity).getWallet().size()==0){
             if (1 == AppApplication.get().getUnit()) {
-                tvEthPrice.setText("￥0.00");
-                tvNeoPrice.setText("￥0.00");
+                tvEthPrice.setText("≈￥0.00");
+                tvNeoPrice.setText("≈￥0.00");
                 price.setText("￥0.00");
-                titlePrice.setText("(￥0.00)");
+                titlePrice.setText("(≈￥0.00)");
             } else {
-                tvEthPrice.setText("$0.00" );
-                tvNeoPrice.setText("$0.00");
+                tvEthPrice.setText("≈$0.00" );
+                tvNeoPrice.setText("≈$0.00");
                 price.setText("$0.00" );
-                titlePrice.setText("($0.00)");
+                titlePrice.setText("(≈$0.00)");
             }
 
             swipeRefresh.post(new Runnable() {
@@ -395,7 +390,7 @@ public class WalletFragment extends BaseFragment {
                     if (count.getCategory_id()==1&&null != count.getBalance()) {
                         //进行计算
                         BigDecimal currentPrice = new BigDecimal(AppUtil.toD(count.getBalance().replace("0x", "0")));
-                        ETHEther = ETHEther.divide(Constant.pEther).add(currentPrice);
+                        ETHEther = ETHEther.add(currentPrice.divide(Constant.pEther));
                         ethCnyPrice=count.getCategory().getCap().getPrice_cny();
                         ethUsdPrice = count.getCategory().getCap().getPrice_usd();
                         hasEth=true;
@@ -407,34 +402,46 @@ public class WalletFragment extends BaseFragment {
                         hasNeo=true;
                     }
                 }
-                if (hasEth){
-                    //添加 eth
-                    TokenBean.ListBean eth=new TokenBean.ListBean();
-                    TokenBean.ListBean.GntCategoryBeanX ethCategory=new TokenBean.ListBean.GntCategoryBeanX();
-                    TokenBean.ListBean.GntCategoryBeanX.CapBeanX ethCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
-                    eth.setName("ETH");
-                    eth.setBalance(ETHEther.toPlainString());
-                    ethCategory.setIcon(R.mipmap.eth+"");
-                    ethCap.setPrice_cny(ethCnyPrice);
-                    ethCap.setPrice_usd(ethUsdPrice);
-                    ethCategory.setCap(ethCap);
-                    eth.setGnt_category(ethCategory);
-                    ethGnt.put("ETH",eth);
-                }
 
-                if (hasNeo){
-                    //添加 neo
-                    TokenBean.ListBean neo=new TokenBean.ListBean();
-                    TokenBean.ListBean.GntCategoryBeanX neoCategory=new TokenBean.ListBean.GntCategoryBeanX();
-                    TokenBean.ListBean.GntCategoryBeanX.CapBeanX neoCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
-                    neo.setName("NEO");
-                    neo.setBalance(NEOEther.toPlainString());
-                    neoCategory.setIcon(R.mipmap.project_icon_neo+"");
-                    neoCap.setPrice_cny(neoCnyPrice);
-                    neoCap.setPrice_usd(neoUsdPrice);
-                    neoCategory.setCap(neoCap);
-                    neo.setGnt_category(neoCategory);
-                    neoGnt.put("NEO",neo);
+                //添加 eth
+                TokenBean.ListBean eth=new TokenBean.ListBean();
+                TokenBean.ListBean.GntCategoryBeanX ethCategory=new TokenBean.ListBean.GntCategoryBeanX();
+                TokenBean.ListBean.GntCategoryBeanX.CapBeanX ethCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
+                eth.setName("ETH");
+                eth.setBalance(ETHEther.toPlainString());
+                ethCategory.setIcon(R.mipmap.eth+"");
+                ethCap.setPrice_cny(ethCnyPrice);
+                ethCap.setPrice_usd(ethUsdPrice);
+                ethCategory.setCap(ethCap);
+                eth.setGnt_category(ethCategory);
+                ethGnt.put("ETH",eth);
+
+                //添加 neo
+                TokenBean.ListBean neo=new TokenBean.ListBean();
+                TokenBean.ListBean.GntCategoryBeanX neoCategory=new TokenBean.ListBean.GntCategoryBeanX();
+                TokenBean.ListBean.GntCategoryBeanX.CapBeanX neoCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
+                neo.setName("NEO");
+                neo.setBalance(NEOEther.toPlainString());
+                neoCategory.setIcon(R.mipmap.project_icon_neo+"");
+                neoCap.setPrice_cny(neoCnyPrice);
+                neoCap.setPrice_usd(neoUsdPrice);
+                neoCategory.setCap(neoCap);
+                neo.setGnt_category(neoCategory);
+                neoGnt.put("NEO",neo);
+
+                if (!hasNeo){
+                    //添加 gas
+                    TokenBean.ListBean gas=new TokenBean.ListBean();
+                    TokenBean.ListBean.GntCategoryBeanX gasCategory=new TokenBean.ListBean.GntCategoryBeanX();
+                    TokenBean.ListBean.GntCategoryBeanX.CapBeanX gasCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
+                    gas.setName("Gas");
+                    gas.setBalance("0.0000");
+                    gasCategory.setIcon(R.mipmap.project_icon_get_gas+"");
+                    gasCap.setPrice_cny("0.00");
+                    gasCap.setPrice_usd("0.00");
+                    gasCategory.setCap(neoCap);
+                    gas.setGnt_category(gasCategory);
+                    neoGnt.put("Gas",gas);
                 }
 
                 index=0;
@@ -542,8 +549,8 @@ public class WalletFragment extends BaseFragment {
             } else {
                 ethList.add(val);
             }
-            ethCnyPrice=ethCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_cny())));
-            ethUsdPrice=ethUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_usd())));
+            ethCnyPrice=ethCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(null==val.getGnt_category()?"0.00":null==val.getGnt_category().getCap()?"0.00":val.getGnt_category().getCap().getPrice_cny())));
+            ethUsdPrice=ethUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(null==val.getGnt_category()?"0.00":null==val.getGnt_category().getCap()?"0.00":val.getGnt_category().getCap().getPrice_usd())));
         }
         ethFragment.setData(ethList);
 
@@ -566,8 +573,8 @@ public class WalletFragment extends BaseFragment {
             } else {
                 neoList.add(val);
             }
-            neoCnyPrice=neoCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_cny())));
-            neoUsdPrice=neoUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(val.getGnt_category().getCap().getPrice_usd())));
+            neoCnyPrice=neoCnyPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(null==val.getGnt_category()?"0.00":null==val.getGnt_category().getCap()?"0.00":val.getGnt_category().getCap().getPrice_cny())));
+            neoUsdPrice=neoUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(null==val.getGnt_category()?"0.00":null==val.getGnt_category().getCap()?"0.00":val.getGnt_category().getCap().getPrice_usd())));
         }
         neoFragment.setData(neoList);
 
@@ -583,15 +590,15 @@ public class WalletFragment extends BaseFragment {
         priceBean.totleUsd = totleUsdPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
 
         if (1 == AppApplication.get().getUnit()) {
-            tvEthPrice.setText("￥" + (null == priceBean.ethCny ? "0.00" : priceBean.ethCny));
-            tvNeoPrice.setText("￥" + (null == priceBean.neoCny ? "0.00" : priceBean.neoCny));
+            tvEthPrice.setText("≈￥" + (null == priceBean.ethCny ? "0.00" : priceBean.ethCny));
+            tvNeoPrice.setText("≈￥" + (null == priceBean.neoCny ? "0.00" : priceBean.neoCny));
             price.setText("￥" + (null == priceBean.totleCny ? "0.00" : priceBean.totleCny));
-            titlePrice.setText("(￥" + (null == priceBean.totleCny ? "0.00" : priceBean.totleCny) + ")");
+            titlePrice.setText("(≈￥" + (null == priceBean.totleCny ? "0.00" : priceBean.totleCny) + ")");
         } else {
-            tvEthPrice.setText("$" + (null == priceBean.ethUsd ? "0.00" : priceBean.ethUsd));
-            tvNeoPrice.setText("$" + (null == priceBean.neoUsd ? "0.00" : priceBean.neoUsd));
+            tvEthPrice.setText("≈$" + (null == priceBean.ethUsd ? "0.00" : priceBean.ethUsd));
+            tvNeoPrice.setText("≈$" + (null == priceBean.neoUsd ? "0.00" : priceBean.neoUsd));
             price.setText("$" + (null == priceBean.totleUsd ? "0.00" : priceBean.totleUsd));
-            titlePrice.setText("($" + (null == priceBean.totleUsd ? "0.00" : priceBean.totleUsd) + ")");
+            titlePrice.setText("(≈$" + (null == priceBean.totleUsd ? "0.00" : priceBean.totleUsd) + ")");
         }
 
         swipeRefresh.setRefreshing(false);

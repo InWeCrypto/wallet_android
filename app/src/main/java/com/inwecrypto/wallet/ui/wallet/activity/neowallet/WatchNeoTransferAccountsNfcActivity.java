@@ -289,7 +289,18 @@ public class WatchNeoTransferAccountsNfcActivity extends BaseActivity {
 
     private void transfer(String data) {
         showFixLoading();
-        WalletApi.walletOrder(mActivity, wallet.getId(), data, wallet.getAddress(), address,"", price+"", "0.0000", type==0?wallet.getCategory().getName():"GAS", new JsonCallback<LzyResponse<Object>>() {
+        WalletApi.neoWalletOrder(mActivity
+                , wallet.getId()
+                , data
+                , wallet.getAddress()
+                , address
+                , ""
+                , price+""
+                , "0.0000"
+                , "NEO"
+                , ""
+                , type==0?Constant.NEO_ASSETS:Constant.GAS_ASSETS
+                , new JsonCallback<LzyResponse<Object>>() {
             @Override
             public void onSuccess(Response<LzyResponse<Object>> response) {
                 hideFixLoading();
