@@ -29,9 +29,9 @@ import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
+
+import ethmobile.Wallet;
 import me.grantland.widget.AutofitTextView;
-import unichain.ETHWallet;
-import unichain.Unichain;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -158,9 +158,9 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                                 break;
                             }
                         }
-                        ETHWallet wallet = null;
+                        Wallet wallet = null;
                         try {
-                            wallet = Unichain.openETHWallet(b, pass.getText().toString());
+                            //wallet = Unichain.openETHWallet(b, pass.getText().toString());
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -173,7 +173,7 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                         }
                         String data = "";
                         try {
-                            data = "0x" + AppUtil.conver16HexStr(wallet.transferCurrency(nonce, oxGas,"0x" + new BigInteger(new BigDecimal(Constant.GAS_LIMIT).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), address, oxPrice));
+                            //data = "0x" + AppUtil.conver16HexStr(wallet.transferCurrency(nonce, oxGas,"0x" + new BigInteger(new BigDecimal(Constant.GAS_LIMIT).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), address, oxPrice));
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override

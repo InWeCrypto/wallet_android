@@ -13,6 +13,7 @@ import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.tencent.bugly.crashreport.CrashReport;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -26,14 +27,15 @@ import okhttp3.OkHttpClient;
  * Created by Administrator on 2017/7/14.
  */
 
-public class AppApplication extends Application{
+public class App extends Application{
 
-    private static AppApplication app;
+    private static App app;
     public static int UPDATA_TYPE=-1;
     public static boolean IS_FIRST=true;
     private SPUtils sp;
     private LoginBean loginBean;
     public static boolean isMain;
+    private int defaultLangue=1;
 
     @Override
     public void onCreate() {
@@ -43,6 +45,13 @@ public class AppApplication extends Application{
         //初始化SP
         sp=new SPUtils(this, Constant.SP_NAME);
         isMain=sp.getBoolean(Constant.NET,true);
+        if (sp.getBoolean(Constant.UNIT_CHANGE,false)){
+            if (isZh()){
+                defaultLangue=1;
+            }else {
+                defaultLangue=2;
+            }
+        }
         //初始化bugly
         CrashReport.initCrashReport(getApplicationContext(), Constant.CRASH_ID, false);
         //初始化阿里云推送
@@ -52,7 +61,7 @@ public class AppApplication extends Application{
 
     }
 
-    public static AppApplication get(){
+    public static App get(){
         return app;
     }
 
@@ -73,7 +82,7 @@ public class AppApplication extends Application{
     }
 
     public int getUnit() {//1.人民币  2.美元
-        return sp.getInt(Constant.UNIT_TYPE,1);
+        return sp.getInt(Constant.UNIT_TYPE,defaultLangue);
     }
 
 
@@ -134,7 +143,7 @@ public class AppApplication extends Application{
         pushService.register(applicationContext, new CommonCallback() {
             @Override
             public void onSuccess(String response) {
-                if (AppApplication.isMain) {
+                if (App.isMain) {
                     sp.putString(Constant.OPEN_ID,pushService.getDeviceId());
                 }else {
                     sp.putString(Constant.TEST_OPEN_ID,pushService.getDeviceId());
@@ -163,5 +172,14 @@ public class AppApplication extends Application{
                 .penaltyLog() //
                 .penaltyDeath() //
                 .build());
+    }
+
+    public boolean isZh() {
+        Locale locale = getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        if (language.endsWith("zh"))
+            return true;
+        else
+            return false;
     }
 }

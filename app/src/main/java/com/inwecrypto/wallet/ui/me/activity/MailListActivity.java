@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.base.BaseFragment;
@@ -134,19 +135,19 @@ public class MailListActivity extends BaseActivity {
 
         ethMailListFragment=new MailListFragment();
         Bundle ethBundle=new Bundle();
-        ethBundle.putInt("type",6);
+        ethBundle.putInt("type", App.isMain?6:1);
         ethBundle.putBoolean("address",address);
         ethMailListFragment.setArguments(ethBundle);
 
         btcMailListFragment=new MailListFragment();
         Bundle btcBundle=new Bundle();
-        btcBundle.putInt("type",9);
+        btcBundle.putInt("type",3);
         btcBundle.putBoolean("address",address);
         btcMailListFragment.setArguments(btcBundle);
 
         neoMailListFragment=new MailListFragment();
         Bundle neoBundle=new Bundle();
-        neoBundle.putInt("type",7);
+        neoBundle.putInt("type",App.isMain?7:2);
         neoBundle.putBoolean("address",address);
         neoMailListFragment.setArguments(neoBundle);
 
@@ -177,6 +178,9 @@ public class MailListActivity extends BaseActivity {
         TextView keystore = (TextView) selectPopupWin.findViewById(R.id.keystore);
         TextView delete = (TextView) selectPopupWin.findViewById(R.id.delete);
 
+        selectPopupWin.findViewById(R.id.word).setVisibility(View.GONE);
+        selectPopupWin.findViewById(R.id.transfer).setVisibility(View.GONE);
+        selectPopupWin.findViewById(R.id.delete_wallet).setVisibility(View.GONE);
         zhujici.setText("ETH");
         keystore.setText("BTC");
         delete.setText("NEO");
@@ -212,7 +216,7 @@ public class MailListActivity extends BaseActivity {
                 window.dismiss();
                 Intent intent=new Intent(mActivity,MailDetaileActivity.class);
                 intent.putExtra("isAdd",true);
-                intent.putExtra("type",6);
+                intent.putExtra("type",App.isMain?6:1);
                 keepTogo(intent);
             }
         });
@@ -231,7 +235,7 @@ public class MailListActivity extends BaseActivity {
                 window.dismiss();
                 Intent intent=new Intent(mActivity,MailDetaileActivity.class);
                 intent.putExtra("isAdd",true);
-                intent.putExtra("type",7);
+                intent.putExtra("type",App.isMain?7:2);
                 keepTogo(intent);
             }
         });

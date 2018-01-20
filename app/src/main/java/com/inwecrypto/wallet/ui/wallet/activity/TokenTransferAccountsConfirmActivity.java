@@ -31,8 +31,8 @@ import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
-import unichain.ETHWallet;
-import unichain.Unichain;
+
+import ethmobile.Wallet;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -174,9 +174,9 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                                 break;
                             }
                         }
-                        ETHWallet wallet = null;
+                        Wallet wallet = null;
                         try {
-                            wallet = Unichain.openETHWallet(b, pass.getText().toString());
+                            //wallet = Unichain.openETHWallet(b, pass.getText().toString());
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -189,7 +189,7 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                         }
                         String data = "";
                         try {
-                            data = "0x" + AppUtil.conver16HexStr(wallet.transferToken(nonce, oxGas,"0x" + new BigInteger(new BigDecimal(gnt.getGnt_category().getGas()).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), gnt.getGnt_category().getAddress(), tokenData.getBytes("utf-8")));
+                            //data = "0x" + AppUtil.conver16HexStr(wallet.transferToken(nonce, oxGas,"0x" + new BigInteger(new BigDecimal(gnt.getGnt_category().getGas()).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), gnt.getGnt_category().getAddress(), tokenData.getBytes("utf-8")));
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override

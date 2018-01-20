@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
@@ -40,6 +40,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import neomobile.Neomobile;
 
 /**
  * Created by donghaijun on 2017/10/31.
@@ -241,7 +242,22 @@ public class AddNeoWalletClodNfcActivity extends BaseActivity {
     }
 
     private void creatWallet() {
-        WalletApi.wallet(mActivity,type_id, name, address, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+        String hashAddress="";
+        try {
+            hashAddress=Neomobile.decodeAddress(address);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hideLoading();
+                    ToastUtil.show(getString(R.string.wallet_creat_error));
+                }
+            });
+            return;
+        }
+
+        WalletApi.wallet(mActivity,type_id, name, address,hashAddress, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
             @Override
             public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
 
@@ -257,11 +273,11 @@ public class AddNeoWalletClodNfcActivity extends BaseActivity {
                         WalletBean walletBean=response.body().data.getRecord();
                         walletBean.setType(Constant.GUANCHA);
 
-                        String mailIco=AppApplication.get().getSp().getString(Constant.WALLET_ICO,"[]");
+                        String mailIco= App.get().getSp().getString(Constant.WALLET_ICO,"[]");
                         ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
                         int icon= AppUtil.getRoundmIcon();
                         mailId.add(new MailIconBean(walletBean.getId(),icon));
-                        AppApplication.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
+                        App.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
                         walletBean.setIcon(AppUtil.getIcon(icon));
                         WalletBean.CategoryBean category=new WalletBean.CategoryBean();
                         category.setName("NEO");

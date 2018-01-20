@@ -59,4 +59,9 @@ public abstract class EndLessOnScrollListener extends  RecyclerView.OnScrollList
      * 并且实现这个方法
      * */
     public abstract void onLoadMore();
+
+    public void reset(){
+        loading = false;
+        previousTotal=0;
+    }
 }

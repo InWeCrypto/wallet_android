@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="10dp"
-            android:text="转账金额"
+            android:text="@string/zhuanzhangjine"
             android:textColor="@color/c_333333"
             android:textSize="10dp" />
 
@@ -97,7 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:text="转账方钱包地址"
+        android:text="@string/zhuanzhangfangqianbaodizhi"
         android:textColor="@color/c_333333"
         android:textSize="12sp" />
 
@@ -125,7 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:text="收款方钱包地址"
+        android:text="@string/shoukuanfangqianbaodizhi"
         android:textColor="@color/c_333333"
         android:textSize="12sp" />
 

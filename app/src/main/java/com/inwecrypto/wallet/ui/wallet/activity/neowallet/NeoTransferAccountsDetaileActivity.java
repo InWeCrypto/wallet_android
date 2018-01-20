@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.NeoOderBean;
@@ -22,6 +22,7 @@ import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
 import java.math.BigDecimal;
 
 import butterknife.BindView;
+import neomobile.Neomobile;
 
 import static com.inwecrypto.wallet.common.http.Url.NEO_ORDER_TEST_ULR;
 import static com.inwecrypto.wallet.common.http.Url.NEO_ORDER_ULR;
@@ -102,7 +103,15 @@ public class NeoTransferAccountsDetaileActivity extends BaseActivity {
             Glide.with(this).load(R.mipmap.icon_complete).crossFade().into(status);
         }
         tvWalletAddress.setText(null != order.getFrom() ? order.getFrom() : "");
-        tvGetAddress.setText(null != order.getTo() ? order.getTo() : "");
+        if (order.getIs_token()==1){
+            try {
+                tvGetAddress.setText(null != order.getTo() ? Neomobile.encodeAddress(order.getTo()) : "");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            tvGetAddress.setText(null != order.getTo() ? order.getTo() : "");
+        }
         tvTime.setText("".equals(order.getCreateTime())?"":AppUtil.getTime(order.getCreateTime()));
         tvGetTime.setText(null==order.getRemark()?"":order.getRemark());
 
@@ -113,7 +122,7 @@ public class NeoTransferAccountsDetaileActivity extends BaseActivity {
                 // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 // 将文本内容放到系统剪贴板里。
-                cm.setText(order.getTx());
+                cm.setText(order.getFrom());
                 ToastUtil.show(R.string.qianbaodizhifuzhi);
             }
         });
@@ -125,7 +134,7 @@ public class NeoTransferAccountsDetaileActivity extends BaseActivity {
                 // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 // 将文本内容放到系统剪贴板里。
-                cm.setText(order.getTx());
+                cm.setText(order.getTo());
                 ToastUtil.show(R.string.qianbaodizhifuzhi);
             }
         });
@@ -136,8 +145,21 @@ public class NeoTransferAccountsDetaileActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, CommonWebActivity.class);
                 intent.putExtra("title", getString(R.string.chaxunjiaoyi));
-                intent.putExtra("url", (AppApplication.isMain?NEO_ORDER_ULR:NEO_ORDER_TEST_ULR) + order.getTx().replace("0x",""));
+                intent.putExtra("url", (App.isMain?NEO_ORDER_ULR:NEO_ORDER_TEST_ULR) + order.getTx().replace("0x",""));
                 keepTogo(intent);
+            }
+        });
+
+        tvOrder.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // 从API11开始android推荐使用android.content.ClipboardManager
+                // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                // 将文本内容放到系统剪贴板里。
+                cm.setText(order.getTx());
+                ToastUtil.show(getString(R.string.jiaoyidanhaofuzhi));
+                return true;
             }
         });
     }

@@ -21,6 +21,7 @@ import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.inwecrypto.wallet.App;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,7 +31,7 @@ import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.LoginBean;
@@ -114,10 +115,11 @@ public class HeadImgActivity extends BaseActivity implements EasyPermissions.Per
             Glide.with(this)
                     .load(user.getUser().getImg())
                     .crossFade()
+                    .placeholder(R.mipmap.touxiang)
                     .into(photoView);
         }else {
             Glide.with(this)
-                    .load(R.mipmap.clod_icon)
+                    .load(R.mipmap.touxiang)
                     .crossFade()
                     .into(photoView);
         }
@@ -186,8 +188,8 @@ public class HeadImgActivity extends BaseActivity implements EasyPermissions.Per
                                     public void run() {
                                         hideLoading();
                                         user.getUser().setImg(finalImgPath);
-                                        AppApplication.get().getLoginBean().getUser().setImg(finalImgPath);
-                                        AppApplication.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(user));
+                                        App.get().getLoginBean().getUser().setImg(finalImgPath);
+                                        App.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(user));
                                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_USERINFO));
                                         ToastUtil.show(getString(R.string.xiugaichenggong));
                                         finish();

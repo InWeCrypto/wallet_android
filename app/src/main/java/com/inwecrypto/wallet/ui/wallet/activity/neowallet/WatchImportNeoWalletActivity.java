@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
@@ -233,10 +233,10 @@ public class WatchImportNeoWalletActivity extends BaseActivity {
         accountManager.setUserData(account, "wallet_type","hot");
 
         account=null;
-        String wallets= AppApplication.get().getSp().getString(Constant.WALLETS,"");
+        String wallets= App.get().getSp().getString(Constant.WALLETS,"");
         if (!wallets.contains(address)){
             wallets=wallets+address+",";
-            AppApplication.get().getSp().putString(Constant.WALLETS,wallets);
+            App.get().getSp().putString(Constant.WALLETS,wallets);
         }
     }
 

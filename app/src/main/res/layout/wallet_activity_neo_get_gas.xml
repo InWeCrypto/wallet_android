@@ -19,8 +19,8 @@
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/c_158A1B"
+                android:layout_height="160dp"
+                android:background="@mipmap/gasbgxxhdpi"
                 android:padding="10dp"
                 android:orientation="vertical">
 
@@ -72,7 +72,7 @@
                         android:paddingBottom="2dp"
                         android:layout_marginLeft="6dp"
                         android:textSize="10sp"
-                        android:text="解冻"
+                        android:text="@string/jiedong"
                         android:textColor="@color/c_D7D7D7"
                         android:background="@drawable/round_999dp_white_bg"/>
                 </LinearLayout>
@@ -141,7 +141,7 @@
                     android:paddingTop="8dp"
                     android:paddingLeft="8dp"
                     android:paddingBottom="8dp"
-                    android:text="全部提取"
+                    android:text="@string/quanbutiqu"
                     android:textColor="@color/c_F95A00"
                     android:textSize="10sp"/>
 
@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:background="@drawable/round_6dp_bule_bg"
+                android:background="@drawable/new_orgen_bg"
                 android:gravity="center"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"

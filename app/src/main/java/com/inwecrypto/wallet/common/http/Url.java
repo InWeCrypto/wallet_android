@@ -1,6 +1,6 @@
 package com.inwecrypto.wallet.common.http;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 
 /**
  * Created by Administrator on 2017/8/1.
@@ -16,15 +16,14 @@ public class Url {
 
     private static final String TEST_1_URL = "https://dev.inwecrypto.com:4430/api/";
 
-    public static final String TEST_2_URL = "https://dev.inwecrypto.com:4431";
+    public static final String TEST_2_URL = "https://dev.inwecrypto.com:4431/v1";
 
     public static final String WEB_ROOT="http://inwecrypto.com/";
 
 
+    private static String BASE = App.isMain ? MAIN_1_URL : TEST_1_URL;
 
-    private static String BASE = AppApplication.isMain ? MAIN_1_URL : TEST_1_URL;
-
-    private static String BASE_2 = AppApplication.isMain ? MAIN_2_URL : TEST_2_URL;
+    private static String BASE_2 = App.isMain ? MAIN_2_URL : TEST_2_URL;
 
     public static String ORDER_ULR = "https://etherscan.io/tx/";
 
@@ -110,6 +109,12 @@ public class Url {
 
     public static String GET_CLAIM_UTXO=BASE+"extend/getNeoClaimUtxo?address=";
 
+    public static String GET_NEO_GNT_INFO=BASE+"extend/getNeoGntInfo?address=";
+
+    public static String GET_NEO_ICO_GAS=BASE+"extend/getIcoGasCost?treaty_address=";
+
+    public static String GET_NEO_NEP5_GAS=BASE+"extend/getNeoGasCost";
+
     public static void changeNet(boolean isMain) {
         if (isMain) {
             BASE = MAIN_1_URL;
@@ -119,7 +124,7 @@ public class Url {
             BASE_2 = TEST_2_URL;
         }
 
-        ORDER_ULR = AppApplication.isMain ? " https://etherscan.io/tx/" : "https://ropsten.etherscan.io/tx/";
+        ORDER_ULR = App.isMain ? " https://etherscan.io/tx/" : "https://ropsten.etherscan.io/tx/";
 
         EULA = BASE.replace("/api", "") + "EULA.html";
 
@@ -193,6 +198,12 @@ public class Url {
 
         GET_CLAIM_UTXO=BASE+"extend/getNeoClaimUtxo?address=";
 
+        GET_NEO_GNT_INFO=BASE+"extend/getNeoGntInfo?address=";
+
+        GET_NEO_ICO_GAS=BASE+"extend/getIcoGasCost?treaty_address=";
+
+        GET_NEO_NEP5_GAS=BASE+"extend/getNeoGasCost";
+
         changeNet2();
     }
 
@@ -212,7 +223,7 @@ public class Url {
 
     public static String SEARCH = BASE_2+"/search/";
 
-    public static String USER_CONTACT=BASE_2+"/user/contact?ico_id=";
+    public static String USER_CONTACT=BASE_2+"/user/contact?"+(App.isMain ?"ico_id=":"category_id=");
 
     public static String USER_CONTACT_ADD=BASE_2+"/user/contact";
 
@@ -243,7 +254,7 @@ public class Url {
 
         SEARCH = BASE_2+"/search/";
 
-        USER_CONTACT=BASE_2+"/user/contact?ico_id=";
+        USER_CONTACT=BASE_2+"/user/contact?"+(App.isMain ?"ico_id=":"category_id=");
 
         USER_CONTACT_ADD=BASE_2+"/user/contact";
 

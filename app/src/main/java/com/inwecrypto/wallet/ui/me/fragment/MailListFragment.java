@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.base.BaseFragment;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
@@ -19,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.MailBean;
 import com.inwecrypto.wallet.bean.MailIconBean;
@@ -117,7 +118,7 @@ public class MailListFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
-        if (type==6||type==7){
+        if (type==1||type==2||type==6||type==7){
             swipeRefresh.post(new Runnable() {
                 @Override
                 public void run() {
@@ -158,14 +159,14 @@ public class MailListFragment extends BaseFragment {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode()== Constant.EVENT_REFRESH&&(type==6||type==7)){
+        if (event.getEventCode()== Constant.EVENT_REFRESH&&(type==1||type==2||type==6||type==7)){
             loadData();
         }
     }
 
     private void LoadSuccess(Response<LzyResponse<ArrayList<MailBean>>> response) {
         boolean isSave=false;
-        String mailIco=AppApplication.get().getSp().getString(Constant.MAIL_ICO,"[]");
+        String mailIco= App.get().getSp().getString(Constant.MAIL_ICO,"[]");
         ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
         HashMap<Integer,Integer> mailHash=new HashMap<>();
         for (int i=0;i<mailId.size();i++){
@@ -197,7 +198,7 @@ public class MailListFragment extends BaseFragment {
                 Integer val = (Integer) entry.getValue();
                 mailId.add(new MailIconBean(key,val));
             }
-            AppApplication.get().getSp().putString(Constant.MAIL_ICO,GsonUtils.objToJson(mailId));
+            App.get().getSp().putString(Constant.MAIL_ICO,GsonUtils.objToJson(mailId));
         }
     }
 }

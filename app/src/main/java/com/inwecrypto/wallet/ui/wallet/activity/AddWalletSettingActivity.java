@@ -10,12 +10,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.App;
 import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
@@ -29,7 +30,9 @@ import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import unichain.ETHWallet;
+
+import ethmobile.Ethmobile;
+import ethmobile.Wallet;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -129,11 +132,11 @@ public class AddWalletSettingActivity extends BaseActivity {
                     @Override
                     public void run() {
                         try {
-                            ETHWallet wallet = new ETHWallet();
+                            Wallet wallet = Ethmobile.fromKeyStore("","");
                             String address="";
                             final byte[] json;
-                            json=wallet.encrypt(etPs.getText().toString());
-                            address=wallet.address();
+//                            json=wallet.encrypt(etPs.getText().toString());
+//                            address=wallet.address();
                             final String finalAddress = address.toLowerCase();
                             if (null!=wallets){
                                 for (WalletBean walletBean:wallets){
@@ -149,11 +152,11 @@ public class AddWalletSettingActivity extends BaseActivity {
                                     }
                                 }
                             }
-                            WalletApi.wallet(mActivity,type_id,etName.getText().toString() , finalAddress, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+                            WalletApi.wallet(mActivity,type_id,etName.getText().toString() , finalAddress,"", new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
                                 @Override
                                 public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
                                     //将钱包保存到ACCOUNTMANAGER
-                                    saveWallet(json, finalAddress,etPs.getText().toString(),etName.getText().toString(), Constant.ZHENGCHANG);
+                                    //saveWallet(json, finalAddress,etPs.getText().toString(),etName.getText().toString(), Constant.ZHENGCHANG);
                                     mActivity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -161,11 +164,11 @@ public class AddWalletSettingActivity extends BaseActivity {
                                             Intent intent=new Intent(mActivity,AddEthSuccessActivity.class);
                                             WalletBean walletBean=response.body().data.getRecord();
                                             walletBean.setType(Constant.ZHENGCHANG);
-                                            String mailIco=AppApplication.get().getSp().getString(Constant.WALLET_ICO,"[]");
+                                            String mailIco= App.get().getSp().getString(Constant.WALLET_ICO,"[]");
                                             ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
                                             int icon= AppUtil.getRoundmIcon();
                                             mailId.add(new MailIconBean(walletBean.getId(),icon));
-                                            AppApplication.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
+                                            App.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
                                             walletBean.setIcon(AppUtil.getIcon(icon));
                                             WalletBean.CategoryBean category=new WalletBean.CategoryBean();
                                             category.setName("ETH");
@@ -213,10 +216,10 @@ public class AddWalletSettingActivity extends BaseActivity {
         accountManager.setUserData(account, "type", type);
         accountManager.setUserData(account, "wallet_type","hot");
 
-        String wallets= AppApplication.get().getSp().getString(Constant.WALLETS,"");
+        String wallets= App.get().getSp().getString(Constant.WALLETS,"");
         if (!wallets.contains(address)){
             wallets=wallets+address+",";
-            AppApplication.get().getSp().putString(Constant.WALLETS,wallets);
+            App.get().getSp().putString(Constant.WALLETS,wallets);
         }
     }
 

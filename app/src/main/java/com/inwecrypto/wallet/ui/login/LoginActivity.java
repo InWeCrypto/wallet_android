@@ -10,11 +10,13 @@ import android.widget.TextView;
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+import com.inwecrypto.wallet.App;
+import com.inwecrypto.wallet.ui.newneo.MainActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.LoginBean;
@@ -27,7 +29,6 @@ import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.MainTabActivity;
 import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
 /**
  * Created by Administrator on 2017/7/15.
@@ -90,10 +91,10 @@ public class LoginActivity extends BaseActivity {
         pushService = PushServiceFactory.getCloudPushService();
 
         if (null==pushService.getDeviceId()||pushService.getDeviceId().equals("")){
-            if (AppApplication.isMain) {
-                openID=AppApplication.get().getSp().getString(Constant.OPEN_ID);
+            if (App.isMain) {
+                openID= App.get().getSp().getString(Constant.OPEN_ID);
             }else {
-                openID=AppApplication.get().getSp().getString(Constant.TEST_OPEN_ID);
+                openID= App.get().getSp().getString(Constant.TEST_OPEN_ID);
             }
         }else {
             openID= pushService.getDeviceId();
@@ -104,10 +105,10 @@ public class LoginActivity extends BaseActivity {
             pushService.register(mActivity, new CommonCallback() {
                 @Override
                 public void onSuccess(String response) {
-                    if (AppApplication.isMain) {
-                        AppApplication.get().getSp().putString(Constant.OPEN_ID,pushService.getDeviceId());
+                    if (App.isMain) {
+                        App.get().getSp().putString(Constant.OPEN_ID,pushService.getDeviceId());
                     }else {
-                        AppApplication.get().getSp().putString(Constant.TEST_OPEN_ID,pushService.getDeviceId());
+                        App.get().getSp().putString(Constant.TEST_OPEN_ID,pushService.getDeviceId());
                     }
                     login();
                 }
@@ -139,17 +140,17 @@ public class LoginActivity extends BaseActivity {
                         response.body().data.getUser().setImg("1");
                     }
 
-                    if (AppApplication.isMain) {
-                        AppApplication.get().getSp().putString(Constant.OPEN_ID,openID);
-                        AppApplication.get().getSp().putString(Constant.TOKEN, response.body().data.getToken());
+                    if (App.isMain) {
+                        App.get().getSp().putString(Constant.OPEN_ID,openID);
+                        App.get().getSp().putString(Constant.TOKEN, response.body().data.getToken());
 
                     }else {
-                        AppApplication.get().getSp().putString(Constant.TEST_OPEN_ID,openID);
-                        AppApplication.get().getSp().putString(Constant.TEST_TOKEN, response.body().data.getToken());
+                        App.get().getSp().putString(Constant.TEST_OPEN_ID,openID);
+                        App.get().getSp().putString(Constant.TEST_TOKEN, response.body().data.getToken());
                     }
-                    AppApplication.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(response.body().data));
-                    AppApplication.get().setLoginBean(response.body().data);
-                    Intent intent=new Intent(mActivity,MainTabActivity.class);
+                    App.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(response.body().data));
+                    App.get().setLoginBean(response.body().data);
+                    Intent intent=new Intent(mActivity,MainActivity.class);
                     //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
                     //将参数取出，传递到MainActivity中
                     if(getIntent().getStringExtra("pushInfo") != null){

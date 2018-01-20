@@ -13,7 +13,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginTop="32dp"
-        android:text="请选择以下钱包"
+        android:text="@string/qingxuanzeyixiaqianbao"
         android:textColor="@color/c_333333"
         android:textSize="18dp"/>
 

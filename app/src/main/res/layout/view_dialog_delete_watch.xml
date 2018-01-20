@@ -32,7 +32,7 @@
         android:layout_gravity="center_horizontal"
         android:textSize="16sp"
         android:textColor="@color/c_333333"
-        android:text="删除后无法找回钱包，请慎重"/>
+        android:text="@string/shanchuqianbaotishi"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:background="@color/c_bababb"
             android:gravity="center"
-            android:text="取消"
+            android:text="@string/quxiao"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:textColor="@color/c_ffffff"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:background="@color/c_008c55"
             android:gravity="center"
-            android:text="删除"
+            android:text="@string/shanchu"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:textColor="@color/c_ffffff"

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 import butterknife.BindView;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.OrderBean;
@@ -121,8 +121,21 @@ public class ReceiveDetaileActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(mActivity, CommonWebActivity.class);
                 intent.putExtra("title",getString(R.string.chaxunjiaoyi));
-                intent.putExtra("url", AppApplication.isMain?ORDER_ULR:ORDER_TEST_ULR+order.getTrade_no());
+                intent.putExtra("url", App.isMain?ORDER_ULR:ORDER_TEST_ULR+order.getTrade_no());
                 keepTogo(intent);
+            }
+        });
+
+        tvOrder.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // 从API11开始android推荐使用android.content.ClipboardManager
+                // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                // 将文本内容放到系统剪贴板里。
+                cm.setText(order.getTrade_no());
+                ToastUtil.show("交易单号以复制到剪贴板中");
+                return true;
             }
         });
     }

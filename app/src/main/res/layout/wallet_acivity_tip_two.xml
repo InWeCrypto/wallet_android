@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="准备的按顺序选择记录的助记词"
+        android:text="@string/zhujici_tip4"
         android:textSize="20dp"
         android:textColor="#000000"/>
 

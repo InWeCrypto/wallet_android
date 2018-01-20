@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import com.inwecrypto.wallet.ui.info.InfoWebFragment;
@@ -32,7 +33,6 @@ import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,14 +40,11 @@ import java.util.Map;
 
 import butterknife.BindView;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MailIconBean;
-import com.inwecrypto.wallet.bean.TokenBean;
 import com.inwecrypto.wallet.bean.WalletBean;
-import com.inwecrypto.wallet.bean.WalletCountBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
@@ -383,7 +380,7 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
                 boolean isSave = false;
-                String mailIco = AppApplication.get().getSp().getString(Constant.WALLET_ICO, "[]");
+                String mailIco = App.get().getSp().getString(Constant.WALLET_ICO, "[]");
                 ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
                 HashMap<Integer, Integer> mailHash = new HashMap<>();
                 for (int i = 0; i < mailId.size(); i++) {
@@ -391,9 +388,9 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
                 }
                 wallet.clear();
                 if (null != response.body().data.getList()) {
-                    String wallets = AppApplication.get().getSp().getString(Constant.WALLETS, "");
-                    String wallets_beifen = AppApplication.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                    String walletsZjc = AppApplication.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
+                    String wallets = App.get().getSp().getString(Constant.WALLETS, "");
+                    String wallets_beifen = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
+                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
                     for (int i = 0; i < response.body().data.getList().size(); i++) {
                         if (null == mailHash.get(response.body().data.getList().get(i).getId())) {
                             int icon = AppUtil.getRoundmIcon();
@@ -427,7 +424,7 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
                             Integer val = (Integer) entry.getValue();
                             mailId.add(new MailIconBean(key, val));
                         }
-                        AppApplication.get().getSp().putString(Constant.WALLET_ICO, GsonUtils.objToJson(mailId));
+                        App.get().getSp().putString(Constant.WALLET_ICO, GsonUtils.objToJson(mailId));
                     }
                     wallet.addAll(response.body().data.getList());
                 }
@@ -593,8 +590,8 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (AppApplication.get().getSp().getBoolean(Constant.NEED_RESTART, false)) {
-            AppApplication.get().getSp().putBoolean(Constant.NEED_RESTART, false);
+        if (App.get().getSp().getBoolean(Constant.NEED_RESTART, false)) {
+            App.get().getSp().putBoolean(Constant.NEED_RESTART, false);
             Intent restart = getIntent();
             finish();
             startActivity(restart);

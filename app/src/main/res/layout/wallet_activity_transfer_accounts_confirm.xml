@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="14dp"
-            android:text="另付手续费："
+            android:text="手续费："
             android:textColor="@color/c_EA642F"
             android:textSize="12dp" />
     </LinearLayout>

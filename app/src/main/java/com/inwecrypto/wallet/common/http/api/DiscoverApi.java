@@ -6,7 +6,7 @@ import com.lzy.okgo.callback.StringCallback;
 
 import java.util.HashMap;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.bean.ArticleBean;
 import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
@@ -29,7 +29,7 @@ public class DiscoverApi {
     public static void getFind(Object object,JsonCallback<LzyResponse<FindBean>> callback){
         OkGo.<LzyResponse<FindBean>>get(Url.FIND)
                 .tag(object)
-                .cacheKey(Constant.DISCOVER_BANNER+ AppApplication.isMain)
+                .cacheKey(Constant.DISCOVER_BANNER+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
@@ -40,7 +40,7 @@ public class DiscoverApi {
         parmas.put("per_page",per_page+"");
         OkGo.<LzyResponse<CommonListBean<ArticleBean>>>get(Url.ARTICLE)
                 .tag(object)
-                .cacheKey("ARTICLE"+page+AppApplication.isMain)
+                .cacheKey("ARTICLE"+page+ App.isMain)
                 .cacheMode(page==1?CacheMode.FIRST_CACHE_THEN_REQUEST:CacheMode.NO_CACHE)
                 .params(parmas)
                 .execute(callback);
@@ -52,7 +52,7 @@ public class DiscoverApi {
         parmas.put("per_page",per_page+"");
         OkGo.<LzyResponse<CommonListBean<IcoListBean>>>get(Url.ICO)
                 .tag(object)
-                .cacheKey("ICO"+page+AppApplication.isMain)
+                .cacheKey("ICO"+page+ App.isMain)
                 .cacheMode(page==1?CacheMode.FIRST_CACHE_THEN_REQUEST:CacheMode.NO_CACHE)
                 .params(parmas)
                 .execute(callback);

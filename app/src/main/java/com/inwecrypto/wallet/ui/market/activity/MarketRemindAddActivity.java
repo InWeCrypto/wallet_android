@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonListBean;
@@ -106,7 +106,7 @@ public class MarketRemindAddActivity extends BaseActivity {
                     }
                     sb.append("]");
                     String currency="";
-                    if (1== AppApplication.get().getUnit()){
+                    if (1== App.get().getUnit()){
                         currency="cny";
                     }else {
                         currency="usd";

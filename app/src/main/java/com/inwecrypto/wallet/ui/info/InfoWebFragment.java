@@ -16,7 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.common.http.Url;
@@ -57,7 +57,7 @@ public class InfoWebFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        url= AppApplication.isMain? Url.WEB_ULR:Url.WEB_TEST_ULR;
+        url= App.isMain? Url.WEB_ULR:Url.WEB_TEST_ULR;
         if (mWebView != null) {
             mWebView.removeAllViews();
             mWebView.destroy();

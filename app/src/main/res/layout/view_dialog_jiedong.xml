@@ -32,7 +32,7 @@
         android:layout_gravity="center_horizontal"
         android:textSize="16sp"
         android:textColor="@color/c_333333"
-        android:text="Gas解冻处理中，请耐心等待"/>
+        android:text="@string/gasjiedongtishi"/>
 
     <TextView
         android:id="@+id/ok"
@@ -41,7 +41,7 @@
         android:layout_marginTop="20dp"
         android:background="@color/c_008c55"
         android:gravity="center"
-        android:text="确定"
+        android:text="@string/queding"
         android:paddingTop="14dp"
         android:paddingBottom="14dp"
         android:textColor="@color/c_ffffff"

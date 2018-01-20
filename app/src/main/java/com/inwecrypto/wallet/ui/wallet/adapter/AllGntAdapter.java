@@ -30,9 +30,9 @@ public class AllGntAdapter extends CommonAdapter<GntBean> {
         Glide.with(mContext).load(gntBean.getIcon()).crossFade().transform(new GlideCircleTransform(mContext)).into((ImageView) holder.getView(R.id.img));
         holder.setText(R.id.name,gntBean.getName());
         if (!gntBean.isSelect()){
-            Glide.with(mContext).load(R.mipmap.list_btn_default).crossFade().into((ImageView) holder.getView(R.id.select));
+            Glide.with(mContext).load(R.mipmap.newneonoselectxxhdpi).crossFade().into((ImageView) holder.getView(R.id.select));
         }else {
-            Glide.with(mContext).load(R.mipmap.list_btn_selected).crossFade().into((ImageView) holder.getView(R.id.select));
+            Glide.with(mContext).load(R.mipmap.newneoselectxxhdpi).crossFade().into((ImageView) holder.getView(R.id.select));
         }
     }
 }

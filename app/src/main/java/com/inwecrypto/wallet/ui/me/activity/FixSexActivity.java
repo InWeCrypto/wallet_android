@@ -7,12 +7,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.App;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.LoginBean;
@@ -80,8 +81,8 @@ public class FixSexActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<LzyResponse<Object>> response) {
                         hideLoading();
-                        AppApplication.get().getLoginBean().getUser().setSex(sex);
-                        AppApplication.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(user));
+                        App.get().getLoginBean().getUser().setSex(sex);
+                        App.get().getSp().putString(Constant.USER_INFO, GsonUtils.objToJson(user));
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_USERINFO));
                         ToastUtil.show(R.string.xiugaichenggong);
                         finish();

@@ -17,7 +17,8 @@ import com.bumptech.glide.Glide;
 import com.google.zxing.WriterException;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.LoginBean;
@@ -113,7 +114,7 @@ public class ReceiveActivity extends BaseActivity {
     @Override
     protected void initData() {
         tvAddress.setText(wallet.getAddress());
-        LoginBean loginBean = AppApplication.get().getLoginBean();
+        LoginBean loginBean = App.get().getLoginBean();
         if (null!=loginBean.getUser().getImg()&&loginBean.getUser().getImg().length()>0){
             Glide.with(this)
                     .load(loginBean.getUser().getImg())

@@ -2,15 +2,16 @@ package com.inwecrypto.wallet.ui.wallet.activity.neowallet;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.ClaimUtxoBean;
@@ -27,6 +28,7 @@ import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.newneo.InputPassFragment;
 import com.inwecrypto.wallet.ui.wallet.activity.TransferAccountsActivity;
 import com.lzy.okgo.model.Response;
 
@@ -71,7 +73,6 @@ public class GetGasActivity extends BaseActivity {
 
     private WalletBean wallet;
     private TokenBean.RecordBean neoBean;
-    private MaterialDialog mMaterialDialog;
     private boolean isClod;
 
     @Override
@@ -106,7 +107,7 @@ public class GetGasActivity extends BaseActivity {
 //                        ToastUtil.show(R.string.no_nfc_hit);
 //                        return;
 //                    }
-                    ToastUtil.show("暂时不支持冷钱包提取Gas!请转换为热钱包");
+                    ToastUtil.show(getString(R.string.gaslengqianbaotishi));
                     return;
                 }
 
@@ -159,11 +160,11 @@ public class GetGasActivity extends BaseActivity {
 //                        ToastUtil.show(R.string.no_nfc_hit);
 //                        return;
 //                    }
-                    ToastUtil.show("暂时不支持冷钱包解冻Gas!请转换为热钱包");
+                    ToastUtil.show(R.string.gaslengqianbaotishi);
                     return;
                 }
                 if (new BigDecimal(neoBean.getBalance()).intValue()==0){
-                    ToastUtil.show("当前NEO余额为0!不可解冻!");
+                    ToastUtil.show(getString(R.string.bukejiedongtishi));
                     return;
                 }
                 showFixLoading();
@@ -303,20 +304,14 @@ public class GetGasActivity extends BaseActivity {
     }
 
     private void transfer(final String unspent) {
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.view_dialog_pass, null, false);
-        final EditText pass = (EditText) view.findViewById(R.id.et_pass);
-        TextView cancle = (TextView) view.findViewById(R.id.cancle);
-        TextView ok = (TextView) view.findViewById(R.id.ok);
-        cancle.setOnClickListener(new View.OnClickListener() {
+        //输入密码
+        FragmentManager fm = getSupportFragmentManager();
+        InputPassFragment input = new InputPassFragment();
+        input.show(fm, "input");
+        input.setOnNextListener(new InputPassFragment.OnNextInterface() {
             @Override
-            public void onClick(View v) {
-                mMaterialDialog.dismiss();
-            }
-        });
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pass.getText().toString().length() == 0) {
+            public void onNext(final String passWord, final Dialog dialog) {
+                if (passWord.length() == 0) {
                     ToastUtil.show(getString(R.string.qingshurumima));
                     return;
                 }
@@ -336,7 +331,7 @@ public class GetGasActivity extends BaseActivity {
                         }
                         neomobile.Wallet wallet = null;
                         try {
-                            wallet = Neomobile.fromKeyStore(b, pass.getText().toString().trim());
+                            wallet = Neomobile.fromKeyStore(b, passWord);
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -370,20 +365,14 @@ public class GetGasActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 hideFixLoading();
-                                mMaterialDialog.dismiss();
+                                dialog.dismiss();
                                 getOrderInfo(finalData, finalOrder);
                             }
                         });
                     }
                 }).start();
-
             }
         });
-
-        mMaterialDialog = new MaterialDialog(mActivity).setView(view);
-        mMaterialDialog.setBackgroundResource(R.drawable.trans_bg);
-        mMaterialDialog.setCanceledOnTouchOutside(true);
-        mMaterialDialog.show();
     }
 
     private void getOrderInfo(String data,String order) {
@@ -403,7 +392,7 @@ public class GetGasActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<LzyResponse<Object>> response) {
                         hideFixLoading();
-                        ToastUtil.show("提取成功");
+                        ToastUtil.show(getString(R.string.tiquchenggong));
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
                         AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
                         finish();
@@ -466,20 +455,14 @@ public class GetGasActivity extends BaseActivity {
     }
 
     private void srartTransfer(final String unspent) {
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.view_dialog_pass, null, false);
-        final EditText pass = (EditText) view.findViewById(R.id.et_pass);
-        TextView cancle = (TextView) view.findViewById(R.id.cancle);
-        TextView ok = (TextView) view.findViewById(R.id.ok);
-        cancle.setOnClickListener(new View.OnClickListener() {
+        //输入密码
+        FragmentManager fm = getSupportFragmentManager();
+        InputPassFragment input = new InputPassFragment();
+        input.show(fm, "input");
+        input.setOnNextListener(new InputPassFragment.OnNextInterface() {
             @Override
-            public void onClick(View v) {
-                mMaterialDialog.dismiss();
-            }
-        });
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pass.getText().toString().length() == 0) {
+            public void onNext(final String passWord, final Dialog dialog) {
+                if (passWord.length() == 0) {
                     ToastUtil.show(getString(R.string.qingshurumima));
                     return;
                 }
@@ -499,7 +482,7 @@ public class GetGasActivity extends BaseActivity {
                         }
                         neomobile.Wallet wallet = null;
                         try {
-                            wallet = Neomobile.fromKeyStore(b, pass.getText().toString().trim());
+                            wallet = Neomobile.fromKeyStore(b, passWord);
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -532,20 +515,14 @@ public class GetGasActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 hideFixLoading();
-                                mMaterialDialog.dismiss();
+                                dialog.dismiss();
                                 getSelfOrderInfo(finalData, finalOrder);
                             }
                         });
                     }
                 }).start();
-
             }
         });
-
-        mMaterialDialog = new MaterialDialog(mActivity).setView(view);
-        mMaterialDialog.setBackgroundResource(R.drawable.trans_bg);
-        mMaterialDialog.setCanceledOnTouchOutside(true);
-        mMaterialDialog.show();
     }
 
     private void getSelfOrderInfo(String data,String order) {
@@ -567,7 +544,7 @@ public class GetGasActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse<Object>> response) {
                         hideFixLoading();
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
-                        EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_JIEDONG_DIALOG));
+                        EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_JIEDONG_DIALOG));
                         finish();
                     }
 

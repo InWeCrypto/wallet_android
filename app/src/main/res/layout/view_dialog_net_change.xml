@@ -13,7 +13,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_marginTop="32dp"
-        android:text="请选择网络"
+        android:text="@string/qingxuanzewangluo"
         android:textColor="@color/c_333333"
         android:textSize="18dp"/>
 
@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="测试网络"
+            android:text="@string/ceshiwangluo"
             android:layout_marginLeft="14dp"
             android:textColor="@color/c_333333"
             android:textSize="18dp"/>
@@ -68,7 +68,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="正式网络"
+            android:text="@string/zhengshiwangluo"
             android:layout_marginLeft="14dp"
             android:textColor="@color/c_333333"
             android:textSize="18dp"/>

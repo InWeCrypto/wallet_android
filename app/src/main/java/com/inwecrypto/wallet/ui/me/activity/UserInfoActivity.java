@@ -10,7 +10,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.LoginBean;
@@ -97,17 +98,18 @@ public class UserInfoActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        loginBean = AppApplication.get().getLoginBean();
+        loginBean = App.get().getLoginBean();
         if (null != loginBean) {
             if (null != loginBean.getUser().getImg() && loginBean.getUser().getImg().length() > 0) {
                 Glide.with(this)
                         .load(loginBean.getUser().getImg())
                         .crossFade()
+                        .placeholder(R.mipmap.touxiang)
                         .transform(new GlideCircleTransform(this))
                         .into(img);
             }else {
                 Glide.with(this)
-                        .load(R.mipmap.clod_icon)
+                        .load(R.mipmap.touxiang)
                         .crossFade()
                         .transform(new GlideCircleTransform(this))
                         .into(img);

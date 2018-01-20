@@ -1,12 +1,12 @@
 package com.inwecrypto.wallet.common.http.api;
 
+import com.inwecrypto.wallet.App;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.bean.IcoOrderBean;
 import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MailBean;
@@ -29,14 +29,14 @@ public class MeApi {
     public static void contact(Object object,int id,JsonCallback<LzyResponse<ArrayList<MailBean>>> callback){
         OkGo.<LzyResponse<ArrayList<MailBean>>>get(Url.USER_CONTACT+id)
                 .tag(object)
-                .cacheKey(Constant.MAIL_LIST+id+ AppApplication.isMain)
+                .cacheKey(Constant.MAIL_LIST+id+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
 
     public static void contact(Object object,int ico_id,String name,String address,String remark,JsonCallback<LzyResponse<Object>> callback){
         HashMap<String,String> params=new HashMap<>();
-        params.put("ico_id",ico_id+"");
+        params.put(App.isMain ?"ico_id":"category_id",ico_id+"");
         params.put("name",name);
         params.put("address",address);
         params.put("remark",remark);
@@ -55,7 +55,7 @@ public class MeApi {
 
     public static void editContact(Object object,int id,int ico_id,String name,String address,String remark,JsonCallback<LzyResponse<Object>> callback){
         HashMap<String,String> params=new HashMap<>();
-        params.put("ico_id",ico_id+"");
+        params.put(App.isMain ?"ico_id":"category_id",ico_id+"");
         params.put("name",name);
         params.put("address",address);
         params.put("remark",remark);
@@ -92,7 +92,7 @@ public class MeApi {
     public static void getUnit(Object object,JsonCallback<LzyResponse<CommonListBean<UnitBean>>> callback){
         OkGo.<LzyResponse<CommonListBean<UnitBean>>>get(Url.MONETARY_UNIT)
                 .tag(object)
-                .cacheKey(Constant.UNIT+AppApplication.isMain)
+                .cacheKey(Constant.UNIT+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }

@@ -36,9 +36,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import butterknife.BindView;
+import ethmobile.Wallet;
+
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
-import unichain.ETHWallet;
-import unichain.Unichain;
 
 /**
  * Created by donghaijun on 2017/10/31.
@@ -245,9 +245,9 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                     @Override
                     public void run() {
 
-                        ETHWallet wallet = null;
+                        Wallet wallet = null;
                         try {
-                            wallet = Unichain.openETHWallet(json, pass.getText().toString());
+                            //wallet = Unichain.openETHWallet(json, pass.getText().toString());
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -260,13 +260,13 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                         }
                         try {
                             if (transfer.getType() == 1) {
-                                data = "0x" + conver16HexStr(wallet.transferCurrency(transfer.getNonce(), transfer.getOx_gas(),"0x" + new BigInteger(new BigDecimal(Constant.GAS_LIMIT).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), transfer.getTransfer_address().toLowerCase(), transfer.getOx_price()));
+                                //data = "0x" + conver16HexStr(wallet.transferCurrency(transfer.getNonce(), transfer.getOx_gas(),"0x" + new BigInteger(new BigDecimal(Constant.GAS_LIMIT).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), transfer.getTransfer_address().toLowerCase(), transfer.getOx_price()));
                             } else {
-                                data = "0x" + conver16HexStr(wallet.transferToken(transfer.getNonce()
-                                        , transfer.getOx_gas()
-                                        , transfer.getGas_limit()
-                                        , transfer.getTransfer_address().toLowerCase()
-                                        , transfer.getOx_price().getBytes("utf-8")));
+//                                data = "0x" + conver16HexStr(wallet.transferToken(transfer.getNonce()
+//                                        , transfer.getOx_gas()
+//                                        , transfer.getGas_limit()
+//                                        , transfer.getTransfer_address().toLowerCase()
+//                                        , transfer.getOx_price().getBytes("utf-8")));
                             }
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {

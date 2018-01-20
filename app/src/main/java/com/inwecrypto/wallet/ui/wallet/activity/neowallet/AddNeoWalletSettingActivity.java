@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import neomobile.Neomobile;
-import unichain.ETHWallet;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -147,7 +146,21 @@ public class AddNeoWalletSettingActivity extends BaseActivity {
                                     }
                                 }
                             }
-                            WalletApi.wallet(mActivity,type_id,etName.getText().toString().trim() , address, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+                            String hashAddress="";
+                            try {
+                                hashAddress=Neomobile.decodeAddress(address);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                mActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideLoading();
+                                        ToastUtil.show(getString(R.string.wallet_creat_error));
+                                    }
+                                });
+                                return;
+                            }
+                            WalletApi.wallet(mActivity,type_id,etName.getText().toString().trim() , address,hashAddress, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
                                 @Override
                                 public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
                                     //将钱包保存到ACCOUNTMANAGER
@@ -159,11 +172,11 @@ public class AddNeoWalletSettingActivity extends BaseActivity {
                                             Intent intent=new Intent(mActivity,AddNeoSuccessActivity.class);
                                             WalletBean walletBean=response.body().data.getRecord();
                                             walletBean.setType(Constant.ZHENGCHANG);
-                                            String mailIco=AppApplication.get().getSp().getString(Constant.WALLET_ICO,"[]");
+                                            String mailIco= App.get().getSp().getString(Constant.WALLET_ICO,"[]");
                                             ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
                                             int icon= AppUtil.getRoundmIcon();
                                             mailId.add(new MailIconBean(walletBean.getId(),icon));
-                                            AppApplication.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
+                                            App.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
                                             walletBean.setIcon(AppUtil.getIcon(icon));
                                             WalletBean.CategoryBean category=new WalletBean.CategoryBean();
                                             category.setName("NEO");
@@ -211,10 +224,10 @@ public class AddNeoWalletSettingActivity extends BaseActivity {
         accountManager.setUserData(account, "type", type);
         accountManager.setUserData(account, "wallet_type","hot");
 
-        String wallets= AppApplication.get().getSp().getString(Constant.WALLETS,"");
+        String wallets= App.get().getSp().getString(Constant.WALLETS,"");
         if (!wallets.contains(address)){
             wallets=wallets+address+",";
-            AppApplication.get().getSp().putString(Constant.WALLETS,wallets);
+            App.get().getSp().putString(Constant.WALLETS,wallets);
         }
     }
 

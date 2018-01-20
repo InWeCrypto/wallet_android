@@ -13,7 +13,10 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+import ethmobile.Ethmobile;
+import ethmobile.Wallet;
+
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
@@ -24,8 +27,6 @@ import com.inwecrypto.wallet.ui.ScanActivity;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.event.KeyEvent;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
-import unichain.ETHWallet;
-import unichain.Unichain;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -176,23 +177,23 @@ public class WatchImportWalletActivity extends BaseActivity {
             public void run() {
                 try {
 
-                    ETHWallet wallet= Unichain.openETHWallet(etInfo.getText().toString().getBytes("utf-8"),pass);
-                    if (!wallet.address().toLowerCase().equals(watchWallet.getAddress().toLowerCase())){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ToastUtil.show(getString(R.string.qingshurugaiqianbaodezhengquekeystore));
-                                hideLoading();
-                            }
-                        });
-                        return;
-                    }
-                    //将钱包保存到ACCOUNTMANAGER
-                    saveWallet(etInfo.getText().toString().getBytes("utf-8")
-                            , wallet.address().toLowerCase()
-                            , pass
-                            , watchWallet.getName()
-                            , Constant.ZHENGCHANG);
+                    Wallet wallet= Ethmobile.fromKeyStore(etInfo.getText().toString(),pass);
+//                    if (!wallet.address().toLowerCase().equals(watchWallet.getAddress().toLowerCase())){
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                ToastUtil.show(getString(R.string.qingshurugaiqianbaodezhengquekeystore));
+//                                hideLoading();
+//                            }
+//                        });
+//                        return;
+//                    }
+//                    //将钱包保存到ACCOUNTMANAGER
+//                    saveWallet(etInfo.getText().toString().getBytes("utf-8")
+//                            , wallet.address().toLowerCase()
+//                            , pass
+//                            , watchWallet.getName()
+//                            , Constant.ZHENGCHANG);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -229,10 +230,10 @@ public class WatchImportWalletActivity extends BaseActivity {
         accountManager.setUserData(account, "wallet_type","hot");
 
         account=null;
-        String wallets= AppApplication.get().getSp().getString(Constant.WALLETS,"");
+        String wallets= App.get().getSp().getString(Constant.WALLETS,"");
         if (!wallets.contains(address)){
             wallets=wallets+address+",";
-            AppApplication.get().getSp().putString(Constant.WALLETS,wallets);
+            App.get().getSp().putString(Constant.WALLETS,wallets);
         }
     }
 

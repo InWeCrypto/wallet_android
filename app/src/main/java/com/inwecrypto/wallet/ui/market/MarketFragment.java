@@ -15,8 +15,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.inwecrypto.wallet.base.BaseFragment;
-import com.lzy.okgo.cache.CacheEntity;
-import com.lzy.okgo.db.CacheManager;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
@@ -25,9 +23,8 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
 import com.inwecrypto.wallet.R;
-import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MarkeListBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;

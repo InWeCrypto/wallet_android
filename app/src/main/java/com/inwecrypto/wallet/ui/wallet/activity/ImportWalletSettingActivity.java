@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.App;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
@@ -17,7 +18,9 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+import ethmobile.Ethmobile;
+import ethmobile.Wallet;
+
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
@@ -32,8 +35,8 @@ import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import unichain.ETHWallet;
-import unichain.Unichain;
+//import unichain.ETHWallet;
+//import unichain.Unichain;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -150,14 +153,14 @@ public class ImportWalletSettingActivity extends BaseActivity {
                     public void run() {
                         try {
 
-                            ETHWallet wallet=null;
+                            Wallet wallet=null;
                             String address="";
                             byte[] json=new byte[0];
                             switch (type){
                                 case 1:
-                                    wallet=Unichain.openETHWallet(key.getBytes("utf-8"),pass);
+                                    wallet=Ethmobile.fromKeyStore(key,pass);
                                     json=key.getBytes();
-                                    address=wallet.address().toLowerCase();
+                                    //address=wallet.address().toLowerCase();
                                     if (!key.toLowerCase().contains(address.replace("0x",""))){
                                         mActivity.runOnUiThread(new Runnable() {
                                             @Override
@@ -169,14 +172,14 @@ public class ImportWalletSettingActivity extends BaseActivity {
                                     }
                                     break;
                                 case 2:
-                                    wallet=Unichain.ethWalletFromMnemonic(key);
-                                    address=wallet.address().toLowerCase();
-                                    json=wallet.encrypt(etPs.getText().toString());
+//                                    wallet=Unichain.ethWalletFromMnemonic(key);
+//                                    address=wallet.address().toLowerCase();
+//                                    json=wallet.encrypt(etPs.getText().toString());
                                     break;
                                 case 3:
-                                    wallet=Unichain.ethWalletFromPrivateKey(key);
-                                    address=wallet.address().toLowerCase();
-                                    json=wallet.encrypt(etPs.getText().toString());
+//                                    wallet=Unichain.ethWalletFromPrivateKey(key);
+//                                    address=wallet.address().toLowerCase();
+//                                    json=wallet.encrypt(etPs.getText().toString());
                                     break;
                                 case 4:
                                     address=key;
@@ -196,7 +199,7 @@ public class ImportWalletSettingActivity extends BaseActivity {
 
                             final byte[] finalJson = json;
                             final String finalAddress = address;
-                            WalletApi.wallet(mActivity,type_id, etName.getText().toString(), address, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+                            WalletApi.wallet(mActivity,type_id, etName.getText().toString(), address,"", new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
                                 @Override
                                 public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
                                     if (4!=type){
@@ -218,11 +221,11 @@ public class ImportWalletSettingActivity extends BaseActivity {
                                             }else {
                                                 walletBean.setType(Constant.ZHENGCHANG);
                                             }
-                                            String mailIco=AppApplication.get().getSp().getString(Constant.WALLET_ICO,"[]");
+                                            String mailIco= App.get().getSp().getString(Constant.WALLET_ICO,"[]");
                                             ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
                                             int icon= AppUtil.getRoundmIcon();
                                             mailId.add(new MailIconBean(walletBean.getId(),icon));
-                                            AppApplication.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
+                                            App.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
                                             walletBean.setIcon(AppUtil.getIcon(icon));
                                             intent.putExtra("wallet",walletBean);
                                             finshTogo(intent);
@@ -303,10 +306,10 @@ public class ImportWalletSettingActivity extends BaseActivity {
         accountManager.setUserData(account, "wallet_type","hot");
 
         account=null;
-        String wallets= AppApplication.get().getSp().getString(Constant.WALLETS,"");
+        String wallets= App.get().getSp().getString(Constant.WALLETS,"");
         if (!wallets.contains(address)){
             wallets=wallets+address+",";
-            AppApplication.get().getSp().putString(Constant.WALLETS,wallets);
+            App.get().getSp().putString(Constant.WALLETS,wallets);
         }
     }
 

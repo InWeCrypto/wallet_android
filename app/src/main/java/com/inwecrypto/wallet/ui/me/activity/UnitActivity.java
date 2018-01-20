@@ -10,7 +10,8 @@ import org.greenrobot.eventbus.EventBus;
 
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.common.Constant;
@@ -70,7 +71,8 @@ public class UnitActivity extends BaseActivity {
                 if (selectPosition == -1) {
                     finish();
                 } else {
-                    AppApplication.get().getSp().putInt(Constant.UNIT_TYPE,selectPosition);
+                    App.get().getSp().putInt(Constant.UNIT_TYPE,selectPosition);
+                    App.get().getSp().putBoolean(Constant.UNIT_CHANGE,true);
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_UNIT_CHANGE));
                     finish();
                 }
@@ -99,7 +101,7 @@ public class UnitActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        if (1== AppApplication.get().getUnit()){
+        if (1== App.get().getUnit()){
             select.setImageResource(R.mipmap.list_btn_selected);
             select2.setImageResource(R.mipmap.list_btn_default);
             selectPosition=1;

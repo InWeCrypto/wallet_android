@@ -1,6 +1,5 @@
 package com.inwecrypto.wallet.ui.wallet.activity;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -14,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.inwecrypto.wallet.common.widget.EndLessOnScrollListener;
 import com.lzy.okgo.model.Response;
@@ -27,7 +27,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.BpsBean;
@@ -258,7 +258,7 @@ public class TokenWalletActivity extends BaseActivity {
             Glide.with(this).load(gnt.getGnt_category().getIcon()).transform(new GlideCircleTransform(this)).crossFade().into(ivImg);
             BigDecimal currentPrice = new BigDecimal(AppUtil.toD(gnt.getBalance().replace("0x", "0")));
             tvPrice.setText(currentPrice.divide(Constant.pEther, 4, BigDecimal.ROUND_HALF_UP).toString());
-            if (1 == AppApplication.get().getUnit()) {
+            if (1 == App.get().getUnit()) {
                 tvChPrice.setText("≈￥" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
                 titlePrice.setText("(￥" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
             } else {
@@ -318,9 +318,9 @@ public class TokenWalletActivity extends BaseActivity {
         });
 
         //保存 minBlock
-        minBlock=AppApplication.get().getSp().getInt(Constant.MIN_BLOCK,12);
+        minBlock= App.get().getSp().getInt(Constant.MIN_BLOCK,12);
         //保存 minBlock
-        currentBlock=new BigDecimal(AppApplication.get().getSp().getString(Constant.CURRENT_BLOCK,"0")).doubleValue();
+        currentBlock=new BigDecimal(App.get().getSp().getString(Constant.CURRENT_BLOCK,"0")).doubleValue();
 
         startRound();
     }
@@ -333,7 +333,7 @@ public class TokenWalletActivity extends BaseActivity {
             public void onSuccess(Response<LzyResponse<MinBlockBean>> response) {
                 minBlock = Integer.parseInt(response.body().data.getMin_block_num());
                 //保存 minBlock
-                AppApplication.get().getSp().putInt(Constant.MIN_BLOCK,minBlock);
+                App.get().getSp().putInt(Constant.MIN_BLOCK,minBlock);
             }
 
             @Override
@@ -348,7 +348,7 @@ public class TokenWalletActivity extends BaseActivity {
                         BigDecimal currentPrice = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
                         currentBlock = currentPrice.doubleValue();
                         //保存 minBlock
-                        AppApplication.get().getSp().putString(Constant.CURRENT_BLOCK,currentPrice.toPlainString());
+                        App.get().getSp().putString(Constant.CURRENT_BLOCK,currentPrice.toPlainString());
                         if (adapter!=null){
                             adapter.notifyDataSetChanged();
                         }
@@ -443,7 +443,7 @@ public class TokenWalletActivity extends BaseActivity {
                     ArrayList<WalletCountBean> walletPrices = response.body().data.getList();
                     BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
                     totleEther = totleEther.add(currentPrice);
-                    if (1 == AppApplication.get().getUnit()) {
+                    if (1 == App.get().getUnit()) {
                         totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null==walletPrices.get(0).getCategory().getCap()?"0":walletPrices.get(0).getCategory().getCap().getPrice_cny()))).setScale(2, BigDecimal.ROUND_HALF_UP);
                         tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
                         tvChPrice.setText("≈￥" + totlePrice.toString());
@@ -475,7 +475,7 @@ public class TokenWalletActivity extends BaseActivity {
                     //进行计算
                     tokenEther = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
                     tvPrice.setText(tokenEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
-                    if (1 == AppApplication.get().getUnit()) {
+                    if (1 == App.get().getUnit()) {
                         tvChPrice.setText("≈￥" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
                         titlePrice.setText("(￥" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
                     } else {

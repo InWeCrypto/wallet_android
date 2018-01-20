@@ -12,7 +12,9 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+import ethmobile.Wallet;
+
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
@@ -21,8 +23,6 @@ import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import unichain.ETHWallet;
-import unichain.Unichain;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -138,44 +138,44 @@ public class WatchImportWalletSettingActivity extends BaseActivity {
                     public void run() {
                         try {
 
-                            ETHWallet wallet=null;
+                            Wallet wallet=null;
                             String address="";
                             byte[] json=new byte[0];
                             switch (type){
                                 case 1:
-                                    wallet=Unichain.openETHWallet(key.getBytes("utf-8"),pass);
-                                    json=key.getBytes();
-                                    address=wallet.address().toLowerCase();
+//                                    wallet=Unichain.openETHWallet(key.getBytes("utf-8"),pass);
+//                                    json=key.getBytes();
+//                                    address=wallet.address().toLowerCase();
                                     break;
                                 case 2:
-                                    wallet=Unichain.ethWalletFromMnemonic(key);
-                                    address=wallet.address().toLowerCase();
-                                    json=wallet.encrypt(etPs.getText().toString());
-                                    if (!address.equals(watchWallet.getAddress())){
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                ToastUtil.show(getString(R.string.qingshurugaiqianbaodezhengquezhujici));
-                                                hideLoading();
-                                            }
-                                        });
-                                        return;
-                                    }
+//                                    wallet=Unichain.ethWalletFromMnemonic(key);
+//                                    address=wallet.address().toLowerCase();
+//                                    json=wallet.encrypt(etPs.getText().toString());
+//                                    if (!address.equals(watchWallet.getAddress())){
+//                                        runOnUiThread(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                ToastUtil.show(getString(R.string.qingshurugaiqianbaodezhengquezhujici));
+//                                                hideLoading();
+//                                            }
+//                                        });
+//                                        return;
+//                                    }
                                     break;
                                 case 3:
-                                    wallet=Unichain.ethWalletFromPrivateKey(key);
-                                    address=wallet.address().toLowerCase();
-                                    json=wallet.encrypt(etPs.getText().toString());
-                                    if (!address.equals(watchWallet.getAddress())){
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                ToastUtil.show(getString(R.string.qingshurugaiqianbaodezhengquesiyao));
-                                                hideLoading();
-                                            }
-                                        });
-                                        return;
-                                    }
+//                                    wallet=Unichain.ethWalletFromPrivateKey(key);
+//                                    address=wallet.address().toLowerCase();
+//                                    json=wallet.encrypt(etPs.getText().toString());
+//                                    if (!address.equals(watchWallet.getAddress())){
+//                                        runOnUiThread(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                ToastUtil.show(getString(R.string.qingshurugaiqianbaodezhengquesiyao));
+//                                                hideLoading();
+//                                            }
+//                                        });
+//                                        return;
+//                                    }
                                     break;
                                 case 4:
                                     address=key;
@@ -257,10 +257,10 @@ public class WatchImportWalletSettingActivity extends BaseActivity {
         accountManager.setUserData(account, "wallet_type","hot");
 
         account=null;
-        String wallets= AppApplication.get().getSp().getString(Constant.WALLETS,"");
+        String wallets= App.get().getSp().getString(Constant.WALLETS,"");
         if (!wallets.contains(address)){
             wallets=wallets+address+",";
-            AppApplication.get().getSp().putString(Constant.WALLETS,wallets);
+            App.get().getSp().putString(Constant.WALLETS,wallets);
         }
     }
 

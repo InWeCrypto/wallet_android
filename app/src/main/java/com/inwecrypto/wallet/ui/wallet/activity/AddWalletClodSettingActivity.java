@@ -15,7 +15,8 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 
 import butterknife.BindView;
-import unichain.ETHWallet;
+import ethmobile.Ethmobile;
+import ethmobile.Wallet;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -113,11 +114,11 @@ public class AddWalletClodSettingActivity extends BaseActivity {
                     @Override
                     public void run() {
                         try {
-                            ETHWallet wallet = new ETHWallet();
+                            Wallet wallet = Ethmobile.fromKeyStore("","");
                             String address="";
                             final byte[] json;
-                            json=wallet.encrypt(etPs.getText().toString());
-                            address=wallet.address();
+//                            json=wallet.encrypt(etPs.getText().toString());
+//                            address=wallet.address();
 
                             final String finalAddress = address;
                             mActivity.runOnUiThread(new Runnable() {
@@ -128,7 +129,7 @@ public class AddWalletClodSettingActivity extends BaseActivity {
                                     intent.putExtra("name", etName.getText().toString());
                                     intent.putExtra("type_id",type_id);
                                     intent.putExtra("address", finalAddress);
-                                    intent.putExtra("json",json);
+                                    //intent.putExtra("json",json);
                                     startActivity(intent);
                                 }
                             });

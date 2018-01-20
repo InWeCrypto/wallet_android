@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.TotlePriceBean;
 import com.lzy.okgo.OkGo;
@@ -22,7 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.LocalTokenBean;
 import com.inwecrypto.wallet.bean.LocalWalletBean;
@@ -83,16 +83,16 @@ public class AutoUpdateService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (AppApplication.IS_FIRST){
-            AppApplication.IS_FIRST=false;
+        if (App.IS_FIRST){
+            App.IS_FIRST=false;
             return super.onStartCommand(intent, flags, startId);
         }
-        if (AppApplication.UPDATA_TYPE==-1){
-            AppApplication.UPDATA_TYPE=1;
-        }else if (AppApplication.UPDATA_TYPE==1){
-            AppApplication.UPDATA_TYPE=2;
+        if (App.UPDATA_TYPE==-1){
+            App.UPDATA_TYPE=1;
+        }else if (App.UPDATA_TYPE==1){
+            App.UPDATA_TYPE=2;
         }else {
-            AppApplication.UPDATA_TYPE=1;
+            App.UPDATA_TYPE=1;
         }
         OkGo.getInstance().cancelTag(this);
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -110,12 +110,12 @@ public class AutoUpdateService extends IntentService {
             isFirst=false;
             return;
         }
-        if (AppApplication.UPDATA_TYPE==1){
+        if (App.UPDATA_TYPE==1){
             try {
                 okhttp3.Response response = OkGo.<LzyResponse<CommonListBean<MarkeListBean>>>get(Url.MARKET_CATEGORY)
-                        .headers("ct", AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
+                        .headers("ct", App.get().getSp().getString(App.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
                         .tag(this)
-                        .cacheKey(Constant.MARKET+AppApplication.isMain)
+                        .cacheKey(Constant.MARKET+ App.isMain)
                         .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                         .execute();
                 if (response.code()==200){
@@ -130,9 +130,9 @@ public class AutoUpdateService extends IntentService {
         }else {
             try {
                 okhttp3.Response response = OkGo.<LzyResponse<CommonListBean<WalletBean>>>get(Url.WALLET)
-                        .headers("ct", AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
+                        .headers("ct", App.get().getSp().getString(App.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
                         .tag(this)
-                        .cacheKey(Constant.WALLETS+AppApplication.isMain)
+                        .cacheKey(Constant.WALLETS+ App.isMain)
                         .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                         .execute();
                 if (response.code()==200) {
@@ -156,9 +156,9 @@ public class AutoUpdateService extends IntentService {
 
                         okhttp3.Response priceResponse = OkGo.<LzyResponse<CommonListBean<WalletCountBean>>>get(Url.CONVERSION)
                                 .tag(this)
-                                .cacheKey(Constant.CONVERSION+AppApplication.isMain)
+                                .cacheKey(Constant.CONVERSION+ App.isMain)
                                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
-                                .headers("ct", AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
+                                .headers("ct", App.get().getSp().getString(App.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
                                 .params(params)
                                 .execute();
 
@@ -198,9 +198,9 @@ public class AutoUpdateService extends IntentService {
                                     //请求代币列表
                                     okhttp3.Response tokenResponse = OkGo.<LzyResponse<TokenBean>>get(Url.CONVERSION + "/" + count.getId())
                                             .tag(this)
-                                            .cacheKey(Url.CONVERSION+"/"+count.getId()+AppApplication.isMain)
+                                            .cacheKey(Url.CONVERSION+"/"+count.getId()+ App.isMain)
                                             .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
-                                            .headers("ct", AppApplication.get().getSp().getString(AppApplication.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
+                                            .headers("ct", App.get().getSp().getString(App.isMain?Constant.TOKEN:Constant.TEST_TOKEN,""))
                                             .execute();
                                     if (tokenResponse.code() == 200) {
                                         String tokenBody = tokenResponse.body().string().toString();
@@ -341,12 +341,12 @@ public class AutoUpdateService extends IntentService {
                                 priceBean.totleUsd = totleUsdPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
 
                                 //设置总资产
-                                AppApplication.get().getSp().putString(AppApplication.isMain ? Constant.TOTAL_PRICE : Constant.TOTAL_TEST_PRICE,  GsonUtils.objToJson(priceBean));
+                                App.get().getSp().putString(App.isMain ? Constant.TOTAL_PRICE : Constant.TOTAL_TEST_PRICE,  GsonUtils.objToJson(priceBean));
                                 //设置缓存列表
                                 //设置 eth 列表
-                                AppApplication.get().getSp().putString(AppApplication.isMain ? Constant.ETH_LIST : Constant.ETH_TEST_LIST, GsonUtils.objToJson(ethList));
+                                App.get().getSp().putString(App.isMain ? Constant.ETH_LIST : Constant.ETH_TEST_LIST, GsonUtils.objToJson(ethList));
                                 //设置 neo 列表
-                                AppApplication.get().getSp().putString(AppApplication.isMain ? Constant.NEO_LIST : Constant.NEO_TEST_LIST, GsonUtils.objToJson(neoList));
+                                App.get().getSp().putString(App.isMain ? Constant.NEO_LIST : Constant.NEO_TEST_LIST, GsonUtils.objToJson(neoList));
 
                                 EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_TOTLE_PRICE_SERVICE));
                             }

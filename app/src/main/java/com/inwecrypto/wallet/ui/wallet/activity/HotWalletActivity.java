@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.lzy.okgo.model.Response;
 import com.r0adkll.slidr.Slidr;
@@ -45,7 +46,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+import ethmobile.Wallet;
+
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonListBean;
@@ -63,8 +65,6 @@ import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.wallet.adapter.GntAdapter;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
-import unichain.ETHWallet;
-import unichain.Unichain;
 
 /**
  * Created by Administrator on 2017/7/16.
@@ -340,7 +340,7 @@ public class HotWalletActivity extends BaseActivity {
             }
         });
 
-        if (1 == AppApplication.get().getUnit()) {
+        if (1 == App.get().getUnit()) {
             tvChPrice.setText(getString(R.string.zongzichan)+"(￥)");
         } else {
             tvChPrice.setText(getString(R.string.zongzichan)+"总资产($)");
@@ -351,7 +351,7 @@ public class HotWalletActivity extends BaseActivity {
         Glide.with(this).load(wallet.getIcon()).crossFade().into(ivImg);
         switch (new Integer(wallet.getType())) {
             case 0:
-                String wallets = AppApplication.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
+                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
                 if (wallets.contains(wallet.getAddress())) {
                     tvWatch.setVisibility(View.GONE);
                 } else {
@@ -416,7 +416,7 @@ public class HotWalletActivity extends BaseActivity {
                 ArrayList<WalletCountBean> walletPrices = response.body().data.getList();
                 BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
                 ETHEther = ETHEther.add(currentPrice).divide(Constant.pEther, 4, BigDecimal.ROUND_HALF_UP);
-                if (1 == AppApplication.get().getUnit()) {
+                if (1 == App.get().getUnit()) {
                     ETHPrice = ETHPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_cny())));
                     ethPrice.setText(ETHEther.toString());
                     tvEthChPrice.setText("≈￥" + ETHPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toString());
@@ -429,7 +429,7 @@ public class HotWalletActivity extends BaseActivity {
                 isEth=true;
                 if (isToken){
                     //计算总金额
-                    if (1 == AppApplication.get().getUnit()) {
+                    if (1 == App.get().getUnit()) {
                         tvPrice.setText(TOKENPrice.add(ETHPrice).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
                         titlePrice.setText("(￥" + TOKENPrice.add(ETHPrice).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
                     } else {
@@ -465,7 +465,7 @@ public class HotWalletActivity extends BaseActivity {
                     BigDecimal currentPrice = new BigDecimal(AppUtil.toD(token.getBalance().replace("0x", "0")));
                     if (null!=token.getGnt_category().getCap()){
 
-                        if (1 == AppApplication.get().getUnit()) {
+                        if (1 == App.get().getUnit()) {
                          TOKENPrice=TOKENPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_cny())));
                         }else {
                            TOKENPrice=TOKENPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_usd())));
@@ -475,7 +475,7 @@ public class HotWalletActivity extends BaseActivity {
                 isToken=true;
                 if (isEth){
                     //计算总金额
-                    if (1 == AppApplication.get().getUnit()) {
+                    if (1 == App.get().getUnit()) {
                         tvPrice.setText(TOKENPrice.add(ETHPrice).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
                         titlePrice.setText("(￥" + TOKENPrice.add(ETHPrice).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
                     } else {
@@ -521,8 +521,8 @@ public class HotWalletActivity extends BaseActivity {
             wallet.setType("0");
             switch (new Integer(wallet.getType())) {
                 case 0:
-                    String wallets = AppApplication.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                    String walletsZjc = AppApplication.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
+                    String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
+                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
                     if (wallets.contains(wallet.getAddress())||walletsZjc.contains(wallet.getAddress())) {
                         tvWatch.setVisibility(View.GONE);
                     } else {
@@ -552,7 +552,7 @@ public class HotWalletActivity extends BaseActivity {
         TextView keystore = (TextView) selectPopupWin.findViewById(R.id.keystore);
         TextView delete = (TextView) selectPopupWin.findViewById(R.id.delete);
 
-        String wallets = AppApplication.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
+        String wallets = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
         if (wallets.contains(wallet.getAddress())) {
             hit.setVisibility(View.GONE);
             zhujici.setVisibility(View.GONE);
@@ -619,9 +619,9 @@ public class HotWalletActivity extends BaseActivity {
                                         break;
                                     }
                                 }
-                                ETHWallet ethWallet = null;
+                                Wallet ethWallet = null;
                                 try {
-                                    ethWallet = Unichain.openETHWallet(b, pass.getText().toString());
+                                    //ethWallet = Unichain.openETHWallet(b, pass.getText().toString());
                                 } catch (Exception e) {
                                     mActivity.runOnUiThread(new Runnable() {
                                         @Override
@@ -634,7 +634,7 @@ public class HotWalletActivity extends BaseActivity {
                                 }
                                 String zjc = "";
                                 try {
-                                    zjc = ethWallet.mnemonic();
+                                    //zjc = ethWallet.mnemonic();
                                 } catch (Exception e) {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -708,9 +708,9 @@ public class HotWalletActivity extends BaseActivity {
                                         break;
                                     }
                                 }
-                                ETHWallet wal = null;
+                                Wallet wal = null;
                                 try {
-                                    wal = Unichain.openETHWallet(b, pass.getText().toString());
+                                    //wal = Unichain.openETHWallet(b, pass.getText().toString());
                                 } catch (Exception e) {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -723,7 +723,7 @@ public class HotWalletActivity extends BaseActivity {
                                 }
                                 byte[] keys = new byte[0];
                                 try {
-                                    keys = wal.encrypt(pass.getText().toString());
+                                    //keys = wal.encrypt(pass.getText().toString());
                                 } catch (Exception e) {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -736,10 +736,10 @@ public class HotWalletActivity extends BaseActivity {
                                 }
                                 accountManager.setUserData(account, "type", Constant.BEIFEN);
 
-                                String wallets = AppApplication.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
+                                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
                                 if (!wallets.contains(wallet.getAddress())) {
                                     wallets = wallets + wallet.getAddress() + ",";
-                                    AppApplication.get().getSp().putString(Constant.WALLETS_BEIFEN, wallets);
+                                    App.get().getSp().putString(Constant.WALLETS_BEIFEN, wallets);
                                 }
                                 final byte[] finalKeys = keys;
                                 runOnUiThread(new Runnable() {
@@ -811,7 +811,7 @@ public class HotWalletActivity extends BaseActivity {
                                     }
                                 }
                                 try {
-                                    Unichain.openETHWallet(b, pass.getText().toString());
+                                    //Unichain.openETHWallet(b, pass.getText().toString());
                                 } catch (Exception e) {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -830,10 +830,10 @@ public class HotWalletActivity extends BaseActivity {
                                         if (null != finalAccount) {
                                             accountManager.removeAccount(finalAccount, null, null);
                                         }
-                                        String walletStr = AppApplication.get().getSp().getString(Constant.WALLETS, "");
+                                        String walletStr = App.get().getSp().getString(Constant.WALLETS, "");
                                         if (walletStr.contains(wallet.getAddress().toLowerCase())) {
                                             walletStr = walletStr.replace(wallet.getAddress().toLowerCase(), "");
-                                            AppApplication.get().getSp().putString(Constant.WALLETS, walletStr);
+                                            App.get().getSp().putString(Constant.WALLETS, walletStr);
                                         }
                                         runOnUiThread(new Runnable() {
                                             @Override

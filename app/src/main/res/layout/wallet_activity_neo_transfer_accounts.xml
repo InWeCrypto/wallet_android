@@ -11,15 +11,15 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="24dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="24dp"
-        android:text="@string/zhuanzhangqianbaodizhi"
-        android:textColor="@color/c_333333"
+        android:text="@string/qianbaodizhi_"
+        android:textColor="@color/c_000000"
         android:textSize="12sp" />
 
     <View
@@ -43,7 +43,6 @@
             android:gravity="center_vertical"
             android:inputType="text"
             android:textColorHint="@color/c_999999"
-            android:hint="请输入转账地址"
             android:paddingBottom="9dp"
             android:paddingTop="9dp"
             android:textColor="@color/c_333333"
@@ -56,7 +55,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="4dp"
-            android:src="@mipmap/home_btn_contacts" />
+            android:src="@mipmap/userlistxxhdpi" />
     </LinearLayout>
 
     <View
@@ -73,34 +72,20 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="12dp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="24dp"
-            android:text="转账金额"
-            android:textColor="@color/c_333333"
-            android:textSize="12sp" />
-        <TextView
-            android:id="@+id/tv_currentPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="4dp"
-            android:text="(当前余额：0.00)"
-            android:textColor="@color/c_999999"
-            android:textSize="10sp" />
-    </LinearLayout>
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="24dp"
+        android:text="@string/zhuanzhangshuliang_"
+        android:textColor="@color/c_000000"
+        android:textSize="12sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp"/>
+        android:layout_height="12dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -121,7 +106,6 @@
             android:paddingBottom="9dp"
             android:paddingTop="9dp"
             android:textColorHint="@color/c_999999"
-            android:hint="转账金额"
             android:textColor="@color/c_333333"
             android:textCursorDrawable='@null'
             android:textSize="14sp" />
@@ -136,23 +120,31 @@
         android:layout_marginRight="25dp"
         android:background="@color/c_ececec" />
 
+    <TextView
+        android:id="@+id/tv_currentPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="24dp"
+        android:textColor="@color/c_999999"
+        android:textSize="10sp" />
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
-
+        android:layout_height="24dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="24dp"
-        android:text="@string/beizhu"
-        android:textColor="@color/c_333333"
+        android:text="@string/beizhu_"
+        android:textColor="@color/c_000000"
         android:textSize="12sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp"/>
+        android:layout_height="12dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -186,6 +178,37 @@
 
     <View
         android:layout_width="match_parent"
+        android:layout_height="12dp"/>
+
+    <LinearLayout
+        android:id="@+id/gasfeell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/fei"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_000000"
+            android:text="@string/jiaoyishouxufei"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mianshouxufei"
+            android:textColor="@color/c_A6A4A4"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
@@ -195,15 +218,26 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:background="@drawable/round_6dp_bule_bg"
+        android:background="@drawable/new_orgen_bg"
         android:gravity="center"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="@string/queding"
+        android:text="@string/tijiao"
         android:textColor="@color/c_ffffff"
         android:textSize="14sp" />
 
-    <View
+    <TextView
+        android:id="@+id/gas_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:visibility="invisible"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/c_A6A4A4"
+        android:textSize="11sp" />
+
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="36dp" />
+        android:layout_height="22dp" />
 </LinearLayout>

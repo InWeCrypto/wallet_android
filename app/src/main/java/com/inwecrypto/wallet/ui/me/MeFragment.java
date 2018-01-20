@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.bean.LoginBean;
@@ -153,7 +153,7 @@ public class MeFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
-        LoginBean loginBean = AppApplication.get().getLoginBean();
+        LoginBean loginBean = App.get().getLoginBean();
         if (null != loginBean) {
             if (null != loginBean.getUser().getImg() && loginBean.getUser().getImg().length() > 0) {
                 Glide.with(this)
@@ -180,7 +180,7 @@ public class MeFragment extends BaseFragment {
         View ok = view.findViewById(R.id.ok);
         final ImageView testImg = (ImageView) view.findViewById(R.id.test_img);
         final ImageView mainImg = (ImageView) view.findViewById(R.id.main_img);
-        if (AppApplication.isMain) {
+        if (App.isMain) {
             current = true;
             net = true;
             mainImg.setImageResource(R.mipmap.list_btn_selected);
@@ -218,11 +218,11 @@ public class MeFragment extends BaseFragment {
                     mMaterialDialog.dismiss();
                     return;
                 }
-                AppApplication.isMain = net;
-                AppApplication.get().getSp().putBoolean(Constant.NET, net);
+                App.isMain = net;
+                App.get().getSp().putBoolean(Constant.NET, net);
                 Url.changeNet(net);
                 mActivity.stopService(new Intent(mActivity, AutoUpdateService.class));
-                AppApplication.get().getSp().putBoolean(Constant.NEED_RESTART, true);
+                App.get().getSp().putBoolean(Constant.NEED_RESTART, true);
                 mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
             }
         });

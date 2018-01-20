@@ -28,7 +28,7 @@
         android:layout_marginBottom="60dp"
         android:layout_above="@+id/cold_qianbao"
         android:textColor="@color/c_ffffff"
-        android:text="登录"
+        android:text="@string/denglu"
         android:textSize="14sp"
         android:gravity="center"
         android:clickable="true"
@@ -67,14 +67,13 @@
             android:layout_height="wrap_content"
             android:textColor="@color/c_ffffff"
             android:textSize="12sp"
-            android:text="登陆钱包即表示同意"/>
+            android:text="@string/denglu_tip"/>
         <TextView
             android:id="@+id/tiaokuan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/c_ffffff"
-            android:textSize="12sp"
-            android:text="《服务协议》、《隐私协议》"/>
+            android:textSize="12sp"/>
     </LinearLayout>
 
 </RelativeLayout>

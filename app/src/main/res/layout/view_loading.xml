@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="14dp"
-        android:text="加载中..."
+        android:text="@string/jiazaizhong"
         android:textColor="@color/c_333333"
         android:textSize="12sp"/>
 </LinearLayout>

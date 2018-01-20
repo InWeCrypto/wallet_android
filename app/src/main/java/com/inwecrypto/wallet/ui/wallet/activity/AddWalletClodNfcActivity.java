@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
@@ -236,7 +236,7 @@ public class AddWalletClodNfcActivity extends BaseActivity {
     }
 
     private void creatWallet() {
-        WalletApi.wallet(mActivity,type_id, name, address, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+        WalletApi.wallet(mActivity,type_id, name, address,"", new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
             @Override
             public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
 
@@ -254,11 +254,11 @@ public class AddWalletClodNfcActivity extends BaseActivity {
                         WalletBean walletBean=response.body().data.getRecord();
                         walletBean.setType(Constant.GUANCHA);
 
-                        String mailIco=AppApplication.get().getSp().getString(Constant.WALLET_ICO,"[]");
+                        String mailIco= App.get().getSp().getString(Constant.WALLET_ICO,"[]");
                         ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
                         int icon= AppUtil.getRoundmIcon();
                         mailId.add(new MailIconBean(walletBean.getId(),icon));
-                        AppApplication.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
+                        App.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
                         walletBean.setIcon(AppUtil.getIcon(icon));
                         WalletBean.CategoryBean category=new WalletBean.CategoryBean();
                         category.setName("ETH");

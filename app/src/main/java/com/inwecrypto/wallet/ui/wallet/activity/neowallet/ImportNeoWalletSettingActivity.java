@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
@@ -162,7 +162,7 @@ public class ImportNeoWalletSettingActivity extends BaseActivity {
                                     address=wallet.address();
                                     break;
                                 case 2:
-                                    wallet=Neomobile.fromMnemonic(key);
+                                    wallet=Neomobile.fromMnemonic(key,App.get().isZh()?"zh_CN":"en_US");
                                     address=wallet.address();
                                     keystory=wallet.toKeyStore(etPs.getText().toString());
                                     break;
@@ -207,7 +207,21 @@ public class ImportNeoWalletSettingActivity extends BaseActivity {
 
                             final String finalKeystory = keystory;
                             final String finalAddress = address;
-                            WalletApi.wallet(mActivity,type_id, etName.getText().toString(), address, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+                            String hashAddress="";
+                            try {
+                                hashAddress=Neomobile.decodeAddress(address);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                mActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideLoading();
+                                        ToastUtil.show(getString(R.string.wallet_creat_error));
+                                    }
+                                });
+                                return;
+                            }
+                            WalletApi.wallet(mActivity,type_id, etName.getText().toString(), address,hashAddress, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
                                 @Override
                                 public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
                                     if (4!=type){
@@ -229,11 +243,11 @@ public class ImportNeoWalletSettingActivity extends BaseActivity {
                                             }else {
                                                 walletBean.setType(Constant.ZHENGCHANG);
                                             }
-                                            String mailIco=AppApplication.get().getSp().getString(Constant.WALLET_ICO,"[]");
+                                            String mailIco= App.get().getSp().getString(Constant.WALLET_ICO,"[]");
                                             ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
                                             int icon= AppUtil.getRoundmIcon();
                                             mailId.add(new MailIconBean(walletBean.getId(),icon));
-                                            AppApplication.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
+                                            App.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
                                             walletBean.setIcon(AppUtil.getIcon(icon));
                                             intent.putExtra("wallet",walletBean);
                                             finshTogo(intent);
@@ -314,10 +328,10 @@ public class ImportNeoWalletSettingActivity extends BaseActivity {
         accountManager.setUserData(account, "wallet_type","hot");
 
         account=null;
-        String wallets= AppApplication.get().getSp().getString(Constant.WALLETS,"");
+        String wallets= App.get().getSp().getString(Constant.WALLETS,"");
         if (!wallets.contains(address)){
             wallets=wallets+address+",";
-            AppApplication.get().getSp().putString(Constant.WALLETS,wallets);
+            App.get().getSp().putString(Constant.WALLETS,wallets);
         }
     }
 

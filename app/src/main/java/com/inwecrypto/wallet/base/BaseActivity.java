@@ -8,7 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
+import com.inwecrypto.wallet.App;
 import com.lzy.okgo.OkGo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,6 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity{
 
     /** 日志输出标志 **/
     protected final String TAG = this.getClass().getSimpleName();
+    private View title;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +74,29 @@ public abstract class BaseActivity extends AppCompatActivity{
         initData();
         setupWindowAnimation();//5.0以上的动画
         BarUtils.statusBarLightMode(this,isLightMode());
+        if (!App.isMain){
+            addWaringView();
+        }
+    }
+
+    protected void addWaringView() {
+        title=LayoutInflater.from(this).inflate(R.layout.test_title_view,null,false);
+        title.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        View view=getWindow().getDecorView();
+        if (view instanceof ViewGroup){
+            ViewGroup root= (ViewGroup) view;
+            root.addView(title);
+        }
+    }
+
+    protected void clearView(){
+        if (null!=title){
+            View view=title.getRootView();
+            if (view instanceof ViewGroup){
+                ViewGroup root= (ViewGroup) view;
+                root.removeView(title);
+            }
+        }
     }
 
     protected void initView(Bundle savedInstanceState) {

@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.NeoOderBean;
@@ -23,7 +23,6 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
-import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
 import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.ScreenUtils;
@@ -35,6 +34,8 @@ import com.inwecrypto.wallet.ui.wallet.activity.ReceiveActivity;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 import com.zhy.adapter.recyclerview.wrapper.EmptyWrapper;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -104,6 +105,7 @@ public class NeoTokenWalletActivity extends BaseActivity {
     private boolean isEnd;
     private boolean isShow;
     private LinearLayoutManager layoutManager;
+    private EndLessOnScrollListener scrollListener;
 
 
     @Override
@@ -116,7 +118,7 @@ public class NeoTokenWalletActivity extends BaseActivity {
 
     @Override
     protected int setLayoutID() {
-        return R.layout.wallet_acivity_token_new;
+        return R.layout.newneo_wallet_acivity_token;
     }
 
     @Override
@@ -187,7 +189,7 @@ public class NeoTokenWalletActivity extends BaseActivity {
 //                        ToastUtil.show(R.string.no_nfc_hit);
 //                        return;
 //                    }
-                    ToastUtil.show("暂时不支持冷钱包转账!请转换为热钱包");
+                    ToastUtil.show(getString(R.string.neolengqianbaotishi));
                     return;
                 }
                 //请求交易记录
@@ -246,25 +248,47 @@ public class NeoTokenWalletActivity extends BaseActivity {
             }
         });
 
-        if (type == 0) {
-            Glide.with(this).load(R.mipmap.project_icon_neo).transform(new GlideCircleTransform(this)).crossFade().into(ivImg);
-            tvPrice.setText(new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString());
-            if (1 == AppApplication.get().getUnit()) {
-                tvChPrice.setText("≈￥" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-                titlePrice.setText("(￥" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+        Glide.with(this).load(R.mipmap.tokenneoxxhdpi).crossFade().into(ivImg);
+        boolean isSee=App.get().getSp().getBoolean(Constant.MAIN_SEE,true);
+        if (isSee){
+            if (type == 0) {
+                tvPrice.setText(new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString());
+                if (1 == App.get().getUnit()) {
+                    tvChPrice.setText("≈￥" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                    titlePrice.setText("(￥" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                } else {
+                    tvChPrice.setText("≈$" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                    titlePrice.setText("($" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                }
             } else {
-                tvChPrice.setText("≈$" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-                titlePrice.setText("($" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                tvPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString());
+                if (1 == App.get().getUnit()) {
+                    tvChPrice.setText("≈￥" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                    titlePrice.setText("(￥" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                } else {
+                    tvChPrice.setText("≈$" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                    titlePrice.setText("($" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                }
             }
-        } else {
-            Glide.with(this).load(R.mipmap.project_icon_gas).transform(new GlideCircleTransform(this)).crossFade().into(ivImg);
-            tvPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString());
-            if (1 == AppApplication.get().getUnit()) {
-                tvChPrice.setText("≈￥" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-                titlePrice.setText("(￥" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+        }else {
+            if (type == 0) {
+                tvPrice.setText(new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString());
+                if (1 == App.get().getUnit()) {
+                    tvChPrice.setText("≈￥****.**");
+                    titlePrice.setText("(￥****.**)");
+                } else {
+                    tvChPrice.setText("≈$****.**");
+                    titlePrice.setText("($****.**)");
+                }
             } else {
-                tvChPrice.setText("≈$" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-                titlePrice.setText("($" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                tvPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString());
+                if (1 == App.get().getUnit()) {
+                    tvChPrice.setText("≈￥****.**");
+                    titlePrice.setText("(￥****.**)");
+                } else {
+                    tvChPrice.setText("≈$****.**");
+                    titlePrice.setText("($****.**)");
+                }
             }
         }
 
@@ -274,7 +298,7 @@ public class NeoTokenWalletActivity extends BaseActivity {
         layoutManager=new LinearLayoutManager(this);
         walletList.setLayoutManager(layoutManager);
         walletList.setAdapter(emptyWrapper);
-        walletList.addOnScrollListener(new EndLessOnScrollListener(layoutManager) {
+        scrollListener=new EndLessOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore() {
                 if (isEnd){
@@ -287,7 +311,8 @@ public class NeoTokenWalletActivity extends BaseActivity {
                     initData();
                 }
             }
-        });
+        };
+        walletList.addOnScrollListener(scrollListener);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -295,12 +320,17 @@ public class NeoTokenWalletActivity extends BaseActivity {
             public void onRefresh() {
                 page=0;
                 isEnd=false;
+                isShow=false;
+                scrollListener.reset();
                 initData();
             }
         });
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                if (position<0||position>=mails.size()){
+                    return;
+                }
                 if (wallet.getAddress().equals(mails.get(position).getFrom())||(mails.get(position).getFrom().equals(mails.get(position).getTo()))) {
                     Intent intent = new Intent(mActivity, NeoTransferAccountsDetaileActivity.class);
                     intent.putExtra("order", mails.get(position));
@@ -335,8 +365,13 @@ public class NeoTokenWalletActivity extends BaseActivity {
 
                 @Override
                 public void run() {
-                    //刷新列表
-                    refershData();
+                    if (page==0){
+                        isEnd=false;
+                        isShow=false;
+                        scrollListener.reset();
+                        //刷新列表
+                        refershData();
+                    }
                 }
             };
             timer.schedule(task, speed, speed);
@@ -351,7 +386,12 @@ public class NeoTokenWalletActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        refershData();
+        if (page==0){
+            isEnd=false;
+            isShow=false;
+            scrollListener.reset();
+            refershData();
+        }
     }
 
     private void refershData() {
@@ -363,6 +403,9 @@ public class NeoTokenWalletActivity extends BaseActivity {
             return;
         }
 
+        //请求余额
+        getBanlance();
+
         //请求交易记录
         WalletApi.neoWalletOrder(this,page, wallet.getId(), "NEO", type == 0 ? Constant.NEO_ASSETS : Constant.GAS_ASSETS, new JsonCallback<LzyResponse<NeoOderBean>>() {
             @Override
@@ -373,7 +416,9 @@ public class NeoTokenWalletActivity extends BaseActivity {
             @Override
             public void onCacheSuccess(Response<LzyResponse<NeoOderBean>> response) {
                 super.onCacheSuccess(response);
-                onSuccess(response);
+                if (page==0){
+                    onSuccess(response);
+                }
             }
 
             @Override
@@ -431,10 +476,14 @@ public class NeoTokenWalletActivity extends BaseActivity {
     @Override
     protected void EventBean(BaseEventBusBean event) {
         if (event.getEventCode() == Constant.EVENT_PRICE) {
+            page=0;
+            isEnd=false;
+            isShow=false;
+            scrollListener.reset();
             initData();
             //请求余额
             getBanlance();
-            //EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
+            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
     }
 
@@ -449,23 +498,46 @@ public class NeoTokenWalletActivity extends BaseActivity {
 
                 if (null != response.body().data && null != response.body().data.getRecord()) {
                     neoBean = response.body().data.getRecord();
-                    if (type == 0) {
-                        tvPrice.setText(new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toString());
-                        if (1 == AppApplication.get().getUnit()) {
-                            tvChPrice.setText("≈￥" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                            titlePrice.setText("(￥" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                    boolean isSee=App.get().getSp().getBoolean(Constant.MAIN_SEE,true);
+                    if (isSee){
+                        if (type == 0) {
+                            tvPrice.setText(new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString());
+                            if (1 == App.get().getUnit()) {
+                                tvChPrice.setText("≈￥" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                                titlePrice.setText("(￥" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                            } else {
+                                tvChPrice.setText("≈$" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                                titlePrice.setText("($" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                            }
                         } else {
-                            tvChPrice.setText("≈$" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                            titlePrice.setText("($" + new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                            tvPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString());
+                            if (1 == App.get().getUnit()) {
+                                tvChPrice.setText("≈￥" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                                titlePrice.setText("(￥" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                            } else {
+                                tvChPrice.setText("≈$" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                                titlePrice.setText("($" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                            }
                         }
-                    } else {
-                        tvPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).toString());
-                        if (1 == AppApplication.get().getUnit()) {
-                            tvChPrice.setText("≈￥" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                            titlePrice.setText("(￥" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                    }else {
+                        if (type == 0) {
+                            tvPrice.setText(new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString());
+                            if (1 == App.get().getUnit()) {
+                                tvChPrice.setText("≈￥****.**");
+                                titlePrice.setText("(￥****.**)");
+                            } else {
+                                tvChPrice.setText("≈$****.**");
+                                titlePrice.setText("($****.**)");
+                            }
                         } else {
-                            tvChPrice.setText("≈$" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                            titlePrice.setText("($" + new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                            tvPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString());
+                            if (1 == App.get().getUnit()) {
+                                tvChPrice.setText("≈￥****.**");
+                                titlePrice.setText("(￥****.**)");
+                            } else {
+                                tvChPrice.setText("≈$****.**");
+                                titlePrice.setText("($****.**)");
+                            }
                         }
                     }
                 }

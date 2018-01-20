@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="需要备份"
+                android:text="@string/xuyaobeifen"
                 android:textSize="20dp"
                 android:textColor="#000000"/>
 
@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1.备份助记词能让您在丢失钱包时快速找回。"
+                android:text="@string/beifen_tip1"
                 android:textSize="12dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
@@ -56,7 +56,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2.请务必将以下助记词抄录下来，并且保存在安全的地方。"
+                android:text="@string/beifen_tip2"
                 android:textSize="12dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
@@ -69,7 +69,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="3.助记词一旦备份成功，此备份步骤不会再出现。"
+                android:text="@string/beifen_tip3"
                 android:textSize="12dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"

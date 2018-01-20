@@ -139,7 +139,7 @@
         android:gravity="center"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="保 存"
+        android:text="@string/baocun_"
         android:textColor="@color/c_ffffff"
         android:textSize="14sp" />
 
@@ -160,7 +160,7 @@
             android:gravity="center"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
-            android:text="编 辑"
+            android:text="@string/bianji_"
             android:textColor="@color/c_ffffff"
             android:textSize="14sp" />
 
@@ -174,7 +174,7 @@
             android:gravity="center"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
-            android:text="删 除"
+            android:text="@string/shanchu_"
             android:layout_marginTop="20dp"
             android:textColor="@color/c_ffffff"
             android:textSize="14sp" />

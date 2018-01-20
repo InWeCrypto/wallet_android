@@ -61,6 +61,8 @@ public class Constant {
 
     public static final String UNIT_TYPE="unit";
 
+    public static final String UNIT_CHANGE="unit_change";
+
     public static final String MARKET="market";
 
     public static final String WALLET_ORDER="wallet_order";
@@ -104,6 +106,8 @@ public class Constant {
     public static final String MIN_BLOCK="min_block";
 
     public static final String CURRENT_BLOCK="current_block";
+
+    public static final String MAIN_SEE="main_block";
 
     public static final int EVENT_REFRESH=0;
 
@@ -154,6 +158,8 @@ public class Constant {
     public static final int EVENT_JIEDONG_DIALOG = 22;
 
     public static final int EVENT_WALLET_DAIBI = 23;
+
+    public static final int EVENT_PASS_SEE = 24;
 
     public static final int EVENT_TOKEN = 4009;
 

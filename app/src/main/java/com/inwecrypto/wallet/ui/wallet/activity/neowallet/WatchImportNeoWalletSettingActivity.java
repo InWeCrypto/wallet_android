@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.inwecrypto.wallet.AppApplication;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
@@ -149,7 +149,7 @@ public class WatchImportNeoWalletSettingActivity extends BaseActivity {
                                     address=wallet.address();
                                     break;
                                 case 2:
-                                    wallet=Neomobile.fromMnemonic(key.trim());
+                                    wallet=Neomobile.fromMnemonic(key.trim(),App.get().isZh()?"zh_CN":"en_US");
                                     address=wallet.address();
                                     json=wallet.toKeyStore(etPs.getText().toString());
                                     if (!address.equals(watchWallet.getAddress())){
@@ -258,10 +258,10 @@ public class WatchImportNeoWalletSettingActivity extends BaseActivity {
         accountManager.setUserData(account, "wallet_type","hot");
 
         account=null;
-        String wallets= AppApplication.get().getSp().getString(Constant.WALLETS,"");
+        String wallets= App.get().getSp().getString(Constant.WALLETS,"");
         if (!wallets.contains(address)){
             wallets=wallets+address+",";
-            AppApplication.get().getSp().putString(Constant.WALLETS,wallets);
+            App.get().getSp().putString(Constant.WALLETS,wallets);
         }
     }
 

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_ffffff">
+    <com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbarlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:elevation="0dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+                <android.support.design.widget.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="?attr/actionBarSize"
+                    app:contentScrim="@android:color/transparent"
+                    app:statusBarScrim="@android:color/transparent"
+                    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:background="#ffffff"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="320dp"
+                            android:scaleType="fitXY"
+                            android:src="@mipmap/walletbgxxhdpi" />
+
+                        <LinearLayout
+                            android:layout_gravity="bottom"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="30dp"
+                            android:paddingRight="30dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:textSize="16sp"
+                                android:textColor="@color/c_3A9E7C"
+                                android:text="Total Balance"/>
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="22dp">
+                                <TextView
+                                    android:id="@+id/amount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="34sp"
+                                    android:textColor="@color/c_ffffff"
+                                    android:textStyle="bold"
+                                    android:singleLine="true"
+                                    android:ellipsize="end"/>
+
+                                <ImageView
+                                    android:id="@+id/see"
+                                    android:layout_width="30dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="right|center_vertical"
+                                    android:padding="4dp"
+                                    android:layout_marginTop="2dp"
+                                    android:layout_marginLeft="4dp"
+                                    android:src="@mipmap/openpassqianxxhdpi"/>
+                            </FrameLayout>
+
+                            <ImageView
+                                android:id="@+id/wallet_manager_bottom"
+                                android:layout_width="52dp"
+                                android:layout_height="52dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginBottom="12dp"
+                                android:src="@mipmap/managewalletxxhdpi"/>
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                    <include
+                        android:id="@+id/toolbar"
+                        layout="@layout/new_base_main_title_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_collapseMode="pin"
+                        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+                    <LinearLayout
+                        android:id="@+id/titlell"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_collapseMode="pin"
+                        android:paddingTop="@dimen/status_bar_height"
+                        android:background="@color/c_ffffff"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="?attr/actionBarSize"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:textSize="12sp"
+                                android:textColor="@color/c_9D9F9E"
+                                android:text="Total Balance"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical">
+                                <TextView
+                                    android:id="@+id/title_price"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="17sp"
+                                    android:textColor="@color/c_333333"
+                                    android:textStyle="bold"/>
+                                <TextView
+                                    android:id="@+id/charge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="11sp"
+                                    android:visibility="gone"
+                                    android:textColor="@color/c_53DA04"
+                                    android:layout_marginLeft="10dp"/>
+                                <ImageView
+                                    android:id="@+id/topsee"
+                                    android:layout_width="22dp"
+                                    android:layout_height="18dp"
+                                    android:padding="4dp"
+                                    android:layout_marginTop="2dp"
+                                    android:layout_marginLeft="6dp"
+                                    android:src="@mipmap/openpassxxhdpi"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/top_wallet_manager"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="12dp"
+                            android:gravity="center"
+                            android:src="@mipmap/walletlistxxhdpi"/>
+
+                        <ImageView
+                            android:id="@+id/top_user"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:padding="1dp"
+                            android:layout_gravity="center"
+                            android:src="@mipmap/touxiang"
+                            android:gravity="center"/>
+                    </LinearLayout>
+
+                </android.support.design.widget.CollapsingToolbarLayout>
+
+            </android.support.design.widget.AppBarLayout>
+
+            <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                <com.inwecrypto.wallet.common.widget.BetterRecyclerView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </android.support.v4.widget.NestedScrollView>
+        </android.support.design.widget.CoordinatorLayout>
+    </com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat>
+</FrameLayout>

@@ -1,5 +1,6 @@
 package com.inwecrypto.wallet.common.http.api;
 
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.bean.KLBean;
 import com.inwecrypto.wallet.bean.PriceBean;
 import com.lzy.okgo.OkGo;
@@ -8,7 +9,6 @@ import com.lzy.okgo.cache.CacheMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MarkeListBean;
 import com.inwecrypto.wallet.bean.MarketAddBean;
@@ -30,7 +30,7 @@ public class MarketApi {
     public static void market(Object object, JsonCallback<LzyResponse<ArrayList<MarkeListBean>>> callback){
         OkGo.<LzyResponse<ArrayList<MarkeListBean>>>get(Url.USER_TICKER)
                 .tag(object)
-                .cacheKey(Constant.MARKET+ AppApplication.isMain)
+                .cacheKey(Constant.MARKET+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
@@ -99,7 +99,7 @@ public class MarketApi {
         params.put("type",type+"");
         OkGo.<LzyResponse<MarketChartBean>>get(Url.MARKET_CATEGORY+"/"+id)
                 .tag(object)
-                .cacheKey(Constant.MARKET+id+""+type+AppApplication.isMain)
+                .cacheKey(Constant.MARKET+id+""+type+ App.isMain)
                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .params(params)
                 .execute(callback);
@@ -108,7 +108,7 @@ public class MarketApi {
     public static void getMarket(Object object, JsonCallback<LzyResponse<CommonListBean<MarkeListBean>>> callback){
         OkGo.<LzyResponse<CommonListBean<MarkeListBean>>>get(Url.USER_TICKER)
                 .tag(object)
-                .cacheKey(Constant.MARKET+Url.USER_TICKER+AppApplication.isMain)
+                .cacheKey(Constant.MARKET+Url.USER_TICKER+ App.isMain)
                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .execute(callback);
     }
@@ -116,7 +116,7 @@ public class MarketApi {
     public static void selectMarket(Object object, JsonCallback<LzyResponse<CommonListBean<MarketAddBean>>> callback){
         OkGo.<LzyResponse<CommonListBean<MarketAddBean>>>get(Url.USER_TICKER_OPTIONS)
                 .tag(object)
-                .cacheKey(Constant.MARKET+Url.USER_TICKER_OPTIONS+AppApplication.isMain)
+                .cacheKey(Constant.MARKET+Url.USER_TICKER_OPTIONS+ App.isMain)
                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .execute(callback);
     }
@@ -141,7 +141,7 @@ public class MarketApi {
     public static void getMarketKLine(Object object,String ico_type,String interval, JsonCallback<LzyResponse<ArrayList<KLBean>>> callback){
         OkGo.<LzyResponse<ArrayList<KLBean>>>get(Url.K_LINE+ico_type+"/usdt/"+interval)
                 .tag(object)
-                .cacheKey(Constant.MARKET+ico_type+interval+AppApplication.isMain)
+                .cacheKey(Constant.MARKET+ico_type+interval+ App.isMain)
                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .execute(callback);
     }
@@ -149,7 +149,7 @@ public class MarketApi {
     public static void getCurrentPrice(Object object,String ico_type, JsonCallback<LzyResponse<PriceBean>> callback){
         OkGo.<LzyResponse<PriceBean>>get(Url.CURRENT_PRICE+ico_type)
                 .tag(object)
-                .cacheKey(Constant.MARKET+ico_type+AppApplication.isMain)
+                .cacheKey(Constant.MARKET+ico_type+ App.isMain)
                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .execute(callback);
     }

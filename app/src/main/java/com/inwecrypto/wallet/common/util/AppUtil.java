@@ -645,4 +645,51 @@ public class AppUtil {
         }
         return null==date1?"":df1.format(date1);
     }
+
+    /*
+     * 函数：reverseArray1和reverseArray2
+     * 功能：实现 数组翻转
+     * 例如：{'a','b','c','d'}变成{'d','c','b','a'}
+     */
+    public static byte[] reverseArray(String string) {
+        if ("0".equals(string)){
+            byte[] zero=new byte[1];
+            return zero;
+        }
+        byte[] array=hexStringToBytes(string);
+        byte[] array_list = new byte[array.length];
+        for (int i = 0; i < array.length; i++) {
+            array_list[i]=(array[array.length - i - 1]);
+        }
+        return array_list;
+    }
+
+    /**
+     * Convert hex string to byte[]
+     * @param hexString the hex string
+     * @return byte[]
+     */
+    public static byte[] hexStringToBytes(String hexString) {
+        if (hexString == null || hexString.equals("")) {
+            return null;
+        }
+        hexString = hexString.toUpperCase();
+        int length = hexString.length() / 2;
+        char[] hexChars = hexString.toCharArray();
+        byte[] d = new byte[length];
+        for (int i = 0; i < length; i++) {
+            int pos = i * 2;
+            d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+        }
+        return d;
+    }
+
+    /**
+     * Convert char to byte
+     * @param c char
+     * @return byte
+     */
+    public static byte charToByte(char c) {
+        return (byte) "0123456789ABCDEF".indexOf(c);
+    }
 }

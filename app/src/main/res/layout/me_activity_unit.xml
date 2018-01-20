@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/img"
             android:layout_marginLeft="18dp"
-            android:text="人民币"/>
+            android:text="@string/renmingbi"/>
 
         <ImageView
             android:id="@+id/select"
@@ -76,7 +76,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/img2"
             android:layout_marginLeft="18dp"
-            android:text="美元"/>
+            android:text="@string/meiyuan"/>
 
         <ImageView
             android:id="@+id/select2"

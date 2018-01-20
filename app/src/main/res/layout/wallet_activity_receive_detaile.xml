@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="10dp"
-            android:text="收款金额"
+            android:text="@string/zhuanzhangjine"
             android:textColor="@color/c_333333"
             android:textSize="10dp" />
 
@@ -153,7 +153,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:text="备注"
+        android:text="@string/beizhu"
         android:textColor="@color/c_333333"
         android:textSize="12sp" />
 

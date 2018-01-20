@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.App;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import butterknife.BindView;
-import com.inwecrypto.wallet.AppApplication;
+
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
@@ -94,10 +95,10 @@ public class WalletTipTwoActivity extends BaseActivity {
                 if (isRight){
                     ToastUtil.show(getString(R.string.zhujicibeifenchenggong));
 
-                    String wallets = AppApplication.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
+                    String wallets = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
                     if (!wallets.contains(wallet.getAddress())) {
                         wallets = wallets + wallet.getAddress() + ",";
-                        AppApplication.get().getSp().putString(Constant.WALLETS_ZJC_BEIFEN, wallets);
+                        App.get().getSp().putString(Constant.WALLETS_ZJC_BEIFEN, wallets);
                     }
                     AppManager.getAppManager().finishActivity(WalletTipOneActivity.class);
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));

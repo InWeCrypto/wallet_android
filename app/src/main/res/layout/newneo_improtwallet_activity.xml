@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_ffffff"
+    android:orientation="vertical">
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height" />
+    
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:padding="1dp"
+        android:src="@mipmap/closexxhdpi"
+        android:layout_marginTop="14dp"
+        android:layout_marginLeft="14dp"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/daoruqianbao"
+        android:layout_gravity="center_horizontal"
+        android:textSize="18sp"
+        android:textColor="@color/c_333333"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/keystorell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/keystore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/c_0A9234"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="Keystore"/>
+
+                <View
+                    android:id="@+id/l1"
+                    android:layout_width="14dp"
+                    android:layout_height="2dp"
+                    android:background="@color/c_0A9234"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/wordll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/word"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/c_333333"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="@string/zhujici"/>
+
+                <View
+                    android:id="@+id/l2"
+                    android:layout_width="14dp"
+                    android:layout_height="2dp"
+                    android:visibility="invisible"
+                    android:background="@color/c_0A9234"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/keyll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/key"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/c_333333"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="@string/siyao"/>
+
+                <View
+                    android:id="@+id/l3"
+                    android:layout_width="14dp"
+                    android:layout_height="2dp"
+                    android:visibility="invisible"
+                    android:background="@color/c_0A9234"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/addressll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/c_333333"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:text="@string/guancha"/>
+
+                <View
+                    android:id="@+id/l4"
+                    android:layout_width="14dp"
+                    android:layout_height="2dp"
+                    android:visibility="invisible"
+                    android:background="@color/c_0A9234"/>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="6"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        
+        <ImageView
+            android:id="@+id/scan"
+            android:layout_width="24dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/scanxxhdpi"
+            android:padding="4dp"
+            android:layout_gravity="right|center_vertical"/>
+    </FrameLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <EditText
+        android:id="@+id/et_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="300dp"
+        android:hint="@string/keystore_hit"
+        android:background="@color/c_fafafa"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:cursorVisible="true"
+        android:gravity="top|left"
+        android:inputType="textMultiLine"
+        android:paddingBottom="12dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="12dp"
+        android:textColor="@color/c_333333"
+        android:textCursorDrawable='@null'
+        android:textColorHint="@color/c_cfcfcf"
+        android:textSize="13sp" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/tv_import"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/c_ffffff"
+        android:textSize="14sp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:gravity="center"
+        android:background="@drawable/new_orgen_bg"
+        android:text="@string/daoru"/>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="46dp" />
+
+</LinearLayout>

@@ -22,7 +22,7 @@
             android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textColor="@color/c_333333"
+            android:textColor="#3D3D3D"
             android:ellipsize="middle"
             android:textSize="14sp"
             android:layout_toRightOf="@+id/img"
@@ -36,7 +36,7 @@
             android:layout_toRightOf="@+id/order"
             android:layout_alignParentRight="true"
             android:singleLine="true"
-            android:textColor="@color/c_333333"
+            android:textColor="#FE1C1C"
             android:ellipsize="end"
             android:textSize="14sp"
             android:layout_marginLeft="8dp"/>
@@ -45,7 +45,7 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/c_999999"
+            android:textColor="#C5C5C5"
             android:textSize="12sp"
             android:layout_below="@+id/order"
             android:layout_toRightOf="@+id/img"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/price"
-            android:textColor="@color/c_333333"
+            android:textColor="#3D3D3D"
             android:textSize="11sp"
             android:layout_marginTop="6dp"/>
     </RelativeLayout>

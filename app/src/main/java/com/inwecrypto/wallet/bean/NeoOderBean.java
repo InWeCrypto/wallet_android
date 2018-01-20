@@ -31,6 +31,7 @@ public class NeoOderBean implements Serializable {
          * createTime : 2017-11-26T22:38:16.133121Z
          * confirmTime : 2017-11-26T22:38:50.41296Z
          * remark:
+         * is_token
          */
 
         private String tx;
@@ -41,6 +42,7 @@ public class NeoOderBean implements Serializable {
         private String createTime;
         private String confirmTime;
         private String remark;
+        private int is_token;
 
         public String getTx() {
             return tx;
@@ -104,6 +106,14 @@ public class NeoOderBean implements Serializable {
 
         public void setRemark(String remark) {
             this.remark = remark;
+        }
+
+        public int getIs_token() {
+            return is_token;
+        }
+
+        public void setIs_token(int is_token) {
+            this.is_token = is_token;
         }
     }
 }

@@ -4,13 +4,13 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.App;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.TokenBean;
 import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
@@ -40,14 +40,14 @@ public class MainGntAdapter extends CommonAdapter<TokenBean.ListBean> {
         BigDecimal currentPrice = new BigDecimal(gntBean.getBalance());
         holder.setText(R.id.tv_price,currentPrice.setScale(4,BigDecimal.ROUND_HALF_UP).toString());
         if (null==gntBean.getGnt_category().getCap()){
-            if (1== AppApplication.get().getUnit()){
+            if (1== App.get().getUnit()){
                 holder.setText(R.id.tv_eth_ch_price,"≈￥0.00");
             }else {
                 holder.setText(R.id.tv_eth_ch_price,"≈$0.00");
             }
             return;
         }else {
-            if (1== AppApplication.get().getUnit()){
+            if (1== App.get().getUnit()){
                 holder.setText(R.id.tv_eth_ch_price,"≈￥"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
             }else {
                 holder.setText(R.id.tv_eth_ch_price,"≈$"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());

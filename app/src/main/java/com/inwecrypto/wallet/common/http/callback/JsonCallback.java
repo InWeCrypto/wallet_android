@@ -1,12 +1,12 @@
 package com.inwecrypto.wallet.common.http.callback;
 
+import com.inwecrypto.wallet.App;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.request.base.Request;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.common.Constant;
 import okhttp3.Response;
 
@@ -34,12 +34,12 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         // 使用的设备信息
         // 可以随意添加,也可以什么都不传
         // 还可以在这里对所有的参数进行加密，均在这里实现
-        if (AppApplication.isMain) {
-            request.headers("ct", AppApplication.get().getSp().getString(Constant.TOKEN,""));
-            request.headers("open-id", AppApplication.get().getSp().getString(Constant.OPEN_ID,""));
+        if (App.isMain) {
+            request.headers("ct", App.get().getSp().getString(Constant.TOKEN,""));
+            request.headers("open-id", App.get().getSp().getString(Constant.OPEN_ID,""));
         }else {
-            request.headers("ct", AppApplication.get().getSp().getString(Constant.TEST_TOKEN,""));
-            request.headers("open-id", AppApplication.get().getSp().getString(Constant.TEST_OPEN_ID,""));
+            request.headers("ct", App.get().getSp().getString(Constant.TEST_TOKEN,""));
+            request.headers("open-id", App.get().getSp().getString(Constant.TEST_OPEN_ID,""));
         }
         request.headers("neo-asset-id", Constant.NEO_ASSETS);
         request.headers("neo-gas-asset-id", Constant.GAS_ASSETS);

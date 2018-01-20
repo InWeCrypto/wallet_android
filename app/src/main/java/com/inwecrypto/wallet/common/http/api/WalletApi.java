@@ -1,14 +1,16 @@
 package com.inwecrypto.wallet.common.http.api;
 
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.bean.ClaimUtxoBean;
+import com.inwecrypto.wallet.bean.IcoGas;
 import com.inwecrypto.wallet.bean.NeoOderBean;
+import com.inwecrypto.wallet.bean.NewNeoGntInfoBean;
 import com.inwecrypto.wallet.bean.UtxoBean;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
 import java.util.HashMap;
 
-import com.inwecrypto.wallet.AppApplication;
 import com.inwecrypto.wallet.bean.BpsBean;
 import com.inwecrypto.wallet.bean.CategoryBean;
 import com.inwecrypto.wallet.bean.CommonListBean;
@@ -30,11 +32,6 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
-import com.lzy.okgo.callback.StringCallback;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2017/8/4.
@@ -47,7 +44,7 @@ public class WalletApi {
     public static void wallet(Object object,JsonCallback<LzyResponse<CommonListBean<WalletBean>>> callback){
         OkGo.<LzyResponse<CommonListBean<WalletBean>>>get(Url.WALLET)
                 .tag(object)
-                .cacheKey(Constant.WALLETS+AppApplication.isMain)
+                .cacheKey(Constant.WALLETS+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
@@ -58,11 +55,12 @@ public class WalletApi {
                 .execute(callback);
     }
 
-    public static void wallet(Object object,int category_id,String name,String address,JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>> callback){
+    public static void wallet(Object object,int category_id,String name,String address,String hashAddress,JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>> callback){
         HashMap<String,String> params=new HashMap<>();
         params.put("category_id",category_id+"");
         params.put("name",name);
         params.put("address",address);
+        params.put("address_hash160",hashAddress);
         OkGo.<LzyResponse<CommonRecordBean<WalletBean>>>post(Url.WALLET)
                 .tag(object)
                 .params(params)
@@ -72,7 +70,7 @@ public class WalletApi {
     public static void walletCategory(Object object,JsonCallback<LzyResponse<CommonListBean<CategoryBean>>> callback){
         OkGo.<LzyResponse<CommonListBean<CategoryBean>>>get(Url.WALLET_CATEGORY)
                 .tag(object)
-                .cacheKey(Constant.WALLET_CATEGORY+AppApplication.isMain)
+                .cacheKey(Constant.WALLET_CATEGORY+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
@@ -130,7 +128,7 @@ public class WalletApi {
         params.put("page",page+"");
         OkGo.<LzyResponse<CommonListBean<OrderBean>>>get(Url.WALLET_ORDER)
                 .tag(object)
-                .cacheKey(Constant.WALLET_ORDER+wallet_id+flag+AppApplication.isMain)
+                .cacheKey(Constant.WALLET_ORDER+wallet_id+flag+ App.isMain)
                 .params(params)
                 .execute(callback);
     }
@@ -143,7 +141,7 @@ public class WalletApi {
         params.put("page",page+"");
         OkGo.<LzyResponse<NeoOderBean>>get(Url.WALLET_ORDER)
                 .tag(object)
-                .cacheKey(Constant.WALLET_ORDER+wallet_id+flag+asset+AppApplication.isMain)
+                .cacheKey(Constant.WALLET_ORDER+wallet_id+flag+asset+ App.isMain)
                 .params(params)
                 .execute(callback);
     }
@@ -188,7 +186,7 @@ public class WalletApi {
         params.put("address",address);
         OkGo.<LzyResponse<ValueBean>>post(Url.ETH_BALANCE)
                 .tag(object)
-                .cacheKey(Constant.BALANCE+address+AppApplication.isMain)
+                .cacheKey(Constant.BALANCE+address+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .params(params)
                 .execute(callback);
@@ -199,7 +197,7 @@ public class WalletApi {
         params.put("wallet_ids",json);
         OkGo.<LzyResponse<CommonListBean<WalletCountBean>>>get(Url.CONVERSION)
                 .tag(object)
-                .cacheKey(Constant.CONVERSION+AppApplication.isMain)
+                .cacheKey(Constant.CONVERSION+ App.isMain)
                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .params(params)
                 .execute(callback);
@@ -210,7 +208,7 @@ public class WalletApi {
         params.put("wallet_ids",id);
         OkGo.<LzyResponse<CommonListBean<WalletCountBean>>>get(Url.CONVERSION)
                 .tag(object)
-                .cacheKey(Constant.CONVERSION+id+AppApplication.isMain)
+                .cacheKey(Constant.CONVERSION+id+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .params(params)
                 .execute(callback);
@@ -219,7 +217,7 @@ public class WalletApi {
     public static void conversion(Object object,int id,JsonCallback<LzyResponse<TokenBean>> callback){
         OkGo.<LzyResponse<TokenBean>>get(Url.CONVERSION+"/"+id)
                 .tag(object)
-                .cacheKey(Url.CONVERSION+"/"+id+AppApplication.isMain)
+                .cacheKey(Url.CONVERSION+"/"+id+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
@@ -227,7 +225,7 @@ public class WalletApi {
     public static void conversionErrorCache(Object object,int id,JsonCallback<LzyResponse<TokenBean>> callback){
         OkGo.<LzyResponse<TokenBean>>get(Url.CONVERSION+"/"+id)
                 .tag(object)
-                .cacheKey(Url.CONVERSION+"/"+id+AppApplication.isMain)
+                .cacheKey(Url.CONVERSION+"/"+id+ App.isMain)
                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .execute(callback);
     }
@@ -281,6 +279,36 @@ public class WalletApi {
         params.put("flag",flag);
         params.put("trade_no",trade_no);
         params.put("asset_id",asset_id);
+        OkGo.<LzyResponse<Object>>post(Url.WALLET_ORDER)
+                .tag(object)
+                .params(params)
+                .execute(callback);
+    }
+
+    public static void neoIcoWalletOrder(Object object
+            ,int wallet_id
+            ,String data
+            ,String pay_address
+            ,String receive_address
+            ,String remark
+            ,String fee
+            ,String handle_fee
+            ,String flag
+            ,String trade_no
+            ,String asset_id
+            ,JsonCallback<LzyResponse<Object>> callback){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("wallet_id",wallet_id+"");
+        params.put("data",data);
+        params.put("pay_address",pay_address);
+        params.put("receive_address",receive_address);
+        params.put("remark",remark);
+        params.put("fee",fee);
+        params.put("handle_fee",handle_fee);
+        params.put("flag",flag);
+        params.put("trade_no",trade_no);
+        params.put("asset_id",asset_id);
+        params.put("is_token","1");
         OkGo.<LzyResponse<Object>>post(Url.WALLET_ORDER)
                 .tag(object)
                 .params(params)
@@ -365,4 +393,34 @@ public class WalletApi {
                 .execute(callback);
     }
 
+    public static void getNeoGntInfo(Object object, String address,String wallet, JsonCallback<LzyResponse<NewNeoGntInfoBean>> callback){
+        OkGo.<LzyResponse<NewNeoGntInfoBean>>get(Url.GET_NEO_GNT_INFO+address.replace("0x","")+"&wallet="+wallet)
+                .tag(object)
+                .execute(callback);
+    }
+
+    public static void getIcoGas(Object object, String address, JsonCallback<LzyResponse<IcoGas>> callback){
+
+        OkGo.<LzyResponse<IcoGas>>get(Url.GET_NEO_ICO_GAS+address)
+                .tag(object)
+                .execute(callback);
+    }
+
+    public static void getNep5Gas(Object object
+            , String treaty_address
+            , String from_address
+            , String to_address
+            , String amount
+            , JsonCallback<LzyResponse<IcoGas>> callback){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("treaty_address",treaty_address.replace("0x",""));
+        params.put("from_address",from_address);
+        params.put("to_address",to_address);
+        params.put("amount",amount);
+
+        OkGo.<LzyResponse<IcoGas>>post(Url.GET_NEO_NEP5_GAS)
+                .tag(object)
+                .params(params)
+                .execute(callback);
+    }
 }
