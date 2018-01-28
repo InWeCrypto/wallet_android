@@ -86,6 +86,7 @@ dependencies {
     compile 'me.zhanghai.android.materialprogressbar:library:1.4.0'
     compile 'me.dm7.barcodescanner:zbar:1.9.8'
     compile 'com.google.zxing:core:3.3.0'
+    compile 'com.wanjian:cockroach:0.0.5'
     //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     compile project(path: ':MPChart')
 }

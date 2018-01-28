@@ -201,13 +201,13 @@ public abstract class BaseActivity extends AppCompatActivity{
         return false;
     }
 
-    protected void hideFixLoading(){
+    public void hideFixLoading(){
         if (null!=fixDialog){
             fixDialog.dismiss();
         }
     }
 
-    protected  void hideLoading(){
+    public  void hideLoading(){
         if (null!=dialog){
             dialog.dismiss();
         }

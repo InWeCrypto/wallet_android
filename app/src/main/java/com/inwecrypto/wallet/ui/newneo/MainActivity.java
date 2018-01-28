@@ -233,13 +233,14 @@ public class MainActivity extends BaseActivity {
                 return false;
             }
         });
+        //获取缓存数据
+        getChace();
     }
 
     @Override
     protected void initData() {
         setImg();
-        //获取缓存数据
-        getChace();
+        OkGo.getInstance().cancelTag(this);
         //从网络获取钱包
         getInfoOnNet();
     }
@@ -340,7 +341,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
                 super.onCacheSuccess(response);
-                onSuccess(response);
+                //onSuccess(response);
             }
 
             @Override
@@ -526,7 +527,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onCacheSuccess(Response<LzyResponse<TokenBean>> response) {
                 super.onCacheSuccess(response);
-                onSuccess(response);
+                //onSuccess(response);
             }
 
             @Override
@@ -610,8 +611,7 @@ public class MainActivity extends BaseActivity {
     protected void EventBean(BaseEventBusBean event) {
         if (event.getEventCode() == Constant.EVENT_WALLET||event.getEventCode() == Constant.EVENT_WALLET_DAIBI
                 || event.getEventCode() == Constant.EVENT_UNIT_CHANGE) {
-            OkGo.getInstance().cancelTag(this);
-            getInfoOnNet();
+            initData();
         }
 
         if (event.getEventCode() ==Constant.EVENT_PASS_SEE){

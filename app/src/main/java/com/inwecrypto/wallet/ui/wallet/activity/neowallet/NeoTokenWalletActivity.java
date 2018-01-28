@@ -483,7 +483,6 @@ public class NeoTokenWalletActivity extends BaseActivity {
             initData();
             //请求余额
             getBanlance();
-            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
     }
 

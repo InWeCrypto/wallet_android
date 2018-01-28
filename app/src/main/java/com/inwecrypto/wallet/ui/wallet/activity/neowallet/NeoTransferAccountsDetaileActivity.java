@@ -62,11 +62,15 @@ public class NeoTransferAccountsDetaileActivity extends BaseActivity {
 
     private NeoOderBean.ListBean order;
     private String unit;
+    private String decimals;
+    private boolean isTnc;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         order = (NeoOderBean.ListBean) extras.getSerializable("order");
         unit=extras.getString("unit");
+        decimals=extras.getString("decimals");
+        isTnc=extras.getBoolean("isTnc",false);
     }
 
     @Override
@@ -90,10 +94,16 @@ public class NeoTransferAccountsDetaileActivity extends BaseActivity {
     @Override
     protected void initData() {
         BigDecimal b = new BigDecimal(order.getValue());
-        if (order.getFrom().equals(order.getTo())){
-            price.setText(b.setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
+        String amount="0.0000";
+        if (isTnc){
+            amount=b.divide(new BigDecimal(10).pow(Integer.parseInt(decimals))).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString();
         }else {
-            price.setText("-" + b.setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
+            amount=b.setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString();
+        }
+        if (order.getFrom().equals(order.getTo())){
+            price.setText(amount);
+        }else {
+            price.setText("-" + amount);
         }
         BigDecimal s = new BigDecimal("0");
         shouxufei.setText(getString(R.string.lingfushouxufei) + s.setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());

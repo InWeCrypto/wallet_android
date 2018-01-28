@@ -280,7 +280,6 @@ public class NewTransferWalletActivity extends BaseActivity {
                             ToastUtil.show(getString(R.string.qianbaozhuanhuachenggong));
                             AppManager.getAppManager().finishActivity(WatchImportWalletTypeActivity.class);
                             EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WATCH_TRANSFER));
-                            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
                             finish();
                         }
                     });

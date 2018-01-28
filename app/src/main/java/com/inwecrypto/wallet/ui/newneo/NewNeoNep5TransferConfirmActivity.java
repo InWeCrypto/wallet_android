@@ -82,6 +82,7 @@ public class NewNeoNep5TransferConfirmActivity extends BaseActivity {
     private String handfee;
     private ArrayList<UtxoBean.ResultBean> utxoBeans = new ArrayList<>();
     private String yuangas;
+    private long amount;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -214,7 +215,7 @@ public class NewNeoNep5TransferConfirmActivity extends BaseActivity {
                         String data = "";
                         String order = "";
                         try {
-                            long amount = new BigDecimal(price).multiply(new BigDecimal(10).pow(Integer.parseInt(tokenBean.getDecimals()))).longValue();
+                            amount = new BigDecimal(price).multiply(new BigDecimal(10).pow(Integer.parseInt(tokenBean.getDecimals()))).longValue();
                             Tx tx = wallet.createNep5Tx(tokenBean.getGnt_category().getAddress(), Neomobile.decodeAddress(wallet.address()), Neomobile.decodeAddress(etAddress.getText().toString().trim()), 0d, amount, unspent);
                             data = tx.getData();
                             order = "0x" + tx.getID();
@@ -253,7 +254,7 @@ public class NewNeoNep5TransferConfirmActivity extends BaseActivity {
                 , wallet.getAddress()
                 , etAddress.getText().toString()
                 , hit
-                , new BigDecimal(price).toPlainString()
+                , amount+""
                 , "0.0000"
                 , "NEO"
                 , order

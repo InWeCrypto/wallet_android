@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.NeoOderBean;
 import com.inwecrypto.wallet.common.util.AppUtil;
@@ -23,27 +24,45 @@ import java.util.List;
 public class NeoRecordAdapter extends CommonAdapter<NeoOderBean.ListBean> {
 
     private String address;
+    private BigDecimal decimals;
+    private String amount;
 
     public NeoRecordAdapter(Context context,String address, int layoutId, List<NeoOderBean.ListBean> datas) {
         super(context, layoutId, datas);
         this.address=address;
     }
 
+    public NeoRecordAdapter(Context context,String address, int layoutId, List<NeoOderBean.ListBean> datas,String decimals) {
+        super(context, layoutId, datas);
+        this.address=address;
+        this.decimals=new BigDecimal(10).pow(Integer.parseInt(decimals));
+    }
+
     @Override
     protected void convert(ViewHolder holder, NeoOderBean.ListBean neoOderBean, int position) {
+        amount="0.0000";
+        if (null!=decimals){
+            try{
+                amount=new BigDecimal(neoOderBean.getValue()).divide(decimals).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString();
+            }catch (Exception e){
+                amount=new BigDecimal(AppUtil.toD(neoOderBean.getValue())).divide(decimals).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString();
+            }
+        }else {
+            amount=new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString();
+        }
         if (neoOderBean.getFrom().equals(neoOderBean.getTo())){
             Glide.with(mContext).load(R.mipmap.zizhuanxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));
-            holder.setText(R.id.price,new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
+            holder.setText(R.id.price,amount);
             //holder.setTextColor(R.id.price, Color.parseColor("#000000"));
             holder.setTextColor(R.id.hit,Color.parseColor("#333333"));
         }else if (neoOderBean.getFrom().equals(address)){
             Glide.with(mContext).load(R.mipmap.zhuanchuxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));
-            holder.setText(R.id.price,"-"+new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
+            holder.setText(R.id.price,"-"+amount);
             //holder.setTextColor(R.id.hit,Color.parseColor("#737373"));
             holder.setTextColor(R.id.price, Color.parseColor("#F10101"));
         }else {
             Glide.with(mContext).load(R.mipmap.zhuanruxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));
-            holder.setText(R.id.price,"+"+new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
+            holder.setText(R.id.price,"+"+amount);
             //holder.setTextColor(R.id.price, Color.parseColor("#000000"));
             holder.setTextColor(R.id.hit,Color.parseColor("#333333"));
         }

@@ -54,11 +54,16 @@ public class NeoReceiveDetaileActivity extends BaseActivity {
 
     private NeoOderBean.ListBean order;
     private String unit;
+    private String decimals;
+    private boolean isTnc;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         order = (NeoOderBean.ListBean) extras.getSerializable("order");
         unit=extras.getString("unit");
+        decimals=extras.getString("decimals");
+        isTnc=extras.getBoolean("isTnc",false);
+
     }
 
     @Override
@@ -82,7 +87,13 @@ public class NeoReceiveDetaileActivity extends BaseActivity {
     @Override
     protected void initData() {
         BigDecimal b = new BigDecimal(order.getValue());
-        price.setText("+"+b.setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
+        String amount="0.0000";
+        if (isTnc){
+            amount=b.divide(new BigDecimal(10).pow(Integer.parseInt(decimals))).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString();
+        }else {
+            amount=b.setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString();
+        }
+        price.setText("+"+amount);
 
         tvWalletAddress.setText(null!=order.getFrom()?order.getFrom():"");
         tvHeyueAddress.setText(null!=order.getTo()?order.getTo():"");

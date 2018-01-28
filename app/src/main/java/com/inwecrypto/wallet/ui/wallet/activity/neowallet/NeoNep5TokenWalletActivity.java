@@ -287,7 +287,7 @@ public class NeoNep5TokenWalletActivity extends BaseActivity {
             }
         }
 
-        adapter = new NeoRecordAdapter(this, wallet.getAddress(), R.layout.wallet_item_neo_token_transfer, mails);
+        adapter = new NeoRecordAdapter(this, wallet.getAddress(), R.layout.wallet_item_neo_token_transfer, mails,tokenBean.getDecimals());
         emptyWrapper=new EmptyWrapper(adapter);
 
         layoutManager=new LinearLayoutManager(this);
@@ -329,12 +329,16 @@ public class NeoNep5TokenWalletActivity extends BaseActivity {
                 if (wallet.getAddress().equals(mails.get(position).getFrom())||(mails.get(position).getFrom().equals(mails.get(position).getTo()))) {
                     Intent intent = new Intent(mActivity, NeoTransferAccountsDetaileActivity.class);
                     intent.putExtra("order", mails.get(position));
+                    intent.putExtra("decimals",tokenBean.getDecimals());
                     intent.putExtra("unit", tokenBean.getSymbol());
+                    intent.putExtra("isTnc",true);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(mActivity, NeoReceiveDetaileActivity.class);
                     intent.putExtra("order", mails.get(position));
+                    intent.putExtra("decimals",tokenBean.getDecimals());
                     intent.putExtra("unit", tokenBean.getSymbol());
+                    intent.putExtra("isTnc",true);
                     startActivity(intent);
                 }
             }
@@ -478,7 +482,6 @@ public class NeoNep5TokenWalletActivity extends BaseActivity {
             initData();
             //请求余额
             getBanlance();
-            EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
     }
 
