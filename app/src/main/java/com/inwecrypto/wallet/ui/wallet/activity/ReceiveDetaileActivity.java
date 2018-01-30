@@ -134,7 +134,7 @@ public class ReceiveDetaileActivity extends BaseActivity {
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 // 将文本内容放到系统剪贴板里。
                 cm.setText(order.getTrade_no());
-                ToastUtil.show("交易单号以复制到剪贴板中");
+                ToastUtil.show(R.string.jiaoyidanhaofuzhi);
                 return true;
             }
         });

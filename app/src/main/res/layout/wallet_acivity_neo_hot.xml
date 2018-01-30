@@ -74,7 +74,7 @@
                             android:paddingRight="6dp"
                             android:visibility="gone"
                             android:textColor="@color/c_ffffff"
-                            android:text="观察" />
+                            android:text="@string/guancha" />
                     </RelativeLayout>
 
                     <LinearLayout
@@ -145,8 +145,7 @@
                             android:layout_below="@+id/tv_price"
                             android:layout_marginTop="10dp"
                             android:textSize="14sp"
-                            android:textColor="@color/c_333333"
-                            android:text="总资产()" />
+                            android:textColor="@color/c_333333" />
 
                         <ImageView
                             android:id="@+id/add_gnt"
@@ -194,7 +193,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="18dp"
                         android:textColor="@color/c_333333"
-                        android:text="总资产"/>
+                        android:text="@string/zongzichan"/>
                     <TextView
                         android:id="@+id/titlePrice"
                         android:layout_width="wrap_content"

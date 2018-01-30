@@ -142,7 +142,7 @@ public abstract class BaseActivity extends AppCompatActivity{
     public void onEventMainThread(BaseEventBusBean event) {
         if (event != null) {
             if (event.getEventCode()== Constant.EVENT_TOKEN){
-                ToastUtil.show("验证过期，请重新登录");
+                ToastUtil.show(getString(R.string.token_error));
                 keepTogo(LoginActivity.class);
             }else {
                 EventBean(event);

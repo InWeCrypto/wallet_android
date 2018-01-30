@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginLeft="28dp"
-        android:text="NEO转账数量："
+        android:text="@string/neozhuanzhangshuliang"
         android:textColor="@color/c_000000"
         android:textSize="14sp" />
 
@@ -89,7 +89,7 @@
         android:gravity="center_horizontal"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="28dp"
-        android:text="(NEO 可用数量：)"
+        android:text="@string/neokeyongshuliang"
         android:textColor="@color/c_A6A4A4"
         android:textSize="11sp" />
 
@@ -110,14 +110,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/c_000000"
-            android:text="交易手续费："
+            android:text="@string/jiaoyishouxufei"
             android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="(10Gas以下免收手续费)"
+            android:text="@string/_10gasfree"
             android:textColor="@color/c_A6A4A4"
             android:textSize="11sp" />
 
@@ -139,7 +139,7 @@
         android:gravity="center"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="提交"
+        android:text="@string/tijiao"
         android:textColor="@color/c_ffffff"
         android:textSize="14sp" />
 
@@ -151,7 +151,7 @@
         android:layout_marginTop="6dp"
         android:visibility="invisible"
         android:layout_gravity="center_horizontal"
-        android:text="(Gas 可用数量：)"
+        android:text="@string/gaskeyongshuliang"
         android:textColor="@color/c_A6A4A4"
         android:textSize="11sp" />
 

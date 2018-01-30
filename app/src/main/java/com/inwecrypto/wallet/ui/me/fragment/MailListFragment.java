@@ -118,7 +118,7 @@ public class MailListFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
-        if (type==1||type==2||type==6||type==7){
+        if (type==1||type==2){
             swipeRefresh.post(new Runnable() {
                 @Override
                 public void run() {
@@ -159,7 +159,7 @@ public class MailListFragment extends BaseFragment {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode()== Constant.EVENT_REFRESH&&(type==1||type==2||type==6||type==7)){
+        if (event.getEventCode()== Constant.EVENT_REFRESH&&(type==1||type==2)){
             loadData();
         }
     }

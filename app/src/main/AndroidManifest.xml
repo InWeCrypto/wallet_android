@@ -454,6 +454,9 @@
         </service>
 
         <service
+            android:name="com.inwecrypto.wallet.service.DownloadService"/>
+
+        <service
             android:enabled="true"
             android:exported="true"
             android:name="com.inwecrypto.wallet.SleepyAccountsService">
@@ -536,6 +539,17 @@
                 <data android:scheme="package"/>
             </intent-filter>
         </receiver>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.inwecrypto.wallet"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <!--元数据-->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

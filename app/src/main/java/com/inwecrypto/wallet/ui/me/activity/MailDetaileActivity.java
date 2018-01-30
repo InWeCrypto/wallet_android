@@ -138,7 +138,7 @@ public class MailDetaileActivity extends BaseActivity {
     private void saveMail() {
         String name=etName.getText().toString();
         String address=etAddress.getText().toString().trim();
-        if (type== (App.isMain?6:1)){
+        if (type== 1){
             address=address.toLowerCase();
         }
         String hint=etHint.getText().toString();
@@ -246,13 +246,13 @@ public class MailDetaileActivity extends BaseActivity {
         if (event.getEventCode()==Constant.EVENT_KEY){
             if (null!=event.getData()){
                 com.inwecrypto.wallet.event.KeyEvent key= (com.inwecrypto.wallet.event.KeyEvent) event.getData();
-                if (type==(App.isMain?6:1)){
+                if (type==1){
                     if (AppUtil.isEthAddress(key.getKey().trim())){
                         etAddress.setText(key.getKey().trim());
                     }else {
                         ToastUtil.show(R.string.qingshuruzhengquedeethdizhi);
                     }
-                }else if (type == (App.isMain?7:2)){
+                }else if (type == 2){
                     if (AppUtil.isNeoAddress(key.getKey().trim())){
                         etAddress.setText(key.getKey().trim());
                     }else {

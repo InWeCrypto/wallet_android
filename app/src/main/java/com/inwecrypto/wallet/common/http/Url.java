@@ -12,7 +12,7 @@ public class Url {
 
     private static final String MAIN_1_URL = "https://china.inwecrypto.com:4430/api/";
 
-    public static final String MAIN_2_URL="https://china.inwecrypto.com:4431";
+    public static final String MAIN_2_URL="https://china.inwecrypto.com:4431/v1";
 
     private static final String TEST_1_URL = "https://dev.inwecrypto.com:4430/api/";
 
@@ -20,6 +20,9 @@ public class Url {
 
     public static final String WEB_ROOT="http://inwecrypto.com/";
 
+    public static final String UPDATE="http://whalewallet.oss-cn-hongkong.aliyuncs.com/update.json";
+
+    public static final String APP_ADDRESS="http://whalewallet.oss-cn-hongkong.aliyuncs.com/inwecrypto.apk";
 
     private static String BASE = App.isMain ? MAIN_1_URL : TEST_1_URL;
 
@@ -223,7 +226,7 @@ public class Url {
 
     public static String SEARCH = BASE_2+"/search/";
 
-    public static String USER_CONTACT=BASE_2+"/user/contact?"+(App.isMain ?"ico_id=":"category_id=");
+    public static String USER_CONTACT=BASE_2+"/user/contact?category_id=";
 
     public static String USER_CONTACT_ADD=BASE_2+"/user/contact";
 

@@ -7,7 +7,7 @@ android {
         applicationId "com.inwecrypto.wallet"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 20180115
+        versionCode 20180130
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

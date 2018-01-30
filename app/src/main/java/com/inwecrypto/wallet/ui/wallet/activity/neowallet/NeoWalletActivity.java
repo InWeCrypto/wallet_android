@@ -416,7 +416,7 @@ public class NeoWalletActivity extends BaseActivity {
                 TokenBean.ListBean getGas=new TokenBean.ListBean();
                 TokenBean.ListBean.GntCategoryBeanX getGasGnt=new TokenBean.ListBean.GntCategoryBeanX();
                 TokenBean.ListBean.GntCategoryBeanX.CapBeanX getGasCap=new TokenBean.ListBean.GntCategoryBeanX.CapBeanX();
-                getGas.setName("可提取Gas");
+                getGas.setName(getString(R.string.ketiqugas));
                 getGasGnt.setIcon(R.mipmap.project_icon_get_gas+"");
 
                 TokenBean.ListBean tokenSale=new TokenBean.ListBean();

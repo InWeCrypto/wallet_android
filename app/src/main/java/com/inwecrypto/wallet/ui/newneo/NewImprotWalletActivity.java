@@ -161,7 +161,7 @@ public class NewImprotWalletActivity extends BaseActivity {
                 switch (type) {
                     case 1:
                         if (!scanKey.contains("{")) {
-                            ToastUtil.show("请输入正确的Keystore");
+                            ToastUtil.show(getString(R.string.qingshuruzhengquedekeystore));
                             return;
                         }
                         //密码确认
@@ -248,7 +248,7 @@ public class NewImprotWalletActivity extends BaseActivity {
                         mActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ToastUtil.show("请填写正确的NEO钱包");
+                                ToastUtil.show(getString(R.string.qingshuruzhengquedeneoqianbaodizhi));
                                 hideLoading();
                             }
                         });
@@ -422,13 +422,13 @@ public class NewImprotWalletActivity extends BaseActivity {
             switch (type) {
                 case 1:
                     if (!keyEvent.getKey().contains("{")) {
-                        ToastUtil.show("请输入正确的Keystore");
+                        ToastUtil.show(getString(R.string.qingshuruzhengquedekeystore));
                         return;
                     }
                     break;
                 case 4:
                     if (!AppUtil.isNeoAddress(keyEvent.getKey().trim())) {
-                        ToastUtil.show("请输入正确的NEO钱包地址");
+                        ToastUtil.show(getString(R.string.qingshuruzhengquedeneoqianbaodizhi));
                         return;
                     }
                     break;

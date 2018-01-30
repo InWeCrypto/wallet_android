@@ -84,7 +84,7 @@ public class NewNeoAddNep5Activity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText("添加NEP-5资产");
+        txtMainTitle.setText(R.string.tianjianep5zichan);
         txtRightTitle.setText(R.string.wancheng);
         txtRightTitle.setCompoundDrawables(null, null, null, null);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +192,7 @@ public class NewNeoAddNep5Activity extends BaseActivity {
                     if (has){
                         move(position);
                     }else {
-                        ToastUtil.show("未找到该代币");
+                        ToastUtil.show(getString(R.string.weizhaodaogaidaibi));
                     }
                     return true;
                 }

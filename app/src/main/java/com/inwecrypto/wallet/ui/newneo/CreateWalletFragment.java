@@ -78,7 +78,7 @@ public class CreateWalletFragment extends DialogFragment {
         eth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.show("暂不支持 ETH 钱包");
+                ToastUtil.show(getString(R.string.zanbuzhichiethqianbao));
             }
         });
 
@@ -97,7 +97,7 @@ public class CreateWalletFragment extends DialogFragment {
         clod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.show("暂不支持冷钱包");
+                ToastUtil.show(getString(R.string.zanbuzhichilengqianbao));
             }
         });
 

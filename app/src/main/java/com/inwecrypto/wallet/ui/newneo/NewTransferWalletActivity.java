@@ -101,7 +101,7 @@ public class NewTransferWalletActivity extends BaseActivity {
             }
         });
 
-        title.setText("转化钱包");
+        title.setText(R.string.zhuanhuaqianbao);
 
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,7 +151,7 @@ public class NewTransferWalletActivity extends BaseActivity {
                 switch (type) {
                     case 1:
                         if (!scanKey.contains("{")) {
-                            ToastUtil.show("请输入正确的Keystore");
+                            ToastUtil.show(R.string.qingshuruzhengquedekeystore);
                             return;
                         }
                         //密码确认
@@ -264,7 +264,7 @@ public class NewTransferWalletActivity extends BaseActivity {
                         mActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ToastUtil.show("请填写正确的NEO钱包");
+                                ToastUtil.show(R.string.qingshuruzhengquedeneoqianbaodizhi);
                                 hideLoading();
                             }
                         });
@@ -375,13 +375,13 @@ public class NewTransferWalletActivity extends BaseActivity {
             switch (type) {
                 case 1:
                     if (!keyEvent.getKey().contains("{")) {
-                        ToastUtil.show("请输入正确的Keystore");
+                        ToastUtil.show(R.string.qingshuruzhengquedekeystore);
                         return;
                     }
                     break;
                 case 4:
                     if (!AppUtil.isNeoAddress(keyEvent.getKey().trim())) {
-                        ToastUtil.show("请输入正确的NEO钱包地址");
+                        ToastUtil.show(R.string.qingshuruzhengquedeneoqianbaodizhi);
                         return;
                     }
                     break;
@@ -389,12 +389,5 @@ public class NewTransferWalletActivity extends BaseActivity {
             scanKey = keyEvent.getKey().trim();
             etInfo.setText(keyEvent.getKey().trim());
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

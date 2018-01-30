@@ -81,7 +81,7 @@ public class AddWalletTypeActivity extends BaseActivity implements EasyPermissio
             @Override
             public void onClick(View v) {
 
-                ToastUtil.show("暂时不支持生成冷钱包!");
+                ToastUtil.show(getString(R.string.zanshibuzhichilengqianbao));
 //                /*
 //                 * 使用hasSystemFeature方法可以检查设备是否其他功能。如陀螺仪，NFC，蓝牙等等，
 //                 */

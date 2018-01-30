@@ -1,5 +1,6 @@
 package com.inwecrypto.wallet.ui.wallet.activity.neowallet;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -77,6 +78,7 @@ public class NeoTokenSaleActivity extends BaseActivity {
         return R.layout.wallet_activity_neo_token_sale;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void initView() {
         txtLeftTitle.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +103,7 @@ public class NeoTokenSaleActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (!AppUtil.isAddress(etAddress.getText().toString().trim())) {
-                    ToastUtil.show("请填写合约地址");
+                    ToastUtil.show(getString(R.string.qingtianxieheyuedizhi));
                     return;
                 }
 
@@ -141,25 +143,25 @@ public class NeoTokenSaleActivity extends BaseActivity {
                                     intent.putExtra("yuangas",response.body().data.getGas_consumed());
                                     keepTogo(intent);
                                 }else {
-                                    ToastUtil.show("手续费不足!请稍后重试");
+                                    ToastUtil.show(getString(R.string.shouxufeibuzu_qingshaohouchongshi));
                                 }
                             }
                         }else {
-                            ToastUtil.show("获取手续费失败!请稍后重试");
+                            ToastUtil.show(getString(R.string.houqushouxufeishibai_qingshaohouchongshi));
                         }
                     }
                 });
             }
         });
 
-        neoAmount.setText("(NEO 可用数量："+new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString()+")");
+        neoAmount.setText("(NEO "+getString(R.string.keyongshuliang)+"："+new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString()+")");
         gas=new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).doubleValue();
         if (gas==0) {
-            submit.setText("当前钱包GAS余额不足，无法提交");
+            submit.setText(R.string.dangqiangasyuebuzu);
             submit.setBackgroundColor(Color.parseColor("#DADADA"));
             submit.setClickable(false);
             gasNum.setVisibility(View.VISIBLE);
-            gasNum.setText("(Gas 可用数量："+gas+")");
+            gasNum.setText("(Gas "+getString(R.string.keyongshuliang)+"："+gas+")");
         }else {
 
         }

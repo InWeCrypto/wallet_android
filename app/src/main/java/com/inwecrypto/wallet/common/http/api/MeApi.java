@@ -4,6 +4,7 @@ import com.inwecrypto.wallet.App;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +18,8 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
+import com.lzy.okgo.callback.FileCallback;
+import com.lzy.okgo.callback.StringCallback;
 
 /**
  * Created by Administrator on 2017/8/4.
@@ -36,7 +39,7 @@ public class MeApi {
 
     public static void contact(Object object,int ico_id,String name,String address,String remark,JsonCallback<LzyResponse<Object>> callback){
         HashMap<String,String> params=new HashMap<>();
-        params.put(App.isMain ?"ico_id":"category_id",ico_id+"");
+        params.put("category_id",ico_id+"");
         params.put("name",name);
         params.put("address",address);
         params.put("remark",remark);
@@ -55,7 +58,7 @@ public class MeApi {
 
     public static void editContact(Object object,int id,int ico_id,String name,String address,String remark,JsonCallback<LzyResponse<Object>> callback){
         HashMap<String,String> params=new HashMap<>();
-        params.put(App.isMain ?"ico_id":"category_id",ico_id+"");
+        params.put("category_id",ico_id+"");
         params.put("name",name);
         params.put("address",address);
         params.put("remark",remark);
@@ -119,6 +122,12 @@ public class MeApi {
 
     public static void getSts(Object object,JsonCallback<LzyResponse<OSSBean>> callback){
         OkGo.<LzyResponse<OSSBean>>get(Url.STS)
+                .tag(object)
+                .execute(callback);
+    }
+
+    public static void check(Object object,StringCallback callback){
+        OkGo.<String>get(Url.UPDATE)
                 .tag(object)
                 .execute(callback);
     }

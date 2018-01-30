@@ -135,7 +135,7 @@ public class MailListActivity extends BaseActivity {
 
         ethMailListFragment=new MailListFragment();
         Bundle ethBundle=new Bundle();
-        ethBundle.putInt("type", App.isMain?6:1);
+        ethBundle.putInt("type", 1);
         ethBundle.putBoolean("address",address);
         ethMailListFragment.setArguments(ethBundle);
 
@@ -147,7 +147,7 @@ public class MailListActivity extends BaseActivity {
 
         neoMailListFragment=new MailListFragment();
         Bundle neoBundle=new Bundle();
-        neoBundle.putInt("type",App.isMain?7:2);
+        neoBundle.putInt("type",2);
         neoBundle.putBoolean("address",address);
         neoMailListFragment.setArguments(neoBundle);
 
@@ -216,7 +216,7 @@ public class MailListActivity extends BaseActivity {
                 window.dismiss();
                 Intent intent=new Intent(mActivity,MailDetaileActivity.class);
                 intent.putExtra("isAdd",true);
-                intent.putExtra("type",App.isMain?6:1);
+                intent.putExtra("type",1);
                 keepTogo(intent);
             }
         });
@@ -235,7 +235,7 @@ public class MailListActivity extends BaseActivity {
                 window.dismiss();
                 Intent intent=new Intent(mActivity,MailDetaileActivity.class);
                 intent.putExtra("isAdd",true);
-                intent.putExtra("type",App.isMain?7:2);
+                intent.putExtra("type",2);
                 keepTogo(intent);
             }
         });

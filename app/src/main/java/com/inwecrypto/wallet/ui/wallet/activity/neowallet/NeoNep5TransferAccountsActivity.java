@@ -155,6 +155,10 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
 //                    ToastUtil.show(R.string.yuebuzu);
 //                    return;
 //                }
+                if (gas == 0) {
+                    ToastUtil.show(R.string.gasyuebuzu);
+                    return;
+                }
 
                 if (!AppUtil.isAddress(etAddress.getText().toString().trim())) {
                     ToastUtil.show(R.string.qingtianxiezhuanzhangqianbaodizhi);

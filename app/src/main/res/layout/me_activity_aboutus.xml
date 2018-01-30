@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="服务协议"
+            android:text="@string/fuwuxieyi"
             android:textColor="@color/c_333333"
             android:textSize="12sp" />
 
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="隐私条款"
+            android:text="@string/yinsitiaokuan"
             android:textColor="@color/c_333333"
             android:textSize="12sp" />
 
@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="开源协议"
+            android:text="@string/kaiyuanxieyi"
             android:textColor="@color/c_333333"
             android:textSize="12sp" />
 
@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="开发团队"
+            android:text="@string/kaifatuandui"
             android:textColor="@color/c_333333"
             android:textSize="12sp" />
 

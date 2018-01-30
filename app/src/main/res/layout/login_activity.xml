@@ -56,6 +56,8 @@
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
@@ -63,15 +65,10 @@
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/c_ffffff"
-            android:textSize="12sp"
-            android:text="@string/denglu_tip"/>
-        <TextView
             android:id="@+id/tiaokuan"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:textColor="@color/c_ffffff"
             android:textSize="12sp"/>
     </LinearLayout>

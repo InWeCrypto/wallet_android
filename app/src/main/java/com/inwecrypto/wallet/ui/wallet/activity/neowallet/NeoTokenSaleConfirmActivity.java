@@ -122,8 +122,8 @@ public class NeoTokenSaleConfirmActivity extends BaseActivity {
         });
 
         tvPrice.setText(amount);
-        tvServiceCharge.setText("手续费："+gas);
-        tvPreServiceCharge.setText("（原手续费："+yuangas+" Gas）");
+        tvServiceCharge.setText(getString(R.string.lingfushouxufei)+gas);
+        tvPreServiceCharge.setText("（"+getString(R.string.yuanshouxufei)+"："+yuangas+" Gas）");
         etAddress.setText(address);
 
         submit.setOnClickListener(new View.OnClickListener() {
@@ -316,10 +316,4 @@ public class NeoTokenSaleConfirmActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

@@ -23,7 +23,7 @@ public class MailBean implements Serializable {
 
     private int id;
     private int user_id;
-    private int ico_id;
+    private int category_id;
     private String name;
     private String address;
     private String remark;
@@ -48,11 +48,11 @@ public class MailBean implements Serializable {
     }
 
     public int getIco_id() {
-        return ico_id;
+        return category_id;
     }
 
     public void setIco_id(int ico_id) {
-        this.ico_id = ico_id;
+        this.category_id = ico_id;
     }
 
     public String getName() {

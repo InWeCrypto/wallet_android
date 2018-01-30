@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="14dp"
-            android:text="手续费："
+            android:text="@string/lingfushouxufei"
             android:textColor="@color/c_EA642F"
             android:textSize="12dp" />
 
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="14dp"
-            android:text="（原手续费：0.0000 Gas）"
+            android:text="@string/_0_gasyuanshouxufei"
             android:textColor="@color/c_d5d5d5"
             android:textSize="9dp" />
     </LinearLayout>
@@ -75,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
-        android:text="智能合约地址"
+        android:text="@string/zhinengheyuedizhi"
         android:textColor="@color/c_8A8A8A"
         android:textSize="12sp" />
 
@@ -118,7 +118,7 @@
         android:gravity="center"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="提交"
+        android:text="@string/tijiao"
         android:textColor="@color/c_ffffff"
         android:textSize="14sp" />
 

@@ -66,8 +66,8 @@
                                     android:id="@+id/name_ll"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="14dp"
-                                    android:layout_marginRight="14dp"
+                                    android:layout_marginLeft="12dp"
+                                    android:layout_marginRight="12dp"
                                     android:layout_marginTop="18dp"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
@@ -139,8 +139,8 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentBottom="true"
-                                    android:layout_marginLeft="14dp"
-                                    android:layout_marginRight="14dp"
+                                    android:layout_marginLeft="12dp"
+                                    android:layout_marginRight="12dp"
                                     android:layout_marginBottom="18dp"
                                     android:orientation="horizontal">
                                     <TextView
@@ -306,8 +306,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="16dp"
-                                android:textColor="@color/c_333333"
-                                android:text="总资产：$10000.00"/>
+                                android:textColor="@color/c_333333"/>
                             <ImageView
                                 android:id="@+id/top_see"
                                 android:layout_width="21dp"
@@ -470,11 +469,17 @@
                             android:textSize="8sp"
                             android:text="@string/gasketiqu"/>
 
-                        <ImageView
+                        <TextView
                             android:layout_marginLeft="4dp"
-                            android:layout_width="20dp"
-                            android:layout_height="12dp"
-                            android:src="@mipmap/getgasxxhdpi"/>
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/getgas_bg"
+                            android:textSize="9sp"
+                            android:gravity="center"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:textColor="@color/c_ffffff"
+                            android:text="@string/tiqu"/>
                     </LinearLayout>
 
                     <TextView

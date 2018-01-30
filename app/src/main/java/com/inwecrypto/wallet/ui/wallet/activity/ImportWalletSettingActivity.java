@@ -165,7 +165,7 @@ public class ImportWalletSettingActivity extends BaseActivity {
                                         mActivity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                ToastUtil.show("请填写正确的KeyStore");
+                                                ToastUtil.show(R.string.qingshuruzhengquedekeystore);
                                                 hideLoading();
                                             }});
                                         return;

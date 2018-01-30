@@ -201,7 +201,7 @@ public class TokenWalletActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isEth) {
                     if (wallet.getType().equals(Constant.GUANCHA)){
-                        ToastUtil.show("暂时不支持观察包转账！请转化为热钱包");
+                        ToastUtil.show(getString(R.string.zanbuzhichiguanchaqianbaozhuanzhang));
                         return;
 //                        PackageManager pm = getPackageManager();
 //                        boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
@@ -219,7 +219,7 @@ public class TokenWalletActivity extends BaseActivity {
                     keepTogo(intent);
                 } else {
                     if (wallet.getType().equals(Constant.GUANCHA)) {
-                        ToastUtil.show("暂时不支持观察包转账！请转化为热钱包");
+                        ToastUtil.show(getString(R.string.zanbuzhichiguanchaqianbaozhuanzhang));
                         return;
 //                        PackageManager pm = getPackageManager();
 //                        boolean nfc = pm.hasSystemFeature(PackageManager.FEATURE_NFC);
