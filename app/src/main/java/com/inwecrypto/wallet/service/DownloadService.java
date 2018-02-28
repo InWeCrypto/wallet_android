@@ -13,15 +13,20 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import com.inwecrypto.wallet.R;
+import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +53,6 @@ public class DownloadService extends Service {
     public void onCreate() {
         super.onCreate();
         mNotificationManager = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
-
     }
 
     @Override
@@ -85,9 +89,16 @@ public class DownloadService extends Service {
         if (progress >= 100) {
             getInstallIntent();
         }
+        EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_DOWNLOAD_UPDATE,progress));
         mNotification = builder.build();
         mNotificationManager.notify(0, mNotification);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        OkGo.getInstance().cancelTag(this);
     }
 
     /**
@@ -137,7 +148,8 @@ public class DownloadService extends Service {
      */
     private void downloadFile(String version,String hash) {
 
-        OkGo.<File>get(Url.APP_ADDRESS).execute(new FileCallback("Inwecrypto"+version+".apk"){
+        OkGo.<File>get(Url.APP_ADDRESS)
+                .tag(this).execute(new FileCallback("Inwecrypto"+version+".apk"){
 
             @Override
             public void onSuccess(Response<File> response) {
@@ -158,13 +170,12 @@ public class DownloadService extends Service {
             public void downloadProgress(Progress progress) {
                 super.downloadProgress(progress);
                 //progress*100为当前文件下载进度，total为文件大小
-                if ((int) ((progress.currentSize/progress.totalSize) * 100) % 10 == 0) {
-                    if ((int) ((progress.currentSize/progress.totalSize) * 100)==100){
-                        return;
-                    }
-                    //避免频繁刷新View，这里设置每下载10%提醒更新一次进度
-                    notifyMsg(getString(R.string.wenxintishi), getString(R.string.wenjianzhengzaixiazaizhong), (int) ((progress.currentSize/progress.totalSize) * 100));
+                int persent= (int) ((progress.currentSize*100L)/progress.totalSize);
+                if (persent==100){
+                    return;
                 }
+                //避免频繁刷新View，这里设置每下载10%提醒更新一次进度
+                notifyMsg(getString(R.string.wenxintishi), getString(R.string.wenjianzhengzaixiazaizhong), persent);
             }
         });
     }

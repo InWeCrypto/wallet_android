@@ -2,13 +2,16 @@ package com.inwecrypto.wallet.ui.wallet.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.inwecrypto.wallet.common.util.AppUtil;
+import com.inwecrypto.wallet.ui.newneo.InputPassFragment;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,6 +33,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
 
+import ethmobile.Ethmobile;
 import ethmobile.Wallet;
 import me.grantland.widget.AutofitTextView;
 
@@ -63,7 +67,6 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
     private String price;
     private String gas;
     private String hit;
-    private MaterialDialog mMaterialDialog;
 
     private String nonce;
     private String oxPrice;
@@ -127,20 +130,14 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
     }
 
     private void transfer() {
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.view_dialog_pass, null, false);
-        final EditText pass = (EditText) view.findViewById(R.id.et_pass);
-        TextView cancle = (TextView) view.findViewById(R.id.cancle);
-        TextView ok = (TextView) view.findViewById(R.id.ok);
-        cancle.setOnClickListener(new View.OnClickListener() {
+        //输入密码
+        FragmentManager fm = getSupportFragmentManager();
+        InputPassFragment input = new InputPassFragment();
+        input.show(fm, "input");
+        input.setOnNextListener(new InputPassFragment.OnNextInterface() {
             @Override
-            public void onClick(View v) {
-                mMaterialDialog.dismiss();
-            }
-        });
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pass.getText().toString().length() == 0) {
+            public void onNext(final String passWord, final Dialog dialog) {
+                if (passWord.length() == 0) {
                     ToastUtil.show(getString(R.string.qingshurumima));
                     return;
                 }
@@ -148,19 +145,19 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        byte[] b = new byte[0];
+                        String b = "";
                         final AccountManager accountManager = AccountManager.get(mActivity);
                         Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                         for (int i = 0; i < accounts.length; i++) {
-                            if (accounts[i].name.equals(wallet.getAddress())) {
+                            if (accounts[i].name.toLowerCase().equals(wallet.getAddress())) {
                                 //accountManager.getUserData(accounts[i], pass.getText().toString());
-                                b = accountManager.getUserData(accounts[i], "wallet").getBytes();
+                                b = accountManager.getUserData(accounts[i], "wallet");
                                 break;
                             }
                         }
                         Wallet wallet = null;
                         try {
-                            //wallet = Unichain.openETHWallet(b, pass.getText().toString());
+                            wallet = Ethmobile.fromKeyStore(b, passWord);
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -173,7 +170,12 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                         }
                         String data = "";
                         try {
-                            //data = "0x" + AppUtil.conver16HexStr(wallet.transferCurrency(nonce, oxGas,"0x" + new BigInteger(new BigDecimal(Constant.GAS_LIMIT).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), address, oxPrice));
+                            //AppUtil.conver16HexStr
+                            data = "0x" + wallet.transfer(nonce
+                                    , address
+                                    , oxPrice
+                                    , oxGas
+                                    ,"0x" + new BigInteger(new BigDecimal(Constant.GAS_LIMIT).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16));
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -189,31 +191,25 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 hideFixLoading();
-                                mMaterialDialog.dismiss();
                                 getOrderInfo(finalData);
                             }
                         });
                     }
                 }).start();
-
             }
         });
-
-        mMaterialDialog = new MaterialDialog(mActivity).setView(view);
-        mMaterialDialog.setBackgroundResource(R.drawable.trans_bg);
-        mMaterialDialog.setCanceledOnTouchOutside(true);
-        mMaterialDialog.show();
     }
 
     private void getOrderInfo(String data) {
         showFixLoading();
         WalletApi.walletOrder(mActivity
                 , wallet.getId()
-                , data, wallet.getAddress()
+                , data
+                , wallet.getAddress()
                 , address
                 , hit
-                , new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString()
-                , new BigDecimal(gas).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString()
+                , oxPrice
+                , oxGas
                 , wallet.getCategory().getName()
                 , Constant.ETH_ORDER_ASSET_ID
                 , new JsonCallback<LzyResponse<Object>>() {

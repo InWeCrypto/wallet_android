@@ -31,12 +31,6 @@ public class MailListAdapter extends CommonAdapter<MailBean> {
     protected void convert(ViewHolder holder, MailBean mailBean, int position) {
         holder.setText(R.id.name,mailBean.getName());
         ((AutofitTextView)holder.getView(R.id.address)).setText(mailBean.getAddress());
-
-        Glide.with(mContext)
-                .load(mailBean.getHeadImg())
-                .transform(new GlideCircleTransform(mContext))
-                .crossFade()
-                .into((ImageView) holder.getView(R.id.img));
     }
 
 }

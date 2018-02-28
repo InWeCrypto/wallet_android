@@ -14,20 +14,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.inwecrypto.wallet.App;
-import com.inwecrypto.wallet.common.util.AnimUtil;
-import com.inwecrypto.wallet.common.widget.EndLessOnScrollListener;
-import com.lzy.okgo.model.Response;
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import butterknife.BindView;
-
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.BpsBean;
@@ -43,14 +29,28 @@ import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
+import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.ScreenUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.common.widget.EndLessOnScrollListener;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.wallet.adapter.RecordAdapter;
+import com.lzy.okgo.model.Response;
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/7/16.
@@ -75,6 +75,14 @@ public class TokenWalletActivity extends BaseActivity {
     TextView txtRightTitle;
     @BindView(R.id.toolbar)
     SimpleToolbar toolbar;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.titlePrice)
+    TextView titlePrice;
+    @BindView(R.id.titlell)
+    LinearLayout titlell;
+    @BindView(R.id.tv_hit)
+    TextView tvHit;
     @BindView(R.id.appbarlayout)
     AppBarLayout appbarlayout;
     @BindView(R.id.wallet_list)
@@ -85,15 +93,6 @@ public class TokenWalletActivity extends BaseActivity {
     LinearLayout llZhuanzhang;
     @BindView(R.id.ll_shoukuan)
     LinearLayout llShoukuan;
-    @BindView(R.id.title)
-    TextView title;
-    @BindView(R.id.titlell)
-    View titlell;
-    @BindView(R.id.titlePrice)
-    TextView titlePrice;
-    @BindView(R.id.tv_hit)
-    TextView tvHit;
-
     private WalletBean wallet;
 
     private TokenBean.ListBean gnt;
@@ -116,9 +115,9 @@ public class TokenWalletActivity extends BaseActivity {
     private int screenWidth;
     private int hitWidth;
     private int distance;
-    private BigDecimal tokenEther=new BigDecimal("0.0000");
+    private BigDecimal tokenEther = new BigDecimal("0.0000");
 
-    private int page=0;
+    private int page = 0;
     private boolean isEnd;
     private boolean isShow;
     private LinearLayoutManager layoutManager;
@@ -142,14 +141,14 @@ public class TokenWalletActivity extends BaseActivity {
     protected void initView() {
 
         //获取屏幕宽度
-        screenWidth=ScreenUtils.getScreenWidth(this);
+        screenWidth = ScreenUtils.getScreenWidth(this);
         //获取提示宽度
         tvHit.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 tvHit.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 hitWidth = tvHit.getMeasuredWidth();
-                distance=(screenWidth-hitWidth)/2- DensityUtil.dip2px(mActivity,24);
+                distance = (screenWidth - hitWidth) / 2 - DensityUtil.dip2px(mActivity, 24);
             }
         });
         //获取滑动距离
@@ -184,13 +183,13 @@ public class TokenWalletActivity extends BaseActivity {
                         title.setVisibility(View.INVISIBLE);
                         titlell.setVisibility(View.VISIBLE);
                         AnimUtil.startShowAnimation(titlell);
-                        AnimUtil.startMoveLeftAnimation(tvHit,distance);
+                        AnimUtil.startMoveLeftAnimation(tvHit, distance);
                         isFinish = true;
                     }
                 } else {
                     if (isFinish) {
                         AnimUtil.startHideAnimation(titlell);
-                        AnimUtil.startMoveRightAnimation(tvHit,distance);
+                        AnimUtil.startMoveRightAnimation(tvHit, distance);
                         isFinish = false;
                     }
                 }
@@ -200,7 +199,7 @@ public class TokenWalletActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (isEth) {
-                    if (wallet.getType().equals(Constant.GUANCHA)){
+                    if (wallet.getType().equals(Constant.GUANCHA)) {
                         ToastUtil.show(getString(R.string.zanbuzhichiguanchaqianbaozhuanzhang));
                         return;
 //                        PackageManager pm = getPackageManager();
@@ -253,33 +252,33 @@ public class TokenWalletActivity extends BaseActivity {
         });
 
         if (isEth) {
-            Glide.with(this).load(R.mipmap.eth).transform(new GlideCircleTransform(this)).crossFade().into(ivImg);
+            Glide.with(this).load(R.mipmap.eth_icon).transform(new GlideCircleTransform(this)).crossFade().into(ivImg);
         } else {
             Glide.with(this).load(gnt.getGnt_category().getIcon()).transform(new GlideCircleTransform(this)).crossFade().into(ivImg);
             BigDecimal currentPrice = new BigDecimal(AppUtil.toD(gnt.getBalance().replace("0x", "0")));
             tvPrice.setText(currentPrice.divide(Constant.pEther, 4, BigDecimal.ROUND_HALF_UP).toString());
             if (1 == App.get().getUnit()) {
-                tvChPrice.setText("≈￥" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                titlePrice.setText("(￥" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                tvChPrice.setText("≈￥" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                titlePrice.setText("(￥" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
             } else {
-                tvChPrice.setText("≈$" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                titlePrice.setText("($" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                tvChPrice.setText("≈$" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                titlePrice.setText("($" + currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
             }
         }
 
-        adapter = new RecordAdapter(this, R.layout.wallet_item_token_transfer, mails, wallet.getAddress(),isEth?"ether":gnt.getName().toLowerCase());
-        layoutManager=new LinearLayoutManager(this);
+        adapter = new RecordAdapter(this, R.layout.wallet_item_token_transfer, mails, wallet.getAddress(), isEth ? "ether" : gnt.getName().toLowerCase());
+        layoutManager = new LinearLayoutManager(this);
         walletList.setLayoutManager(layoutManager);
         walletList.setAdapter(adapter);
         walletList.addOnScrollListener(new EndLessOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore() {
-                if (isEnd){
-                    if (!isShow&&page!=0){
+                if (isEnd) {
+                    if (!isShow && page != 0) {
                         ToastUtil.show(getString(R.string.zanwugengduoshuju));
-                        isShow=true;
+                        isShow = true;
                     }
-                }else {
+                } else {
                     page++;
                     initData();
                 }
@@ -290,8 +289,8 @@ public class TokenWalletActivity extends BaseActivity {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                page=0;
-                isEnd=false;
+                page = 0;
+                isEnd = false;
                 initData();
             }
         });
@@ -301,12 +300,12 @@ public class TokenWalletActivity extends BaseActivity {
                 if (wallet.getAddress().equals(mails.get(position).getPay_address())) {
                     Intent intent = new Intent(mActivity, TransferAccountsDetaileActivity.class);
                     intent.putExtra("order", mails.get(position));
-                    intent.putExtra("unit",isEth?"ether":gnt.getName().toLowerCase());
+                    intent.putExtra("unit", isEth ? "ether" : gnt.getName().toLowerCase());
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(mActivity, ReceiveDetaileActivity.class);
                     intent.putExtra("order", mails.get(position));
-                    intent.putExtra("unit",isEth?"ether":gnt.getName().toLowerCase());
+                    intent.putExtra("unit", isEth ? "ether" : gnt.getName().toLowerCase());
                     startActivity(intent);
                 }
             }
@@ -318,9 +317,9 @@ public class TokenWalletActivity extends BaseActivity {
         });
 
         //保存 minBlock
-        minBlock= App.get().getSp().getInt(Constant.MIN_BLOCK,12);
+        minBlock = App.get().getSp().getInt(Constant.MIN_BLOCK, 12);
         //保存 minBlock
-        currentBlock=new BigDecimal(App.get().getSp().getString(Constant.CURRENT_BLOCK,"0")).doubleValue();
+        currentBlock = new BigDecimal(App.get().getSp().getString(Constant.CURRENT_BLOCK, "0")).doubleValue();
 
         startRound();
     }
@@ -333,7 +332,7 @@ public class TokenWalletActivity extends BaseActivity {
             public void onSuccess(Response<LzyResponse<MinBlockBean>> response) {
                 minBlock = Integer.parseInt(response.body().data.getMin_block_num());
                 //保存 minBlock
-                App.get().getSp().putInt(Constant.MIN_BLOCK,minBlock);
+                App.get().getSp().putInt(Constant.MIN_BLOCK, minBlock);
             }
 
             @Override
@@ -348,8 +347,8 @@ public class TokenWalletActivity extends BaseActivity {
                         BigDecimal currentPrice = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
                         currentBlock = currentPrice.doubleValue();
                         //保存 minBlock
-                        App.get().getSp().putString(Constant.CURRENT_BLOCK,currentPrice.toPlainString());
-                        if (adapter!=null){
+                        App.get().getSp().putString(Constant.CURRENT_BLOCK, currentPrice.toPlainString());
+                        if (adapter != null) {
                             adapter.notifyDataSetChanged();
                         }
                     }
@@ -387,8 +386,13 @@ public class TokenWalletActivity extends BaseActivity {
                                                     currentBlock = currentPrice.doubleValue();
                                                 }
                                             });
-                                            //刷新列表
-                                            refershData();
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    //刷新列表
+                                                    refershData();
+                                                }
+                                            });
                                         }
                                     };
                                     timer.schedule(task, speed, speed);
@@ -444,12 +448,12 @@ public class TokenWalletActivity extends BaseActivity {
                     BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
                     totleEther = totleEther.add(currentPrice);
                     if (1 == App.get().getUnit()) {
-                        totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null==walletPrices.get(0).getCategory().getCap()?"0":walletPrices.get(0).getCategory().getCap().getPrice_cny()))).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == walletPrices.get(0).getCategory().getCap() ? "0" : walletPrices.get(0).getCategory().getCap().getPrice_cny()))).setScale(2, BigDecimal.ROUND_HALF_UP);
                         tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
                         tvChPrice.setText("≈￥" + totlePrice.toString());
                         titlePrice.setText("(￥" + totlePrice.toString() + ")");
                     } else {
-                        totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null==walletPrices.get(0).getCategory().getCap()?"0":walletPrices.get(0).getCategory().getCap().getPrice_usd()))).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == walletPrices.get(0).getCategory().getCap() ? "0" : walletPrices.get(0).getCategory().getCap().getPrice_usd()))).setScale(2, BigDecimal.ROUND_HALF_UP);
                         tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
                         tvChPrice.setText("≈$" + totlePrice.toString());
                         titlePrice.setText("($" + totlePrice.toString() + ")");
@@ -469,18 +473,18 @@ public class TokenWalletActivity extends BaseActivity {
             WalletApi.balanceof(mActivity, gnt.getGnt_category().getAddress(), wallet.getAddress(), new JsonCallback<LzyResponse<ValueBean>>() {
                 @Override
                 public void onSuccess(Response<LzyResponse<ValueBean>> response) {
-                    if (null==tvPrice||null==tvChPrice||null==titlePrice){
+                    if (null == tvPrice || null == tvChPrice || null == titlePrice) {
                         return;
                     }
                     //进行计算
                     tokenEther = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
                     tvPrice.setText(tokenEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
                     if (1 == App.get().getUnit()) {
-                        tvChPrice.setText("≈￥" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                        titlePrice.setText("(￥" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                        tvChPrice.setText("≈￥" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                        titlePrice.setText("(￥" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
                     } else {
-                        tvChPrice.setText("≈$" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                        titlePrice.setText("($" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null==gnt.getGnt_category().getCap()?"0":gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
+                        tvChPrice.setText("≈$" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                        titlePrice.setText("($" + tokenEther.divide(Constant.pEther).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + ")");
                     }
                 }
 
@@ -493,7 +497,7 @@ public class TokenWalletActivity extends BaseActivity {
         }
 
         //请求交易记录
-        WalletApi.walletOrder(this,page, wallet.getId(), flag ,isEth?Constant.ETH_ORDER_ASSET_ID:gnt.getGnt_category().getAddress().toLowerCase(), new JsonCallback<LzyResponse<CommonListBean<OrderBean>>>() {
+        WalletApi.walletOrder(this, page, wallet.getId(), flag, isEth ? Constant.ETH_ORDER_ASSET_ID : gnt.getGnt_category().getAddress().toLowerCase(), new JsonCallback<LzyResponse<CommonListBean<OrderBean>>>() {
             @Override
             public void onSuccess(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
                 LoadSuccess(response);
@@ -509,7 +513,7 @@ public class TokenWalletActivity extends BaseActivity {
             public void onError(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
                 super.onError(response);
                 ToastUtil.show(getString(R.string.load_error));
-                if (page!=0){
+                if (page != 0) {
                     page--;
                 }
             }
@@ -538,18 +542,18 @@ public class TokenWalletActivity extends BaseActivity {
     }
 
     private void LoadSuccess(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
-        if (page==0){
+        if (page == 0) {
             mails.clear();
             if (null != response.body().data.getList()) {
-                if (response.body().data.getList().size()<10){
-                    isEnd=true;
+                if (response.body().data.getList().size() < 10) {
+                    isEnd = true;
                 }
                 mails.addAll(response.body().data.getList());
             }
-        }else {
+        } else {
             if (null != response.body().data.getList()) {
-                if (response.body().data.getList().size()<10){
-                    isEnd=true;
+                if (response.body().data.getList().size() < 10) {
+                    isEnd = true;
                 }
                 mails.addAll(response.body().data.getList());
             }
@@ -564,5 +568,4 @@ public class TokenWalletActivity extends BaseActivity {
             EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
         }
     }
-
 }

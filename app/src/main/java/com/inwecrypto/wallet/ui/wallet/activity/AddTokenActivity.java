@@ -4,17 +4,11 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import com.lzy.okgo.model.Response;
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
-
-import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonListBean;
@@ -24,8 +18,18 @@ import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.wallet.adapter.AllGntAdapter;
+import com.lzy.okgo.model.Response;
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -35,27 +39,36 @@ import com.inwecrypto.wallet.ui.wallet.adapter.AllGntAdapter;
 
 public class AddTokenActivity extends BaseActivity {
 
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
     TextView txtMainTitle;
     @BindView(R.id.txt_right_title)
     TextView txtRightTitle;
+    @BindView(R.id.toolbar)
+    SimpleToolbar toolbar;
+    @BindView(R.id.search)
+    EditText search;
     @BindView(R.id.token_list)
     RecyclerView tokenList;
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout swipeRefresh;
 
     private AllGntAdapter adapter;
-    private ArrayList<GntBean> data=new ArrayList<>();
+    private ArrayList<GntBean> data = new ArrayList<>();
 
     private int id;
     private int walletId;
+    private int position=-1;
+    private boolean move;
+    private int mIndex = 0;
+    private LinearLayoutManager unitManager;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-        id=extras.getInt("id");
-        walletId=extras.getInt("walletId");
+        id = extras.getInt("id");
+        walletId = extras.getInt("walletId");
     }
 
     @Override
@@ -73,22 +86,22 @@ public class AddTokenActivity extends BaseActivity {
         });
         txtMainTitle.setText(R.string.tianjiadaibi);
         txtRightTitle.setText(R.string.wancheng);
-        txtRightTitle.setCompoundDrawables(null,null,null,null);
+        txtRightTitle.setCompoundDrawables(null, null, null, null);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringBuilder sb=new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 sb.append("[");
-                for (int i=0;i<data.size();i++){
-                    if (data.get(i).isSelect()){
-                        sb.append(data.get(i).getId()+",");
+                for (int i = 0; i < data.size(); i++) {
+                    if (data.get(i).isSelect()) {
+                        sb.append(data.get(i).getId() + ",");
                     }
                 }
-                if(sb.length()!=1){
+                if (sb.length() != 1) {
                     sb.delete(sb.length() - 1, sb.length());
                 }
                 sb.append("]");
-                WalletApi.userGnt(mActivity,walletId,sb.toString(), new JsonCallback<LzyResponse<Object>>() {
+                WalletApi.userGnt(mActivity, walletId, sb.toString(), new JsonCallback<LzyResponse<Object>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<Object>> response) {
                         EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_REFRESH));
@@ -104,8 +117,9 @@ public class AddTokenActivity extends BaseActivity {
             }
         });
 
-        adapter=new AllGntAdapter(this,R.layout.wallet_item_gnt,data);
-        tokenList.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new AllGntAdapter(this, R.layout.wallet_item_gnt, data);
+        unitManager=new LinearLayoutManager(this);
+        tokenList.setLayoutManager(unitManager);
         tokenList.setAdapter(adapter);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
@@ -115,7 +129,7 @@ public class AddTokenActivity extends BaseActivity {
                 initData();
             }
         });
-        tokenList.setOnScrollListener(new RecyclerView.OnScrollListener(){
+        tokenList.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int topRowVerticalPosition =
@@ -132,9 +146,9 @@ public class AddTokenActivity extends BaseActivity {
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (data.get(position).isSelect()){
+                if (data.get(position).isSelect()) {
                     data.get(position).setSelect(false);
-                }else {
+                } else {
                     data.get(position).setSelect(true);
                 }
                 adapter.notifyDataSetChanged();
@@ -144,6 +158,33 @@ public class AddTokenActivity extends BaseActivity {
             public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
                 return false;
             }
+        });
+
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if ((actionId == 0 || actionId == 3) && event != null) {
+                    boolean has=false;
+                    for (int i=0;i<data.size();i++){
+                        if (data.get(i).getName().toUpperCase().equals(search.getText().toString().toUpperCase())){
+                            has=true;
+                            position=i;
+                            break;
+                        }
+                    }
+                    if (has){
+                        move(position);
+                    }else {
+                        ToastUtil.show(getString(R.string.weizhaodaogaidaibi));
+                    }
+                    return true;
+                }
+                return false;
+
+            }
+
         });
     }
 
@@ -156,11 +197,11 @@ public class AddTokenActivity extends BaseActivity {
                 swipeRefresh.setRefreshing(true);
             }
         });
-        WalletApi.gntCategory(mActivity,walletId,id,new JsonCallback<LzyResponse<CommonListBean<GntBean>>>() {
+        WalletApi.gntCategory(mActivity, walletId, id, new JsonCallback<LzyResponse<CommonListBean<GntBean>>>() {
             @Override
             public void onSuccess(Response<LzyResponse<CommonListBean<GntBean>>> response) {
                 data.clear();
-                if (null!=response.body().data&&null!=response.body().data.getList()){
+                if (null != response.body().data && null != response.body().data.getList()) {
                     data.addAll(response.body().data.getList());
                 }
                 adapter.notifyDataSetChanged();
@@ -181,4 +222,46 @@ public class AddTokenActivity extends BaseActivity {
 
     }
 
+    private void move(int position){
+        mIndex = position;
+        tokenList.stopScroll();
+        smoothMoveToPosition(position);
+    }
+
+    private void smoothMoveToPosition(int n) {
+
+        int firstItem = unitManager.findFirstVisibleItemPosition();
+        int lastItem = unitManager.findLastVisibleItemPosition();
+        if (n <= firstItem ){
+            tokenList.smoothScrollToPosition(n);
+        }else if ( n <= lastItem ){
+            int top = tokenList.getChildAt(n - firstItem).getTop();
+            tokenList.smoothScrollBy(0, top);
+        }else{
+            tokenList.smoothScrollToPosition(n);
+            move = true;
+        }
+
+    }
+
+    class RecyclerViewListener extends RecyclerView.OnScrollListener{
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if (move && newState == RecyclerView.SCROLL_STATE_IDLE){
+                move = false;
+                int n = mIndex - unitManager.findFirstVisibleItemPosition();
+                if ( 0 <= n && n < tokenList.getChildCount()){
+                    int top = tokenList.getChildAt(n).getTop();
+                    tokenList.smoothScrollBy(0, top);
+                }
+
+            }
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+        }
+    }
 }

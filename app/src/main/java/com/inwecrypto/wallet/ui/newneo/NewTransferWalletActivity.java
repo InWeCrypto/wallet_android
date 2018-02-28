@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ethmobile.Ethmobile;
 import neomobile.Neomobile;
 import neomobile.Wallet;
 
@@ -80,10 +81,12 @@ public class NewTransferWalletActivity extends BaseActivity {
     private String pass;
 
     private WalletBean watchWallet;
+    private boolean isNeo=true;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         watchWallet = (WalletBean) extras.getSerializable("wallet");
+        isNeo=extras.getBoolean("isNeo",true);
     }
 
     @Override
@@ -161,7 +164,11 @@ public class NewTransferWalletActivity extends BaseActivity {
                             @Override
                             public void onNext(String passWord, Dialog dialog) {
                                 pass = passWord;
-                                importWallet();
+                                if (isNeo){
+                                    importNeoWallet();
+                                }else {
+                                    importEthWallet();
+                                }
                             }
                         });
                         break;
@@ -191,13 +198,127 @@ public class NewTransferWalletActivity extends BaseActivity {
                 if (type != 1) {
                     pass = passInput;
                 }
-                importWallet();
+                if (isNeo){
+                    importNeoWallet();
+                }else {
+                    importEthWallet();
+                }
 
             }
         });
     }
 
-    private void importWallet() {
+    private void importEthWallet() {
+        showLoading();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    ethmobile.Wallet wallet = null;
+                    String address = "";
+                    String keystory = "";
+                    switch (type) {
+                        case 1:
+                            wallet = Ethmobile.fromKeyStore(scanKey, pass);
+                            keystory = scanKey;
+                            address = wallet.address();
+                            if (!address.toLowerCase().equals(watchWallet.getAddress())) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.show(R.string.qingshurugaiqianbaodezhengquekeystore);
+                                        hideLoading();
+                                    }
+                                });
+                                return;
+                            }
+                            break;
+                        case 2:
+                            wallet = Ethmobile.fromMnemonic(scanKey,App.get().isZh()?"zh_CN":"en_US");
+                            address = wallet.address();
+                            keystory = wallet.toKeyStore(pass);
+                            if (!address.toLowerCase().equals(watchWallet.getAddress())) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.show(R.string.qingshurugaiqianbaodezhengquezhujici);
+                                        hideLoading();
+                                    }
+                                });
+                                return;
+                            }
+                            break;
+                        case 3:
+                            wallet = Ethmobile.fromPrivateKey(AppUtil.hexStringToBytes(scanKey));
+                            address = wallet.address();
+                            keystory = wallet.toKeyStore(pass);
+                            if (!address.toLowerCase().equals(watchWallet.getAddress())) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.show(R.string.qingshurugaiqianbaodezhengquesiyao);
+                                        hideLoading();
+                                    }
+                                });
+                                return;
+                            }
+                            break;
+                        case 4:
+                            address = scanKey.toLowerCase();
+                            break;
+                    }
+
+
+                    if (!AppUtil.isNeoAddress(address)) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.show(R.string.qingshuruzhengquedeethdizhi);
+                                hideLoading();
+                            }
+                        });
+                        return;
+                    }
+
+                    saveWallet(keystory, address.toLowerCase(), pass, watchWallet.getName(), Constant.ZHENGCHANG);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideLoading();
+                            ToastUtil.show(getString(R.string.qianbaozhuanhuachenggong));
+                            AppManager.getAppManager().finishActivity(WatchImportWalletTypeActivity.class);
+                            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WATCH_TRANSFER));
+                            finish();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            switch (type) {
+                                case 1:
+                                    ToastUtil.show(R.string.jianchamima);
+                                    break;
+                                case 2:
+                                    ToastUtil.show(R.string.jianchazhujici);
+                                    break;
+                                case 3:
+                                    ToastUtil.show(R.string.jianchasiyao);
+                                    break;
+                            }
+                            hideLoading();
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void importNeoWallet() {
         showLoading();
 
         new Thread(new Runnable() {

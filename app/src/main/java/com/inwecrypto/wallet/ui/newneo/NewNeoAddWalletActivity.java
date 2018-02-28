@@ -27,11 +27,13 @@ import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.wallet.activity.AddEthSuccessActivity;
 import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import ethmobile.Ethmobile;
 import neomobile.Neomobile;
 import neomobile.Wallet;
 
@@ -60,9 +62,12 @@ public class NewNeoAddWalletActivity extends BaseActivity {
     private ArrayList<WalletBean> wallets;
     private boolean isSee;
 
+    private boolean isNeo;
+
     @Override
     protected void getBundleExtras(Bundle extras) {
         wallets = (ArrayList<WalletBean>) extras.getSerializable("wallets");
+        isNeo=extras.getBoolean("isNeo");
     }
 
     @Override
@@ -151,95 +156,91 @@ public class NewNeoAddWalletActivity extends BaseActivity {
                     return;
                 }
                 showLoading();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Wallet neowallet = Neomobile.new_();
-                            final String keyStore = neowallet.toKeyStore(etPs.getText().toString().trim());
-                            String address = neowallet.address();
-                            final String finalAddress = address;
-                            if (null != wallets) {
-                                for (WalletBean walletBean : wallets) {
-                                    if (address.contains(walletBean.getAddress())) {
-                                        mActivity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                ToastUtil.show(R.string.wallet_has_add_error);
-                                                hideLoading();
-                                            }
-                                        });
-                                        return;
-                                    }
-                                }
-                            }
-                            String hashAddress = "";
-                            try {
-                                hashAddress = Neomobile.decodeAddress(address);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                if (isNeo){
+                    createNeoWallet();
+                }else {
+                    createEthWallet();
+                }
+            }
+
+        });
+    }
+
+    private void createEthWallet() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ethmobile.Wallet wallet = Ethmobile.new_();
+                    String address="";
+                    final String json=wallet.toKeyStore(etPs.getText().toString());
+                    address=wallet.address();
+                    final String finalAddress = address.toLowerCase();
+                    if (null!=wallets){
+                        for (WalletBean walletBean:wallets){
+                            if (address.contains(walletBean.getAddress().toLowerCase())){
                                 mActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        ToastUtil.show(R.string.wallet_has_add_error);
                                         hideLoading();
-                                        ToastUtil.show(getString(R.string.wallet_creat_error));
                                     }
                                 });
                                 return;
                             }
-                            WalletApi.wallet(mActivity, 2, etName.getText().toString().trim(), address, hashAddress, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
-                                @Override
-                                public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
-                                    //将钱包保存到ACCOUNTMANAGER
-                                    saveWallet(keyStore, finalAddress, etPs.getText().toString().trim(), etName.getText().toString().trim(), Constant.ZHENGCHANG);
-                                    mActivity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            hideLoading();
-                                            Intent intent = new Intent(mActivity, NewNewAddNeoSuccessActivity.class);
-                                            WalletBean walletBean = response.body().data.getRecord();
-                                            walletBean.setType(Constant.ZHENGCHANG);
-                                            String mailIco = App.get().getSp().getString(Constant.WALLET_ICO, "[]");
-                                            ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
-                                            int icon = AppUtil.getRoundmIcon();
-                                            mailId.add(new MailIconBean(walletBean.getId(), icon));
-                                            App.get().getSp().putString(Constant.WALLET_ICO, GsonUtils.objToJson(mailId));
-                                            walletBean.setIcon(AppUtil.getIcon(icon));
-                                            WalletBean.CategoryBean category = new WalletBean.CategoryBean();
-                                            category.setName("NEO");
-                                            walletBean.setCategory(category);
-                                            intent.putExtra("wallet", walletBean);
-                                            finshTogo(intent);
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onError(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
-                                    super.onError(response);
-                                    mActivity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ToastUtil.show(getString(R.string.wallet_inner_creat_error) + response.message());
-                                            hideLoading();
-                                        }
-                                    });
-                                }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        }
+                    }
+                    WalletApi.wallet(mActivity,1,etName.getText().toString() , finalAddress,"", new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+                        @Override
+                        public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
+                            //将钱包保存到ACCOUNTMANAGER
+                            saveWallet(json, finalAddress,etPs.getText().toString(),etName.getText().toString(), Constant.ZHENGCHANG);
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtil.show(R.string.wallet_inner_creat_error);
+                                    hideLoading();
+                                    Intent intent=new Intent(mActivity,AddEthSuccessActivity.class);
+                                    WalletBean walletBean=response.body().data.getRecord();
+                                    walletBean.setType(Constant.ZHENGCHANG);
+                                    String mailIco= App.get().getSp().getString(Constant.WALLET_ICO,"[]");
+                                    ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
+                                    int icon= AppUtil.getRoundmIcon();
+                                    mailId.add(new MailIconBean(walletBean.getId(),icon));
+                                    App.get().getSp().putString(Constant.WALLET_ICO,GsonUtils.objToJson(mailId));
+                                    walletBean.setIcon(AppUtil.getIcon(icon));
+                                    WalletBean.CategoryBean category=new WalletBean.CategoryBean();
+                                    category.setName("ETH");
+                                    walletBean.setCategory(category);
+                                    intent.putExtra("wallet",walletBean);
+                                    finshTogo(intent);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError(Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
+                            super.onError(response);
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.show(R.string.wallet_creat_error);
                                     hideLoading();
                                 }
                             });
                         }
-                    }
-                }).start();
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.show(R.string.wallet_inner_creat_error);
+                            hideLoading();
+                        }
+                    });
+                }
             }
-        });
+        }).start();
     }
 
     private void saveWallet(String json, String address, String pass, String name, String type) {
@@ -256,6 +257,96 @@ public class NewNeoAddWalletActivity extends BaseActivity {
             wallets = wallets + address + ",";
             App.get().getSp().putString(Constant.WALLETS, wallets);
         }
+    }
+
+    private void createNeoWallet() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Wallet neowallet = Neomobile.new_();
+                    final String keyStore = neowallet.toKeyStore(etPs.getText().toString().trim());
+                    String address = neowallet.address();
+                    final String finalAddress = address;
+                    if (null != wallets) {
+                        for (WalletBean walletBean : wallets) {
+                            if (address.contains(walletBean.getAddress())) {
+                                mActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.show(R.string.wallet_has_add_error);
+                                        hideLoading();
+                                    }
+                                });
+                                return;
+                            }
+                        }
+                    }
+                    String hashAddress = "";
+                    try {
+                        hashAddress = Neomobile.decodeAddress(address);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideLoading();
+                                ToastUtil.show(getString(R.string.wallet_creat_error));
+                            }
+                        });
+                        return;
+                    }
+                    WalletApi.wallet(mActivity, 2, etName.getText().toString().trim(), address, hashAddress, new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+                        @Override
+                        public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
+                            //将钱包保存到ACCOUNTMANAGER
+                            saveWallet(keyStore, finalAddress, etPs.getText().toString().trim(), etName.getText().toString().trim(), Constant.ZHENGCHANG);
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hideLoading();
+                                    Intent intent = new Intent(mActivity, NewNewAddNeoSuccessActivity.class);
+                                    WalletBean walletBean = response.body().data.getRecord();
+                                    walletBean.setType(Constant.ZHENGCHANG);
+                                    String mailIco = App.get().getSp().getString(Constant.WALLET_ICO, "[]");
+                                    ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
+                                    int icon = AppUtil.getRoundmIcon();
+                                    mailId.add(new MailIconBean(walletBean.getId(), icon));
+                                    App.get().getSp().putString(Constant.WALLET_ICO, GsonUtils.objToJson(mailId));
+                                    walletBean.setIcon(AppUtil.getIcon(icon));
+                                    WalletBean.CategoryBean category = new WalletBean.CategoryBean();
+                                    category.setName("NEO");
+                                    walletBean.setCategory(category);
+                                    intent.putExtra("wallet", walletBean);
+                                    finshTogo(intent);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
+                            super.onError(response);
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.show(getString(R.string.wallet_inner_creat_error) + response.message());
+                                    hideLoading();
+                                }
+                            });
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.show(R.string.wallet_inner_creat_error);
+                            hideLoading();
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     @Override

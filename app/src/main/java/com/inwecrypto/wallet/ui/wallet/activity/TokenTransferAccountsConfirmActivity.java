@@ -2,21 +2,14 @@ package com.inwecrypto.wallet.ui.wallet.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.inwecrypto.wallet.common.util.AppUtil;
-import com.lzy.okgo.model.Response;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
-import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CountBean;
@@ -28,11 +21,24 @@ import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AppManager;
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
-import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
+import com.inwecrypto.wallet.common.widget.SimpleToolbar;
+import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.newneo.InputPassFragment;
+import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import ethmobile.Ethmobile;
 import ethmobile.Wallet;
+import me.grantland.widget.AutofitTextView;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -48,24 +54,24 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
     TextView txtMainTitle;
     @BindView(R.id.txt_right_title)
     TextView txtRightTitle;
+    @BindView(R.id.toolbar)
+    SimpleToolbar toolbar;
     @BindView(R.id.tv_price)
     TextView tvPrice;
     @BindView(R.id.tv_service_charge)
     TextView tvServiceCharge;
     @BindView(R.id.et_address)
-    TextView etAddress;
+    AutofitTextView etAddress;
     @BindView(R.id.et_hit)
     TextView etHit;
     @BindView(R.id.tv_transfer)
     TextView tvTransfer;
-
     private WalletBean wallet;
     private TokenBean.ListBean gnt;
     private String address;
     private String price;
     private String gas;
     private String hit;
-    private MaterialDialog mMaterialDialog;
 
     private String nonce;
     private String oxPrice;
@@ -76,9 +82,9 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
         address = extras.getString("address");
         gnt = (TokenBean.ListBean) extras.getSerializable("gnt");
         price = extras.getString("price");
-        oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
+        oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(Constant.pEther).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString(), 10).toString(16);
         gas = extras.getString("gas");
-        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(Constant.pEther).divide(new BigDecimal(gnt.getGnt_category().getGas()), 0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
+        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(Constant.pEther).divide(new BigDecimal(gnt.getGnt_category().getGas()), 0, BigDecimal.ROUND_HALF_UP).toPlainString(), 10).toString(16);
         hit = extras.getString("hit");
         wallet = (WalletBean) extras.getSerializable("wallet");
     }
@@ -107,20 +113,21 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                     public void onSuccess(Response<LzyResponse<CountBean>> response) {
                         hideFixLoading();
                         nonce = response.body().data.getCount();
-                        WalletApi.transferABI(mActivity, gnt.getGnt_category().getAddress(), etAddress.getText().toString(), oxPrice, new JsonCallback<LzyResponse<TransferABIBean>>() {
-                            @Override
-                            public void onSuccess(Response<LzyResponse<TransferABIBean>> response) {
-                                hideFixLoading();
-                                transfer(response.body().data.getData());
-                            }
-
-                            @Override
-                            public void onError(Response<LzyResponse<TransferABIBean>> response) {
-                                super.onError(response);
-                                ToastUtil.show(R.string.zhuanzhangshibaiqingchongshi);
-                                hideFixLoading();
-                            }
-                        });
+                        transfer();
+//                        WalletApi.transferABI(mActivity, gnt.getGnt_category().getAddress(), etAddress.getText().toString(), oxPrice, new JsonCallback<LzyResponse<TransferABIBean>>() {
+//                            @Override
+//                            public void onSuccess(Response<LzyResponse<TransferABIBean>> response) {
+//                                hideFixLoading();
+//                                transfer(response.body().data.getData());
+//                            }
+//
+//                            @Override
+//                            public void onError(Response<LzyResponse<TransferABIBean>> response) {
+//                                super.onError(response);
+//                                ToastUtil.show(R.string.zhuanzhangshibaiqingchongshi);
+//                                hideFixLoading();
+//                            }
+//                        });
                     }
 
                     @Override
@@ -136,27 +143,21 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        tvPrice.setText(new BigDecimal(price).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
+        tvPrice.setText(new BigDecimal(price).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
         tvServiceCharge.setText(getString(R.string.lingfushouxufei) + gas);
         etAddress.setText(address);
         etHit.setText(hit);
     }
 
-    private void transfer(final String tokenData) {
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.view_dialog_pass, null, false);
-        final EditText pass = (EditText) view.findViewById(R.id.et_pass);
-        TextView cancle = (TextView) view.findViewById(R.id.cancle);
-        TextView ok = (TextView) view.findViewById(R.id.ok);
-        cancle.setOnClickListener(new View.OnClickListener() {
+    private void transfer() {
+        //输入密码
+        FragmentManager fm = getSupportFragmentManager();
+        InputPassFragment input = new InputPassFragment();
+        input.show(fm, "input");
+        input.setOnNextListener(new InputPassFragment.OnNextInterface() {
             @Override
-            public void onClick(View v) {
-                mMaterialDialog.dismiss();
-            }
-        });
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pass.getText().toString().length() == 0) {
+            public void onNext(final String passWord, final Dialog dialog) {
+                if (passWord.length() == 0) {
                     ToastUtil.show(getString(R.string.qingshurumima));
                     return;
                 }
@@ -164,19 +165,19 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        byte[] b = new byte[0];
+                        String b = "";
                         final AccountManager accountManager = AccountManager.get(mActivity);
                         Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                         for (int i = 0; i < accounts.length; i++) {
                             if (accounts[i].name.equals(wallet.getAddress())) {
                                 //accountManager.getUserData(accounts[i], pass.getText().toString());
-                                b = accountManager.getUserData(accounts[i], "wallet").getBytes();
+                                b = accountManager.getUserData(accounts[i], "wallet");
                                 break;
                             }
                         }
                         Wallet wallet = null;
                         try {
-                            //wallet = Unichain.openETHWallet(b, pass.getText().toString());
+                            wallet = Ethmobile.fromKeyStore(b, passWord);
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -189,7 +190,14 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                         }
                         String data = "";
                         try {
-                            //data = "0x" + AppUtil.conver16HexStr(wallet.transferToken(nonce, oxGas,"0x" + new BigInteger(new BigDecimal(gnt.getGnt_category().getGas()).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16), gnt.getGnt_category().getAddress(), tokenData.getBytes("utf-8")));
+                            //AppUtil.conver16HexStr
+                            data = "0x" + wallet.transferERC20(gnt.getGnt_category().getAddress()
+                                    ,nonce
+                                    ,address
+                                    //,tokenData
+                                    ,oxPrice
+                                    ,oxGas
+                                    ,"0x" + new BigInteger(new BigDecimal(gnt.getGnt_category().getGas()).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16));
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -205,20 +213,13 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 hideFixLoading();
-                                mMaterialDialog.dismiss();
                                 getOrderInfo(finalData);
                             }
                         });
                     }
                 }).start();
-
             }
         });
-
-        mMaterialDialog = new MaterialDialog(mActivity).setView(view);
-        mMaterialDialog.setBackgroundResource(R.drawable.trans_bg);
-        mMaterialDialog.setCanceledOnTouchOutside(true);
-        mMaterialDialog.show();
     }
 
     private void getOrderInfo(String data) {
@@ -228,34 +229,34 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                 , data
                 , wallet.getAddress()
                 , address, hit
-                , new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString()
-                , new BigDecimal(gas).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString()
+                , oxPrice
+                , oxGas
                 , gnt.getName()
                 , gnt.getGnt_category().getAddress().toLowerCase()
                 , new JsonCallback<LzyResponse<Object>>() {
-            @Override
-            public void onSuccess(Response<LzyResponse<Object>> response) {
-                hideFixLoading();
-                ToastUtil.show(R.string.zhuanzhangchenggong);
-                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
-                AppManager.getAppManager().finishActivity(TokenTransferAccountsActivity.class);
-                finish();
-            }
+                    @Override
+                    public void onSuccess(Response<LzyResponse<Object>> response) {
+                        hideFixLoading();
+                        ToastUtil.show(R.string.zhuanzhangchenggong);
+                        EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
+                        AppManager.getAppManager().finishActivity(TokenTransferAccountsActivity.class);
+                        finish();
+                    }
 
-            @Override
-            public void onError(Response<LzyResponse<Object>> response) {
-                super.onError(response);
-                hideFixLoading();
-                if (response.getException().getMessage().contains("wallet_error")){
-                    ToastUtil.show(getString(R.string.fuwuqineibucuowu));
-                    EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
-                    AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
-                    finish();
-                }else {
-                    ToastUtil.show(getString(R.string.load_error));
-                }
-            }
-        });
+                    @Override
+                    public void onError(Response<LzyResponse<Object>> response) {
+                        super.onError(response);
+                        hideFixLoading();
+                        if (response.getException().getMessage().contains("wallet_error")) {
+                            ToastUtil.show(getString(R.string.fuwuqineibucuowu));
+                            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
+                            AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
+                            finish();
+                        } else {
+                            ToastUtil.show(getString(R.string.load_error));
+                        }
+                    }
+                });
     }
 
     @Override

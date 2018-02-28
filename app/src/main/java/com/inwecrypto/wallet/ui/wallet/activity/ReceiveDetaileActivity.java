@@ -83,7 +83,13 @@ public class ReceiveDetaileActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        BigDecimal b = new BigDecimal(order.getFee());
+        String priceNum="0.0000";
+        if (order.getFee().startsWith("0x")){
+            priceNum=AppUtil.toD(order.getFee());
+        }else {
+            priceNum=order.getFee();
+        }
+        BigDecimal b = new BigDecimal(priceNum);
         price.setText("+"+b.divide(Constant.pEther).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
 
         tvWalletAddress.setText(null!=order.getPay_address()?order.getPay_address():"");
@@ -98,7 +104,7 @@ public class ReceiveDetaileActivity extends BaseActivity {
                 // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 // 将文本内容放到系统剪贴板里。
-                cm.setText(order.getTrade_no());
+                cm.setText(order.getPay_address());
                 ToastUtil.show(R.string.qianbaodizhifuzhi);
             }
         });
@@ -110,7 +116,7 @@ public class ReceiveDetaileActivity extends BaseActivity {
                 // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 // 将文本内容放到系统剪贴板里。
-                cm.setText(order.getTrade_no());
+                cm.setText(order.getReceive_address());
                 ToastUtil.show(R.string.qianbaodizhifuzhi);
             }
         });
@@ -121,7 +127,7 @@ public class ReceiveDetaileActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(mActivity, CommonWebActivity.class);
                 intent.putExtra("title",getString(R.string.chaxunjiaoyi));
-                intent.putExtra("url", App.isMain?ORDER_ULR:ORDER_TEST_ULR+order.getTrade_no());
+                intent.putExtra("url", (App.isMain?ORDER_ULR:ORDER_TEST_ULR)+order.getTrade_no());
                 keepTogo(intent);
             }
         });

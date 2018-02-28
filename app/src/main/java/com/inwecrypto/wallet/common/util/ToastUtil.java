@@ -14,7 +14,7 @@ public class ToastUtil {
 
     public static void show(String msg) {
         if (toast == null) {
-            toast = Toast.makeText(App.get(), msg, Toast.LENGTH_SHORT);
+            toast = Toast.makeText(App.get(), msg, Toast.LENGTH_LONG);
         }
         toast.setText(msg);
         toast.show();
@@ -22,7 +22,7 @@ public class ToastUtil {
 
     public static void show(int msgId) {
         if (toast == null) {
-            toast = Toast.makeText(App.get(),msgId, Toast.LENGTH_SHORT);
+            toast = Toast.makeText(App.get(),msgId, Toast.LENGTH_LONG);
         }
         toast.setText(msgId);
         toast.show();

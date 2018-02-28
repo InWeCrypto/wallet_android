@@ -15,6 +15,8 @@ import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.newneo.NewNeoAddWalletActivity;
+import com.inwecrypto.wallet.ui.newneo.NewNeoWalletListActivity;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -64,8 +66,7 @@ public class AddEthSuccessActivity extends BaseActivity {
     }
 
     private void gotoWallet() {
-        AppManager.getAppManager().finishActivity(AddWalletTypeActivity.class);
-        AppManager.getAppManager().finishActivity(AddWalletListActivity.class);
+        AppManager.getAppManager().finishActivity(NewNeoWalletListActivity.class);
         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
         Intent intent=new Intent(mActivity,HotWalletActivity.class);
         intent.putExtra("wallet",wallet);

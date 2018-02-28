@@ -29,8 +29,8 @@ import com.lzy.okgo.callback.StringCallback;
 
 public class MeApi {
 
-    public static void contact(Object object,int id,JsonCallback<LzyResponse<ArrayList<MailBean>>> callback){
-        OkGo.<LzyResponse<ArrayList<MailBean>>>get(Url.USER_CONTACT+id)
+    public static void contact(Object object,int id,JsonCallback<LzyResponse<CommonListBean<MailBean>>> callback){
+        OkGo.<LzyResponse<CommonListBean<MailBean>>>get(Url.USER_CONTACT+id)
                 .tag(object)
                 .cacheKey(Constant.MAIL_LIST+id+ App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
@@ -49,8 +49,8 @@ public class MeApi {
                 .execute(callback);
     }
 
-    public static void getContact(Object object,int id,JsonCallback<LzyResponse<MailBean>> callback){
-        OkGo.<LzyResponse<MailBean>>get(Url.USER_CONTACT_ADD+"/"+id)
+    public static void getContact(Object object,int id,JsonCallback<LzyResponse<CommonRecordBean<MailBean>>> callback){
+        OkGo.<LzyResponse<CommonRecordBean<MailBean>>>get(Url.USER_CONTACT_ADD+"/"+id)
                 .tag(object)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);

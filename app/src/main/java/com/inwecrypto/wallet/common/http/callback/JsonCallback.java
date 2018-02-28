@@ -35,12 +35,11 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         // 可以随意添加,也可以什么都不传
         // 还可以在这里对所有的参数进行加密，均在这里实现
         if (App.isMain) {
-            request.headers("ct", App.get().getSp().getString(Constant.TOKEN,""));
-            request.headers("open-id", App.get().getSp().getString(Constant.OPEN_ID,""));
+            request.headers("Authorization", App.get().getSp().getString(Constant.TOKEN,""));
         }else {
-            request.headers("ct", App.get().getSp().getString(Constant.TEST_TOKEN,""));
-            request.headers("open-id", App.get().getSp().getString(Constant.TEST_OPEN_ID,""));
+            request.headers("Authorization", App.get().getSp().getString(Constant.TEST_TOKEN,""));
         }
+        request.headers("lang", App.get().isZh()?"zh":"en");
         request.headers("neo-asset-id", Constant.NEO_ASSETS);
         request.headers("neo-gas-asset-id", Constant.GAS_ASSETS);
     }

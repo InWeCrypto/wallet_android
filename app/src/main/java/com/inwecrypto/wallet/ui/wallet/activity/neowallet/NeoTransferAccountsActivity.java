@@ -120,7 +120,7 @@ public class NeoTransferAccountsActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, MailListActivity.class);
                 intent.putExtra("address", true);
-                intent.putExtra("select", 2);
+                intent.putExtra("select", 1);
                 keepTogo(intent);
             }
         });
@@ -195,7 +195,11 @@ public class NeoTransferAccountsActivity extends BaseActivity {
                                     intent.putExtra("type", type);
                                     intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
                                     intent.putExtra("hit", etHint.getText().toString().trim());
-                                    intent.putExtra("unit", "(NEO)");
+                                    if (type==0){
+                                        intent.putExtra("unit", "(NEO)");
+                                    }else {
+                                        intent.putExtra("unit", "(Gas)");
+                                    }
                                     intent.putExtra("to", etAddress.getText().toString().trim());
                                     intent.putExtra("handfee", getString(R.string.shouxufei)+"：0.0000");
                                     keepTogo(intent);

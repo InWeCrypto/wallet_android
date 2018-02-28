@@ -9,120 +9,99 @@
 
     <include layout="@layout/base_title_bar" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="30dp"
-        android:text="@string/nicheng"
-        android:textColor="@color/c_333333"
-        android:textSize="12sp" />
-
-    <EditText
-        android:id="@+id/et_name"
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@color/c_ffffff"
-        android:cursorVisible="true"
-        android:gravity="center_vertical"
-        android:inputType="text"
-        android:paddingBottom="20dp"
-        android:paddingRight="8dp"
-        android:paddingTop="20dp"
-        android:textColor="@color/c_333333"
-        android:textCursorDrawable='@null'
-        android:textSize="14sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@color/c_ececec" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="14dp"
-        android:text="@string/qianbaodizhi"
-        android:textColor="@color/c_333333"
-        android:textSize="12sp" />
-
+        android:layout_height="30dp" />
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nicheng"
+            android:textColor="@color/c_333333"
+            android:textSize="13sp" />
 
         <EditText
-            android:id="@+id/et_address"
-            android:layout_width="0dp"
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@color/c_ffffff"
             android:cursorVisible="true"
             android:gravity="center_vertical"
-            android:inputType="textMultiLine"
-            android:paddingBottom="20dp"
+            android:inputType="text"
+            android:paddingBottom="15dp"
             android:paddingRight="8dp"
-            android:paddingTop="20dp"
-            android:layout_marginRight="6dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="15dp"
             android:textColor="@color/c_333333"
             android:textCursorDrawable='@null'
-            android:textSize="14sp" />
+            android:textSize="13sp" />
 
-        <ImageView
-            android:id="@+id/scan"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:src="@mipmap/main_scan"
-            android:layout_marginRight="8dp" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@color/c_ececec" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="#F6F6F6"/>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="14dp"
-        android:text="@string/beizhu"
-        android:textColor="@color/c_333333"
-        android:textSize="12sp" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
 
-    <EditText
-        android:id="@+id/et_hint"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@color/c_ffffff"
-        android:cursorVisible="true"
-        android:gravity="center_vertical"
-        android:inputType="text"
-        android:paddingBottom="20dp"
-        android:paddingRight="8dp"
-        android:paddingTop="20dp"
-        android:textColor="@color/c_333333"
-        android:textCursorDrawable='@null'
-        android:textSize="14sp" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dizhi"
+            android:textColor="@color/c_333333"
+            android:textSize="13sp" />
+
+        <EditText
+            android:id="@+id/et_address"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@color/c_ffffff"
+            android:cursorVisible="true"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:paddingBottom="15dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="15dp"
+            android:textColor="@color/c_333333"
+            android:textCursorDrawable='@null'
+            android:textSize="13sp" />
+
+        <ImageView
+            android:id="@+id/scan"
+            android:layout_width="32dp"
+            android:layout_height="30dp"
+            android:padding="8dp"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/wode_saoyisao" />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@color/c_ececec" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="#F6F6F6"/>
+
 
     <View
         android:layout_width="match_parent"
@@ -130,56 +109,18 @@
         android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/tv_save"
+        android:id="@+id/tv_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:background="@drawable/round_6dp_bule_bg"
+        android:background="@drawable/new_orgen_bg"
         android:gravity="center"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="@string/baocun_"
+        android:text="@string/shanchu_"
         android:textColor="@color/c_ffffff"
         android:textSize="14sp" />
-
-    <LinearLayout
-        android:id="@+id/ll_detaile"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:background="@drawable/round_6dp_bule_bg"
-            android:gravity="center"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
-            android:text="@string/bianji_"
-            android:textColor="@color/c_ffffff"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tv_delete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:background="@color/c_E86438"
-            android:gravity="center"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
-            android:text="@string/shanchu_"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/c_ffffff"
-            android:textSize="14sp" />
-
-    </LinearLayout>
 
     <android.support.v4.widget.Space
         android:layout_width="match_parent"

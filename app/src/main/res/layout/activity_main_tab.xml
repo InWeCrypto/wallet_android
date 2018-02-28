@@ -1,71 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout"
+<com.inwecrypto.wallet.common.widget.FragmentTabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/tabhost"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <com.inwecrypto.wallet.common.widget.FragmentTabHost
-        android:id="@android:id/tabhost"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#DEDEDE"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="48dp"
+            android:background="#F9F9F9"
+            android:orientation="horizontal">
 
-            <FrameLayout
-                android:id="@+id/content"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent" />
+            <include
+                android:id="@+id/tab1"
+                layout="@layout/view_tab_indicator"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
-            <include layout="@layout/base_gray_line" />
+            <include
+                android:id="@+id/tab2"
+                layout="@layout/view_tab_indicator"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:background="@color/c_ffffff">
-
-                <include
-                    android:id="@+id/tab1"
-                    layout="@layout/view_tab_indicator"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
-
-                <include
-                    android:id="@+id/tab2"
-                    layout="@layout/view_tab_indicator"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
-
-                <include
-                    android:id="@+id/tab3"
-                    layout="@layout/view_tab_indicator"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
-
-                <include
-                    android:id="@+id/tab4"
-                    layout="@layout/view_tab_indicator"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"/>
-
-            </LinearLayout>
+            <include
+                android:id="@+id/tab3"
+                layout="@layout/view_tab_indicator"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
         </LinearLayout>
 
-    </com.inwecrypto.wallet.common.widget.FragmentTabHost>
+    </LinearLayout>
 
-    <include layout="@layout/draw_menu_layout" />
-
-</android.support.v4.widget.DrawerLayout>
+</com.inwecrypto.wallet.common.widget.FragmentTabHost>

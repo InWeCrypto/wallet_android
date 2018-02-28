@@ -109,6 +109,51 @@ public class Constant {
 
     public static final String MAIN_SEE="main_block";
 
+    public static final String TOUCH_ID="touch_id";
+
+    public static final String PROJECT_JSON_MAIN="project_json_main";
+
+    public static final String PROJECT_JSON_TEST="project_json_test";
+
+    public static final String LANGUE_CHANGE="ischange";
+
+    public static final String IS_CHINESE="ischinese";
+
+    public static final String BASE_PROJECT_JSON="[\n" +
+            " {\n" +
+            "   \"id\":0,\n" +
+            "   \"type\":\"sys_msg_inwehot\",\n" +
+            "   \"isShow\":true\n" +
+            " },\n" +
+            " {\n" +
+            "   \"id\":1,\n" +
+            "   \"type\":\"sys_msg_trading\",\n" +
+            "   \"isShow\":true\n" +
+            " },\n" +
+            " {\n" +
+            "   \"id\":2,\n" +
+            "   \"type\":\"sys_msg_exchangenotice\",\n" +
+            "   \"isShow\":true\n" +
+            " },\n" +
+            " {\n" +
+            "   \"id\":3,\n" +
+            "   \"type\":\"sys_msg_candybow\",\n" +
+            "   \"isShow\":false\n" +
+            " },\n" +
+            " {\n" +
+            "   \"id\":4,\n" +
+            "   \"type\":\"sys_msg_order\",\n" +
+            "   \"isShow\":true\n" +
+            " },\n" +
+            " {\n" +
+            "   \"id\":5,\n" +
+            "   \"type\":\"sys_msg\",\n" +
+            "   \"isShow\":true\n" +
+            " }\n" +
+            "]";
+
+    public static final String BASE_SORT="[{\"p\":0},{\"p\":1},{\"p\":2},{\"p\":3},{\"p\":4},{\"p\":5}]";
+
     public static final int EVENT_REFRESH=0;
 
     public static final int EVENT_KEY=1;
@@ -160,6 +205,32 @@ public class Constant {
     public static final int EVENT_WALLET_DAIBI = 23;
 
     public static final int EVENT_PASS_SEE = 24;
+
+    public static final int EVENT_COMMON_PROJECT = 25;
+
+    public static final int EVENT_WALLET_SELECT = 26;
+
+    public static final int EVENT_LANGUE = 27;
+
+    public static final int EVENT_REFERSH = 28;
+
+    public static final int EVENT_REFERSH_SUC = 29;
+
+    public static final int EVENT_FIX = 30;
+
+    public static final int EVENT_ZIXUN_MESSAGE = 31;
+
+    public static final int EVENT_SHOUCANG = 32;
+
+    public static final int EVENT_DINGZHI = 33;
+
+    public static final int EVENT_PINGLUN = 34;
+
+    public static final int EVENT_TIP = 35;
+
+    public static final int EVENT_DOWNLOAD_UPDATE = 36;
+
+    public static final int EVENT_NOTIFY = 37;
 
     public static final int EVENT_TOKEN = 4009;
 

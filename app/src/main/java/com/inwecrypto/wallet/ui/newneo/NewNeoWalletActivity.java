@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,10 +41,8 @@ import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.wallet.activity.WalletTipOneActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.WatchImportWalletTypeActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.neowallet.GetGasActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoNep5TokenWalletActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoTokenSaleActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoTokenWalletActivity;
 import com.lzy.okgo.model.Response;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
@@ -490,8 +487,13 @@ public class NewNeoWalletActivity extends BaseActivity {
 
                 @Override
                 public void run() {
-                    //刷新列表
-                    refershData();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //刷新列表
+                            refershData();
+                        }
+                    });
                 }
             };
             timer.schedule(task, 30000, 30000);
@@ -535,8 +537,7 @@ public class NewNeoWalletActivity extends BaseActivity {
 
                     tvPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString());
 
-
-                    getgas.setText("(" + new BigDecimal(neoBean.getGnt().get(0).getAvailable()).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString() + "Gas"+getString(R.string.ketiqu)+")");
+                    getgas.setText("(" + new BigDecimal(neoBean.getGnt().get(0).getAvailable()).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString() +getString(R.string.ketiqu)+")");
 
                     if (1 == App.get().getUnit()) {
                         neoTotleChPrice = new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
@@ -566,7 +567,7 @@ public class NewNeoWalletActivity extends BaseActivity {
 
                 adapter.notifyDataSetChanged();
                 //计算金额
-                for (int i = 4; i < data.size(); i++) {
+                for (int i = 0; i < data.size(); i++) {
                     BigInteger price = new BigInteger(AppUtil.reverseArray(data.get(i).getBalance()));
                     BigDecimal currentPrice = new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(data.get(i).getDecimals())));
                     if (null != data.get(i).getGnt_category().getCap()) {
@@ -579,7 +580,6 @@ public class NewNeoWalletActivity extends BaseActivity {
                 }
 
                 //计算总金额
-
                 if (1 == App.get().getUnit()) {
                     totleChPrice = TOKENPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
                     changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));

@@ -8,12 +8,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lzy.okgo.model.Response;
-import com.xw.repo.BubbleSeekBar;
-
-import java.math.BigDecimal;
-
-import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.GasBean;
@@ -26,10 +20,18 @@ import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.event.KeyEvent;
 import com.inwecrypto.wallet.ui.ScanActivity;
 import com.inwecrypto.wallet.ui.me.activity.MailListActivity;
+import com.lzy.okgo.model.Response;
+import com.xw.repo.BubbleSeekBar;
+
+import java.math.BigDecimal;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -39,29 +41,31 @@ import com.inwecrypto.wallet.ui.me.activity.MailListActivity;
 
 public class TokenTransferAccountsActivity extends BaseActivity {
 
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
     TextView txtMainTitle;
     @BindView(R.id.txt_right_title)
     TextView txtRightTitle;
+    @BindView(R.id.toolbar)
+    SimpleToolbar toolbar;
     @BindView(R.id.et_address)
     EditText etAddress;
     @BindView(R.id.iv_mail)
     ImageView ivMail;
+    @BindView(R.id.tv_currentPrice)
+    TextView tvCurrentPrice;
     @BindView(R.id.et_price)
     EditText etPrice;
-    @BindView(R.id.et_hint)
-    EditText etHint;
-    @BindView(R.id.tv_ok)
-    TextView tvOk;
     @BindView(R.id.gas)
     TextView gas;
     @BindView(R.id.gasBar)
     BubbleSeekBar gasBar;
-    @BindView(R.id.tv_currentPrice)
-    TextView tvCurrentPrice;
-
+    @BindView(R.id.et_hint)
+    EditText etHint;
+    @BindView(R.id.tv_ok)
+    TextView tvOk;
     private WalletBean wallet;
     private TokenBean.ListBean gnt;
     private BigDecimal gasPrice;
@@ -77,8 +81,8 @@ public class TokenTransferAccountsActivity extends BaseActivity {
         wallet = (WalletBean) extras.getSerializable("wallet");
         gnt = (TokenBean.ListBean) extras.getSerializable("gnt");
         price = extras.getString("price");
-        low = new BigDecimal("25200000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
-        high = new BigDecimal("2520120000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
+        low = new BigDecimal("25200000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000), 0, BigDecimal.ROUND_HALF_UP);
+        high = new BigDecimal("2520120000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000), 0, BigDecimal.ROUND_HALF_UP);
         distance = high.subtract(low);
     }
 
@@ -106,7 +110,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 keepTogo(ScanActivity.class);
             }
         });
-        tvCurrentPrice.setText("("+getString(R.string.dangqianyue)+"：" + price + ")");
+        tvCurrentPrice.setText("(" + getString(R.string.dangqianyue) + "：" + price + ")");
         ivMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,7 +192,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 });
             }
         });
-        gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+        gas.setText(low.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_UP).toString());
     }
 
     @Override
@@ -202,22 +206,22 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 if (currentGas.subtract(low).longValue() <= 0) {
                     position = 0;
                     gasBar.setProgress(position);
-                    gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(low.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_UP).toString());
                 } else if (currentGas.subtract(high).longValue() >= 0) {
                     position = 100;
                     gasBar.setProgress(position);
-                    gas.setText(high.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(high.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_UP).toString());
                 } else {
                     position = currentGas.subtract(low).divide(distance, 0, BigDecimal.ROUND_HALF_DOWN).setScale(0, BigDecimal.ROUND_HALF_DOWN).multiply(Constant.p100).floatValue();
                     gasBar.setProgress(position);
-                    gas.setText(new BigDecimal(position).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
+                    gas.setText(new BigDecimal(position).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_DOWN).toString());
                 }
             }
 
             @Override
             public void onError(Response<LzyResponse<GasBean>> response) {
                 super.onError(response);
-                gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                gas.setText(low.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_UP).toString());
             }
 
             @Override
@@ -226,7 +230,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 gasBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
                     @Override
                     public void onProgressChanged(int progress, float progressFloat) {
-                        gas.setText(new BigDecimal(progressFloat).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
+                        gas.setText(new BigDecimal(progressFloat).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_DOWN).toString());
                     }
 
                     @Override

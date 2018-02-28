@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@color/c_ffffff"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F8F8F8">
 
     <include layout="@layout/base_title_bar" />
 
-    <EditText
-        android:id="@+id/et_name"
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
         android:background="@color/c_ffffff"
-        android:cursorVisible="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:gravity="center_vertical"
-        android:inputType="text"
-        android:paddingBottom="20dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="20dp"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/c_333333"
-        android:textCursorDrawable='@null'
-        android:textSize="14sp" />
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:cursorVisible="true"
+            android:gravity="center_vertical"
+            android:background="@color/c_ffffff"
+            android:inputType="text"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:textColor="@color/c_333333"
+            android:textCursorDrawable='@null'
+            android:textSize="14sp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:background="@color/c_ececec" />
+        <ImageView
+            android:id="@+id/clear"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:padding="6dp"
+            android:src="@mipmap/wode_shanchu"/>
+        
+    </LinearLayout>
+
 
 </LinearLayout>

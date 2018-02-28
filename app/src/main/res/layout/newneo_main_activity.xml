@@ -55,7 +55,7 @@
                                 android:layout_marginBottom="4dp"
                                 android:textSize="16sp"
                                 android:textColor="@color/c_3A9E7C"
-                                android:text="Total Balance"/>
+                                android:text="@string/zongzichan"/>
 
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -126,7 +126,7 @@
                                 android:layout_marginBottom="4dp"
                                 android:textSize="12sp"
                                 android:textColor="@color/c_9D9F9E"
-                                android:text="Total Balance"/>
+                                android:text="@string/zongzichan"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -173,6 +173,7 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:padding="1dp"
+                            android:visibility="gone"
                             android:layout_gravity="center"
                             android:src="@mipmap/touxiang"
                             android:gravity="center"/>

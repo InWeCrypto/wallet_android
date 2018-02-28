@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_ffffff"
+    android:orientation="vertical">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="InWeCrypto"
+            android:textSize="20sp"
+            android:textColor="@color/c_333333"/>
+        
+        <FrameLayout
+            android:id="@+id/searchfl"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_g_bg"
+            android:layout_marginLeft="14dp"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@mipmap/zhuye_sousuo_ico"/>
+        </FrameLayout>
+        
+        <ImageView
+            android:id="@+id/more"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="6dp"
+            android:padding="6dp"
+            android:src="@mipmap/zhuye_tianjia_ico"/>
+
+    </LinearLayout>
+
+    <com.inwecrypto.wallet.common.widget.pullextend.PullExtendLayout
+        android:id="@+id/pull_extend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.inwecrypto.wallet.common.widget.pullextend.ExtendListHeader
+            android:id="@+id/extend_header"
+            android:layout_width="match_parent"
+            android:layout_height="125dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/shoucangll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:clickable="true"
+                        android:background="?android:selectableItemBackground"
+                        android:orientation="vertical">
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:id="@+id/shoucang"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@mipmap/xiangmuzhuye_xing_cio"
+                            android:gravity="center"/>
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                        <View
+                            android:id="@+id/l1"
+                            android:layout_width="10dp"
+                            android:layout_height="2dp"
+                            android:background="#FF6806"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tradingll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:clickable="true"
+                        android:background="?android:selectableItemBackground"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/trading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:textColor="#D8D8D8"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+
+                        <View
+                            android:id="@+id/l2"
+                            android:layout_width="10dp"
+                            android:layout_height="2dp"
+                            android:visibility="invisible"
+                            android:background="#FF6806"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/activell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:clickable="true"
+                        android:background="?android:selectableItemBackground"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/active"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:textColor="#D8D8D8"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+
+                        <View
+                            android:id="@+id/l3"
+                            android:layout_width="10dp"
+                            android:layout_height="2dp"
+                            android:visibility="invisible"
+                            android:background="#FF6806"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/upcomingll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/upcoming"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:textColor="#D8D8D8"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+
+                        <View
+                            android:id="@+id/l4"
+                            android:layout_width="10dp"
+                            android:layout_height="2dp"
+                            android:visibility="invisible"
+                            android:background="#FF6806"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/endedll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:background="?android:selectableItemBackground"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/ended"
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="6dp"
+                            android:paddingBottom="6dp"
+                            android:textColor="#D8D8D8"
+                            android:gravity="center"
+                            android:textSize="12sp"/>
+
+                        <View
+                            android:id="@+id/l5"
+                            android:layout_width="10dp"
+                            android:layout_height="2dp"
+                            android:visibility="invisible"
+                            android:background="#FF6806"/>
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_weight="6"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/refresh"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@mipmap/zhuye_shuaxin_ico"
+                    android:padding="13dp"
+                    android:layout_gravity="right|center_vertical"/>
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#F6F6F6"/>
+
+            <com.inwecrypto.wallet.common.widget.NoScrollViewPager
+                android:id="@+id/vp_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+    </com.inwecrypto.wallet.common.widget.pullextend.PullExtendLayout>
+
+</LinearLayout>

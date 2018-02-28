@@ -9,23 +9,28 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
-import butterknife.BindView;
-
-import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.base.BaseFragment;
+import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.me.adapter.CommonPagerAdapter;
 import com.inwecrypto.wallet.ui.me.fragment.MailListFragment;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -35,14 +40,31 @@ import com.inwecrypto.wallet.ui.me.fragment.MailListFragment;
 
 public class MailListActivity extends BaseActivity {
 
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
     TextView txtMainTitle;
     @BindView(R.id.txt_right_title)
-    TextView txtRightTitle;
-    @BindView(R.id.rg)
-    RadioGroup rg;
+    View txtRightTitle;
+    @BindView(R.id.eth)
+    TextView eth;
+    @BindView(R.id.l2)
+    View l2;
+    @BindView(R.id.ethll)
+    LinearLayout ethll;
+    @BindView(R.id.neo)
+    TextView neo;
+    @BindView(R.id.l3)
+    View l3;
+    @BindView(R.id.neoll)
+    LinearLayout neoll;
+    @BindView(R.id.btc)
+    TextView btc;
+    @BindView(R.id.l4)
+    View l4;
+    @BindView(R.id.btcll)
+    LinearLayout btcll;
     @BindView(R.id.vp_list)
     ViewPager vpList;
 
@@ -54,10 +76,12 @@ public class MailListActivity extends BaseActivity {
     private boolean address;
     private int select;
 
+    private int type = 1;
+
     @Override
     protected void getBundleExtras(Bundle extras) {
-        address=extras.getBoolean("address",false);
-        select=extras.getInt("select");
+        address = extras.getBoolean("address", false);
+        select = extras.getInt("select");
     }
 
     @Override
@@ -84,25 +108,24 @@ public class MailListActivity extends BaseActivity {
             }
         });
 
-        Drawable drawableInfo= getResources().getDrawable(R.mipmap.btn_add_friends);
-        /// 这一步必须要做,否则不会显示.
-        drawableInfo.setBounds(0, 0, drawableInfo.getMinimumWidth(), drawableInfo.getMinimumHeight());
-        txtRightTitle.setCompoundDrawables(drawableInfo,null,null,null);
-
-        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        ethll.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch (checkedId){
-                    case R.id.rb_eth:
-                        vpList.setCurrentItem(0);
-                        break;
-                    case R.id.rb_btc:
-                        vpList.setCurrentItem(1);
-                        break;
-                    case R.id.rb_neo:
-                        vpList.setCurrentItem(2);
-                        break;
-                }
+            public void onClick(View v) {
+                vpList.setCurrentItem(0);
+            }
+        });
+
+        neoll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vpList.setCurrentItem(1);
+            }
+        });
+
+        btcll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vpList.setCurrentItem(2);
             }
         });
 
@@ -114,15 +137,15 @@ public class MailListActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                switch (position){
+                switch (position) {
                     case 0:
-                        rg.check(R.id.rb_eth);
+                        selectType(1);
                         break;
                     case 1:
-                        rg.check(R.id.rb_btc);
+                        selectType(2);
                         break;
                     case 2:
-                        rg.check(R.id.rb_neo);
+                        selectType(3);
                         break;
                 }
             }
@@ -133,32 +156,32 @@ public class MailListActivity extends BaseActivity {
             }
         });
 
-        ethMailListFragment=new MailListFragment();
-        Bundle ethBundle=new Bundle();
+        ethMailListFragment = new MailListFragment();
+        Bundle ethBundle = new Bundle();
         ethBundle.putInt("type", 1);
-        ethBundle.putBoolean("address",address);
+        ethBundle.putBoolean("address", address);
         ethMailListFragment.setArguments(ethBundle);
 
-        btcMailListFragment=new MailListFragment();
-        Bundle btcBundle=new Bundle();
-        btcBundle.putInt("type",3);
-        btcBundle.putBoolean("address",address);
+        btcMailListFragment = new MailListFragment();
+        Bundle btcBundle = new Bundle();
+        btcBundle.putInt("type", 3);
+        btcBundle.putBoolean("address", address);
         btcMailListFragment.setArguments(btcBundle);
 
-        neoMailListFragment=new MailListFragment();
-        Bundle neoBundle=new Bundle();
-        neoBundle.putInt("type",2);
-        neoBundle.putBoolean("address",address);
+        neoMailListFragment = new MailListFragment();
+        Bundle neoBundle = new Bundle();
+        neoBundle.putInt("type", 2);
+        neoBundle.putBoolean("address", address);
         neoMailListFragment.setArguments(neoBundle);
 
-        fragments=new ArrayList<>();
+        fragments = new ArrayList<>();
         fragments.add(ethMailListFragment);
-        fragments.add(btcMailListFragment);
         fragments.add(neoMailListFragment);
+        fragments.add(btcMailListFragment);
 
-        adapter=new CommonPagerAdapter(getSupportFragmentManager(),fragments);
+        adapter = new CommonPagerAdapter(getSupportFragmentManager(), fragments);
         vpList.setAdapter(adapter);
-        if (select!=0){
+        if (select != 0) {
             vpList.setCurrentItem(select);
         }
     }
@@ -169,6 +192,44 @@ public class MailListActivity extends BaseActivity {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
+        if (event.getEventCode()== Constant.EVENT_REFERSH){
+            if (1==event.getKey1()){
+                selectType(1);
+            }
+
+            if (2==event.getKey1()){
+                selectType(2);
+            }
+        }
+    }
+
+    private void selectType(int i) {
+        if (type == i) {
+            return;
+        }
+        type = i;
+        l2.setVisibility(View.INVISIBLE);
+        l3.setVisibility(View.INVISIBLE);
+        l4.setVisibility(View.INVISIBLE);
+
+        eth.setTextColor(getResources().getColor(R.color.c_D8D8D8));
+        neo.setTextColor(getResources().getColor(R.color.c_D8D8D8));
+        btc.setTextColor(getResources().getColor(R.color.c_D8D8D8));
+
+        switch (type) {
+            case 1:
+                eth.setTextColor(getResources().getColor(R.color.c_FF6806));
+                l2.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                neo.setTextColor(getResources().getColor(R.color.c_FF6806));
+                l3.setVisibility(View.VISIBLE);
+                break;
+            case 3:
+                btc.setTextColor(getResources(). getColor(R.color.c_FF6806));
+                l4.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
     private void showSelectDialog() {
@@ -182,8 +243,8 @@ public class MailListActivity extends BaseActivity {
         selectPopupWin.findViewById(R.id.transfer).setVisibility(View.GONE);
         selectPopupWin.findViewById(R.id.delete_wallet).setVisibility(View.GONE);
         zhujici.setText("ETH");
-        keystore.setText("BTC");
-        delete.setText("NEO");
+        keystore.setText("NEO");
+        delete.setText("BTC");
 
         final PopupWindow window = new PopupWindow(selectPopupWin, DensityUtil.dip2px(this, 100), WindowManager.LayoutParams.WRAP_CONTENT);
         // 产生背景变暗效果
@@ -197,7 +258,7 @@ public class MailListActivity extends BaseActivity {
         window.setTouchable(true);
         window.setBackgroundDrawable(new BitmapDrawable());
         window.update();
-        window.showAsDropDown(txtRightTitle, 0,-DensityUtil.dip2px(this,10));
+        window.showAsDropDown(txtRightTitle, 0, -DensityUtil.dip2px(this, 10));
         window.setOnDismissListener(new PopupWindow.OnDismissListener() {
 
             // 在dismiss中恢复透明度
@@ -214,9 +275,9 @@ public class MailListActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 window.dismiss();
-                Intent intent=new Intent(mActivity,MailDetaileActivity.class);
-                intent.putExtra("isAdd",true);
-                intent.putExtra("type",1);
+                Intent intent = new Intent(mActivity, MailDetaileActivity.class);
+                intent.putExtra("isAdd", true);
+                intent.putExtra("type", 1);
                 keepTogo(intent);
             }
         });
@@ -225,7 +286,10 @@ public class MailListActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 window.dismiss();
-                ToastUtil.show(getString(R.string.jingqingqidai));
+                Intent intent = new Intent(mActivity, MailDetaileActivity.class);
+                intent.putExtra("isAdd", true);
+                intent.putExtra("type", 2);
+                keepTogo(intent);
             }
         });
 
@@ -233,10 +297,7 @@ public class MailListActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 window.dismiss();
-                Intent intent=new Intent(mActivity,MailDetaileActivity.class);
-                intent.putExtra("isAdd",true);
-                intent.putExtra("type",2);
-                keepTogo(intent);
+                ToastUtil.show(getString(R.string.jingqingqidai));
             }
         });
     }

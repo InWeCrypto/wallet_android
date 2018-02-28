@@ -27,6 +27,11 @@ public class NewNeoWalletListPopupAdapter extends CommonAdapter<NewNeoTokenListB
 
     @Override
     protected void convert(ViewHolder holder, NewNeoTokenListBean listBean, int position) {
+        if (listBean.getWallet().getCategory_id()==1){
+            Glide.with(mContext).load(R.mipmap.project_icon_eth).crossFade().into((ImageView) holder.getView(R.id.img));
+        }else {
+            Glide.with(mContext).load(R.mipmap.neoxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));
+        }
         holder.setText(R.id.name,listBean.getName());
         holder.setText(R.id.amount,new BigDecimal(listBean.getPrice()).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
     }

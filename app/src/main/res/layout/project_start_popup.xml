@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:hedgehog="http://schemas.android.com/tools"
+    android:background="@color/c_ffffff"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="8dp"
+        android:src="@mipmap/closexxhdpi"
+        android:layout_gravity="right"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pingfen"
+        android:textColor="@color/c_333333"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
+
+    <com.inwecrypto.wallet.common.widget.RatingBar
+        android:id="@+id/ratingbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        app:starCount="5"
+        app:starEmpty="@mipmap/xiangmugaikuang_xing"
+        app:starFill="@mipmap/xiangmugaikuang_xing_s"
+        app:starHalf="@mipmap/xiangmugaikuang_xing"
+        app:starImageSize="30dp"
+        app:starPadding="10dp"
+        app:starStep="0.1"
+        app:stepSize="Half"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <TextView
+        android:id="@+id/fen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#262626"
+        android:textSize="11sp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+
+    <net.qiujuer.genius.ui.widget.Button
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="56dp"
+        android:layout_marginRight="56dp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/login_bg"
+        android:text="@string/queding"
+        android:textSize="14sp"
+        android:textColor="@color/c_ffffff"
+        app:gTouchCornerRadius="12dp"
+        app:gTouchDurationRate="0.7"
+        app:gTouchEffect="ripple" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="60dp"/>
+
+</LinearLayout>

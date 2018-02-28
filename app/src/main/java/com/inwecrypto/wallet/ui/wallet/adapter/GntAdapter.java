@@ -38,15 +38,15 @@ public class GntAdapter extends CommonAdapter<TokenBean.ListBean> {
         holder.setText(R.id.tv_price,currentPrice.divide(pEther,4,BigDecimal.ROUND_HALF_UP).toString());
         if (null==gntBean.getGnt_category().getCap()){
             if (1== App.get().getUnit()){
-                holder.setText(R.id.tv_eth_ch_price,"≈￥0.00");
+                holder.setText(R.id.tv_eth_ch_price,"￥0.00");
             }else {
-                holder.setText(R.id.tv_eth_ch_price,"≈$0.00");
+                holder.setText(R.id.tv_eth_ch_price,"$0.00");
             }
         }else {
             if (1== App.get().getUnit()){
-                holder.setText(R.id.tv_eth_ch_price,"≈￥"+currentPrice.divide(pEther).multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+                holder.setText(R.id.tv_eth_ch_price,"￥"+currentPrice.divide(pEther).multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
             }else {
-                holder.setText(R.id.tv_eth_ch_price,"≈$"+currentPrice.divide(pEther).multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+                holder.setText(R.id.tv_eth_ch_price,"$"+currentPrice.divide(pEther).multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
             }
         }
     }

@@ -174,7 +174,7 @@
             <ImageView
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@mipmap/neoxxhdpi"/>
+                android:src="@mipmap/project_icon_eth"/>
 
             <TextView
                 android:layout_width="wrap_content"

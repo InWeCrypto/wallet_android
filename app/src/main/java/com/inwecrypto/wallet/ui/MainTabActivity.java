@@ -1,65 +1,64 @@
 package com.inwecrypto.wallet.ui;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
+import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
 import com.inwecrypto.wallet.App;
-import com.inwecrypto.wallet.base.BaseFragment;
-import com.inwecrypto.wallet.common.widget.MaterialDialog;
-import com.inwecrypto.wallet.ui.info.InfoWebFragment;
-import com.inwecrypto.wallet.ui.market.MarketFragment;
-import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoWalletActivity;
-import com.inwecrypto.wallet.ui.wallet.adapter.WalletListAdapter;
-import com.lzy.okgo.model.Response;
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import butterknife.BindView;
-
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
-import com.inwecrypto.wallet.bean.CommonListBean;
-import com.inwecrypto.wallet.bean.MailIconBean;
-import com.inwecrypto.wallet.bean.WalletBean;
+import com.inwecrypto.wallet.base.BaseFragment;
+import com.inwecrypto.wallet.bean.UpdateBean;
+import com.inwecrypto.wallet.bean.YaoqinBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
-import com.inwecrypto.wallet.common.http.api.WalletApi;
+import com.inwecrypto.wallet.common.http.api.MeApi;
+import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
+import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.common.widget.FragmentTabHost;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.service.AutoUpdateService;
+import com.inwecrypto.wallet.service.DownloadService;
+import com.inwecrypto.wallet.service.MessageService;
 import com.inwecrypto.wallet.ui.me.MeFragment;
-import com.inwecrypto.wallet.ui.wallet.WalletFragment;
-import com.inwecrypto.wallet.ui.wallet.activity.AddWalletListActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.HotWalletActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.MessageActivity;
-import com.inwecrypto.wallet.ui.wallet.adapter.WalletMenuAdapter;
+import com.inwecrypto.wallet.ui.me.activity.YaoqinActivity;
+import com.inwecrypto.wallet.ui.newneo.WalletFragment;
+import com.inwecrypto.wallet.ui.news.ZixunFragment;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.inwecrypto.wallet.common.http.Url.MAIN_YAOQIN;
+import static com.inwecrypto.wallet.common.http.Url.TEST_YAOQIN;
 
 /**
  * Created by xiaoji on 2017/7/14.
@@ -69,59 +68,35 @@ import com.inwecrypto.wallet.ui.wallet.adapter.WalletMenuAdapter;
 
 public class MainTabActivity extends BaseActivity implements View.OnClickListener {
 
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
-    @BindView(R.id.add_wallet)
-    TextView addWallet;
-    @BindView(R.id.import_wallet)
-    TextView importWallet;
-    @BindView(R.id.scan)
-    TextView scan;
-    @BindView(R.id.wallet_list)
-    RecyclerView walletList;
-
-    private LinearLayout[] tabs = new LinearLayout[4];
-    private ImageView[] imgs = new ImageView[4];
-    private TextView[] titles = new TextView[4];
-    private int[] imgIds = new int[]{R.mipmap.tab_hangqing_nor, R.mipmap.tab_faxian_nor, R.mipmap.tab_qianbao_nor, R.mipmap.tab_wode_nor};
-    private int[] imgClickIds = new int[]{R.mipmap.tab_hangqing_pre, R.mipmap.tab_faxian_pre, R.mipmap.tab_qianbao_pre, R.mipmap.tab_wode_pre};
-    private String[] titleStrs;
-    private int[] colors = new int[]{Color.parseColor("#afafb0"), Color.parseColor("#008c55")};
-    private BaseFragment[] fragments = new BaseFragment[4];
-    private String[] tags = new String[]{"f1", "f2", "f3", "f4"};
+    @BindView(R.id.content)
+    FrameLayout content;
+    private LinearLayout[] tabs = new LinearLayout[3];
+    private ImageView[] imgs = new ImageView[3];
+    private TextView[] titles = new TextView[3];
+    private int[] imgIds = new int[]{R.mipmap.zixun_ico_s, R.mipmap.qianbao_ico_s, R.mipmap.wode_ico_s};
+    private int[] imgClickIds = new int[]{R.mipmap.zixun_ico, R.mipmap.qianbao_ico, R.mipmap.wode_ico};
+    private int[] titleStrs = new int[]{R.string.zixun, R.string.qianbao, R.string.wode};
+    private int[] colors = new int[]{Color.parseColor("#BBBBBB"), Color.parseColor("#008c55")};
+    private BaseFragment[] fragments = new BaseFragment[3];
+    private String[] tags = new String[]{"f1", "f2", "f3"};
     private FragmentManager manager;
     private int currentIndex = -1;
 
-
-    private WalletMenuAdapter adapter;
-
-    private ArrayList<WalletBean> wallet = new ArrayList<>();
-
-    private boolean isMainScan;
-
     private WebView mWebView;
-    private String address;
-    private boolean hasNeo;
-    private boolean isRefresh;
 
-    public boolean isInit() {
-        return init;
-    }
+    private boolean isYaoqin;
 
-    public void setInit(boolean init) {
-        this.init = init;
-    }
+    private UpdateBean updateBean;
+    private AlertDialog alertDialog;
 
-    private boolean init;
+    private boolean isStartService;
+
+    private static final int REQUEST_PERMISSION_STORAGE = 0x01;
+    private ProgressDialog pd6;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-        isOpenEventBus = true;
-        String bundleExtra = getIntent().getStringExtra("pushInfo");
-        if (bundleExtra != null) {
-            Intent intent = new Intent(this, MessageActivity.class);
-            startActivity(intent);
-        }
+        isYaoqin = extras.getBoolean("isYaoqin", false);
     }
 
     @Override
@@ -131,16 +106,15 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void initView() {
-        titleStrs = new String[]{getResources().getString(R.string.hangqing), getResources().getString(R.string.zixun), getResources().getString(R.string.zichan), getResources().getString(R.string.dinzhi)};
     }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+
         tabs[0] = (LinearLayout) findViewById(R.id.tab1);
         tabs[1] = (LinearLayout) findViewById(R.id.tab2);
         tabs[2] = (LinearLayout) findViewById(R.id.tab3);
-        tabs[3] = (LinearLayout) findViewById(R.id.tab4);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             imgs[i] = (ImageView) tabs[i].findViewById(R.id.img);
             imgs[i].setImageResource(imgIds[i]);
             titles[i] = (TextView) tabs[i].findViewById(R.id.title);
@@ -148,106 +122,6 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
         }
         initTab(savedInstanceState);
         initListener();
-        startService(new Intent(this, AutoUpdateService.class));
-        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                drawerLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        drawerLayout.getViewTreeObserver().removeOnPreDrawListener(this);
-                        drawerLayout.openDrawer(Gravity.LEFT);
-                        return false;
-                    }
-                });
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-            }
-        });
-
-        addWallet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-                addWallet.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(mActivity, AddWalletListActivity.class);
-                        intent.putExtra("type", 1);
-                        keepTogo(intent);
-                    }
-                }, 600);
-            }
-        });
-
-        importWallet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-                importWallet.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(mActivity, AddWalletListActivity.class);
-                        intent.putExtra("type", 2);
-                        intent.putExtra("wallets", wallet);
-                        keepTogo(intent);
-                    }
-                }, 600);
-            }
-        });
-
-        scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-                scan.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        isMainScan = true;
-                        keepTogo(ScanActivity.class);
-                    }
-                }, 600);
-            }
-        });
-
-        adapter = new WalletMenuAdapter(this, R.layout.wallet_item_menu, wallet);
-        walletList.setLayoutManager(new LinearLayoutManager(this));
-        walletList.setAdapter(adapter);
-
-        adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, final int position) {
-                drawerLayout.closeDrawers();
-                walletList.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = null;
-                        if (wallet.get(position).getCategory_id() == 1) {
-                            intent = new Intent(mActivity, HotWalletActivity.class);
-                        } else {
-                            intent = new Intent(mActivity, NeoWalletActivity.class);
-                        }
-                        intent.putExtra("wallet", wallet.get(position));
-                        keepTogo(intent);
-                    }
-                }, 400);
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
 
         //预加载网页
         mWebView = new WebView(this);
@@ -260,6 +134,130 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
                 mWebView = null;
             }
         }, 2000);
+
+        //开启服务
+        startService(new Intent(mActivity, MessageService.class));
+
+        if (isYaoqin && App.get().isZh()) {
+            content.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ZixunApi.getYaoqinKey(this, new JsonCallback<LzyResponse<YaoqinBean>>() {
+                        @Override
+                        public void onSuccess(final Response<LzyResponse<YaoqinBean>> response) {
+                            if (response.body().data.isCandy_bow_stat()) {
+                                //获取邀请码
+                                Intent intent = new Intent(mActivity, YaoqinActivity.class);
+                                String token = App.get().getSp().getString(App.isMain ? Constant.TOKEN : Constant.TEST_TOKEN);
+                                intent.putExtra("url", (App.isMain ? MAIN_YAOQIN : TEST_YAOQIN) + response.body().data.getCode() + "&token=" + token);
+                                keepTogo(intent);
+                            }
+                        }
+                    });
+                }
+            },2000);
+        }
+
+        //检查更新
+        checkUpdate();
+
+        EMClient.getInstance().groupManager().loadAllGroups();
+        EMClient.getInstance().chatManager().loadAllConversations();
+    }
+
+    private void checkUpdate() {
+        MeApi.check(this, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                updateBean = GsonUtils.jsonToObj(response.body(), UpdateBean.class);
+                if (Integer.parseInt(updateBean.getVersionCode()) > AppUtil.getVersion(mActivity)) {
+                    isStartService = false;
+                    //弹出下载框
+                    alertDialog = new AlertDialog.Builder(mActivity)
+                            .setTitle(R.string.banbengengxin)
+                            .setMessage(updateBean.getUpdateHit())
+                            .setCancelable(updateBean.getForce().equals("1") ? false : true)
+                            .setPositiveButton(R.string.gengxin, null)
+                            .setNegativeButton(R.string.quxiao, null)
+                            .create();
+                    alertDialog.show();
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (isStartService) {
+                                ToastUtil.show(getString(R.string.zhengzaihoutaixiazai));
+                                return;
+                            }
+                            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
+                            } else {
+                                startUpdateService();
+                            }
+                        }
+                    });
+
+                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (updateBean.getForce().equals("0")) {
+                                alertDialog.dismiss();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void startUpdateService() {
+
+        //显示一个
+        alertDialog.dismiss();
+        if (!updateBean.getForce().equals("0")) {
+            isStartService = true;
+        }
+        ToastUtil.show(getString(R.string.zhengzaixiazaizhong));
+        Intent intent = new Intent(mActivity, DownloadService.class);
+        intent.putExtra("version", updateBean.getVersionCode());
+        intent.putExtra("hash", updateBean.getHash());
+        mActivity.startService(intent);
+
+        pd6 = new ProgressDialog(this);
+        pd6.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);// 设置水平进度条
+        pd6.setCancelable(false);// 设置是否可以通过点击Back键取消
+        pd6.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+        pd6.setTitle(R.string.tishi);
+        pd6.setMax(100);
+        if (updateBean.getForce().equals("0")) {
+            pd6.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.houtaixiazai), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            pd6.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.quxiao), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    stopService(new Intent(mActivity, DownloadService.class));
+                    dialog.dismiss();
+                }
+            });
+        }
+        pd6.setMessage(getString(R.string.zhengzaixiazaizhong));
+        pd6.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //获取权限
+                startUpdateService();
+            } else {
+                ToastUtil.show(getString(R.string.quanxianbeijingzhi_wufaxiazaiapk));
+            }
+        }
     }
 
     private void initTab(Bundle savedInstanceState) {
@@ -268,7 +266,7 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
 
         int index = 1;
         if (null != savedInstanceState) {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 3; i++) {
                 if (null != manager.findFragmentByTag(tags[i])) {
                     fragments[i] = (BaseFragment) manager.findFragmentByTag(tags[i]);
                     fragments[i].setUserVisibleHint(false);
@@ -285,7 +283,7 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initListener() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             tabs[i].setOnClickListener(this);
         }
     }
@@ -307,20 +305,13 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
 
         switch (i) {
             case 1:
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                addTab(ft, 1, null == fragments[0] ? new MarketFragment() : null);
+                addTab(ft, 1, null == fragments[0] ? new ZixunFragment() : null);
                 break;
             case 2:
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                addTab(ft, 2, null == fragments[1] ? new InfoWebFragment() : null);
+                addTab(ft, 2, null == fragments[1] ? new WalletFragment() : null);
                 break;
             case 3:
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                addTab(ft, 3, null == fragments[2] ? new WalletFragment() : null);
-                break;
-            case 4:
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                addTab(ft, 4, null == fragments[3] ? new MeFragment() : null);
+                addTab(ft, 3, null == fragments[2] ? new MeFragment() : null);
                 break;
         }
 
@@ -361,194 +352,26 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
             case R.id.tab3:
                 changeTab(3);
                 break;
-            case R.id.tab4:
-                changeTab(4);
-                break;
         }
     }
 
 
     @Override
     protected void initData() {
-        //从网络获取钱包
-        getInfoOnNet();
     }
-
-    private void getInfoOnNet() {
-        hasNeo = false;
-        WalletApi.wallet(mActivity, new JsonCallback<LzyResponse<CommonListBean<WalletBean>>>() {
-            @Override
-            public void onSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
-                boolean isSave = false;
-                String mailIco = App.get().getSp().getString(Constant.WALLET_ICO, "[]");
-                ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
-                HashMap<Integer, Integer> mailHash = new HashMap<>();
-                for (int i = 0; i < mailId.size(); i++) {
-                    mailHash.put(mailId.get(i).getId(), mailId.get(i).getIcon());
-                }
-                wallet.clear();
-                if (null != response.body().data.getList()) {
-                    String wallets = App.get().getSp().getString(Constant.WALLETS, "");
-                    String wallets_beifen = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
-                    for (int i = 0; i < response.body().data.getList().size(); i++) {
-                        if (null == mailHash.get(response.body().data.getList().get(i).getId())) {
-                            int icon = AppUtil.getRoundmIcon();
-                            mailHash.put(response.body().data.getList().get(i).getId(), icon);
-                            response.body().data.getList().get(i).setIcon(AppUtil.getIcon(icon));
-                            isSave = true;
-                        } else {
-                            response.body().data.getList().get(i).setIcon(AppUtil.getIcon(mailHash.get(response.body().data.getList().get(i).getId())));
-                        }
-
-                        if (wallets.contains(response.body().data.getList().get(i).getAddress())) {
-                            if (wallets_beifen.contains(response.body().data.getList().get(i).getAddress()) || walletsZjc.contains(response.body().data.getList().get(i).getAddress())) {
-                                response.body().data.getList().get(i).setType(Constant.BEIFEN);
-                            } else {
-                                response.body().data.getList().get(i).setType(Constant.ZHENGCHANG);
-                            }
-                        } else {
-                            response.body().data.getList().get(i).setType(Constant.GUANCHA);
-                        }
-                        if (!hasNeo && response.body().data.getList().get(i).getCategory().getName().equals("NEO")) {
-                            hasNeo = true;
-                        }
-                    }
-
-                    if (isSave) {
-                        mailId.clear();
-                        Iterator iter = mailHash.entrySet().iterator();
-                        while (iter.hasNext()) {
-                            Map.Entry entry = (Map.Entry) iter.next();
-                            Integer key = (Integer) entry.getKey();
-                            Integer val = (Integer) entry.getValue();
-                            mailId.add(new MailIconBean(key, val));
-                        }
-                        App.get().getSp().putString(Constant.WALLET_ICO, GsonUtils.objToJson(mailId));
-                    }
-                    wallet.addAll(response.body().data.getList());
-                }
-
-                adapter.notifyDataSetChanged();
-
-                if (!response.isFromCache()) {
-                    setInit(true);
-                }
-
-                InfoWebFragment fragment = (InfoWebFragment) manager.findFragmentByTag(tags[1]);
-                if (!response.isFromCache() && (isRefresh || (null != fragment && fragment.isShow))) {
-                    //获取代币列表
-                    EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET_DAIBI));
-                    isRefresh = false;
-                }
-            }
-
-            @Override
-            public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
-                super.onCacheSuccess(response);
-                onSuccess(response);
-            }
-
-            @Override
-            public void onError(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
-                super.onError(response);
-                ToastUtil.show("加载失败");
-                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_MAIN_REFERSH_COMP));
-            }
-        });
-    }
-
-    public ArrayList<WalletBean> getWallet() {
-        return wallet;
-    }
-
-    public void setWallet(ArrayList<WalletBean> wallet) {
-        this.wallet = wallet;
-    }
-
-    public boolean isRefresh() {
-        return isRefresh;
-    }
-
-    public void setRefresh(boolean refresh) {
-        isRefresh = refresh;
-    }
-
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode() == Constant.OPEN_CLOSE_MENU) {
-            drawerLayout.openDrawer(Gravity.LEFT);
-        }
-        if (event.getEventCode() == Constant.EVENT_KEY && isMainScan) {
-            isMainScan = false;
-            com.inwecrypto.wallet.event.KeyEvent keyEvent = (com.inwecrypto.wallet.event.KeyEvent) event.getData();
-            if (AppUtil.isAddress(keyEvent.getKey().trim())) {
-                address = keyEvent.getKey().trim().toLowerCase();
-                //弹出钱包选择框
-                showWalletList();
-            } else {
-                ToastUtil.show("请输入正确的钱包地址");
+        if (event.getEventCode() == Constant.EVENT_DOWNLOAD_UPDATE) {
+            if (null != pd6) {
+                pd6.setProgress(event.getKey1());
             }
-        }
-
-        if (event.getEventCode() == Constant.EVENT_WALLET) {
-            setRefresh(true);
-            getInfoOnNet();
         }
     }
 
-    private MaterialDialog mMaterialDialog;
-
-    private void showWalletList() {
-        if (null==wallet||wallet.size()==0){
-            ToastUtil.show("您暂时没有钱包!请先添加钱包");
-            return;
-        }
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.view_dialog_ico_wallet, null, false);
-        RecyclerView walletList = (RecyclerView) view.findViewById(R.id.wallet_list);
-        WalletListAdapter walletListAdapter=new WalletListAdapter(this,R.layout.wallet_item_wallet_list,wallet);
-        walletList.setLayoutManager(new LinearLayoutManager(this));
-        walletList.setAdapter(walletListAdapter);
-        walletListAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                mMaterialDialog.dismiss();
-
-                Intent intent = null;
-                if (AppUtil.isEthAddress(address)) {
-                    if (wallet.get(position).getCategory_id()!=1){
-                        ToastUtil.show("当前地址为ETH钱包地址,请选择ETH钱包");
-                        return;
-                    }
-                    intent = new Intent(mActivity, HotWalletActivity.class);
-                } else if (AppUtil.isNeoAddress(address)){
-                    if (wallet.get(position).getCategory_id()!=2){
-                        ToastUtil.show("当前地址为NEO钱包地址,请选择NEO钱包");
-                        return;
-                    }
-                    intent = new Intent(mActivity, NeoWalletActivity.class);
-                }
-                // 从API11开始android推荐使用android.content.ClipboardManager
-                // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
-                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                // 将文本内容放到系统剪贴板里。
-                cm.setPrimaryClip(ClipData.newPlainText(null, address));
-                ToastUtil.show("已将该地址复制到剪切板中!");
-
-                intent.putExtra("wallet", wallet.get(position));
-                keepTogo(intent);
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
-        mMaterialDialog = new MaterialDialog(mActivity).setView(view);
-        mMaterialDialog.setBackgroundResource(R.drawable.trans_bg);
-        mMaterialDialog.setCanceledOnTouchOutside(true);
-        mMaterialDialog.show();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private long mExitTime;
@@ -559,27 +382,17 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
         if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getAction() == KeyEvent.ACTION_DOWN
                 && event.getRepeatCount() == 0) {
-            if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
-                drawerLayout.closeDrawers();
-                return true;
-            }
-
-            InfoWebFragment fragment = (InfoWebFragment) manager.findFragmentByTag(tags[1]);
-            if (null != fragment) {
-                if (fragment.isShow && fragment.canBack()) {
-                    return true;
-                }
-            }
 
             //2.点击的时间差如果大于2000，则提示用户点击两次退出
             if (System.currentTimeMillis() - mExitTime > 2000) {
                 //3.保存当前时间
                 mExitTime = System.currentTimeMillis();
                 //4.提示
-                ToastUtil.show("再按一次退出InWeCrypto");
+                ToastUtil.show(getString(R.string.tuichuapp));
             } else {
                 //5.点击的时间差小于2000，退出。
-                finish();
+                AppManager.getAppManager().finishAllActivity();
+                // 杀掉进程
                 System.exit(0);
             }
             return true;
@@ -596,11 +409,9 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
             finish();
             startActivity(restart);
         }
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopService(new Intent(this, AutoUpdateService.class));
+        if (intent.getBooleanExtra("isRe", false)) {
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_ZIXUN_MESSAGE));
+        }
     }
 }

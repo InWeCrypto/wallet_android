@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#D2D2D2">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="#ffffff"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        android:paddingTop="@dimen/status_bar_height">
+
+    <TextView
+        android:id="@+id/txt_left_title"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:drawableLeft="@mipmap/nav_back"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/c_333333"
+        android:textSize="16sp"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/txt_main_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:maxWidth="240dp"
+        android:textColor="@color/c_333333"
+        android:textSize="18sp"
+        android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/txt_right_title1"
+            android:layout_width="45dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="right"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:src="@mipmap/xiangmuzhuye_ren_ico"
+            android:gravity="center"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/txt_right_title2"
+            android:layout_width="45dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="right"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:src="@mipmap/zhuye_jiaoyizhong_xing_ico"
+            android:gravity="center"
+            android:visibility="visible"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#DEDEDE"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <FrameLayout
+            android:id="@+id/chart"
+            android:layout_width="0dp"
+            android:layout_weight="87"
+            android:visibility="gone"
+            android:background="@drawable/gaundian_bg"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/xiangmuzhuye_jianpan"/>
+        </FrameLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#DEDEDE"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/gaikuang"
+            android:layout_width="0dp"
+            android:layout_weight="222"
+            android:background="@drawable/gaundian_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/menu"
+                android:layout_width="16dp"
+                android:layout_height="12dp"
+                android:layout_marginRight="2dp"
+                android:src="@mipmap/xiangmuzhuye_caidan"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/xiangmugaikuang"
+                android:textColor="#626262"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#DEDEDE"/>
+
+        <TextView
+            android:id="@+id/history"
+            android:layout_width="0dp"
+            android:layout_weight="222"
+            android:layout_height="match_parent"
+            android:background="@drawable/gaundian_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/trading_lishizixun"
+            android:textSize="14sp"
+            android:textColor="#626262"/>
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#DEDEDE"/>
+
+        <TextView
+            android:id="@+id/projet"
+            android:layout_width="0dp"
+            android:layout_weight="222"
+            android:layout_height="match_parent"
+            android:background="@drawable/gaundian_bg"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/xiangmujieshao"
+            android:textSize="14sp"
+            android:textColor="#626262"/>
+    </LinearLayout>
+
+</LinearLayout>

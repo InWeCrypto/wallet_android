@@ -26,11 +26,13 @@ public class NewNeoMainTokenAdapter extends CommonAdapter<TokenBean.ListBean> {
 
     @Override
     protected void convert(ViewHolder holder, TokenBean.ListBean listBean, int position) {
-        if (position==0||position==1){
+        try{
             Glide.with(mContext).load(Integer.parseInt(listBean.getGnt_category().getIcon())).crossFade().into((ImageView) holder.getView(R.id.img));
-        }else {
-            if (null!=listBean.getGnt_category().getIcon()){
+        }catch (Exception e){
+            if (null!=listBean.getGnt_category().getIcon()) {
                 Glide.with(mContext).load(listBean.getGnt_category().getIcon()).crossFade().into((ImageView) holder.getView(R.id.img));
+            }else {
+                Glide.with(mContext).load(R.drawable.trans_bg).crossFade().into((ImageView) holder.getView(R.id.img));
             }
         }
 

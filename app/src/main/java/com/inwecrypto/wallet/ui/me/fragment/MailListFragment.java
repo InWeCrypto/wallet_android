@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.base.BaseFragment;
+import com.inwecrypto.wallet.bean.CommonListBean;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
@@ -125,20 +126,20 @@ public class MailListFragment extends BaseFragment {
                     swipeRefresh.setRefreshing(true);
                 }
             });
-            MeApi.contact(mFragment,type,new JsonCallback<LzyResponse<ArrayList<MailBean>>>() {
+            MeApi.contact(mFragment,type,new JsonCallback<LzyResponse<CommonListBean<MailBean>>>() {
                 @Override
-                public void onSuccess(Response<LzyResponse<ArrayList<MailBean>>> response) {
+                public void onSuccess(Response<LzyResponse<CommonListBean<MailBean>>> response) {
                     LoadSuccess(response);
                 }
 
                 @Override
-                public void onCacheSuccess(Response<LzyResponse<ArrayList<MailBean>>> response) {
+                public void onCacheSuccess(Response<LzyResponse<CommonListBean<MailBean>>> response) {
                     super.onCacheSuccess(response);
                     onSuccess(response);
                 }
 
                 @Override
-                public void onError(Response<LzyResponse<ArrayList<MailBean>>> response) {
+                public void onError(Response<LzyResponse<CommonListBean<MailBean>>> response) {
                     super.onError(response);
                     ToastUtil.show(getString(R.string.load_error));
                 }
@@ -164,41 +165,11 @@ public class MailListFragment extends BaseFragment {
         }
     }
 
-    private void LoadSuccess(Response<LzyResponse<ArrayList<MailBean>>> response) {
-        boolean isSave=false;
-        String mailIco= App.get().getSp().getString(Constant.MAIL_ICO,"[]");
-        ArrayList<MailIconBean> mailId = GsonUtils.jsonToArrayList(mailIco, MailIconBean.class);
-        HashMap<Integer,Integer> mailHash=new HashMap<>();
-        for (int i=0;i<mailId.size();i++){
-            mailHash.put(mailId.get(i).getId(),mailId.get(i).getIcon());
-        }
+    private void LoadSuccess(Response<LzyResponse<CommonListBean<MailBean>>> response) {
         mails.clear();
         if (null!=response.body().data){
-            ArrayList<MailBean> mailsBean = response.body().data;
-            for (int i=0;i<mailsBean.size();i++){
-                if (null==mailHash.get(mailsBean.get(i).getId())){
-                    int icon= AppUtil.getRoundmIcon();
-                    mailHash.put(mailsBean.get(i).getId(),icon);
-                    mailsBean.get(i).setHeadImg(AppUtil.getRoundmHeadIcon(icon));
-                    isSave=true;
-                }else {
-                    mailsBean.get(i).setHeadImg(AppUtil.getRoundmHeadIcon(mailHash.get(mailsBean.get(i).getId())));
-                }
-            }
-            mails.addAll(mailsBean);
+            mails.addAll(response.body().data.getList());
         }
         adapter.notifyDataSetChanged();
-
-        if (isSave){
-            mailId.clear();
-            Iterator iter = mailHash.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry entry = (Map.Entry) iter.next();
-                Integer key = (Integer) entry.getKey();
-                Integer val = (Integer) entry.getValue();
-                mailId.add(new MailIconBean(key,val));
-            }
-            App.get().getSp().putString(Constant.MAIL_ICO,GsonUtils.objToJson(mailId));
-        }
     }
 }

@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="24dp"
-        android:text="@string/zhuanzhangqianbaodizhi"
+        android:text="@string/qianbaodizhi_"
         android:textColor="@color/c_333333"
         android:textSize="12sp" />
 
@@ -46,7 +46,6 @@
             android:gravity="center_vertical"
             android:inputType="text"
             android:textColorHint="@color/c_999999"
-            android:hint="请输入转账地址"
             android:paddingBottom="9dp"
             android:paddingTop="9dp"
             android:textColor="@color/c_333333"
@@ -59,7 +58,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="4dp"
-            android:src="@mipmap/home_btn_contacts" />
+            android:src="@mipmap/userlistxxhdpi" />
     </LinearLayout>
 
 
@@ -84,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="24dp"
-            android:text="转账金额"
+            android:text="@string/zhuanzhangshuliang_"
             android:textColor="@color/c_333333"
             android:textSize="12sp" />
         <TextView
@@ -122,7 +121,6 @@
             android:paddingBottom="9dp"
             android:paddingTop="9dp"
             android:textColorHint="@color/c_999999"
-            android:hint="转账金额"
             android:textColor="@color/c_333333"
             android:textCursorDrawable='@null'
             android:textSize="14sp" />
@@ -152,7 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="GAS费用"
-            android:textColor="@color/c_008c55"
+            android:textColor="@color/c_000000"
             android:textSize="14dp" />
 
         <TextView
@@ -161,7 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="0.0000000"
-            android:textColor="@color/c_008c55"
+            android:textColor="#FF841C"
             android:textSize="14dp" />
     </RelativeLayout>
 
@@ -183,7 +181,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="慢"
-            android:textColor="@color/c_999999"
+            android:textColor="#C5C5C5"
             android:textSize="12dp" />
 
         <com.xw.repo.BubbleSeekBar
@@ -192,12 +190,12 @@
             android:layout_height="8dp"
             android:layout_weight="1"
             app:bsb_auto_adjust_section_mark="true"
-            app:bsb_second_track_color="@color/c_EA642F"
+            app:bsb_second_track_color="#FF841C"
             app:bsb_show_progress_in_float="false"
             app:bsb_thumb_radius="9dp"
             app:bsb_thumb_radius_on_dragging="12dp"
-            app:bsb_track_color="@color/c_008c55"
-            app:bsb_track_size="8dp"
+            app:bsb_track_color="#0A9234"
+            app:bsb_track_size="2dp"
             app:bsb_hide_bubble="true"/>
 
         <TextView
@@ -205,7 +203,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="快"
-            android:textColor="@color/c_999999"
+            android:textColor="#C5C5C5"
             android:textSize="12dp" />
     </LinearLayout>
 
@@ -269,11 +267,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:background="@drawable/round_6dp_bule_bg"
+        android:background="@drawable/new_orgen_bg"
         android:gravity="center"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        android:text="@string/queding"
+        android:text="@string/tijiao"
         android:textColor="@color/c_ffffff"
         android:textSize="14sp" />
 

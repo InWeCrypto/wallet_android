@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#EFEFEF">
+    android:background="#F8F8F8">
 
     <include layout="@layout/base_title_bar"/>
 
@@ -31,7 +31,7 @@
     <android.support.v4.widget.Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="16"/>
+        android:layout_weight="12"/>
 
     <RelativeLayout
         android:id="@+id/rl_user"
@@ -39,9 +39,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/white_bg"
         android:clickable="true"
-        android:paddingBottom="22dp"
-        android:paddingLeft="34dp"
-        android:paddingTop="22dp">
+        android:paddingBottom="16dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
             android:layout_centerVertical="true"
             android:text="@string/fuwuxieyi"
             android:textColor="@color/c_333333"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
@@ -63,9 +63,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/white_bg"
         android:clickable="true"
-        android:paddingBottom="22dp"
-        android:paddingLeft="34dp"
-        android:paddingTop="22dp">
+        android:paddingBottom="16dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
             android:layout_centerVertical="true"
             android:text="@string/yinsitiaokuan"
             android:textColor="@color/c_333333"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
@@ -87,9 +87,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/white_bg"
         android:clickable="true"
-        android:paddingBottom="22dp"
-        android:paddingLeft="34dp"
-        android:paddingTop="22dp">
+        android:paddingBottom="16dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
             android:layout_centerVertical="true"
             android:text="@string/kaiyuanxieyi"
             android:textColor="@color/c_333333"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
@@ -111,9 +111,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/white_bg"
         android:clickable="true"
-        android:paddingBottom="22dp"
-        android:paddingLeft="34dp"
-        android:paddingTop="22dp">
+        android:paddingBottom="16dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -121,7 +121,7 @@
             android:layout_centerVertical="true"
             android:text="@string/kaifatuandui"
             android:textColor="@color/c_333333"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 

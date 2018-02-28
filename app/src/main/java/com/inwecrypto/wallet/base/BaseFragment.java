@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.lzy.okgo.OkGo;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,6 +36,8 @@ public abstract class BaseFragment extends Fragment {
     protected BaseActivity mActivity;
     protected Context mContext;
     private Unbinder mUnbinder;
+
+
     protected boolean isOpenEventBus;
     protected boolean isPullDown = true;
     protected int curentPage=1;
@@ -197,6 +201,14 @@ public abstract class BaseFragment extends Fragment {
         return NetworkUtils.isConnected(mActivity); // NetUtil 是我自己封装的类
     }
 
+    public boolean isOpenEventBus() {
+        return isOpenEventBus;
+    }
+
+    public void setOpenEventBus(boolean openEventBus) {
+        isOpenEventBus = openEventBus;
+    }
+
     /**
      * 不关闭当前页面跳转
      * @param cls 要跳转的Activity
@@ -212,6 +224,16 @@ public abstract class BaseFragment extends Fragment {
      */
     public void keepTogo(Intent intent) {
         this.startActivity(intent);
+    }
+
+    private RecyclerView list;
+
+    public RecyclerView getList() {
+        return list;
+    }
+
+    public void setList(RecyclerView list) {
+        this.list = list;
     }
 
 }

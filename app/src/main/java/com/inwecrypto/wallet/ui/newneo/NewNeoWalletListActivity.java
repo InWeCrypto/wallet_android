@@ -22,6 +22,7 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.wallet.activity.HotWalletActivity;
 import com.inwecrypto.wallet.ui.wallet.adapter.NeoWalletListAdapter;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
@@ -97,9 +98,15 @@ public class NewNeoWalletListActivity extends BaseActivity {
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, final int position) {
-                Intent intent = new Intent(mActivity, NewNeoWalletActivity.class);
-                intent.putExtra("wallet", wallet.get(position));
-                finshTogo(intent);
+                if (wallet.get(position).getCategory_id()==1){
+                    Intent intent = new Intent(mActivity, HotWalletActivity.class);
+                    intent.putExtra("wallet", wallet.get(position));
+                    finshTogo(intent);
+                }else {
+                    Intent intent = new Intent(mActivity, NewNeoWalletActivity.class);
+                    intent.putExtra("wallet", wallet.get(position));
+                    finshTogo(intent);
+                }
             }
 
             @Override
@@ -133,18 +140,16 @@ public class NewNeoWalletListActivity extends BaseActivity {
                     String wallets_beifen = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
                     String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
                     for (int i = 0; i < response.body().data.getList().size(); i++) {
-                        if (response.body().data.getList().get(i).getCategory_id() == 2) {
-                            if (wallets.contains(response.body().data.getList().get(i).getAddress())) {
-                                if (wallets_beifen.contains(response.body().data.getList().get(i).getAddress()) || walletsZjc.contains(response.body().data.getList().get(i).getAddress())) {
-                                    response.body().data.getList().get(i).setType(Constant.BEIFEN);
-                                } else {
-                                    response.body().data.getList().get(i).setType(Constant.ZHENGCHANG);
-                                }
+                        if (wallets.contains(response.body().data.getList().get(i).getAddress())) {
+                            if (wallets_beifen.contains(response.body().data.getList().get(i).getAddress()) || walletsZjc.contains(response.body().data.getList().get(i).getAddress())) {
+                                response.body().data.getList().get(i).setType(Constant.BEIFEN);
                             } else {
-                                response.body().data.getList().get(i).setType(Constant.GUANCHA);
+                                response.body().data.getList().get(i).setType(Constant.ZHENGCHANG);
                             }
-                            wallet.add(response.body().data.getList().get(i));
+                        } else {
+                            response.body().data.getList().get(i).setType(Constant.GUANCHA);
                         }
+                        wallet.add(response.body().data.getList().get(i));
                     }
                 }
 

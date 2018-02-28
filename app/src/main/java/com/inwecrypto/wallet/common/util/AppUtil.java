@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -17,6 +19,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,7 +48,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.ProjectBean;
@@ -53,16 +59,6 @@ import com.inwecrypto.wallet.bean.UpdateBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.widget.WebView4Scroll;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.info.activity.AllInfoActivity;
-import com.inwecrypto.wallet.ui.info.activity.InfoWebActivity;
-import com.inwecrypto.wallet.ui.info.adapter.ExplorerAdapter;
-import com.inwecrypto.wallet.ui.info.adapter.MarketAdapter;
-import com.inwecrypto.wallet.ui.info.adapter.WalletAdapter;
-import com.inwecrypto.wallet.ui.info.fragment.AllInfoFragment;
-import com.inwecrypto.wallet.ui.info.activity.IcoActivity;
-import com.inwecrypto.wallet.ui.info.activity.ProjectOnlineActivity;
-import com.inwecrypto.wallet.ui.info.activity.ProjectUnderlineActivity;
-import com.inwecrypto.wallet.ui.info.adapter.PopupMarketAdapter;
 import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 import com.zhy.adapter.recyclerview.wrapper.EmptyWrapper;
@@ -98,6 +94,32 @@ public class AppUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 返回app运行状态
+     * 1:程序在前台运行
+     * 2:程序在后台运行
+     * 3:程序未启动
+     * 注意：需要配置权限<uses-permission android:name="android.permission.GET_TASKS" />
+     */
+    public static int getAppSatus(Context context, String pageName) {
+
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(20);
+
+        //判断程序是否在栈顶
+        if (list.get(0).topActivity.getPackageName().equals(pageName)) {
+            return 1;
+        } else {
+            //判断程序是否在栈里
+            for (ActivityManager.RunningTaskInfo info : list) {
+                if (info.topActivity.getPackageName().equals(pageName)) {
+                    return 2;
+                }
+            }
+            return 3;//栈里找不到，返回3
+        }
     }
 
     /**
@@ -159,8 +181,8 @@ public class AppUtil {
     }
 
     public static boolean isAddress(String address) {
-        String num = "0x[0-9a-zA-Z]{40}";
-        String neo = "[0-9a-zA-Z]{34}";
+        String num = "0x[0-9a-zA-Z]+";
+        String neo = "[0-9a-zA-Z]+";
         if (TextUtils.isEmpty(address)) {
             return false;
         } else {
@@ -170,7 +192,7 @@ public class AppUtil {
     }
 
     public static boolean isEthAddress(String address) {
-        String num = "0x[0-9a-zA-Z]{40}";
+        String num = "0x[0-9a-zA-Z]+";
         if (TextUtils.isEmpty(address)) {
             return false;
         } else {
@@ -360,190 +382,6 @@ public class AppUtil {
         return result.toString().toUpperCase();
     }
 
-    public static void showMainMenu(View view, final BaseActivity activity,boolean isShowMain) {
-
-        View selectPopupWin = LayoutInflater.from(activity).inflate(R.layout.view_popup_main_menu, null, false);
-        TextView main=(TextView)selectPopupWin.findViewById(R.id.main);
-        TextView allNews = (TextView) selectPopupWin.findViewById(R.id.all_news);
-        TextView ico = (TextView) selectPopupWin.findViewById(R.id.ico);
-
-        if (!isShowMain){
-            main.setVisibility(View.GONE);
-        }
-        final PopupWindow window = new PopupWindow(selectPopupWin, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00FFFFFF")));
-        window.setFocusable(true);
-        window.setOutsideTouchable(true);
-        window.update();
-        window.showAsDropDown(view,-DensityUtil.dip2px(activity,20),-DensityUtil.dip2px(activity,20));
-
-        if (isShowMain){
-            main.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppManager.getAppManager().finishActivity(ProjectOnlineActivity.class);
-                    AppManager.getAppManager().finishActivity(ProjectUnderlineActivity.class);
-                    AppManager.getAppManager().finishActivity(AllInfoFragment.class);
-                    AppManager.getAppManager().finishActivity(IcoActivity.class);
-                }
-            });
-        }
-
-        allNews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.keepTogo(AllInfoActivity.class);
-                window.dismiss();
-            }
-        });
-
-        ico.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.keepTogo(IcoActivity.class);
-                window.dismiss();
-            }
-        });
-    }
-
-    public static void showMarketMenu(View view, final BaseActivity activity,ArrayList<ProjectBean.ProjectMarketsBean> marketList) {
-
-        View selectPopupWin = LayoutInflater.from(activity).inflate(R.layout.info_popup_view_market, null, false);
-        RecyclerView list= (RecyclerView) selectPopupWin.findViewById(R.id.list);
-        list.setLayoutManager(new LinearLayoutManager(activity));
-        PopupMarketAdapter adapter=new PopupMarketAdapter(activity,R.layout.info_item_popup_market,marketList);
-        list.setAdapter(adapter);
-
-        final PopupWindow window = new PopupWindow(selectPopupWin, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00FFFFFF")));
-        window.setFocusable(true);
-        window.setOutsideTouchable(true);
-        window.update();
-        window.showAsDropDown(view,0,0);
-
-        adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_POPUP_MARKET,position));
-                window.dismiss();
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
-    }
-
-    public static void showLiulanqi(final BaseActivity activity, View view, final ArrayList<ProjectBean.ProjectExplorersBean> data){
-        // 产生背景变暗效果
-        WindowManager.LayoutParams lp = activity.getWindow()
-                .getAttributes();
-        lp.alpha = 0.4f;
-        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        activity.getWindow().setAttributes(lp);
-
-        View selectPopupWin = LayoutInflater.from(activity).inflate(R.layout.view_popup_liulanqi, null, false);
-        TextView title=(TextView)selectPopupWin.findViewById(R.id.title);
-        RecyclerView list = (RecyclerView) selectPopupWin.findViewById(R.id.list);
-        title.setText(R.string.liulanqi);
-
-        final PopupWindow window = new PopupWindow(selectPopupWin, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#eeeeee")));
-        window.setFocusable(true);
-        window.setOutsideTouchable(true);
-        window.update();
-        window.showAtLocation(view,
-                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        window.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                WindowManager.LayoutParams lp = activity.getWindow()
-                        .getAttributes();
-                lp.alpha = 1f;
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                activity.getWindow().setAttributes(lp);
-            }
-        });
-
-        ExplorerAdapter explorerAdapter = new ExplorerAdapter(activity, R.layout.info_item_explorer, data);
-        list.setLayoutManager(new LinearLayoutManager(activity));
-        list.setAdapter(explorerAdapter);
-        explorerAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (null == data.get(position).getUrl()
-                        || null == data.get(position).getName()) {
-                    return;
-                }
-                Intent intent = new Intent(activity, InfoWebActivity.class);
-                intent.putExtra("title", data.get(position).getName());
-                intent.putExtra("url", data.get(position).getUrl());
-                activity.keepTogo(intent);
-                window.dismiss();
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
-    }
-
-    public static void showWallet(final BaseActivity activity, View view, final ArrayList<ProjectBean.ProjectWalletsBean> data){
-        // 产生背景变暗效果
-        WindowManager.LayoutParams lp = activity.getWindow()
-                .getAttributes();
-        lp.alpha = 0.4f;
-        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        activity.getWindow().setAttributes(lp);
-
-        View selectPopupWin = LayoutInflater.from(activity).inflate(R.layout.view_popup_liulanqi, null, false);
-        TextView title=(TextView)selectPopupWin.findViewById(R.id.title);
-        RecyclerView list = (RecyclerView) selectPopupWin.findViewById(R.id.list);
-        title.setText(R.string.zhichiqianbao);
-
-        final PopupWindow window = new PopupWindow(selectPopupWin, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#eeeeee")));
-        window.setFocusable(true);
-        window.setOutsideTouchable(true);
-        window.update();
-        window.showAtLocation(view,
-                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        window.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                WindowManager.LayoutParams lp = activity.getWindow()
-                        .getAttributes();
-                lp.alpha = 1f;
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                activity.getWindow().setAttributes(lp);
-            }
-        });
-
-        WalletAdapter walletAdapter = new WalletAdapter(activity,R.layout.info_item_explorer, data);
-        list.setLayoutManager(new LinearLayoutManager(activity));
-        list.setAdapter(walletAdapter);
-        walletAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (null == data.get(position).getUrl()
-                        || null == data.get(position).getName()) {
-                    return;
-                }
-                Intent intent = new Intent(activity, InfoWebActivity.class);
-                intent.putExtra("title", data.get(position).getName());
-                intent.putExtra("url", data.get(position).getUrl());
-                activity.keepTogo(intent);
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
-
-    }
 
     public static WebView createWebView(WebView webView,BaseActivity activity) {
 
@@ -555,12 +393,12 @@ public class AppUtil {
         //允许截图
         webView.setDrawingCacheEnabled(true);
         //屏蔽长按事件
-        webView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
+//        webView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                return true;
+//            }
+//        });
         //初始化WebSettings
         final WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -644,6 +482,21 @@ public class AppUtil {
         }
         dff.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//需要转化成的时间格式
+        Date date1 = null;
+        try {
+            date1 = dff.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null==date1?"":df1.format(date1);
+    }
+
+    public static String getGTime(String time){
+        SimpleDateFormat dff =null;
+        dff = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//输入的被转化的时间格式
+
+        dff.setTimeZone(TimeZone.getTimeZone("GMT"));
+        SimpleDateFormat df1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", App.get().isLocle()?Locale.CHINA:Locale.US);//需要转化成的时间格式
         Date date1 = null;
         try {
             date1 = dff.parse(time);
@@ -801,4 +654,55 @@ public class AppUtil {
         }
     }
 
+    private static final String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>"; // 定义script的正则表达式
+    private static final String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>"; // 定义style的正则表达式
+    private static final String regEx_html = "<[^>]+>"; // 定义HTML标签的正则表达式
+    private static final String regEx_space = "\\s*|\t|\r|\n";// 定义空格回车换行符
+    private static final String regEx_w = "<w[^>]*?>[\\s\\S]*?<\\/w[^>]*?>";//定义所有w标签
+
+    /**
+     * @param htmlStr
+     * @return 删除Html标签
+     * @author LongJin
+     */
+    public static String delHTMLTag(String htmlStr) {
+        Pattern p_w = Pattern.compile(regEx_w, Pattern.CASE_INSENSITIVE);
+        Matcher m_w = p_w.matcher(htmlStr);
+        htmlStr = m_w.replaceAll(""); // 过滤script标签
+
+
+        Pattern p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
+        Matcher m_script = p_script.matcher(htmlStr);
+        htmlStr = m_script.replaceAll(""); // 过滤script标签
+
+
+        Pattern p_style = Pattern.compile(regEx_style, Pattern.CASE_INSENSITIVE);
+        Matcher m_style = p_style.matcher(htmlStr);
+        htmlStr = m_style.replaceAll(""); // 过滤style标签
+
+
+        Pattern p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
+        Matcher m_html = p_html.matcher(htmlStr);
+        htmlStr = m_html.replaceAll(""); // 过滤html标签
+
+
+        Pattern p_space = Pattern.compile(regEx_space, Pattern.CASE_INSENSITIVE);
+        Matcher m_space = p_space.matcher(htmlStr);
+        htmlStr = m_space.replaceAll(""); // 过滤空格回车标签
+
+        htmlStr = htmlStr.replaceAll(" ", ""); //过滤
+        htmlStr = htmlStr.replaceAll("&nbsp;", ""); //过滤
+        return htmlStr.trim(); // 返回文本字符串
+    }
+
+    public static void changeAppLanguage(Context context) {
+        String sta = App.get().getSp().getBoolean(Constant.IS_CHINESE) ? "zh" : "en";
+        // 本地语言设置
+        Locale myLocale = new Locale(sta);
+        Resources res = context.getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+    }
 }

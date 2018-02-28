@@ -142,7 +142,7 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, MailListActivity.class);
                 intent.putExtra("address", true);
-                intent.putExtra("select", 2);
+                intent.putExtra("select", 1);
                 keepTogo(intent);
             }
         });

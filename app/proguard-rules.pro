@@ -141,6 +141,17 @@ public static final int *;
 
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context);
+}
+
+-keep class com.hyphenate.** {*;}
+-dontwarn  com.hyphenate.**
+
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context);
+}
 #-------------------------------------------------------------------------
 
 #---------------------------------3.与js互相调用的类------------------------

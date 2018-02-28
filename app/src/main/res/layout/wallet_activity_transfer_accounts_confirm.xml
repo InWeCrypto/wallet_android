@@ -52,7 +52,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="14dp"
-            android:text="手续费："
             android:textColor="@color/c_EA642F"
             android:textSize="12dp" />
     </LinearLayout>
@@ -152,7 +151,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:background="@drawable/round_6dp_bule_bg"
+        android:background="@drawable/new_orgen_bg"
         android:gravity="center"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"

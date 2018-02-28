@@ -365,13 +365,18 @@ public class NeoTokenWalletActivity extends BaseActivity {
 
                 @Override
                 public void run() {
-                    if (page==0){
-                        isEnd=false;
-                        isShow=false;
-                        scrollListener.reset();
-                        //刷新列表
-                        refershData();
-                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (page==0){
+                                isEnd=false;
+                                isShow=false;
+                                scrollListener.reset();
+                                //刷新列表
+                                refershData();
+                            }
+                        }
+                    });
                 }
             };
             timer.schedule(task, speed, speed);

@@ -1,76 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/c_ffffff"
+    android:orientation="vertical">
 
-    <ImageView
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/login_bg"/>
-    
-    <ImageView
+        android:layout_height="0dp"
+        android:layout_weight="100"/>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:layout_centerHorizontal="true"
-        android:src="@mipmap/logo"/>
-
-
-    <TextView
-        android:id="@+id/hot_qianbao"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="60dp"
-        android:layout_above="@+id/cold_qianbao"
-        android:textColor="@color/c_ffffff"
-        android:text="@string/denglu"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:clickable="true"
-        android:background="#30ffffff"/>
+        android:text="@string/hello"
+        android:layout_marginLeft="24dp"
+        android:textColor="#FF841C"
+        android:textSize="24sp"/>
 
     <TextView
-        android:id="@+id/cold_qianbao"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_above="@+id/ll"
-        android:layout_marginBottom="30dp"
-        android:textColor="@color/c_ffffff"
-        android:visibility="gone"
-        android:text="@string/lengqianbao"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:clickable="true"
-        android:background="@drawable/login_btn_bg"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_back"
+        android:layout_marginLeft="24dp"
+        android:textColor="#FF841C"
+        android:textSize="24sp"/>
 
-    <LinearLayout
-        android:id="@+id/ll"
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="110"/>
+
+    <EditText
+        android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:hint="@string/email"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:background="@color/c_ffffff"
+        android:cursorVisible="true"
+        android:textColorHint="#E7E7E7"
+        android:textColor="@color/c_333333"
+        android:textSize="14sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:background="#ECECEC"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:orientation="horizontal">
-        <TextView
-            android:id="@+id/tiaokuan"
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/c_ffffff"
-            android:textSize="12sp"/>
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:hint="@string/mima"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:background="@color/c_ffffff"
+            android:cursorVisible="true"
+            android:textColorHint="#E7E7E7"
+            android:textColor="@color/c_333333"
+            android:textSize="14sp"/>
+
+        <ImageView
+            android:id="@+id/pass_see"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="4dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/denglu_eyes_close_xxx"/>
+
     </LinearLayout>
 
-</RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:background="#ECECEC"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="12"/>
+
+    <TextView
+        android:id="@+id/pass_loss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="24dp"
+        android:layout_gravity="right"
+        android:textColor="#DADDDC"
+        android:textSize="14sp"
+        android:text="@string/wangjimima_"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="160"/>
+
+    <net.qiujuer.genius.ui.widget.Button
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/login_bg"
+        android:text="@string/jinruinwecrypto"
+        android:textSize="14sp"
+        android:textColor="@color/c_ffffff"
+        app:gTouchCornerRadius="12dp"
+        app:gTouchDurationRate="0.7"
+        app:gTouchEffect="ripple" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="12"/>
+
+    <TextView
+        android:id="@+id/regist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#008C55"
+        android:textSize="14sp"
+        android:text="@string/zhuce"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="23"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="340"
+        android:orientation="horizontal">
+        <Space
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/denglu_bg_xxx"/>
+    </LinearLayout>
+
+</LinearLayout>

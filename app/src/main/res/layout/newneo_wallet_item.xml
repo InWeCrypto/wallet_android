@@ -12,8 +12,7 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_centerVertical="true"
-        android:scaleType="fitXY"
-        android:src="@mipmap/project_icon_neo"/>
+        android:scaleType="centerInside"/>
 
     <TextView
         android:id="@+id/name"
@@ -22,7 +21,6 @@
         android:layout_toRightOf="@+id/img"
         android:layout_centerVertical="true"
         android:layout_marginLeft="6dp"
-        android:text="NEO"
         android:textColor="@color/c_333333"
         android:textSize="14sp"/>
 

@@ -1,6 +1,7 @@
 package com.inwecrypto.wallet.common.http.callback;
 
 import com.google.gson.stream.JsonReader;
+import com.inwecrypto.wallet.R;
 import com.lzy.okgo.convert.Converter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -127,27 +128,32 @@ public class JsonConvert<T> implements Converter<T> {
                     LzyResponse lzyResponse = Convert.fromJson(bodys, type);
                     response.close();
                     return (T) lzyResponse;
-                }else if (bodys.contains("4001")) {
+                }else if (bodys.contains("4001")||bodys.contains("4010")) {
                     EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_TOKEN));
-                    throw new IllegalStateException("Please login");
+                    throw new IllegalStateException("4001:Please login");
+                }else if (bodys.contains("4010")) {
+                    EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_TOKEN));
+                    throw new IllegalStateException("4010:Please login");
                 } else if (bodys.contains("4002")) {
                     ToastUtil.show("Privilege access");
-                    throw new IllegalStateException("wallet_error:No permission");
+                    throw new IllegalStateException("4002:wallet_error:No permission");
                 } else if (bodys.contains("4003")) {
-                    throw new IllegalStateException("wallet_error:Routing does not exist");
+                    throw new IllegalStateException("4003:wallet_error:Routing does not exist");
                 }else if (bodys.contains("4004")) {
-                    throw new IllegalStateException("wallet_error:Validation does not pass");
+                    throw new IllegalStateException("4004:wallet_error:Validation does not pass");
                 }else if (bodys.contains("4005")) {
-                    throw new IllegalStateException("wallet_error:Query data does not exist");
+                    throw new IllegalStateException("4005:wallet_error:Query data does not exist");
                 }else if (bodys.contains("4006")) {
-                    throw new IllegalStateException("wallet_error:Request execution failure");
+                    throw new IllegalStateException("4006:wallet_error:Request execution failure");
                 }else if (bodys.contains("4007")) {
-                    throw new IllegalStateException("wallet_error:The request succeeds and is about to jump");
+                    throw new IllegalStateException("4007:wallet_error:The request succeeds and is about to jump");
                 }else if (bodys.contains("4008")) {
-                    throw new IllegalStateException("wallet_error:unregistered");
+                    throw new IllegalStateException("4008:wallet_error:unregistered");
                 }else if (bodys.contains("4009")) {
                     EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_TOKEN));
-                    throw new IllegalStateException("Token expired");
+                    throw new IllegalStateException("4009:Token expired");
+                }else if (bodys.contains("5201")) {
+                    throw new IllegalStateException("5201:wallet_error");
                 }else {
                     //直接将服务端的错误信息抛出，onError中可以获取
                     throw new IllegalStateException("wallet_error:unknown error");

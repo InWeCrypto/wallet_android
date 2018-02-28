@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#FAFAFA">
+
+    <include layout="@layout/base_title_bar"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#F6F6F6"/>
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="fitXY"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/c_333333"
+            android:textSize="14sp"/>
+        
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/historyll"
+        android:clickable="true"
+        android:background="@drawable/wode_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lishizixun"
+            android:layout_centerVertical="true"
+            android:textSize="14sp"
+            android:textColor="#34A21F" />
+
+        <ImageView
+            android:layout_width="4.5dp"
+            android:layout_height="8.5dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/xiangmuchakan_fanhui"/>
+
+    </RelativeLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/wode_bg"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/shishizixuntuisong"
+            android:layout_centerVertical="true"
+            android:textSize="14sp"
+            android:textColor="@color/c_333333" />
+
+        <com.suke.widget.SwitchButton
+            android:id="@+id/push"
+            android:layout_width="36dp"
+            android:layout_height="22dp"
+            android:layout_alignParentRight="true"
+            app:sb_checked="true"
+            app:sb_button_color="@color/c_ffffff"
+            app:sb_border_width="0dp"
+            app:sb_uncheck_color="#BFBFBF"
+            app:sb_checked_color="#F46A00"
+            app:sb_background="#BFBFBF"
+            app:sb_uncheckcircle_width="0dp"
+            app:sb_uncheckcircle_radius="0dp"
+            app:sb_show_indicator="false"/>
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

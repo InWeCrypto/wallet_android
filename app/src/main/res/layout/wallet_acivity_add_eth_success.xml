@@ -51,7 +51,7 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:gravity="center"
-        android:background="@drawable/round_6dp_bule_bg"
+        android:background="@drawable/new_orgen_bg"
         android:text="@string/jinruqianbaokaishibeifen"/>
 
     <android.support.v4.widget.Space

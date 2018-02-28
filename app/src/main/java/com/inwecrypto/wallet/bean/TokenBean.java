@@ -984,6 +984,7 @@ public class TokenBean implements Serializable{
          * balance : 0x0000000000000000000000000000000000000000000000000000000000000000
          * gnt_category : {"id":1,"category_id":1,"name":"SNT","created_at":"2017-07-30 23:01:27","updated_at":"2017-08-15 18:55:59","icon":"http://cryptobox.oss-cn-shenzhen.aliyuncs.com/7071bdd3-1366-3866-932b-6893a2e03a07.png","address":"0xd9d700125b05f26df706f7190fa3be40c29af2fa","gas":"11","cap":{"id":12831458,"asset_id":"omisego","name":"OmiseGo","symbol":"OMG","rank":"14","price_usd":"6.49145","price_btc":"0.00152059","volume_usd_24h":"82698400.0","market_cap_usd":"638187588.0","available_supply":"98312024.0","total_supply":"140245398.0","percent_change_1h":"-0.37","percent_change_24h":"-8.19","percent_change_7d":"116.54","last_updated":"1502738361","price_cny":"43.28888347","volume_cny_24h":"551482550.24","market_cap_cny":"4255817751.0"}}
          * get_gas
+         *
          */
 
         private int id;
@@ -997,8 +998,17 @@ public class TokenBean implements Serializable{
         private String decimals;
         private String symbol;
         private String get_gas;
+        private boolean isNeo;
         private GntCategoryBeanX gnt_category;
         private ArrayList<NewNeoTokenListBean> wallets;
+
+        public boolean isNeo() {
+            return isNeo;
+        }
+
+        public void setNeo(boolean neo) {
+            isNeo = neo;
+        }
 
         public String getGet_gas() {
             return get_gas;

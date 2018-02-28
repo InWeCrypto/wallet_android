@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#D2D2D2">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="#ffffff"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        android:paddingTop="@dimen/status_bar_height">
+
+        <TextView
+            android:id="@+id/txt_left_title"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:drawableLeft="@mipmap/nav_back"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@color/c_333333"
+            android:textSize="16sp"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/txt_main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:maxWidth="240dp"
+            android:textColor="@color/c_333333"
+            android:textSize="18sp"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/txt_right_title"
+            android:layout_width="62dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="right"
+            android:paddingRight="24dp"
+            android:paddingLeft="24dp"
+            android:src="@mipmap/xiangmuzhuye_ren_ico"
+            android:gravity="center"
+            android:visibility="visible"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="14dp">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#DEDEDE"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#F9F9F9">
+
+        <TextView
+            android:id="@+id/hot"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:gravity="center"
+            android:text="@string/erdianzixun"
+            android:textSize="14sp"
+            android:textColor="#626262"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#DEDEDE"/>
+
+        <TextView
+            android:id="@+id/h24"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/_24xiaoshizixun"
+            android:gravity="center"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:textSize="14sp"
+            android:textColor="#626262"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/views"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gaundian_bg"
+        android:gravity="center"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:clickable="true"
+        android:textSize="14sp"
+        android:textColor="#626262"
+        android:text="你的观点"
+        android:visibility="gone"/>
+</LinearLayout>

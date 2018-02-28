@@ -212,7 +212,7 @@
         android:layout_marginRight="25dp"
         android:gravity="center"
         android:background="@drawable/new_orgen_bg"
-        android:text="@string/daoru"/>
+        android:text="@string/ksdaoru"/>
 
     <android.support.v4.widget.Space
         android:layout_width="match_parent"

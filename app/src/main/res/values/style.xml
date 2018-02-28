@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowAnimationStyle">@style/activityAnim</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="AppTheme" parent="BaseTheme">
@@ -68,4 +69,5 @@
         <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
     </style>
+
 </resources>

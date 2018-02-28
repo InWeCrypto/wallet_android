@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="130dp"
+    android:layout_height="wrap_content"
+    android:paddingRight="14dp"
+    android:background="@android:color/transparent">
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="13dp"
+            android:layout_height="6dp"
+            android:src="@mipmap/icon_sanjiao"
+            android:layout_gravity="right"
+            android:layout_marginRight="8dp"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/c_ffffff">
+        
+        <LinearLayout
+            android:id="@+id/saoyisao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="12dp"
+            android:paddingRight="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@mipmap/zhuye_saoyisao_ico"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/saoyisao"
+                android:textSize="14sp"
+                android:textColor="@color/c_000000"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/hit"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/c_DAD7D7"/>
+
+        <LinearLayout
+            android:id="@+id/addWallet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="12dp"
+            android:paddingRight="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@mipmap/zhuye_tianjiaqianbao_ico"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:text="@string/tianjiaqianbao"
+                android:layout_marginLeft="8dp"
+                android:textSize="14sp"
+                android:textColor="@color/c_000000"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/hit2"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/c_DAD7D7"/>
+
+        <LinearLayout
+            android:id="@+id/shoufukuan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:paddingLeft="12dp"
+            android:paddingRight="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@mipmap/zhuye_shoukuan_ico"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:text="@string/shoufukuan"
+                android:textSize="14sp"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/c_000000"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -10,14 +10,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.zxing.WriterException;
-
-import butterknife.BindView;
-
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
@@ -27,7 +25,9 @@ import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
 import com.inwecrypto.wallet.common.util.QuanCodeUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import me.grantland.widget.AutofitTextView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -36,28 +36,24 @@ import me.grantland.widget.AutofitTextView;
  */
 
 public class ReceiveActivity extends BaseActivity {
-    @BindView(R.id.txt_left_title)
-    TextView txtLeftTitle;
-    @BindView(R.id.txt_main_title)
-    TextView txtMainTitle;
-    @BindView(R.id.txt_right_title)
-    TextView txtRightTitle;
+
+    @BindView(R.id.close)
+    ImageView close;
+    @BindView(R.id.share)
+    ImageView share;
     @BindView(R.id.iv_code)
     ImageView ivCode;
+    @BindView(R.id.address)
+    TextView address;
     @BindView(R.id.iv_header)
     ImageView ivHeader;
-    @BindView(R.id.tv_address)
-    AutofitTextView tvAddress;
-    @BindView(R.id.tv_copy)
-    TextView tvCopy;
-
     private WalletBean wallet;
     private Bitmap bitmap;
     private Thread thread;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-        wallet= (WalletBean) extras.getSerializable("wallet");
+        wallet = (WalletBean) extras.getSerializable("wallet");
     }
 
     @Override
@@ -67,38 +63,32 @@ public class ReceiveActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        txtMainTitle.setText(R.string.shoukuan);
-        txtLeftTitle.setOnClickListener(new View.OnClickListener() {
+        close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-        Drawable drawable= getResources().getDrawable(R.mipmap.nav_share);
-        /// 这一步必须要做,否则不会显示.
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        txtRightTitle.setCompoundDrawables(drawable,null,null,null);
-        txtRightTitle.setOnClickListener(new View.OnClickListener() {
+        share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1=new Intent(Intent.ACTION_SEND);
-                intent1.putExtra(Intent.EXTRA_TEXT,wallet.getAddress());
+                Intent intent1 = new Intent(Intent.ACTION_SEND);
+                intent1.putExtra(Intent.EXTRA_TEXT, wallet.getAddress());
                 intent1.setType("text/plain");
-                keepTogo(Intent.createChooser(intent1,"share"));
+                keepTogo(Intent.createChooser(intent1, "share"));
             }
         });
 
         ivCode.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) ivCode.getLayoutParams();
-                params.height=ivCode.getMeasuredWidth();
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ivCode.getLayoutParams();
+                params.height = ivCode.getMeasuredWidth();
                 ivCode.setLayoutParams(params);
             }
         });
 
-        tvCopy.setOnClickListener(new View.OnClickListener() {
+        address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 从API11开始android推荐使用android.content.ClipboardManager
@@ -113,27 +103,18 @@ public class ReceiveActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        tvAddress.setText(wallet.getAddress());
-        LoginBean loginBean = App.get().getLoginBean();
-        if (null!=loginBean.getUser().getImg()&&loginBean.getUser().getImg().length()>0){
-            Glide.with(this)
-                    .load(loginBean.getUser().getImg())
-                    .crossFade()
-                    .placeholder(R.mipmap.clod_icon)
-                    .transform(new GlideCircleTransform(this))
-                    .into(ivHeader);
-        }
-        thread=new Thread(new Runnable() {
+        address.setText(wallet.getAddress());
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 //文本类型
                 try {
-                    bitmap = QuanCodeUtils.createQuanCode(mActivity,wallet.getAddress());
-                    if (null!=ivCode){
+                    bitmap = QuanCodeUtils.createQuanCode(mActivity, wallet.getAddress());
+                    if (null != ivCode) {
                         ivCode.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (null!=ivCode&&null!=bitmap){
+                                if (null != ivCode && null != bitmap) {
                                     ivCode.setImageBitmap(bitmap);
                                 }
                             }
@@ -150,13 +131,13 @@ public class ReceiveActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (null!=thread){
+        if (null != thread) {
             thread.interrupt();
-            thread=null;
+            thread = null;
         }
-        if (null!=bitmap){
+        if (null != bitmap) {
             bitmap.recycle();
-            bitmap=null;
+            bitmap = null;
         }
         super.onDestroy();
     }
@@ -165,5 +146,4 @@ public class ReceiveActivity extends BaseActivity {
     protected void EventBean(BaseEventBusBean event) {
 
     }
-
 }

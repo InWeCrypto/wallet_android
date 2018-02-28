@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:autofit="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="18dp"
-    android:paddingRight="24dp"
-    android:paddingLeft="24dp">
-    
-    <ImageView
-        android:id="@+id/img"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:scaleType="fitXY"/>
+    android:paddingTop="9dp"
+    android:paddingRight="15dp"
+    android:paddingLeft="15dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/img"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="6dp"
         android:textColor="@color/c_333333"
         android:textSize="14sp"/>
 
@@ -27,21 +19,17 @@
         android:id="@+id/address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
-        android:layout_toRightOf="@+id/img"
-        android:layout_marginTop="12dp"
-        android:layout_below="@+id/name"
+        android:layout_marginTop="6dp"
         android:singleLine="true"
         android:ellipsize="middle"
         android:maxLines="1"
-        android:textSize="14sp"
+        android:textSize="13sp"
         autofit:minTextSize="8sp"
-        android:textColor="@color/c_999999"/>
+        android:textColor="#C1BFBF"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/c_ececec"
-        android:layout_below="@+id/address"
-        android:layout_marginTop="18dp"/>
-</RelativeLayout>
+        android:background="#FBF1F1"
+        android:layout_marginTop="6dp"/>
+</LinearLayout>

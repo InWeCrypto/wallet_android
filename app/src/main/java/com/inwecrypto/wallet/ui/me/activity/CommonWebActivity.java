@@ -22,16 +22,19 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
-
-import butterknife.BindView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 import static android.view.KeyEvent.KEYCODE_BACK;
@@ -44,37 +47,39 @@ import static android.view.KeyEvent.KEYCODE_BACK;
 
 public class CommonWebActivity extends BaseActivity {
 
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
     TextView txtMainTitle;
     @BindView(R.id.txt_right_title)
     TextView txtRightTitle;
+    @BindView(R.id.toolbar)
+    SimpleToolbar toolbar;
     @BindView(R.id.web)
     FrameLayout web;
-    @BindView(R.id.progress)
-    MaterialProgressBar progress;
     @BindView(R.id.reload)
     TextView reload;
-
+    @BindView(R.id.progress)
+    MaterialProgressBar progress;
     private WebView mWebView = null;
     private final ReferenceQueue<WebView> WEB_VIEW_QUEUE = new ReferenceQueue<>();
     private String title;
     private String url;
     private RotateAnimation rotate;
-    private boolean isFinish=true;
+    private boolean isFinish = true;
     private String content;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-        title=extras.getString("title");
-        url=extras.getString("url");
-        content=extras.getString("content");
+        title = extras.getString("title");
+        url = extras.getString("url");
+        content = extras.getString("content");
     }
 
     @Override
     protected int setLayoutID() {
-        return R.layout.discover_article_detail;
+        return R.layout.common_webview_layout;
     }
 
     @Override
@@ -87,15 +92,15 @@ public class CommonWebActivity extends BaseActivity {
             }
         });
 
-        Drawable drawable= getResources().getDrawable(R.mipmap.icon_refresh);
+        Drawable drawable = getResources().getDrawable(R.mipmap.icon_refresh);
         /// 这一步必须要做,否则不会显示.
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        txtRightTitle.setCompoundDrawables(drawable,null,null,null);
+        txtRightTitle.setCompoundDrawables(drawable, null, null, null);
 
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null!=mWebView){
+                if (null != mWebView) {
                     startAnimat();
                     mWebView.reload();
                 }
@@ -109,7 +114,7 @@ public class CommonWebActivity extends BaseActivity {
             final WeakReference<WebView> webViewWeakReference =
                     new WeakReference<>(new WebView(mActivity.getApplicationContext()), WEB_VIEW_QUEUE);
             mWebView = webViewWeakReference.get();
-            mWebView = AppUtil.createWebView(mWebView,mActivity);
+            mWebView = AppUtil.createWebView(mWebView, mActivity);
             mWebView.setWebViewClient(initWebViewClient());
             mWebView.setWebChromeClient(initWebChromeClient());
         }
@@ -152,12 +157,12 @@ public class CommonWebActivity extends BaseActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                if (progress!=null){
+                if (progress != null) {
                     if (progress.getVisibility() == View.GONE) {
                         progress.setVisibility(View.VISIBLE);
                     }
                 }
-                if (reload!=null){
+                if (reload != null) {
                     reload.setVisibility(View.GONE);
                 }
             }
@@ -167,10 +172,10 @@ public class CommonWebActivity extends BaseActivity {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     return;
                 }
-                if (reload!=null){
+                if (reload != null) {
                     reload.setVisibility(View.VISIBLE);
                 }
                 stopAnimat();
@@ -181,8 +186,8 @@ public class CommonWebActivity extends BaseActivity {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                if (request.isForMainFrame()){ // 或者： if(request.getUrl().toString() .equals(getUrl()))
-                    if (reload!=null){
+                if (request.isForMainFrame()) { // 或者： if(request.getUrl().toString() .equals(getUrl()))
+                    if (reload != null) {
                         reload.setVisibility(View.VISIBLE);
                     }
                 }
@@ -198,16 +203,16 @@ public class CommonWebActivity extends BaseActivity {
     }
 
 
-    public WebChromeClient initWebChromeClient(){
-       return new WebChromeClient() {
+    public WebChromeClient initWebChromeClient() {
+        return new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 if (newProgress == 100) {
-                    if (progress!=null){
+                    if (progress != null) {
                         progress.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(progress!=null){
+                                if (progress != null) {
                                     progress.setVisibility(View.GONE);
                                     stopAnimat();
                                 }
@@ -221,8 +226,8 @@ public class CommonWebActivity extends BaseActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-                if (title.contains("404")){
-                    if (reload!=null){
+                if (title.contains("404")) {
+                    if (reload != null) {
                         reload.setVisibility(View.VISIBLE);
                     }
                 }
@@ -264,11 +269,11 @@ public class CommonWebActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        if (null!=url){
+        if (null != url) {
             mWebView.loadUrl(url);
         }
 
-        if (null!=content){
+        if (null != content) {
             mWebView.loadData(content, "text/html", "utf-8");
         }
     }
@@ -286,14 +291,14 @@ public class CommonWebActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public  void startAnimat(){
-        if (txtRightTitle==null){
+    public void startAnimat() {
+        if (txtRightTitle == null) {
             return;
         }
-        isFinish=false;
+        isFinish = false;
         txtRightTitle.clearAnimation();
 
-        rotate  = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         LinearInterpolator lin = new LinearInterpolator();
         rotate.setInterpolator(lin);
         rotate.setDuration(1600);//设置动画持续周期
@@ -303,20 +308,20 @@ public class CommonWebActivity extends BaseActivity {
         txtRightTitle.setAnimation(rotate);
     }
 
-    public void stopAnimat(){
-        if (!isFinish){
+    public void stopAnimat() {
+        if (!isFinish) {
             txtRightTitle.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (rotate!=null){
+                    if (rotate != null) {
                         rotate.cancel();
                     }
-                    if (txtRightTitle!=null){
+                    if (txtRightTitle != null) {
                         txtRightTitle.clearAnimation();
                     }
-                    isFinish=true;
+                    isFinish = true;
                 }
-            },1600);
+            }, 1600);
         }
 
     }

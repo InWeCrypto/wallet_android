@@ -26,9 +26,12 @@ import java.util.ArrayList;
  * @date 2016/07/03 下午 3:19:34
  */
 public class CreateWalletFragment extends DialogFragment {
+
     private LinearLayout addLayout, typeLayout, innerTypeLayout;
     private View close,addNew,importWallet,back,neo,eth,back2,hot,clod;
     private ArrayList<WalletBean> wallets;
+    private boolean isNeo=true;
+    private boolean isImport;
 
     @NonNull
     @Override
@@ -63,24 +66,9 @@ public class CreateWalletFragment extends DialogFragment {
 
         addNew=dialog.findViewById(R.id.add_new);
         importWallet=dialog.findViewById(R.id.import_wallet);
-        importWallet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getActivity(),NewImprotWalletActivity.class);
-                intent.putExtra("wallets",wallets);
-                startActivity(intent);
-                dialog.cancel();
-            }
-        });
         back=dialog.findViewById(R.id.back);
         neo=dialog.findViewById(R.id.neo);
         eth=dialog.findViewById(R.id.eth);
-        eth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToastUtil.show(getString(R.string.zanbuzhichiethqianbao));
-            }
-        });
 
         back2=dialog.findViewById(R.id.back2);
         hot=dialog.findViewById(R.id.hot);
@@ -89,6 +77,7 @@ public class CreateWalletFragment extends DialogFragment {
             public void onClick(View v) {
                 Intent intent=new Intent(getActivity(),NewNeoAddWalletActivity.class);
                 intent.putExtra("wallets",wallets);
+                intent.putExtra("isNeo",isNeo);
                 startActivity(intent);
                 dialog.cancel();
             }
@@ -105,6 +94,8 @@ public class CreateWalletFragment extends DialogFragment {
         back.setOnClickListener(listener);
         neo.setOnClickListener(listener);
         back2.setOnClickListener(listener);
+        importWallet.setOnClickListener(listener);
+        eth.setOnClickListener(listener);
         return dialog;
     }
 
@@ -116,19 +107,33 @@ public class CreateWalletFragment extends DialogFragment {
             Animation slide_left_to_right = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_left_to_right);
             Animation slide_left_to_left_in = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_left_to_left_in);
             switch (view.getId()) {
+                case R.id.import_wallet:
+                    isImport=true;
                 case R.id.add_new:
                     addLayout.startAnimation(slide_left_to_left);
                     addLayout.setVisibility(View.GONE);
                     typeLayout.startAnimation(slide_right_to_left);
                     typeLayout.setVisibility(View.VISIBLE);
                     break;
+                case R.id.eth:
+                    isNeo=false;
                 case R.id.neo:
-                    typeLayout.startAnimation(slide_left_to_left);
-                    typeLayout.setVisibility(View.GONE);
-                    innerTypeLayout.startAnimation(slide_right_to_left);
-                    innerTypeLayout.setVisibility(View.VISIBLE);
+                    if (isImport){
+                        Intent intent=new Intent(getActivity(),NewImprotWalletActivity.class);
+                        intent.putExtra("wallets",wallets);
+                        intent.putExtra("isNeo",isNeo);
+                        startActivity(intent);
+                        CreateWalletFragment.this.getDialog().cancel();
+                    }else {
+                        typeLayout.startAnimation(slide_left_to_left);
+                        typeLayout.setVisibility(View.GONE);
+                        innerTypeLayout.startAnimation(slide_right_to_left);
+                        innerTypeLayout.setVisibility(View.VISIBLE);
+                    }
                     break;
                 case R.id.back:
+                    isNeo=true;
+                    isImport=false;
                     addLayout.startAnimation(slide_left_to_left_in);
                     addLayout.setVisibility(View.VISIBLE);
                     typeLayout.startAnimation(slide_left_to_right);

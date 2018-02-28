@@ -79,7 +79,7 @@ public class InputPassFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (pass.getText().toString().length()==0){
-                    ToastUtil.show("密码不能为空");
+                    ToastUtil.show(getString(R.string.mimabunengweikong));
                     return;
                 }
                 if (null!=listener){

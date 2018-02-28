@@ -8,12 +8,12 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="6dp" />
+        android:layout_height="8dp" />
 
     <ImageView
         android:id="@+id/img"
-        android:layout_width="20dp"
-        android:layout_height="20dp" />
+        android:layout_width="18dp"
+        android:layout_height="18dp" />
 
     <Space
         android:layout_width="match_parent"
@@ -26,11 +26,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:includeFontPadding="false"
-        android:textColor="@color/c_afafb0"
-        android:textSize="10sp" />
+        android:textSize="11sp" />
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="8dp" />
+        android:layout_height="3dp" />
 
 </LinearLayout>

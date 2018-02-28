@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/c_ffffff">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="#ffffff"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        android:paddingTop="@dimen/status_bar_height">
+
+        <TextView
+            android:id="@+id/txt_left_title"
+            android:layout_width="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:drawableLeft="@mipmap/nav_back"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@color/c_333333"
+            android:textSize="16sp"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/txt_main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:maxWidth="240dp"
+            android:textColor="@color/c_333333"
+            android:textSize="18sp"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/txt_right_title"
+            android:layout_width="62dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="right"
+            android:paddingRight="24dp"
+            android:paddingLeft="24dp"
+            android:src="@mipmap/xiangmuzhuye_ren_ico"
+            android:gravity="center"
+            android:visibility="visible"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.8">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            android:src="@mipmap/candyzhuye_beijing" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="4dp"
+            android:orientation="vertical"
+            android:elevation="4dp"
+            android:background="@drawable/candy_wight_bg">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+                <FrameLayout
+                    android:id="@+id/left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+                    <ImageView
+                        android:layout_width="8dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/candyzhuye_zuofanfan"/>
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/data"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/c_333333"
+                    android:textSize="15sp"
+                    android:text="July/2018"/>
+
+                <FrameLayout
+                    android:id="@+id/right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+                    <ImageView
+                        android:layout_width="8dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/candyzhuye_youfan"/>
+                </FrameLayout>
+            </LinearLayout>
+
+            <com.haibin.calendarview.CalendarView
+                android:id="@+id/calendarView"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                app:month_view="com.inwecrypto.wallet.ui.newneo.SimpleCalendarCardView"
+                app:calendar_height="35dp"
+                app:current_month_text_color="#333333"
+                app:current_month_lunar_text_color="#CFCFCF"
+                app:min_year="2009"
+                app:other_month_text_color="#e1e1e1"
+                app:scheme_text_color="#333"
+                app:scheme_theme_color="#333"
+                app:selected_text_color="#fff"
+                app:selected_theme_color="#333"
+                app:day_text_size="13sp"
+                app:month_view_show_mode="mode_all"
+                app:week_text_color="#444444"
+                app:lunar_text_size="0sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/current_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
+        android:textColor="@color/c_333333"
+        android:textSize="20sp"/>
+
+
+    <com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#DEDEDE"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/views"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gaundian_bg"
+        android:gravity="center"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:clickable="true"
+        android:textSize="14sp"
+        android:textColor="#626262"
+        android:text="你的观点"
+        android:visibility="gone"/>
+
+</LinearLayout>

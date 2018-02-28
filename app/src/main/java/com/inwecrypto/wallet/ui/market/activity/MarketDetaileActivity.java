@@ -1,12 +1,19 @@
 package com.inwecrypto.wallet.ui.market.activity;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -30,14 +37,18 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.KLBean;
-import com.inwecrypto.wallet.bean.MarkeListBean;
 import com.inwecrypto.wallet.bean.PriceBean;
+import com.inwecrypto.wallet.bean.TradingProjectDetaileBean;
+import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.MarketApi;
+import com.inwecrypto.wallet.common.http.api.UserApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
+import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.chart.CoupleChartGestureListener;
 import com.inwecrypto.wallet.common.widget.chart.MyBottomMarkerView;
@@ -49,10 +60,13 @@ import com.inwecrypto.wallet.common.widget.chart.VolFormatter;
 import com.inwecrypto.wallet.common.widget.chart.bean.DataParse;
 import com.inwecrypto.wallet.common.widget.chart.bean.KLineBean;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.me.activity.AddMarketTipFragment;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.pnikosis.materialishprogress.ProgressWheel;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -60,9 +74,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -73,16 +87,20 @@ import butterknife.BindView;
 public class MarketDetaileActivity extends BaseActivity {
 
 
-    @BindView(R.id.back)
-    TextView back;
-    @BindView(R.id.title)
-    TextView title;
+    @BindView(R.id.txt_left_title)
+    TextView txtLeftTitle;
+    @BindView(R.id.txt_main_title)
+    TextView txtMainTitle;
+    @BindView(R.id.txt_right_title)
+    TextView txtRightTitle;
     @BindView(R.id.toolbar)
     SimpleToolbar toolbar;
     @BindView(R.id.usdPrice)
     TextView usdPrice;
     @BindView(R.id.cnyPrice)
     TextView cnyPrice;
+    @BindView(R.id.tip)
+    ImageView tip;
     @BindView(R.id.charge24)
     TextView charge24;
     @BindView(R.id.volume24)
@@ -137,9 +155,7 @@ public class MarketDetaileActivity extends BaseActivity {
     ProgressWheel progress;
     @BindView(R.id.stateRL)
     RelativeLayout stateRL;
-    @BindView(R.id.txt_right_title)
-    TextView txtRightTitle;
-    private MarkeListBean market;
+
     private String type = "1m";
     private DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
@@ -159,12 +175,16 @@ public class MarketDetaileActivity extends BaseActivity {
     private SimpleDateFormat minFormat = new SimpleDateFormat("HH:mm");
     private SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private boolean isFirst=true;
+    private boolean isFirst = true;
 
+    private TradingProjectDetaileBean project;
+
+    private RotateAnimation rotate;
+    private boolean isFinish = true;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-        market = (MarkeListBean) extras.getSerializable("market");
+        project = (TradingProjectDetaileBean) extras.getSerializable("project");
     }
 
     @Override
@@ -174,19 +194,25 @@ public class MarketDetaileActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        setLightMode(false);
-        back.setOnClickListener(new View.OnClickListener() {
+
+        txtLeftTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        Drawable drawable = getResources().getDrawable(R.mipmap.icon_refresh);
+        /// 这一步必须要做,否则不会显示.
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        txtRightTitle.setCompoundDrawables(drawable, null, null, null);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startAnimat();
                 getChart();
             }
         });
+
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -244,47 +270,86 @@ public class MarketDetaileActivity extends BaseActivity {
         initChartKline();
         initChartVolume();
         setChartListener();
+
+        if (null!=project.getCategory_user()){
+            if (project.getCategory_user().isIs_market_follow()){
+                tip.setImageResource(R.mipmap.shishihangqing_xiaoxi);
+            }else {
+                tip.setImageResource(R.mipmap.shishihangqing_xiaoxihui);
+            }
+        }else {
+            tip.setImageResource(R.mipmap.shishihangqing_xiaoxihui);
+        }
+
+
+        tip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                final AddMarketTipFragment improt = new AddMarketTipFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("price", null==project.getIco().getPrice_usd()?"0.00":project.getIco().getPrice_usd());
+                bundle.putString("high",null==project.getCategory_user().getMarket_hige()?"0":project.getCategory_user().getMarket_hige());
+                bundle.putString("low",null==project.getCategory_user().getMarket_lost()?"0":project.getCategory_user().getMarket_lost());
+                improt.setArguments(bundle);
+                improt.show(fm, "tip");
+                improt.setOnNextListener(new AddMarketTipFragment.OnNextInterface() {
+                    @Override
+                    public void onNext(String hight, String low, Dialog dialog) {
+                        showFixLoading();
+                        UserApi.follow(mActivity
+                                , project.getId()+""
+                                , true
+                                , hight
+                                , low
+                                , new JsonCallback<LzyResponse<Object>>() {
+                                    @Override
+                                    public void onSuccess(Response<LzyResponse<Object>> response) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                tip.setImageResource(R.mipmap.shishihangqing_xiaoxi);
+                                                improt.dismiss();
+                                                ToastUtil.show(getString(R.string.tianjiatixingchenggong));
+                                                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_TIP));
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onError(Response<LzyResponse<Object>> response) {
+                                        super.onError(response);
+                                        ToastUtil.show(getString(R.string.tianjiatixingshibai));
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        super.onFinish();
+                                        hideFixLoading();
+                                    }
+                                });
+                    }
+                });
+            }
+        });
     }
 
 
     @Override
     protected void initData() {
-        title.setText(market.getEn_name().toUpperCase());
-
-        if (null != market.getTime_data()) {
-            usdPrice.setText("$" + decimalFormat.format(Float.parseFloat(market.getTime_data().getPrice_usd())));
-            cnyPrice.setText("¥" + decimalFormat.format(Float.parseFloat(market.getTime_data().getPrice_cny())));
-            float liang = Float.parseFloat(market.getTime_data().getVolume_cny_24h());
-            if (liang < 10000) {
-                volume24.setText("¥" +decimalFormat.format(liang));
-            } else if (liang < 100000000) {
-                volume24.setText("¥" +decimalFormat.format(liang / 10000) + getString(R.string.wan));
-            } else {
-                volume24.setText("¥" +decimalFormat.format(liang / 10000 / 10000) + getString(R.string.yi));
-            }
-
-            if (market.getTime_data().getChange_24h().contains("-")) {
-                charge24.setText(new BigDecimal(market.getTime_data().getChange_24h()).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
-                charge24.setTextColor(Color.parseColor("#e50370"));
-            } else {
-                charge24.setText("+" + new BigDecimal(market.getTime_data().getChange_24h()).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
-                charge24.setTextColor(Color.parseColor("#74a700"));
-            }
-            up24.setText("¥" +new BigDecimal(market.getTime_data().getMax_price_cny_24h()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-            down24.setText("¥" +new BigDecimal(market.getTime_data().getMin_price_cny_24h()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-        }
+        txtMainTitle.setText(project.getUnit());
 
         getChart();
     }
 
     private void getChart() {
+        OkGo.getInstance().cancelTag(mActivity);
         //请求K线数据
-        MarketApi.getMarketKLine(mActivity, market.getUnit(), type, new JsonCallback<LzyResponse<ArrayList<KLBean>>>() {
+        MarketApi.getMarketKLine(mActivity, project.getUnit(), type, new JsonCallback<LzyResponse<ArrayList<KLBean>>>() {
 
             @Override
             public void onStart(Request<LzyResponse<ArrayList<KLBean>>, ? extends Request> request) {
                 super.onStart(request);
-                OkGo.getInstance().cancelTag(mActivity);
                 stateRL.setVisibility(View.VISIBLE);
                 progress.setVisibility(View.VISIBLE);
                 progress.spin();
@@ -317,9 +382,9 @@ public class MarketDetaileActivity extends BaseActivity {
                     mChartKline.moveViewToX(kLineDatas.size() - 1);
                     mChartVolume.moveViewToX(kLineDatas.size() - 1);
 
-                    if (isFirst){
-                        isFirst=false;
-                    }else {
+                    if (isFirst) {
+                        isFirst = false;
+                    } else {
                         mChartKline.invalidate();
                         mChartVolume.invalidate();
                     }
@@ -327,11 +392,11 @@ public class MarketDetaileActivity extends BaseActivity {
                     mChartKline.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (null!=stateRL){
+                            if (null != stateRL) {
                                 stateRL.setVisibility(View.GONE);
                             }
                         }
-                    },400);
+                    }, 400);
 
                 }
             }
@@ -342,7 +407,7 @@ public class MarketDetaileActivity extends BaseActivity {
                 stateRL.setVisibility(View.VISIBLE);
                 progress.setVisibility(View.GONE);
                 noData.setVisibility(View.VISIBLE);
-                noData.setText("数据加载失败!请点击重试!");
+                noData.setText(R.string.shujujiazaishibaiqingdianjichongshi);
                 noData.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -357,6 +422,44 @@ public class MarketDetaileActivity extends BaseActivity {
                 onSuccess(response);
             }
 
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                stopAnimat();
+            }
+        });
+
+        MarketApi.getCurrentPrice(this, project.getUnit(), new JsonCallback<LzyResponse<PriceBean>>() {
+            @Override
+            public void onSuccess(Response<LzyResponse<PriceBean>> response) {
+                if (null != response.body().data) {
+                    PriceBean priceBean = response.body().data;
+                    usdPrice.setText("$" + decimalFormat.format(Float.parseFloat(priceBean.getPrice())));
+                    cnyPrice.setText("¥" + decimalFormat.format(Float.parseFloat(priceBean.getPrice_cny())));
+
+                    float liang = App.get().isZh() ? Float.parseFloat(priceBean.getVolume_cny()) : Float.parseFloat(priceBean.getVolume());
+
+                    String unit = App.get().isZh() ? "¥" : "$";
+
+                    if (liang < 10000) {
+                        volume24.setText(unit + decimalFormat.format(liang));
+                    } else if (liang < 100000000) {
+                        volume24.setText(unit + decimalFormat.format(liang / 10000) + getString(R.string.wan));
+                    } else {
+                        volume24.setText(unit + decimalFormat.format(liang / 10000 / 10000) + getString(R.string.yi));
+                    }
+
+                    if (priceBean.get_$24h_change_cny().contains("-")) {
+                        charge24.setText(new BigDecimal(App.get().isZh() ? priceBean.get_$24h_change_cny() : priceBean.get_$24h_change()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
+                        charge24.setTextColor(Color.parseColor("#e50370"));
+                    } else {
+                        charge24.setText("+" + new BigDecimal(App.get().isZh() ? priceBean.get_$24h_change_cny() : priceBean.get_$24h_change()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
+                        charge24.setTextColor(Color.parseColor("#74a700"));
+                    }
+                    up24.setText(unit + new BigDecimal(App.get().isZh() ? priceBean.get_$24h_max_price_cny() : priceBean.get_$24h_max_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                    down24.setText(unit + new BigDecimal(App.get().isZh() ? priceBean.get_$24h_min_price_cny() : priceBean.get_$24h_min_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                }
+            }
         });
     }
 
@@ -435,12 +538,12 @@ public class MarketDetaileActivity extends BaseActivity {
      */
     private void initChartKline() {
         mChartKline.setDrawBorders(true);//是否绘制边线
-        mChartKline.setBorderWidth(2);//边线宽度，单位dp
+        mChartKline.setBorderWidth(1);//边线宽度，单位dp
         mChartKline.setDragEnabled(true);//启用图表拖拽事件
         mChartKline.setScaleYEnabled(false);//启用Y轴上的缩放
         mChartKline.setAutoScaleMinMaxEnabled(true);
         mChartKline.setTouchEnabled(true);
-        mChartKline.setBorderColor(Color.parseColor("#222629"));//边线颜色
+        mChartKline.setBorderColor(Color.parseColor("#eeeeee"));//边线颜色
         mChartKline.setDescription("");//右下角对图表的描述信息
         mChartKline.setMinOffset(0f);
         mChartKline.setExtraOffsets(0f, 0f, 0f, 3f);
@@ -519,7 +622,7 @@ public class MarketDetaileActivity extends BaseActivity {
     private void initChartVolume() {
         mChartVolume.setDrawBorders(true);  //边框是否显示
         mChartVolume.setBorderWidth(1);//边框的宽度，float类型，dp单位
-        mChartVolume.setBorderColor(Color.parseColor("#2c3033"));//边框颜色
+        mChartVolume.setBorderColor(Color.parseColor("#eeeeee"));//边框颜色
         mChartVolume.setDescription(""); //图表默认右下方的描述，参数是String对象
         mChartVolume.setDragEnabled(true);// 是否可以拖拽
         mChartVolume.setScaleYEnabled(false); //是否可以缩放 仅y轴
@@ -765,5 +868,40 @@ public class MarketDetaileActivity extends BaseActivity {
             if (newIndex >= 0 && newIndex < mData.getMa30DataL().size())
                 ma30.setText("MA30" + MyUtils.getDecimalFormatVol(mData.getMa30DataL().get(newIndex).getVal()));
         }
+    }
+
+    public void startAnimat() {
+        if (txtRightTitle == null) {
+            return;
+        }
+        isFinish = false;
+        txtRightTitle.clearAnimation();
+
+        rotate = new RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        LinearInterpolator lin = new LinearInterpolator();
+        rotate.setInterpolator(lin);
+        rotate.setDuration(1600);//设置动画持续周期
+        rotate.setRepeatCount(-1);//设置重复次数
+        rotate.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+        rotate.setStartOffset(10);//执行前的等待时间
+        txtRightTitle.setAnimation(rotate);
+    }
+
+    public void stopAnimat() {
+        if (!isFinish) {
+            txtRightTitle.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (rotate != null) {
+                        rotate.cancel();
+                    }
+                    if (txtRightTitle != null) {
+                        txtRightTitle.clearAnimation();
+                    }
+                    isFinish = true;
+                }
+            }, 1600);
+        }
+
     }
 }

@@ -17,6 +17,7 @@ import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.NewNeoTokenListBean;
 import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.ui.wallet.activity.HotWalletActivity;
 import com.inwecrypto.wallet.ui.wallet.adapter.NeoWalletListAdapter;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
@@ -74,9 +75,15 @@ public class WalletListFragment extends DialogFragment {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 dialog.dismiss();
-                Intent intent = new Intent(getActivity(), NewNeoWalletActivity.class);
-                intent.putExtra("wallet", walletBeans.get(position).getWallet());
-                startActivity(intent);
+                if (walletBeans.get(position).getWallet().getCategory_id()==2){
+                    Intent intent = new Intent(getActivity(), NewNeoWalletActivity.class);
+                    intent.putExtra("wallet", walletBeans.get(position).getWallet());
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(getActivity(), HotWalletActivity.class);
+                    intent.putExtra("wallet", walletBeans.get(position).getWallet());
+                    startActivity(intent);
+                }
             }
 
             @Override

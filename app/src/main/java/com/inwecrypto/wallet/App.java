@@ -1,17 +1,19 @@
 package com.inwecrypto.wallet;
 
 import android.app.Application;
-import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
 
-import com.alibaba.sdk.android.push.CloudPushService;
-import com.alibaba.sdk.android.push.CommonCallback;
-import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
+import com.hyphenate.exceptions.HyphenateException;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.common.util.AppManager;
+import com.inwecrypto.wallet.common.util.LocaleUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -63,11 +65,48 @@ public class App extends Application{
         installCockroach();
         //初始化bugly
         CrashReport.initCrashReport(getApplicationContext(), Constant.CRASH_ID, false);
-        //初始化阿里云推送
-        initCloudChannel(this);
         //初始化网络请求
         initHttp();
 
+        //初始化环形
+        EMOptions options = new EMOptions();
+        //初始化
+        EMClient.getInstance().init(this, options);
+        //在做打包混淆时，关闭debug模式，避免消耗不必要的资源
+        EMClient.getInstance().setDebugMode(true);
+        try {
+            EMClient.getInstance().changeAppkey(
+                    isMain?"1109180116115999#online":"1109180116115999#test");
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+
+        if (!sp.getBoolean(Constant.LANGUE_CHANGE,false)){
+            if (isLocle()){
+                sp.putBoolean(Constant.IS_CHINESE,true);
+            }else {
+                sp.putBoolean(Constant.IS_CHINESE,false);
+            }
+        }
+        Locale _UserLocale= LocaleUtils.getUserLocale(this);
+        LocaleUtils.updateLocale(this, _UserLocale);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Locale _UserLocale=LocaleUtils.getUserLocale(this);
+        //系统语言改变了应用保持之前设置的语言
+        if (_UserLocale != null) {
+            Locale.setDefault(_UserLocale);
+            Configuration _Configuration = new Configuration(newConfig);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                _Configuration.setLocale(_UserLocale);
+            } else {
+                _Configuration.locale =_UserLocale;
+            }
+            getResources().updateConfiguration(_Configuration, getResources().getDisplayMetrics());
+        }
     }
 
     public static App get(){
@@ -106,8 +145,8 @@ public class App extends Application{
         //log打印级别，决定了log显示的详细程度
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
         //log颜色级别，决定了log在控制台显示的颜色
-        loggingInterceptor.setColorLevel(Level.INFO);
-        //builder.addInterceptor(loggingInterceptor);
+        //loggingInterceptor.setColorLevel(Level.INFO);
+        builder.addInterceptor(loggingInterceptor);
         builder.connectTimeout(30, TimeUnit.SECONDS);
         builder.readTimeout(30, TimeUnit.SECONDS);
         builder.writeTimeout(30, TimeUnit.SECONDS);
@@ -142,27 +181,6 @@ public class App extends Application{
 //                .addCommonParams(params);                       //全局公共参数
     }
 
-    /**
-     * 初始化云推送通道
-     * @param applicationContext
-     */
-    private void initCloudChannel(Context applicationContext) {
-        PushServiceFactory.init(applicationContext);
-        final CloudPushService pushService = PushServiceFactory.getCloudPushService();
-        pushService.register(applicationContext, new CommonCallback() {
-            @Override
-            public void onSuccess(String response) {
-                if (App.isMain) {
-                    sp.putString(Constant.OPEN_ID,pushService.getDeviceId());
-                }else {
-                    sp.putString(Constant.TEST_OPEN_ID,pushService.getDeviceId());
-                }
-            }
-            @Override
-            public void onFailed(String errorCode, String errorMessage) {
-            }
-        });
-    }
 
 //
 //    protected void setupLeakCanary() {
@@ -216,6 +234,10 @@ public class App extends Application{
     }
 
     public boolean isZh() {
+        return sp.getBoolean(Constant.IS_CHINESE,true);
+    }
+
+    public boolean isLocle(){
         Locale locale = getResources().getConfiguration().locale;
         String language = locale.getLanguage();
         if (language.endsWith("zh"))

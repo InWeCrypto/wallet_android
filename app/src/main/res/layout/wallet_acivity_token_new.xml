@@ -44,9 +44,9 @@
 
                         <ImageView
                             android:id="@+id/iv_img"
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:layout_marginTop="28dp"
                             android:scaleType="fitXY"/>
 
 
@@ -54,9 +54,10 @@
                             android:id="@+id/tv_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="26dp"
-                            android:textSize="32sp"
-                            android:textColor="@color/c_008c55"
+                            android:layout_marginTop="9dp"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/c_158327"
                             android:text="0.00"/>
 
                         <TextView
@@ -65,9 +66,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="26dp"
-                            android:textSize="14sp"
-                            android:textColor="@color/c_008c55"
-                            android:text="≈"/>
+                            android:textSize="13sp"
+                            android:textColor="@color/c_939393"/>
 
                     </LinearLayout>
 
@@ -106,7 +106,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18dp"
                             android:textColor="@color/c_333333"
-                            android:text="总资产"/>
+                            android:text="@string/zongzichan"/>
                         <TextView
                             android:id="@+id/titlePrice"
                             android:layout_width="wrap_content"
@@ -133,7 +133,7 @@
                         android:layout_gravity="center_horizontal"
                         android:textSize="12sp"
                         android:textColor="@color/c_999999"
-                        android:text="最近交易记录"/>
+                        android:text="@string/zuijinjiaoyijilu"/>
 
                     <View
                         android:layout_width="match_parent"
@@ -163,19 +163,19 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:background="@color/c_EA642F"
+            android:background="@drawable/new_orgen_bg"
             android:clickable="true"
             android:paddingTop="16dp"
             android:paddingBottom="16dp">
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@mipmap/zhuanzhang"/>
+                android:src="@mipmap/neozhuanzhangxxhdpi"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="22dp"
-                android:text="转账"
+                android:layout_marginLeft="8dp"
+                android:text="@string/zhuanzhang"
                 android:textColor="@color/c_ffffff"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -184,6 +184,7 @@
             android:id="@+id/ll_shoukuan"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:gravity="center"
@@ -199,7 +200,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="22dp"
-                android:text="收款"
+                android:text="@string/shoukuan"
                 android:textColor="@color/c_ffffff"
                 android:textSize="14sp" />
         </LinearLayout>

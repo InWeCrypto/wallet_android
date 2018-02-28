@@ -12,12 +12,18 @@ import java.io.Serializable;
 
 public class PriceBean implements Serializable {
 
+
     /**
-     * price : 11605.82000000
-     * volume : 1592.89859400
-     * 24h_max_price : 11660.00000000
-     * 24h_min_price : 11447.68000000
-     * 24h_change : 0
+     * price : 852.0106500000
+     * volume : 5067429.7500000000
+     * 24h_max_price : 856.2067500000
+     * 24h_min_price : 851.6698500000
+     * 24h_change : -0.44
+     * price_cny : 5400.5547060900
+     * volume_cny : 32120410.2133500000
+     * 24h_max_price_cny : 5427.1521055500
+     * 24h_min_price_cny : 5398.3945112100
+     * 24h_change_cny : -0.44
      */
 
     private String price;
@@ -28,6 +34,14 @@ public class PriceBean implements Serializable {
     private String _$24h_min_price;
     @SerializedName("24h_change")
     private String _$24h_change;
+    private String price_cny;
+    private String volume_cny;
+    @SerializedName("24h_max_price_cny")
+    private String _$24h_max_price_cny;
+    @SerializedName("24h_min_price_cny")
+    private String _$24h_min_price_cny;
+    @SerializedName("24h_change_cny")
+    private String _$24h_change_cny;
 
     public String getPrice() {
         return price;
@@ -67,5 +81,45 @@ public class PriceBean implements Serializable {
 
     public void set_$24h_change(String _$24h_change) {
         this._$24h_change = _$24h_change;
+    }
+
+    public String getPrice_cny() {
+        return price_cny;
+    }
+
+    public void setPrice_cny(String price_cny) {
+        this.price_cny = price_cny;
+    }
+
+    public String getVolume_cny() {
+        return volume_cny;
+    }
+
+    public void setVolume_cny(String volume_cny) {
+        this.volume_cny = volume_cny;
+    }
+
+    public String get_$24h_max_price_cny() {
+        return _$24h_max_price_cny;
+    }
+
+    public void set_$24h_max_price_cny(String _$24h_max_price_cny) {
+        this._$24h_max_price_cny = _$24h_max_price_cny;
+    }
+
+    public String get_$24h_min_price_cny() {
+        return _$24h_min_price_cny;
+    }
+
+    public void set_$24h_min_price_cny(String _$24h_min_price_cny) {
+        this._$24h_min_price_cny = _$24h_min_price_cny;
+    }
+
+    public String get_$24h_change_cny() {
+        return _$24h_change_cny;
+    }
+
+    public void set_$24h_change_cny(String _$24h_change_cny) {
+        this._$24h_change_cny = _$24h_change_cny;
     }
 }

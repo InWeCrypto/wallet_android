@@ -25,7 +25,11 @@ public class NeoWalletListAdapter extends CommonAdapter<WalletBean> {
 
     @Override
     protected void convert(ViewHolder holder, WalletBean walletBean, int position) {
-        Glide.with(mContext).load(R.mipmap.neoxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));
+        if (walletBean.getCategory_id()==1){
+            Glide.with(mContext).load(R.mipmap.project_icon_eth).crossFade().into((ImageView) holder.getView(R.id.img));
+        }else {
+            Glide.with(mContext).load(R.mipmap.neoxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));
+        }
         holder.setText(R.id.name,walletBean.getName());
     }
 }
