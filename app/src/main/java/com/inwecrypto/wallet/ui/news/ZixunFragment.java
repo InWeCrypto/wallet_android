@@ -250,7 +250,7 @@ public class ZixunFragment extends BaseFragment {
         for (int i = 0; i < 6; i++) {
             marks.get(i).setName(projectNames[i]);
             marks.get(i).setImg(projectImgs[i]);
-            if (marks.get(i).isShow()){
+            if (i!=3){
                 topMarks.add(marks.get(i));
             }
         }
