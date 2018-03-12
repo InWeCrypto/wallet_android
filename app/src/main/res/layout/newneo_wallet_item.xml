@@ -25,6 +25,16 @@
         android:textSize="14sp"/>
 
     <TextView
+        android:id="@+id/type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/name"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="2dp"
+        android:textColor="@color/c_333333"
+        android:textSize="10sp"/>
+
+    <TextView
         android:id="@+id/amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

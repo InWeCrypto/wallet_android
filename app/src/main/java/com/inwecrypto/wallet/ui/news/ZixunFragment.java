@@ -33,6 +33,7 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
+import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
@@ -41,6 +42,8 @@ import com.inwecrypto.wallet.common.widget.NoScrollViewPager;
 import com.inwecrypto.wallet.common.widget.pullextend.ExtendListHeader;
 import com.inwecrypto.wallet.common.widget.pullextend.PullExtendLayout;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.QuickActivity;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.me.adapter.CommonPagerAdapter;
 import com.inwecrypto.wallet.ui.newneo.CreateWalletFragment;
 import com.inwecrypto.wallet.ui.newneo.NewTransferWalletActivity;
@@ -114,10 +117,9 @@ public class ZixunFragment extends BaseFragment {
     private RecyclerView listHeader;
     private ExtendMarkAdapter mExtendMarkAdapter;
     private ArrayList<CommonProjectBean> marks = new ArrayList<>();
-    private ArrayList<CommonProjectBean> topMarks = new ArrayList<>();
 
-    private int[] projectNames = new int[]{R.string.inweerdian, R.string.jiaoyishitu, R.string.jiaoyisuogonggao, R.string.tangguohe, R.string.jiaoyitixing, R.string.tongzhi};
-    private int[] projectImgs = new int[]{R.mipmap.zhuye_inwe_ico, R.mipmap.zhuye_tradingview_ico, R.mipmap.zhuye_jiaoyisuo_ico, R.mipmap.zhuye_candybowl_ico, R.mipmap.zhuye_jiaoyitixing_ico, R.mipmap.tongzhichakan_tongzhi};
+    private int[] projectNames = new int[]{R.string.inweerdian, R.string.jiaoyishitu, R.string.jiaoyisuogonggao, R.string.jiaoyitixing, R.string.tongzhi};
+    private int[] projectImgs = new int[]{R.mipmap.zhuye_inwe_ico, R.mipmap.zhuye_tradingview_ico, R.mipmap.zhuye_jiaoyisuo_ico, R.mipmap.zhuye_jiaoyitixing_ico, R.mipmap.tongzhichakan_tongzhi};
 
     private int type = -1;
 
@@ -239,31 +241,39 @@ public class ZixunFragment extends BaseFragment {
             }
         });
 
+        if (App.get().getSp().getBoolean(Constant.FIRST_3,true)){
+            vpList.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent=new Intent(mActivity,QuickActivity.class);
+                    intent.putExtra("type",3);
+                    keepTogo(intent);
+                }
+            },300);
+        }
     }
 
 
     private void setCommonProject() {
-        //获取缓存文件
+        //获取MARKS缓存文件
+        ArrayList<CommonProjectBean> cacheMarks=CacheUtils.getCache(((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
+                +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail())));
         marks.clear();
-        String projectJson = App.get().getSp().getString(App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST, Constant.BASE_PROJECT_JSON);
-        marks.addAll(GsonUtils.jsonToArrayList(projectJson, CommonProjectBean.class));
-        for (int i = 0; i < 6; i++) {
+        marks.addAll(cacheMarks);
+        for (int i = 0; i < 5; i++) {
             marks.get(i).setName(projectNames[i]);
             marks.get(i).setImg(projectImgs[i]);
-            if (i!=3){
-                topMarks.add(marks.get(i));
-            }
         }
 
         listHeader = extendHeader.getRecyclerView();
         listHeader.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-        mExtendMarkAdapter = new ExtendMarkAdapter(mContext, R.layout.zixun_project_item, topMarks);
+        mExtendMarkAdapter = new ExtendMarkAdapter(mContext, R.layout.zixun_project_item, marks);
         listHeader.setAdapter(mExtendMarkAdapter);
         mExtendMarkAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 Intent intent = null;
-                switch (topMarks.get(position).getId()) {
+                switch (marks.get(position).getId()) {
                     case 0:
                         intent = new Intent(mActivity, InweHotActivity.class);
                         break;
@@ -273,18 +283,26 @@ public class ZixunFragment extends BaseFragment {
                     case 2:
                         intent = new Intent(mActivity, ExchangeNoticeActivity.class);
                         break;
+//                    case 3:
+//                        intent = new Intent(mActivity, CandyBowActivity.class);
+//                        break;
                     case 3:
-                        intent = new Intent(mActivity, CandyBowActivity.class);
-                        break;
-                    case 4:
+                        if (!App.get().isLogin()){
+                            keepTogo(LoginActivity.class);
+                            return;
+                        }
                         intent = new Intent(mActivity, TradingNoticeActivity.class);
                         break;
-                    case 5:
+                    case 4:
+                        if (!App.get().isLogin()){
+                            keepTogo(LoginActivity.class);
+                            return;
+                        }
                         intent = new Intent(mActivity, NoticeActivity.class);
                         break;
                 }
                 pullExtend.closeExtendHeadAndFooter();
-                intent.putExtra("marks", topMarks.get(position));
+                intent.putExtra("marks", marks.get(position));
                 keepTogo(intent);
                 EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_FIX,position));
             }
@@ -345,6 +363,9 @@ public class ZixunFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
+        if (!App.get().isLogin()){
+            return;
+        }
         WalletApi.wallet(mActivity, new JsonCallback<LzyResponse<CommonListBean<WalletBean>>>() {
             @Override
             public void onSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {

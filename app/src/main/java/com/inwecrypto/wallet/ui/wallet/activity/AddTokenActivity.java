@@ -17,6 +17,7 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
+import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
@@ -211,7 +212,9 @@ public class AddTokenActivity extends BaseActivity {
             @Override
             public void onError(Response<LzyResponse<CommonListBean<GntBean>>> response) {
                 super.onError(response);
-                ToastUtil.show(getString(R.string.load_error));
+                if (NetworkUtils.isConnected(mActivity)){
+                    ToastUtil.show(getString(R.string.load_error));
+                }
                 swipeRefresh.setRefreshing(false);
             }
         });

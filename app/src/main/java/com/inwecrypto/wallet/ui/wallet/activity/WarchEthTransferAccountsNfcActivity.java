@@ -318,8 +318,8 @@ public class WarchEthTransferAccountsNfcActivity extends BaseActivity {
                     , wallet.getAddress()
                     , address
                     , hint
-                    , new BigDecimal(price.toString()).multiply(pEther).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString()
-                    , new BigDecimal(gas).multiply(pEther).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString()
+                    , new BigDecimal(price.toString()).multiply(pEther).setScale(0, BigDecimal.ROUND_DOWN).toPlainString()
+                    , new BigDecimal(gas).multiply(pEther).setScale(0, BigDecimal.ROUND_DOWN).toPlainString()
                     , gnt
                     , asset_id
                     , new JsonCallback<LzyResponse<Object>>() {

@@ -231,4 +231,10 @@ public static final int *;
 -keepclassmembers class * extends android.webkit.WebViewClient {
     public void *(android.webkit.WebView, jav.lang.String);
 }
+
+-keep public class android.net.http.SslError
+
+-dontwarn android.webkit.WebView
+-dontwarn android.net.http.SslError
+-dontwarn Android.webkit.WebViewClient
 #----------------------------------------------------------------------------

@@ -32,10 +32,10 @@ public class GntAdapter extends CommonAdapter<TokenBean.ListBean> {
 
     @Override
     protected void convert(ViewHolder holder, TokenBean.ListBean gntBean, int position) {
-        Glide.with(mContext).load(gntBean.getGnt_category().getIcon()).transform(new GlideCircleTransform(mContext)).crossFade().into((ImageView) holder.getView(R.id.iv_img));
+        Glide.with(mContext).load(gntBean.getGnt_category().getIcon()).crossFade().into((ImageView) holder.getView(R.id.iv_img));
         holder.setText(R.id.name,gntBean.getName());
         BigDecimal currentPrice = new BigDecimal(AppUtil.toD(gntBean.getBalance().replace("0x", "0")));
-        holder.setText(R.id.tv_price,currentPrice.divide(pEther,4,BigDecimal.ROUND_HALF_UP).toString());
+        holder.setText(R.id.tv_price,currentPrice.divide(AppUtil.decimal(gntBean.getDecimals()),4,BigDecimal.ROUND_DOWN).toString());
         if (null==gntBean.getGnt_category().getCap()){
             if (1== App.get().getUnit()){
                 holder.setText(R.id.tv_eth_ch_price,"￥0.00");
@@ -44,9 +44,9 @@ public class GntAdapter extends CommonAdapter<TokenBean.ListBean> {
             }
         }else {
             if (1== App.get().getUnit()){
-                holder.setText(R.id.tv_eth_ch_price,"￥"+currentPrice.divide(pEther).multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+                holder.setText(R.id.tv_eth_ch_price,"￥"+currentPrice.divide(AppUtil.decimal(gntBean.getDecimals())).multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_DOWN).toString());
             }else {
-                holder.setText(R.id.tv_eth_ch_price,"$"+currentPrice.divide(pEther).multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+                holder.setText(R.id.tv_eth_ch_price,"$"+currentPrice.divide(AppUtil.decimal(gntBean.getDecimals())).multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_DOWN).toString());
             }
         }
     }

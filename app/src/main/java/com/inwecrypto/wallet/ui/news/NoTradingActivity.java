@@ -27,6 +27,7 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.news.adapter.InwehotAdapter;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
@@ -128,6 +129,10 @@ public class NoTradingActivity extends BaseActivity {
         txtRightTitle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 if (null != project.getCategory_user() && project.getCategory_user().isIs_favorite()) {
                     collectProject(false);
                 } else {

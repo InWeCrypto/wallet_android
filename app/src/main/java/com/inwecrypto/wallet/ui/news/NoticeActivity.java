@@ -168,7 +168,7 @@ public class NoticeActivity extends BaseActivity {
             tradingNotice.setContent(meg);
             totle.add(tradingNotice);
         }
-        data.addAll(totle);
+        data.addAll(0,totle);
         adapter.notifyDataSetChanged();
     }
 

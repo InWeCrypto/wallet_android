@@ -43,12 +43,12 @@ public class NeoRecordAdapter extends CommonAdapter<NeoOderBean.ListBean> {
         amount="0.0000";
         if (null!=decimals){
             try{
-                amount=new BigDecimal(neoOderBean.getValue()).divide(decimals).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString();
+                amount=new BigDecimal(neoOderBean.getValue()).divide(decimals).setScale(8,BigDecimal.ROUND_DOWN).toPlainString();
             }catch (Exception e){
-                amount=new BigDecimal(AppUtil.toD(neoOderBean.getValue())).divide(decimals).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString();
+                amount=new BigDecimal(AppUtil.toD(neoOderBean.getValue())).divide(decimals).setScale(8,BigDecimal.ROUND_DOWN).toPlainString();
             }
         }else {
-            amount=new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString();
+            amount=new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_DOWN).toPlainString();
         }
         if (neoOderBean.getFrom().equals(neoOderBean.getTo())){
             Glide.with(mContext).load(R.mipmap.zizhuanxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));

@@ -97,7 +97,7 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
             priceNum=order.getFee();
         }
         BigDecimal b = new BigDecimal(priceNum);
-        price.setText("-" + b.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
+        price.setText("-" + b.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
 
         String gasNum="0.0000";
         if (null!=order.getHandle_fee()){
@@ -108,7 +108,7 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
             }
         }
         BigDecimal s = new BigDecimal(gasNum);
-        shouxufei.setText(getString(R.string.lingfushouxufei) + s.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
+        shouxufei.setText(getString(R.string.lingfushouxufei) + s.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
 
         if (order.getStatus() == 0) {
             Glide.with(this).load(R.mipmap.icon_complete).crossFade().into(status);

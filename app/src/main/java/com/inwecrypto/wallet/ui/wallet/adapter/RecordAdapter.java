@@ -29,12 +29,19 @@ public class RecordAdapter extends CommonAdapter<OrderBean> {
     private TokenWalletActivity activity;
     private BigDecimal pEther = new BigDecimal("1000000000000000000");
     private String unit;
+    private boolean isEth;
+    private BigDecimal decimalUnit;
 
-    public RecordAdapter(Context context, int layoutId, List<OrderBean> datas,String address,String unit) {
+    public RecordAdapter(Context context, int layoutId, List<OrderBean> datas,String address,String unit,String decimal) {
         super(context, layoutId, datas);
         this.address=address;
         activity= (TokenWalletActivity) context;
         this.unit=unit;
+        if ("ether".equals(unit)){
+            isEth=true;
+        }else {
+            decimalUnit=AppUtil.decimal(decimal);
+        }
     }
 
     @Override
@@ -81,7 +88,7 @@ public class RecordAdapter extends CommonAdapter<OrderBean> {
             }else {
                 price=orderBean.getFee();
             }
-            holder.setText(R.id.price,"-"+new BigDecimal(price).divide(pEther,4,BigDecimal.ROUND_HALF_UP).toPlainString()+unit);
+            holder.setText(R.id.price,"-"+new BigDecimal(price).divide((isEth?pEther:decimalUnit),4,BigDecimal.ROUND_DOWN).toPlainString()+unit);
             holder.setTextColor(R.id.price, Color.parseColor("#F81A1A"));
         }else {
             if ("".equals(orderBean.getConfirm_at())&&current>=activity.minBlock){//交易失败
@@ -120,7 +127,7 @@ public class RecordAdapter extends CommonAdapter<OrderBean> {
             }else {
                 price=orderBean.getFee();
             }
-            holder.setText(R.id.price,"+"+new BigDecimal(price).divide(pEther,4,BigDecimal.ROUND_HALF_UP).toPlainString()+unit);
+            holder.setText(R.id.price,"+"+new BigDecimal(price).divide((isEth?pEther:decimalUnit),4,BigDecimal.ROUND_DOWN).toPlainString()+unit);
             holder.setTextColorRes(R.id.price,R.color.c_232772);
         }
         holder.setText(R.id.order,orderBean.getTrade_no());

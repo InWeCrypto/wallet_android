@@ -14,6 +14,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +27,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.PopupWindow;
@@ -80,21 +83,6 @@ public class AppUtil {
         context.startActivity(Intent.createChooser(intentItem, dialogTitle));
     }
 
-    /**
-     * need < uses-permission android:name =“android.permission.GET_TASKS” />
-     * 判断是否前台运行
-     */
-    public static boolean isRunningForeground(Context context) {
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> taskList = am.getRunningTasks(1);
-        if (taskList != null && !taskList.isEmpty()) {
-            ComponentName componentName = taskList.get(0).topActivity;
-            if (componentName != null && componentName.getPackageName().equals(context.getPackageName())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
      * 返回app运行状态
@@ -119,64 +107,6 @@ public class AppUtil {
                 }
             }
             return 3;//栈里找不到，返回3
-        }
-    }
-
-    /**
-     * 获取App包 信息版本号
-     * @param context
-     * @return
-     */
-    public PackageInfo getPackageInfo(Context context) {
-        PackageManager packageManager = context.getPackageManager();
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return packageInfo;
-    }
-
-    /**
-     * 判断应用是否已经启动
-     * @param context 一个context
-     * @param packageName 要判断应用的包名
-     * @return boolean
-     */
-    public static boolean isAppAlive(Context context, String packageName){
-        ActivityManager activityManager =
-                (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> processInfos
-                = activityManager.getRunningAppProcesses();
-        for(int i = 0; i < processInfos.size(); i++){
-            if(processInfos.get(i).processName.equals(packageName)){
-                Log.i("NotificationLaunch",
-                        String.format("the %s is running, isAppAlive return true", packageName));
-                return true;
-            }
-        }
-        Log.i("NotificationLaunch",
-                String.format("the %s is not running, isAppAlive return false", packageName));
-        return false;
-    }
-
-    /**
-     * 验证手机格式
-     */
-    public static boolean isMobile(String number) {
-    /*
-    移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188、178
-    联通：130、131、132、152、155、156、185、186
-    电信：133、153、180、189、（1349卫通）
-    总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9
-    */
-        String num = "[1]\\d{10}";//"[1]"代表第1位为数字1，"[358]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
-        if (TextUtils.isEmpty(number)) {
-            return false;
-        } else {
-            //matches():字符串是否在给定的正则表达式匹配
-            return number.matches(num);
         }
     }
 
@@ -211,46 +141,6 @@ public class AppUtil {
         }
     }
 
-    //View 转 bitmap
-    public static Bitmap getBitmapByView(View view,Activity context) {
-        Bitmap bitmap= Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        view.draw(canvas);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        int options = 100;
-        bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);
-        // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
-        while (baos.toByteArray().length / 1024 > 300) {
-            // 重置baos即清空baos
-            baos.reset();
-            // 每次都减少10
-            options -= 10;
-            // 这里压缩options%，把压缩后的数据存放到baos中
-            bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);
-        }
-        String path = Environment.getExternalStorageDirectory() +"/";
-        File dirFile = new File(path);
-        if(!dirFile.exists()){
-            dirFile.mkdir();
-        }
-        File myCaptureFile = new File(path + "small.jpg");
-        try {
-            FileOutputStream fos = new FileOutputStream(myCaptureFile);
-            fos.write(baos.toByteArray());
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // 释放Bitmap
-        if (bitmap != null && !bitmap.isRecycled()) {
-            bitmap.recycle();
-            bitmap = null;
-        }
-        return BitmapFactory.decodeFile(myCaptureFile.getAbsolutePath());
-    }
 
     // 任意进制数转为十进制数
     public static String toD(String a) {
@@ -318,32 +208,6 @@ public class AppUtil {
         return i;
     }
 
-    public static int getRoundmHeadIcon(int i) {
-        switch (i){
-            case 1:
-                return R.drawable.img_1;
-            case 2:
-                return R.drawable.img_2;
-            case 3:
-                return R.drawable.img_3;
-            case 4:
-                return R.drawable.img_4;
-            case 5:
-                return R.drawable.img_5;
-            case 6:
-                return R.drawable.img_6;
-            case 7:
-                return R.drawable.img_7;
-            case 8:
-                return R.drawable.img_8;
-            case 9:
-                return R.drawable.img_9;
-            case 10:
-                return R.drawable.img_10;
-        }
-        return R.drawable.img_1;
-    }
-
     /**
      * 规则3：必须同时包含大小写字母及数字
      * 是否包含
@@ -383,7 +247,7 @@ public class AppUtil {
     }
 
 
-    public static WebView createWebView(WebView webView,BaseActivity activity) {
+    public static WebView createWebView(WebView webView, final BaseActivity activity) {
 
         WebView.setWebContentsDebuggingEnabled(true);
         //不能横向滚动
@@ -392,6 +256,18 @@ public class AppUtil {
         webView.setVerticalScrollBarEnabled(false);
         //允许截图
         webView.setDrawingCacheEnabled(true);
+
+        webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
+        webView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse(url));
+                activity.startActivity(intent);
+            }
+        });
         //屏蔽长按事件
 //        webView.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override
@@ -405,13 +281,18 @@ public class AppUtil {
         //隐藏缩放控件
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
-        //禁止缩放
-        settings.setSupportZoom(false);
+        //缩放
+        settings.setSupportZoom(true);
         //文件权限
         settings.setAllowFileAccess(true);
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setAllowContentAccess(true);
+
+        // 显示完整网页
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);// 解决三星note4显示不全
 
         if (NetworkUtils.isConnected(activity.getApplicationContext())) {
             settings.setCacheMode(WebSettings.LOAD_DEFAULT);//根据cache-control决定是否从网络上取数据。
@@ -424,6 +305,10 @@ public class AppUtil {
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
 
         return webView;
     }
@@ -704,5 +589,9 @@ public class AppUtil {
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
+    }
+
+    public static BigDecimal decimal(String decimal){
+        return new BigDecimal(Math.pow(10,Double.parseDouble(decimal)));
     }
 }

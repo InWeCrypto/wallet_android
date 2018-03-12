@@ -9,12 +9,16 @@ import android.util.DisplayMetrics;
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
+import com.inwecrypto.wallet.bean.CommonProjectBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.AppUtil;
+import com.inwecrypto.wallet.common.util.CacheUtils;
+import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.newneo.WalletFragment;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -44,25 +48,26 @@ public class WelcomeActivity extends BaseActivity {
             findViewById(android.R.id.content).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (null == App.get().getSp().getString(App.isMain?Constant.TOKEN:Constant.TEST_TOKEN) || "".equals(App.get().getSp().getString(App.isMain?Constant.TOKEN:Constant.TEST_TOKEN))) {
-                        Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
-                        //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
-                        //将参数取出，传递到MainActivity中
-                        if (getIntent().getStringExtra("pushInfo") != null) {
-                            intent.putExtra("pushInfo",
-                                    getIntent().getStringExtra("pushInfo"));
-                        }
-                        finshTogo(intent);
-                    } else {
-                        Intent intent = new Intent(WelcomeActivity.this, MainTabActivity.class);
-                        //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
-                        //将参数取出，传递到MainActivity中
-                        if (getIntent().getStringExtra("pushInfo") != null) {
-                            intent.putExtra("pushInfo",
-                                    getIntent().getStringExtra("pushInfo"));
-                        }
-                        finshTogo(intent);
+                    ArrayList<CommonProjectBean> mainCacheMarks= CacheUtils.getCache(Constant.PROJECT_JSON_MAIN+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
+                    ArrayList<CommonProjectBean> testCacheMarks= CacheUtils.getCache(Constant.PROJECT_JSON_TEST+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
+                    ArrayList<CommonProjectBean> marks=new ArrayList<>();
+                    if (null==mainCacheMarks||null==testCacheMarks){
+                        marks=GsonUtils.jsonToArrayList(Constant.BASE_PROJECT_JSON, CommonProjectBean.class);
                     }
+                    if (null==mainCacheMarks){
+                        CacheUtils.setCache(Constant.PROJECT_JSON_MAIN+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()), marks);
+                    }
+                    if (null==testCacheMarks){
+                        CacheUtils.setCache(Constant.PROJECT_JSON_TEST+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()), marks);
+                    }
+                    Intent intent = new Intent(WelcomeActivity.this, MainTabActivity.class);
+                    //如果启动app的Intent中带有额外的参数，表明app是从点击通知栏的动作中启动的
+                    //将参数取出，传递到MainActivity中
+                    if (getIntent().getStringExtra("pushInfo") != null) {
+                        intent.putExtra("pushInfo",
+                                getIntent().getStringExtra("pushInfo"));
+                    }
+                    finshTogo(intent);
                 }
             }, 2000);
     }

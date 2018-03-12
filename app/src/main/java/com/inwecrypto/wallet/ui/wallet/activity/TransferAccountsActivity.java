@@ -169,7 +169,7 @@ public class TransferAccountsActivity extends BaseActivity {
                 });
             }
         });
-        gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+        gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_DOWN).toPlainString());
     }
 
     @Override
@@ -182,29 +182,29 @@ public class TransferAccountsActivity extends BaseActivity {
                 try{
                     parseLong=new BigDecimal(AppUtil.toD(response.body().data.getGasPrice().replace("0x", "0")));
                 }catch (Exception e){
-                    gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_DOWN).toPlainString());
                     return;
                 }
                 BigDecimal currentGas = parseLong.multiply(new BigDecimal(Constant.GAS_LIMIT));
                 if (currentGas.subtract(Constant.low).longValue()<=0){
                     position=0;
                     gasBar.setProgress(position);
-                    gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_DOWN).toPlainString());
                 }else if (currentGas.subtract(Constant.high).longValue()>=0){
                     position=100;
                     gasBar.setProgress(position);
-                    gas.setText(Constant.high.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(Constant.high.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_DOWN).toPlainString());
                 }else {
                     position=currentGas.subtract(Constant.low).divide(distance,2,BigDecimal.ROUND_HALF_DOWN).multiply(Constant.p100).setScale(0,BigDecimal.ROUND_HALF_DOWN).floatValue();
                     gasBar.setProgress(position);
-                    gas.setText(new BigDecimal(position).divide(Constant.p100).multiply(distance).add(Constant.low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
+                    gas.setText(new BigDecimal(position).divide(Constant.p100).multiply(distance).add(Constant.low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toPlainString());
                 }
             }
 
             @Override
             public void onError(Response<LzyResponse<GasBean>> response) {
                 super.onError(response);
-                gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                gas.setText(Constant.low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_DOWN).toPlainString());
             }
 
             @Override
@@ -213,7 +213,7 @@ public class TransferAccountsActivity extends BaseActivity {
                 gasBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
                     @Override
                     public void onProgressChanged(int progress, float progressFloat) {
-                        gas.setText(new BigDecimal(progressFloat).divide(Constant.p100).multiply(distance).add(Constant.low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
+                        gas.setText(new BigDecimal(progressFloat).divide(Constant.p100).multiply(distance).add(Constant.low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toPlainString());
                     }
 
                     @Override
@@ -233,7 +233,7 @@ public class TransferAccountsActivity extends BaseActivity {
             @Override
             public void onSuccess(Response<LzyResponse<ValueBean>> response) {
                 BigDecimal currentPrice = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
-                tvCurrentPrice.setText("("+getString(R.string.dangqianyue)+"："+currentPrice.divide(Constant.pEther,4,BigDecimal.ROUND_HALF_UP).toString()+")");
+                tvCurrentPrice.setText("("+getString(R.string.dangqianyue)+"："+currentPrice.divide(Constant.pEther,4,BigDecimal.ROUND_DOWN).toString()+")");
             }
 
             @Override

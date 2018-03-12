@@ -102,6 +102,8 @@ public class SettingTypeActivity extends BaseActivity {
                                 Url.changeNet(selectPosition==1?true:false);
                                 App.get().getSp().putBoolean(Constant.NEED_RESTART, true);
                                 EMClient.getInstance().logout(true);
+                                App.get().setLoginBean(null);
+                                App.get().getSp().putString(Constant.USER_INFO,"{}");
                                 //修改 appKey
                                 try {
                                     EMClient.getInstance().changeAppkey(
@@ -111,6 +113,7 @@ public class SettingTypeActivity extends BaseActivity {
                                 }
                                 App.get().getSp().putString(Constant.TOKEN,"");
                                 App.get().getSp().putString(Constant.TEST_TOKEN,"");
+                                App.get().setLogin(false);
                                 AppManager.getAppManager().finishAllActivity();
                                 runOnUiThread(new Runnable() {
                                     @Override

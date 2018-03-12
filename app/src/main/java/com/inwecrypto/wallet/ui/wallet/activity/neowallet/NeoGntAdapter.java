@@ -36,12 +36,12 @@ public class NeoGntAdapter extends CommonAdapter<TokenBean.ListBean> {
         Glide.with(mContext).load(gntBean.getGnt_category().getIcon()).transform(new GlideCircleTransform(mContext)).crossFade().into((ImageView) holder.getView(R.id.iv_img));
         BigInteger price=new BigInteger(AppUtil.reverseArray(gntBean.getBalance()));
         BigDecimal currentPrice = new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(gntBean.getDecimals())));
-        holder.setText(R.id.tv_price,currentPrice.setScale(4,BigDecimal.ROUND_HALF_UP).toString());
+        holder.setText(R.id.tv_price,currentPrice.setScale(4,BigDecimal.ROUND_DOWN).toString());
         if (null!=gntBean.getGnt_category().getCap()){
             if (1== App.get().getUnit()){
-                holder.setText(R.id.tv_eth_ch_price,"≈￥"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+                holder.setText(R.id.tv_eth_ch_price,"≈￥"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_DOWN).toString());
             }else {
-                holder.setText(R.id.tv_eth_ch_price,"≈$"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toString());
+                holder.setText(R.id.tv_eth_ch_price,"≈$"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_DOWN).toString());
             }
         }
         if (null==gntBean.getGnt_category().getCap()){

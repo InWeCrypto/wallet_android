@@ -14,16 +14,19 @@ import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.ArticleDetaileBean;
 import com.inwecrypto.wallet.bean.ArticleListBean;
 import com.inwecrypto.wallet.bean.CommonProjectBean;
+import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.EndLessOnScrollListener;
+import com.inwecrypto.wallet.common.widget.MultiItemTypeSupport;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.news.adapter.InweHotHistoryAdapter;
+import com.inwecrypto.wallet.ui.news.adapter.InwehotNewsHistoryAdapter;
 import com.inwecrypto.wallet.ui.wallet.adapter.RecordAdapter;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
@@ -54,13 +57,13 @@ public class InweHotHistoryActivity extends BaseActivity {
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayoutCompat swipeRefresh;
 
-    private int page = 0;
+    private int page = 1;
     private boolean isEnd;
     private boolean isShow;
 
     private LinearLayoutManager layoutManager;
 
-    private InweHotHistoryAdapter adapter;
+    private InwehotNewsHistoryAdapter adapter;
 
     private ArrayList<ArticleDetaileBean> data=new ArrayList<>();
 
@@ -85,7 +88,21 @@ public class InweHotHistoryActivity extends BaseActivity {
 
         txtMainTitle.setText(R.string.lishizixun);
 
-        adapter = new InweHotHistoryAdapter(this, R.layout.shoucang_item, data);
+        adapter = new InwehotNewsHistoryAdapter(this, data,-1, new MultiItemTypeSupport<ArticleDetaileBean>() {
+            @Override
+            public int getLayoutId(int itemType) {
+                if (itemType==1){
+                    return R.layout.inwe_hot_history_quick_item;
+                }else {
+                    return R.layout.inwe_hot_history_item;
+                }
+            }
+
+            @Override
+            public int getItemViewType(int position, ArticleDetaileBean articleDetaileBean) {
+                return articleDetaileBean.getType()==1?1:0;
+            }
+        });
         layoutManager = new LinearLayoutManager(this);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
@@ -185,6 +202,14 @@ public class InweHotHistoryActivity extends BaseActivity {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-
+        if (event.getEventCode()== Constant.EVENT_INWE_HOT_HISTORY_CLICK){
+            if (null!=data&&-1==event.getKey1()){
+                Intent intent=new Intent(mActivity,ProjectNewsWebActivity.class);
+                intent.putExtra("title",data.get(event.getKey2()).getTitle());
+                intent.putExtra("url", (App.isMain? Url.MAIN_NEWS:Url.TEST_NEWS)+data.get(event.getKey2()).getId());
+                intent.putExtra("id",data.get(event.getKey2()).getId());
+                keepTogo(intent);
+            }
+        }
     }
 }

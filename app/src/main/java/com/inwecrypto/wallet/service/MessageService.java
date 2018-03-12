@@ -1,11 +1,13 @@
 package com.inwecrypto.wallet.service;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -17,7 +19,6 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.AppUtil;
-import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.MainTabActivity;
 
@@ -63,6 +64,7 @@ public class MessageService extends Service {
 
                 //应用是否在前台
                 if (1==AppUtil.getAppSatus(getApplicationContext(),"com.inwecrypto.wallet")) {
+
                     //收到消息
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_ZIXUN_MESSAGE));
                 } else {
@@ -92,11 +94,18 @@ public class MessageService extends Service {
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
 
-                    String title= "InWe";
+                    String title= "InWeCrypto";
                     EMTextMessageBody body= (EMTextMessageBody) messages.get(0).getBody();
                     builder.setContentTitle(title)
-                            .setTicker(body.getMessage())
+                            .setContentText(body.getMessage().toString())
+                            .setTicker(body.getMessage().toString())
+                            .setWhen(System.currentTimeMillis())
+                            .setPriority(Notification.PRIORITY_MAX)
                             .setContentIntent(intentPend)
+                            .setDefaults(Notification.DEFAULT_SOUND)
+                            .setVibrate(new long[]{0,1000,500,1000})//设置通知震动下表1表示静止的时长，下表2是震动的时长。（双数下标是静止时长，单数下标是震动时长）
+                            .setLights(Color.RED,1000,1000)//设置呼吸灯
+                            .setDefaults(NotificationCompat.COLOR_DEFAULT)//根据手机当前环境调节
                             .setSmallIcon(R.mipmap.ic_launcher);
 
                     NotificationManager manager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -129,7 +138,6 @@ public class MessageService extends Service {
 
     @Override
     public void onDestroy() {
-        stopForeground(true);
         super.onDestroy();
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }

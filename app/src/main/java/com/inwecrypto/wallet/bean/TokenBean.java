@@ -398,10 +398,19 @@ public class TokenBean implements Serializable{
             private String updated_at;
             private int wallet_id;
             private String balance;
+            private String decimals;
             private String unavailable;
             private String available;
             private GntCategoryBean gnt_category;
             private CapBean cap;
+
+            public String getDecimals() {
+                return decimals;
+            }
+
+            public void setDecimals(String decimals) {
+                this.decimals = decimals;
+            }
 
             public String getUnavailable() {
                 return unavailable;
@@ -707,7 +716,16 @@ public class TokenBean implements Serializable{
                 private String icon;
                 private String address;
                 private String gas;
+                private String decimals;
                 private CapBean cap;
+
+                public String getDecimals() {
+                    return decimals;
+                }
+
+                public void setDecimals(String decimals) {
+                    this.decimals = decimals;
+                }
 
                 public String getId() {
                     return id;
@@ -1001,6 +1019,15 @@ public class TokenBean implements Serializable{
         private boolean isNeo;
         private GntCategoryBeanX gnt_category;
         private ArrayList<NewNeoTokenListBean> wallets;
+        private int type;
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
 
         public boolean isNeo() {
             return isNeo;

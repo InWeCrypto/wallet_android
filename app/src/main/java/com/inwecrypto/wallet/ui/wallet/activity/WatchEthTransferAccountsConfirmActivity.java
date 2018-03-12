@@ -66,9 +66,9 @@ public class WatchEthTransferAccountsConfirmActivity extends BaseActivity implem
     protected void getBundleExtras(Bundle extras) {
         address = extras.getString("address");
         price = extras.getString("price");
-        oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
+        oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(Constant.pEther).setScale(0,BigDecimal.ROUND_DOWN).toPlainString(),10).toString(16);
         gas = extras.getString("gas");
-        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(Constant.pEther).divide(new BigDecimal(Constant.GAS_LIMIT), 0,BigDecimal.ROUND_HALF_UP).toPlainString(),10).toString(16);
+        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(Constant.pEther).divide(new BigDecimal(Constant.GAS_LIMIT), 0,BigDecimal.ROUND_DOWN).toPlainString(),10).toString(16);
         hit = extras.getString("hit");
         wallet = (WalletBean) extras.getSerializable("wallet");
     }
@@ -99,7 +99,7 @@ public class WatchEthTransferAccountsConfirmActivity extends BaseActivity implem
 
     @Override
     protected void initData() {
-        tvPrice.setText(new BigDecimal(price).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
+        tvPrice.setText(new BigDecimal(price).setScale(4,BigDecimal.ROUND_DOWN).toPlainString());
         tvServiceCharge.setText(getString(R.string.lingfushouxufei) + gas);
         etAddress.setText(address);
         etHit.setText(hit);

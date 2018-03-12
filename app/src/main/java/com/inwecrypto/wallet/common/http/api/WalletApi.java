@@ -44,7 +44,7 @@ public class WalletApi {
     public static void wallet(Object object,JsonCallback<LzyResponse<CommonListBean<WalletBean>>> callback){
         OkGo.<LzyResponse<CommonListBean<WalletBean>>>get(Url.WALLET)
                 .tag(object)
-                .cacheKey(Constant.WALLETS+ App.isMain)
+                .cacheKey(Constant.WALLETS+ App.isMain+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()))
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
@@ -225,7 +225,7 @@ public class WalletApi {
     public static void conversionErrorCache(Object object,int id,JsonCallback<LzyResponse<TokenBean>> callback){
         OkGo.<LzyResponse<TokenBean>>get(Url.CONVERSION+"/"+id)
                 .tag(object)
-                .cacheKey(Url.CONVERSION+"/"+id+ App.isMain)
+                .cacheKey(Url.CONVERSION+"/"+id+ App.isMain+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()))
                 .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .execute(callback);
     }

@@ -90,7 +90,7 @@ public class ReceiveDetaileActivity extends BaseActivity {
             priceNum=order.getFee();
         }
         BigDecimal b = new BigDecimal(priceNum);
-        price.setText("+"+b.divide(Constant.pEther).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
+        price.setText("+"+b.divide(Constant.pEther).setScale(4,BigDecimal.ROUND_DOWN).toPlainString());
 
         tvWalletAddress.setText(null!=order.getPay_address()?order.getPay_address():"");
         tvHeyueAddress.setText(null!=order.getReceive_address()?order.getReceive_address():"");

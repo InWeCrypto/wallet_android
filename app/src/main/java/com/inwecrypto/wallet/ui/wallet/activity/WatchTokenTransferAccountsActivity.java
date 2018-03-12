@@ -77,8 +77,8 @@ public class WatchTokenTransferAccountsActivity extends BaseActivity {
         wallet = (WalletBean) extras.getSerializable("wallet");
         gnt = (TokenBean.ListBean) extras.getSerializable("gnt");
         price = extras.getString("price");
-        low = new BigDecimal("25200000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
-        high = new BigDecimal("2520120000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
+        low = new BigDecimal("25200000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000),0,BigDecimal.ROUND_DOWN);
+        high = new BigDecimal("2520120000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000),0,BigDecimal.ROUND_DOWN);
         distance = high.subtract(low);
     }
 
@@ -188,7 +188,7 @@ public class WatchTokenTransferAccountsActivity extends BaseActivity {
                 });
             }
         });
-        gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+        gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_DOWN).toString());
     }
 
     @Override
@@ -202,13 +202,13 @@ public class WatchTokenTransferAccountsActivity extends BaseActivity {
                 if (currentGas.subtract(low).longValue() <= 0) {
                     position = 0;
                     gasBar.setProgress(position);
-                    gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_DOWN).toString());
                 } else if (currentGas.subtract(high).longValue() >= 0) {
                     position = 100;
                     gasBar.setProgress(position);
-                    gas.setText(high.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(high.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_DOWN).toString());
                 } else {
-                    position = currentGas.subtract(low).divide(distance, 0, BigDecimal.ROUND_HALF_DOWN).setScale(0, BigDecimal.ROUND_HALF_DOWN).multiply(Constant.p100).floatValue();
+                    position = currentGas.subtract(low).divide(distance, 0, BigDecimal.ROUND_DOWN).setScale(0, BigDecimal.ROUND_HALF_DOWN).multiply(Constant.p100).floatValue();
                     gasBar.setProgress(position);
                     gas.setText(new BigDecimal(position).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_DOWN).toString());
                 }
@@ -217,7 +217,7 @@ public class WatchTokenTransferAccountsActivity extends BaseActivity {
             @Override
             public void onError(Response<LzyResponse<GasBean>> response) {
                 super.onError(response);
-                gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_HALF_UP).toString());
+                gas.setText(low.divide(Constant.pEther).setScale(8,BigDecimal.ROUND_DOWN).toString());
             }
 
             @Override

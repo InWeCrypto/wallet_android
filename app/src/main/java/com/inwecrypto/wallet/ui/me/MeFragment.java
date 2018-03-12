@@ -20,8 +20,10 @@ import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
+import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.me.activity.AboutUsActivity;
 import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
 import com.inwecrypto.wallet.ui.me.activity.MailListActivity;
@@ -77,6 +79,8 @@ public class MeFragment extends BaseFragment {
     RelativeLayout yaoqing;
     @BindView(R.id.zhangben)
     RelativeLayout zhangben;
+    @BindView(R.id.qindenglu)
+    TextView qindenglu;
 
     @Override
     protected int setLayoutID() {
@@ -90,6 +94,10 @@ public class MeFragment extends BaseFragment {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 Intent intent=new Intent(mActivity, UserActivity.class);
                 mActivity.keepTogo(intent);
             }
@@ -98,6 +106,10 @@ public class MeFragment extends BaseFragment {
         yaoqing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 ZixunApi.getYaoqinKey(this, new JsonCallback<LzyResponse<YaoqinBean>>() {
                     @Override
                     public void onSuccess(Response<LzyResponse<YaoqinBean>> response) {
@@ -113,7 +125,7 @@ public class MeFragment extends BaseFragment {
                             intent.putExtra("code",response.body().data.getCode());
                             keepTogo(intent);
                         }else {
-                            ToastUtil.show(getString(R.string.huodongzanweiqidong));
+                            ToastUtil.show(getString(R.string.huodongyijieshu));
                         }
 
                     }
@@ -138,6 +150,10 @@ public class MeFragment extends BaseFragment {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 Intent intent=new Intent(mActivity, MailListActivity.class);
                 mActivity.keepTogo(intent);
 
@@ -148,6 +164,10 @@ public class MeFragment extends BaseFragment {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 Intent intent=new Intent(mActivity, ShoucangActivity.class);
                 mActivity.keepTogo(intent);
 
@@ -158,6 +178,10 @@ public class MeFragment extends BaseFragment {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 Intent intent=new Intent(mActivity, MarketTipActivity.class);
                 mActivity.keepTogo(intent);
 
@@ -185,26 +209,45 @@ public class MeFragment extends BaseFragment {
     }
 
     @Override
-    protected void loadData() {
-        LoginBean loginBean = App.get().getLoginBean();
-        if (null != loginBean) {
-            if (null != loginBean.getImg() && loginBean.getImg().length() > 0) {
-                Glide.with(this)
-                        .load(loginBean.getImg())
-                        .crossFade()
-                        .error(R.mipmap.wode_touxiang)
-                        .transform(new GlideCircleTransform(mContext))
-                        .into(img);
-            }else{
-                Glide.with(this)
-                        .load(R.mipmap.wode_touxiang)
-                        .crossFade()
-                        .transform(new GlideCircleTransform(mContext))
-                        .into(img);
-            }
-            nickName.setText(loginBean.getName());
-            email.setText(getString(R.string.dengluzhanghu)+loginBean.getEmail());
+    public void onResume() {
+        super.onResume();
+        if (!isFirst&&!isLoadSuccess){
+            loadData();
         }
+    }
+
+    @Override
+    protected void loadData() {
+        if (App.get().isLogin()){
+            qindenglu.setVisibility(View.GONE);
+            nickName.setVisibility(View.VISIBLE);
+            email.setVisibility(View.VISIBLE);
+            LoginBean loginBean = App.get().getLoginBean();
+            if (null != loginBean) {
+                if (null != loginBean.getImg() && loginBean.getImg().length() > 0) {
+                    Glide.with(this)
+                            .load(loginBean.getImg())
+                            .crossFade()
+                            .error(R.mipmap.wode_touxiang)
+                            .transform(new GlideCircleTransform(mContext))
+                            .into(img);
+                }else{
+                    Glide.with(this)
+                            .load(R.mipmap.wode_touxiang)
+                            .crossFade()
+                            .transform(new GlideCircleTransform(mContext))
+                            .into(img);
+                }
+                nickName.setText(loginBean.getName());
+                email.setText(getString(R.string.dengluzhanghu)+loginBean.getEmail());
+            }
+        }else {
+            nickName.setVisibility(View.INVISIBLE);
+            email.setVisibility(View.INVISIBLE);
+            qindenglu.setVisibility(View.VISIBLE);
+        }
+        isLoadSuccess=true;
+        isFirst=false;
     }
 
     @Override

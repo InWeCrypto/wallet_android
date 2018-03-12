@@ -48,7 +48,7 @@ public class ProjectAdatpter extends CommonAdapter<ProjectDetaileBean> {
             holder.setText(R.id.news,"");
             holder.setText(R.id.time,"");
         }
-        holder.setText(R.id.price,null==projectDetaileBean.getPrice()?((App.get().getUnit()==1?"¥":"$")+"0.00"):((App.get().getUnit()==1?"¥":"$")+new BigDecimal(projectDetaileBean.getPrice()).setScale(2, RoundingMode.HALF_UP).toPlainString()));
+        holder.setText(R.id.price,null==projectDetaileBean.getPrice()?((App.get().getUnit()==1?"¥":"$")+"0.00"):((App.get().getUnit()==1?"¥":"$")+new BigDecimal(projectDetaileBean.getPrice()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString()));
 
         if (null!=projectDetaileBean.getCharge()){
             if (!projectDetaileBean.getCharge().contains("-")){

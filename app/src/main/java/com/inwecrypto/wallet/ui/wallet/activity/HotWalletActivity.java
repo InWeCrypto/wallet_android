@@ -40,11 +40,14 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.DensityUtil;
+import com.inwecrypto.wallet.common.util.NetworkUtils;
+import com.inwecrypto.wallet.common.util.ScreenUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.QuickActivity;
 import com.inwecrypto.wallet.ui.newneo.InputPassFragment;
 import com.inwecrypto.wallet.ui.newneo.NewNeoReciveActivity;
 import com.inwecrypto.wallet.ui.newneo.NewTransferWalletActivity;
@@ -142,6 +145,8 @@ public class HotWalletActivity extends BaseActivity {
     SwipeMenuRecyclerView list;
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayoutCompat swipeRefresh;
+    @BindView(R.id.card_bg)
+    ImageView cardBg;
     private ArrayList<TokenBean.ListBean> data = new ArrayList<>();
     private GntAdapter adapter;
 
@@ -177,6 +182,10 @@ public class HotWalletActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) cardBg.getLayoutParams();
+        params.height= (int) ((ScreenUtils.getScreenWidth(this)-DensityUtil.dip2px(this,52))/1956.0*1176.0);
+        cardBg.setLayoutParams(params);
+
         SlidrConfig config = new SlidrConfig.Builder()
                 .primaryColor(Color.parseColor("#000000"))
                 .secondaryColor(Color.parseColor("#000000"))
@@ -354,6 +363,7 @@ public class HotWalletActivity extends BaseActivity {
             }
         });
         list.setAdapter(adapter);
+        list.setNestedScrollingEnabled(false);
         list.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
             @Override
             public void onItemClick(SwipeMenuBridge menuBridge) {
@@ -472,6 +482,20 @@ public class HotWalletActivity extends BaseActivity {
             };
             timer.schedule(task, 30000, 30000);
         }
+
+        if (App.get().getSp().getBoolean(Constant.FIRST_4,true)){
+            swipeRefresh.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    int[] location=new int[2];
+                    recive.getLocationOnScreen(location);
+                    Intent intent=new Intent(mActivity,QuickActivity.class);
+                    intent.putExtra("type",4);
+                    intent.putExtra("y",location[1]);
+                    keepTogo(intent);
+                }
+            },300);
+        }
     }
 
     @Override
@@ -505,25 +529,25 @@ public class HotWalletActivity extends BaseActivity {
                 ETHPrice = ETHPrice.multiply(new BigDecimal(0));
                 ArrayList<WalletCountBean> walletPrices = response.body().data.getList();
                 BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
-                ETHEther = ETHEther.add(currentPrice).divide(Constant.pEther, 4, BigDecimal.ROUND_HALF_UP);
+                ETHEther = ETHEther.add(currentPrice).divide(Constant.pEther, 4, BigDecimal.ROUND_DOWN);
                 if (1 == App.get().getUnit()) {
                     ETHPrice = ETHPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_cny())));
                     neoPrice.setText(ETHEther.toString());
-                    neoTotleChPrice=ETHPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    neoTotleChPrice=ETHPrice.setScale(2, BigDecimal.ROUND_DOWN).toString();
                 } else {
                     ETHPrice = ETHPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_usd())));
                     neoPrice.setText(ETHEther.toString());
-                    neoTotleUsdPrice=ETHPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    neoTotleUsdPrice=ETHPrice.setScale(2, BigDecimal.ROUND_DOWN).toString();
                 }
 
                 isEth = true;
                 if (isToken) {
                     //计算总金额
                     if (1 == App.get().getUnit()) {
-                        totleChPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+                        totleChPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
                         changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
                     } else {
-                        totleUsdPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+                        totleUsdPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
                         changeSee(0, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
                     }
                 }
@@ -556,9 +580,9 @@ public class HotWalletActivity extends BaseActivity {
                     if (null != token.getGnt_category().getCap()) {
 
                         if (1 == App.get().getUnit()) {
-                            TOKENPrice = TOKENPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_cny())));
+                            TOKENPrice = TOKENPrice.add(currentPrice.divide(AppUtil.decimal(token.getDecimals())).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_cny())));
                         } else {
-                            TOKENPrice = TOKENPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_usd())));
+                            TOKENPrice = TOKENPrice.add(currentPrice.divide(AppUtil.decimal(token.getDecimals())).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_usd())));
                         }
                     }
                 }
@@ -566,10 +590,10 @@ public class HotWalletActivity extends BaseActivity {
                 if (isEth) {
                     //计算总金额
                     if (1 == App.get().getUnit()) {
-                        totleChPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+                        totleChPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
                         changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
                     } else {
-                        totleUsdPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+                        totleUsdPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
                         changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
                     }
                 }
@@ -584,7 +608,9 @@ public class HotWalletActivity extends BaseActivity {
             @Override
             public void onError(Response<LzyResponse<TokenBean>> response) {
                 super.onError(response);
-                ToastUtil.show(getString(R.string.load_error));
+                if (NetworkUtils.isConnected(mActivity)){
+                    ToastUtil.show(getString(R.string.load_error));
+                }
             }
 
             @Override

@@ -154,8 +154,8 @@ public class NeoTokenSaleActivity extends BaseActivity {
             }
         });
 
-        neoAmount.setText("(NEO "+getString(R.string.keyongshuliang)+"："+new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString()+")");
-        gas=new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).doubleValue();
+        neoAmount.setText("(NEO "+getString(R.string.keyongshuliang)+"："+new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_DOWN).toPlainString()+")");
+        gas=new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_DOWN).doubleValue();
         if (gas==0) {
             submit.setText(R.string.dangqiangasyuebuzu);
             submit.setBackgroundColor(Color.parseColor("#DADADA"));

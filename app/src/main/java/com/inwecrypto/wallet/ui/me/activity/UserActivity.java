@@ -170,6 +170,9 @@ public class UserActivity extends BaseActivity implements EasyPermissions.Permis
                         EMClient.getInstance().logout(true);
                         App.get().getSp().putString(Constant.TOKEN,"");
                         App.get().getSp().putString(Constant.TEST_TOKEN,"");
+                        App.get().setLoginBean(null);
+                        App.get().getSp().putString(Constant.USER_INFO,"{}");
+                        App.get().setLogin(false);
                         AppManager.getAppManager().finishAllActivity();
                         stopService(new Intent(mActivity, MessageService.class));
                         runOnUiThread(new Runnable() {

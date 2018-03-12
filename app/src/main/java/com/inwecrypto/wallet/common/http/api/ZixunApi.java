@@ -77,6 +77,18 @@ public class ZixunApi {
     }
 
     /**
+     * 获取inwe 热点
+     * @param object
+     * @param page
+     * @param callback
+     */
+    public static void getInweHotHistory(Object object,int page,String type,JsonCallback<LzyResponse<ArticleListBean>> callback){
+        OkGo.<LzyResponse<ArticleListBean>>get(Url.INWE_HOT_HISTORY+page+"&"+type)
+                .tag(object)
+                .execute(callback);
+    }
+
+    /**
      * 获取TradingView
      * @param object
      * @param page

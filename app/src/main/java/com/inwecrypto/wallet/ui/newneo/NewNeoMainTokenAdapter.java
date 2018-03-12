@@ -37,6 +37,13 @@ public class NewNeoMainTokenAdapter extends CommonAdapter<TokenBean.ListBean> {
         }
 
         holder.setText(R.id.name,listBean.getName());
-        holder.setText(R.id.amount,new BigDecimal(listBean.getBalance()).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
+        holder.setText(R.id.amount,new BigDecimal(listBean.getBalance()).setScale(4,BigDecimal.ROUND_DOWN).toPlainString());
+        if (listBean.getType()==1){
+            holder.setText(R.id.type,"(eth)");
+        }else if (listBean.getType()==2){
+            holder.setText(R.id.type,"(neo)");
+        }else {
+            holder.setText(R.id.type,"");
+        }
     }
 }

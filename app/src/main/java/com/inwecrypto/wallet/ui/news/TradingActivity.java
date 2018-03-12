@@ -38,6 +38,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.market.activity.MarketDetaileActivity;
 import com.inwecrypto.wallet.ui.news.adapter.ExchangeNoticeAdapater;
 import com.inwecrypto.wallet.ui.news.adapter.InwehotAdapter;
@@ -141,6 +142,10 @@ public class TradingActivity extends BaseActivity {
         txtRightTitle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 if(null!=project.getCategory_user()&&project.getCategory_user().isIs_favorite()){
                     collectProject(false);
                 }else {
@@ -256,7 +261,6 @@ public class TradingActivity extends BaseActivity {
 
         selectPopupWin.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupHeight = selectPopupWin.getMeasuredHeight();  //获取测量后的高度
-        int[] location = new int[2];
 
         int width=(int) (ScreenUtils.getScreenWidth(this)/3.2);
 
@@ -267,9 +271,8 @@ public class TradingActivity extends BaseActivity {
         window.setTouchable(true);
         window.setBackgroundDrawable(new BitmapDrawable());
         window.update();
-        gaikuang.getLocationOnScreen(location);
         //这里就可自定义在上方和下方了 ，这种方式是为了确定在某个位置，某个控件的左边，右边，上边，下边都可以
-        window.showAtLocation(gaikuang, Gravity.NO_GRAVITY, (int) (location[0] + (gaikuang.getWidth()-width)/2), location[1] - popupHeight);
+        window.showAsDropDown(gaikuang, ((gaikuang.getWidth()-width)/2), -(popupHeight+gaikuang.getHeight()), Gravity.NO_GRAVITY);
 
         ((CommonAdapter)list.getAdapter()).setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override

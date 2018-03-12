@@ -33,6 +33,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.RatingBar;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
@@ -136,6 +137,11 @@ public class TradingProjectActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
+
                 //输入密码
                 FragmentManager fm = getSupportFragmentManager();
                 ProjectStartFragment input = new ProjectStartFragment();
@@ -199,7 +205,7 @@ public class TradingProjectActivity extends BaseActivity {
                 no.setText("No." + project.getCategory_score().getSort());
             }
             ratingbar.setStar((float) project.getCategory_score().getValue());
-            fenshu.setText(new BigDecimal(project.getCategory_score().getValue()).setScale(1, RoundingMode.HALF_UP).toPlainString()+"分");
+            fenshu.setText(new BigDecimal(project.getCategory_score().getValue()).setScale(1, BigDecimal.ROUND_DOWN).toPlainString()+"分");
         }else {
             ratingbar.setStar(0);
             fenshu.setText("0"+getString(R.string.fenshu));
@@ -303,7 +309,6 @@ public class TradingProjectActivity extends BaseActivity {
 
         selectPopupWin.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupHeight = selectPopupWin.getMeasuredHeight();  //获取测量后的高度
-        int[] location = new int[2];
 
         int width=(int) (ScreenUtils.getScreenWidth(this)/3.2);
 
@@ -314,9 +319,8 @@ public class TradingProjectActivity extends BaseActivity {
         window.setTouchable(true);
         window.setBackgroundDrawable(new BitmapDrawable());
         window.update();
-        wallet.getLocationOnScreen(location);
         //这里就可自定义在上方和下方了 ，这种方式是为了确定在某个位置，某个控件的左边，右边，上边，下边都可以
-        window.showAtLocation(wallet, Gravity.NO_GRAVITY, (int) (location[0] + (wallet.getWidth()-width)/2), (location[1] -(popupHeight*3/2)));
+        window.showAsDropDown(wallet, (wallet.getWidth()-width)/2, -(popupHeight+wallet.getHeight()), Gravity.NO_GRAVITY);
 
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
@@ -362,7 +366,6 @@ public class TradingProjectActivity extends BaseActivity {
 
         selectPopupWin.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupHeight = selectPopupWin.getMeasuredHeight();  //获取测量后的高度
-        int[] location = new int[2];
 
         int width=(int) (ScreenUtils.getScreenWidth(this)/3.2);
 
@@ -373,9 +376,8 @@ public class TradingProjectActivity extends BaseActivity {
         window.setTouchable(true);
         window.setBackgroundDrawable(new BitmapDrawable());
         window.update();
-        explore.getLocationOnScreen(location);
         //这里就可自定义在上方和下方了 ，这种方式是为了确定在某个位置，某个控件的左边，右边，上边，下边都可以
-        window.showAtLocation(explore, Gravity.NO_GRAVITY, (int) (location[0] + (explore.getWidth()-width)/2), location[1] - popupHeight);
+        window.showAsDropDown(explore, (explore.getWidth()-width)/2,  -(popupHeight+explore.getHeight()), Gravity.NO_GRAVITY);
 
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override

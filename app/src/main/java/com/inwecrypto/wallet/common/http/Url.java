@@ -70,7 +70,7 @@ public class Url {
 
     public static String PROJECT = BASE_2 + "/category?type=";
 
-    public static String INWE_HOT = BASE_2 + "/article?is_scroll&page=";
+    public static String INWE_HOT = BASE_2 + "/article?inwe_hot&page=";
 
     public static String TRADING_VIEW = BASE_2 + "/article?type=4&page=";
 
@@ -100,6 +100,7 @@ public class Url {
 
     public static String CANCLE_DOT=BASE_2+"/category/";
 
+    public static String INWE_HOT_HISTORY = BASE_2 + "/article?page=";
 
 
 
@@ -362,7 +363,7 @@ public class Url {
 
         PROJECT = BASE_2 + "/category?type=";
 
-        INWE_HOT = BASE_2 + "/article?is_scroll&page=";
+        INWE_HOT = BASE_2 + "/article?inwe_hot&page=";
 
         TRADING_VIEW = BASE_2 + "/article?type=4&page=";
 
@@ -389,6 +390,10 @@ public class Url {
         NEWS_COLLECT= BASE_2 +"/article/";
 
         GET_YAOQIN=BASE_2+"/user/ont_candy_bow";
+
+        CANCLE_DOT=BASE_2+"/category/";
+
+        INWE_HOT_HISTORY = BASE_2 + "/article?page=";
     }
 
 }

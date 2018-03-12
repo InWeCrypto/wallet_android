@@ -14,6 +14,7 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
+import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.news.NoTradingActivity;
@@ -92,10 +93,19 @@ public class ProjectFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (!isFirst&&!isLoadSuccess&&NetworkUtils.isConnected(getContext())){
+            loadData();
+        }
+    }
+
+    @Override
     protected void loadData() {
         ZixunApi.getProject(this, type,1, new JsonCallback<LzyResponse<ProjectListBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<ProjectListBean>> response) {
+                isLoadSuccess=true;
                 LoadSuccess(response);
             }
 
@@ -114,6 +124,7 @@ public class ProjectFragment extends BaseFragment {
             @Override
             public void onFinish() {
                 super.onFinish();
+                isFirst=false;
                 EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH_SUC));
             }
         });

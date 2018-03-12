@@ -55,6 +55,14 @@ public class ProjectStartFragment extends DialogFragment {
         fen.setText(num+getString(R.string.fenshu));
         ratingbar.setStar(Float.parseFloat(num));
 
+        if (isSb){
+            dialog.findViewById(R.id.ratingbarfl).setClickable(true);
+            dialog.findViewById(R.id.ratingbarfl).setFocusable(true);
+            ratingbar.setClickable(false);
+            ratingbar.setFocusable(false);
+            ratingbar.setEnabled(false);
+        }
+
         dialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +70,6 @@ public class ProjectStartFragment extends DialogFragment {
             }
         });
 
-        ratingbar.setClickable(true);
         ratingbar.setOnRatingChangeListener(new RatingBar.OnRatingChangeListener() {
             @Override
             public void onRatingChange(float RatingCount) {

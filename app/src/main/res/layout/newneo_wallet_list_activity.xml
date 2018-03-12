@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/new_base_wallet_list_title_bar"/>
+    <include layout="@layout/base_title_bar"/>
 
     <View
         android:layout_width="match_parent"
@@ -16,11 +16,40 @@
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/wallet_list"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/c_ffffff"/>
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/wallet_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/c_ffffff"/>
+            <LinearLayout
+                android:id="@+id/empty_ll"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/c_ffffff">
+                
+                <ImageView
+                    android:layout_width="63dp"
+                    android:layout_height="64dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/emptywallet"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/zanwuqianbaoqingzhiyoushangjiaotianjia"
+                    android:textColor="#DCDCDC"
+                    android:textSize="11sp"/>
+                
+            </LinearLayout>
+        </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

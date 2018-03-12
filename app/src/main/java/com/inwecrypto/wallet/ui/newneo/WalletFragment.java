@@ -1,6 +1,7 @@
 package com.inwecrypto.wallet.ui.newneo;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -12,7 +13,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,17 +41,24 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
 import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.inwecrypto.wallet.common.util.AppUtil;
+import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.GsonUtils;
+import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.BetterRecyclerView;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.service.DownloadService;
+import com.inwecrypto.wallet.ui.QuickActivity;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.db.CacheManager;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
+import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -122,6 +132,8 @@ public class WalletFragment extends BaseFragment {
 
     private boolean needRefresh;
 
+    private HeaderAndFooterWrapper header;
+
     @Override
     protected int setLayoutID() {
         return R.layout.newneo_main_activity;
@@ -139,6 +151,10 @@ public class WalletFragment extends BaseFragment {
         walletManagerBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 Intent intent = new Intent(mActivity, NewNeoWalletListActivity.class);
                 intent.putExtra("wallet", wallet);
                 keepTogo(intent);
@@ -148,6 +164,10 @@ public class WalletFragment extends BaseFragment {
         topWalletManager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 Intent intent = new Intent(mActivity, NewNeoWalletListActivity.class);
                 intent.putExtra("wallet", wallet);
                 keepTogo(intent);
@@ -173,6 +193,9 @@ public class WalletFragment extends BaseFragment {
         see.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    return;
+                }
                 boolean isSee = App.get().getSp().getBoolean(Constant.MAIN_SEE, true);
                 App.get().getSp().putBoolean(Constant.MAIN_SEE, !isSee);
                 changeSee(App.get().getUnit(), !isSee);
@@ -182,6 +205,9 @@ public class WalletFragment extends BaseFragment {
         topsee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    return;
+                }
                 boolean isSee = App.get().getSp().getBoolean(Constant.MAIN_SEE, true);
                 App.get().getSp().putBoolean(Constant.MAIN_SEE, !isSee);
                 changeSee(App.get().getUnit(), !isSee);
@@ -218,28 +244,45 @@ public class WalletFragment extends BaseFragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (!App.get().isLogin()){
+                    swipeRefresh.setRefreshing(false);
+                    return;
+                }
                 //从网络获取钱包
                 getInfoOnNet();
             }
         });
 
         adapter = new NewNeoMainTokenAdapter(mActivity, R.layout.newneo_wallet_item, neoList);
+        header=new HeaderAndFooterWrapper(adapter);
+        View view=LayoutInflater.from(getContext()).inflate(R.layout.wallet_fragment_header,null,false);
+        view.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        header.addHeaderView(view);
         list.setLayoutManager(new LinearLayoutManager(mActivity));
-        list.setAdapter(adapter);
+        list.setAdapter(header);
+        list.setNestedScrollingEnabled(false);
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (wallet.size() == 0) {
-                    ToastUtil.show(getString(R.string.zanwuqianbao));
-                    return;
-                }
                 //弹出钱包选择框
                 FragmentManager fm = mActivity.getSupportFragmentManager();
                 WalletListFragment walletlist = new WalletListFragment();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("wallets", neoList.get(position).getWallets());
+                bundle.putSerializable("wallets", neoList.size()>0?neoList.get(position-1).getWallets():null);
                 walletlist.setArguments(bundle);
                 walletlist.show(fm, "list");
+                walletlist.setOnNextListener(new WalletListFragment.OnNextInterface() {
+                    @Override
+                    public void onNext(Dialog dialog) {
+                        dialog.cancel();
+                        FragmentManager fm = mActivity.getSupportFragmentManager();
+                        CreateWalletFragment create = new CreateWalletFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("wallets", wallet);
+                        create.setArguments(bundle);
+                        create.show(fm, "create");
+                    }
+                });
 
             }
 
@@ -248,8 +291,6 @@ public class WalletFragment extends BaseFragment {
                 return false;
             }
         });
-        //获取缓存数据
-        getChace();
 
         if (timer == null) {
             timer = new Timer(true);
@@ -271,16 +312,42 @@ public class WalletFragment extends BaseFragment {
         if (null == swipeRefresh) {
             return;
         }
+
+        if (App.get().getSp().getBoolean(Constant.FIRST_1,true)){
+            swipeRefresh.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    int[] location=new int[2];
+                    walletManagerBottom.getLocationOnScreen(location);
+                    Intent intent=new Intent(mActivity,QuickActivity.class);
+                    intent.putExtra("type",1);
+                    intent.putExtra("y",location[1]);
+                    keepTogo(intent);
+                }
+            },300);
+        }
+
+        if (!App.get().isLogin()){
+            return;
+        }
+        //获取缓存数据
+        getChace();
         swipeRefresh.post(new Runnable() {
             @Override
             public void run() {
                 swipeRefresh.setRefreshing(true);
             }
         });
+
     }
 
     @Override
     protected void loadData() {
+        if (!App.get().isLogin()){
+            swipeRefresh.setRefreshing(false);
+            return;
+        }
+
         setImg();
         OkGo.getInstance().cancelTag(this);
         //从网络获取钱包
@@ -295,7 +362,15 @@ public class WalletFragment extends BaseFragment {
             needRefresh=false;
             //loadData();
         }
-
+        if (!isFirst&&!isLoadSuccess&&NetworkUtils.isConnected(getContext())&&App.get().isLogin()){
+            swipeRefresh.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefresh.setRefreshing(true);
+                }
+            });
+            loadData();
+        }
     }
 
     private void setImg() {
@@ -330,10 +405,11 @@ public class WalletFragment extends BaseFragment {
     }
 
     private void getChace() {
-        //获取总资产
-        String totlePrice = App.get().getSp().getString(App.isMain ? Constant.TOTAL_PRICE : Constant.TOTAL_TEST_PRICE, "{}");
-        TotlePriceBean priceBean = GsonUtils.jsonToObj(totlePrice, TotlePriceBean.class);
-
+        //获取总资产缓存
+        TotlePriceBean priceBean =CacheUtils.getCache((App.isMain ? Constant.TOTAL_PRICE : Constant.TOTAL_TEST_PRICE)+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
+        if (null==priceBean){
+            priceBean=new TotlePriceBean();
+        }
         if (1 == App.get().getUnit()) {
             totleChPrice = (null == priceBean.totleCny ? "0.00" : priceBean.totleCny);
             changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
@@ -342,38 +418,27 @@ public class WalletFragment extends BaseFragment {
             changeSee(0, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
         }
 
-        //设置缓存列表
-        String totleneoGnt = App.get().getSp().getString(App.isMain ? Constant.NEO_LIST : Constant.NEO_TEST_LIST, "[]");
-        ArrayList<TokenBean.ListBean> neoChaceList = GsonUtils.jsonToArrayList(totleneoGnt, TokenBean.ListBean.class);
+        //获取代币缓存列表
+        ArrayList<TokenBean.ListBean> tokenChaceList =CacheUtils.getCache((App.isMain ? Constant.NEO_LIST : Constant.NEO_TEST_LIST)+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
+        if (null==tokenChaceList){
+            tokenChaceList=new ArrayList<>();
+        }
         neoList.clear();
-        neoList.addAll(neoChaceList);
+        neoList.addAll(tokenChaceList);
         adapter.notifyDataSetChanged();
+
+        //获取钱包缓存列表
+        LzyResponse<CommonListBean<WalletBean>> chaceList= CacheUtils.getCache(Constant.WALLETS+ App.isMain);
+        if (null!=chaceList&&null!=chaceList.data){
+            getWalletList(chaceList.data);
+        }
     }
 
     private void getInfoOnNet() {
         WalletApi.wallet(mActivity, new JsonCallback<LzyResponse<CommonListBean<WalletBean>>>() {
             @Override
             public void onSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
-                wallet.clear();
-                if (null != response.body().data.getList()) {
-                    walletPosition.clear();
-                    String wallets = App.get().getSp().getString(Constant.WALLETS, "");
-                    String wallets_beifen = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
-                    for (int i = 0; i < response.body().data.getList().size(); i++) {
-                            if (wallets.contains(response.body().data.getList().get(i).getAddress())) {
-                                if (wallets_beifen.contains(response.body().data.getList().get(i).getAddress()) || walletsZjc.contains(response.body().data.getList().get(i).getAddress())) {
-                                    response.body().data.getList().get(i).setType(Constant.BEIFEN);
-                                } else {
-                                    response.body().data.getList().get(i).setType(Constant.ZHENGCHANG);
-                                }
-                            } else {
-                                response.body().data.getList().get(i).setType(Constant.GUANCHA);
-                            }
-                            walletPosition.put(response.body().data.getList().get(i).getId(), wallet.size());
-                            wallet.add(response.body().data.getList().get(i));
-                    }
-                }
+                getWalletList(response.body().data);
                 if (!response.isFromCache()) {
                     //获取代币列表
                     getTokenList();
@@ -393,6 +458,29 @@ public class WalletFragment extends BaseFragment {
                 swipeRefresh.setRefreshing(false);
             }
         });
+    }
+
+    private void getWalletList(CommonListBean<WalletBean> response) {
+        wallet.clear();
+        if (null != response.getList()) {
+            walletPosition.clear();
+            String wallets = App.get().getSp().getString(Constant.WALLETS, "");
+            String wallets_beifen = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
+            String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
+            for (int i = 0; i < response.getList().size(); i++) {
+                    if (wallets.contains(response.getList().get(i).getAddress())) {
+                        if (wallets_beifen.contains(response.getList().get(i).getAddress()) || walletsZjc.contains(response.getList().get(i).getAddress())) {
+                            response.getList().get(i).setType(Constant.BEIFEN);
+                        } else {
+                            response.getList().get(i).setType(Constant.ZHENGCHANG);
+                        }
+                    } else {
+                        response.getList().get(i).setType(Constant.GUANCHA);
+                    }
+                    walletPosition.put(response.getList().get(i).getId(), wallet.size());
+                    wallet.add(response.getList().get(i));
+            }
+        }
     }
 
     private void getTokenList() {
@@ -424,14 +512,6 @@ public class WalletFragment extends BaseFragment {
             ethCategory.setIcon(R.mipmap.eth_icon + "");
             eth.setGnt_category(ethCategory);
             neoGnt.put("ETH", eth);
-
-            TokenBean.ListBean gas = new TokenBean.ListBean();
-            TokenBean.ListBean.GntCategoryBeanX gasCategory = new TokenBean.ListBean.GntCategoryBeanX();
-            gas.setName("Gas");
-            gas.setBalance("0.0000");
-            gasCategory.setIcon(R.mipmap.tokenneoxxhdpi + "");
-            gas.setGnt_category(gasCategory);
-            neoGnt.put("Gas", gas);
 
             setDataList();
             swipeRefresh.post(new Runnable() {
@@ -474,18 +554,28 @@ public class WalletFragment extends BaseFragment {
                         //进行计算
                         BigDecimal currentPrice = new BigDecimal(AppUtil.toD(count.getBalance().replace("0x", "0")));
                         ETHEther = ETHEther.add(currentPrice.divide(Constant.pEther));
-                        ethCnyPrice=count.getCategory().getCap().getPrice_cny();
-                        ethUsdPrice = count.getCategory().getCap().getPrice_usd();
+                        if(null!=count.getCategory().getCap()){
+                            ethCnyPrice=count.getCategory().getCap().getPrice_cny();
+                            ethUsdPrice = count.getCategory().getCap().getPrice_usd();
+                        }else {
+                            ethCnyPrice= "0.00";
+                            ethUsdPrice = "0.00";
+                        }
                         NewNeoTokenListBean list = new NewNeoTokenListBean(count.getName()
-                                , currentPrice.divide(Constant.pEther).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString()
+                                , currentPrice.divide(Constant.pEther).setScale(4,BigDecimal.ROUND_DOWN).toPlainString()
                                 , count.getId()
                                 , wallet.get(walletPosition.get(count.getId())));
                         ethWallets.add(list);
                     }else if (count.getCategory_id()==2&&null != count.getBalance()){
                         BigDecimal currentPrice = new BigDecimal(count.getBalance());
                         NEOEther = NEOEther.add(currentPrice);
-                        neoCnyPrice = count.getCategory().getCap().getPrice_cny();
-                        neoUsdPrice = count.getCategory().getCap().getPrice_usd();
+                        if(null!=count.getCategory().getCap()){
+                            neoCnyPrice = count.getCategory().getCap().getPrice_cny();
+                            neoUsdPrice = count.getCategory().getCap().getPrice_usd();
+                        }else {
+                            neoCnyPrice = "0.00";
+                            neoUsdPrice = "0.00";
+                        }
                         NewNeoTokenListBean list = new NewNeoTokenListBean(count.getName(), count.getBalance(), count.getId(), wallet.get(walletPosition.get(count.getId())));
                         neoWallets.add(list);
                     }
@@ -530,7 +620,9 @@ public class WalletFragment extends BaseFragment {
             @Override
             public void onError(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
                 super.onError(response);
-                ToastUtil.show(R.string.jiazaishibai);
+                if (NetworkUtils.isConnected(getContext())){
+                    ToastUtil.show(R.string.jiazaishibai);
+                }
                 swipeRefresh.setRefreshing(false);
             }
         });
@@ -549,15 +641,15 @@ public class WalletFragment extends BaseFragment {
                     if (response.body().data.getRecord().getCategory_id() == 2) {
                         TokenBean.RecordBean record = response.body().data.getRecord();
 
-                        if (null != neoGnt.get(record.getGnt().get(0).getCap().getName())) {
-                            TokenBean.ListBean bfGnt = neoGnt.get(record.getGnt().get(0).getCap().getName());
+                        if (null!=record.getGnt().get(0).getCap()&&null != neoGnt.get(record.getGnt().get(0).getCap().getName()+"(NEO)")) {
+                            TokenBean.ListBean bfGnt = neoGnt.get(record.getGnt().get(0).getCap().getName()+"(NEO)");
                             BigDecimal secPrice = new BigDecimal(record.getGnt().get(0).getBalance());
 
                             bfGnt.setBalance(secPrice.add(new BigDecimal(bfGnt.getBalance())).toString());
                             NewNeoTokenListBean list = new NewNeoTokenListBean(walletCount.get(index).getName(), record.getGnt().get(0).getBalance(), walletCount.get(index).getId(), wallet.get(walletPosition.get(walletCount.get(index).getId())));
                             bfGnt.getWallets().add(list);
-                            neoGnt.put(record.getGnt().get(0).getCap().getName(), bfGnt);
-                        } else {
+                            neoGnt.put(record.getGnt().get(0).getCap().getName()+"(NEO)", bfGnt);
+                        } else if (null!=record.getGnt().get(0).getCap()){
                             ArrayList<NewNeoTokenListBean> neoWallets = new ArrayList<>();
                             TokenBean.ListBean gasBean = new TokenBean.ListBean();
                             TokenBean.ListBean.GntCategoryBeanX gasGntBean = new TokenBean.ListBean.GntCategoryBeanX();
@@ -573,7 +665,8 @@ public class WalletFragment extends BaseFragment {
                             NewNeoTokenListBean list = new NewNeoTokenListBean(walletCount.get(index).getName(), record.getGnt().get(0).getBalance(), walletCount.get(index).getId(), wallet.get(walletPosition.get(walletCount.get(index).getId())));
                             neoWallets.add(list);
                             gasBean.setWallets(neoWallets);
-                            neoGnt.put(record.getGnt().get(0).getCap().getName(), gasBean);
+                            gasBean.setType(2);
+                            neoGnt.put(record.getGnt().get(0).getCap().getName()+"(NEO)", gasBean);
                         }
                     }
                 }
@@ -581,56 +674,54 @@ public class WalletFragment extends BaseFragment {
                 if (null != response.body().data.getList()) {
                     if (response.body().data.getRecord().getCategory_id() == 2){
                         for (TokenBean.ListBean gnt : response.body().data.getList()) {
-                            if (null != neoGnt.get(gnt.getName())) {
-                                TokenBean.ListBean bfGnt = neoGnt.get(gnt.getName());
+                            if (null != neoGnt.get(gnt.getName()+"(NEO)")) {
+                                TokenBean.ListBean bfGnt = neoGnt.get(gnt.getName()+"(NEO)");
                                 BigInteger price = new BigInteger(AppUtil.reverseArray(gnt.getBalance()));
                                 BigDecimal currentPrice = new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(gnt.getDecimals() == null ? "0" : gnt.getDecimals())));
 
                                 NewNeoTokenListBean list = new NewNeoTokenListBean(walletCount.get(index).getName(), currentPrice.toPlainString(), walletCount.get(index).getId(), wallet.get(walletPosition.get(walletCount.get(index).getId())));
                                 bfGnt.getWallets().add(list);
-                                gnt.setBalance(currentPrice.add(new BigDecimal(bfGnt.getBalance())).toString());
+                                gnt.setBalance(currentPrice.add(new BigDecimal(bfGnt.getBalance())).toPlainString());
                                 gnt.setWallets(bfGnt.getWallets());
-                                neoGnt.put(gnt.getName(), gnt);
+                                neoGnt.put(gnt.getName()+"(NEO)", gnt);
                             } else {
                                 BigInteger price = new BigInteger(AppUtil.reverseArray(gnt.getBalance()));
                                 BigDecimal currentPrice = new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(gnt.getDecimals() == null ? "0" : gnt.getDecimals())));
 
-                                gnt.setBalance(currentPrice.toString());
+                                gnt.setBalance(currentPrice.toPlainString());
                                 ArrayList<NewNeoTokenListBean> neoWallets = new ArrayList<>();
                                 NewNeoTokenListBean list = new NewNeoTokenListBean(walletCount.get(index).getName(), currentPrice.toPlainString(), walletCount.get(index).getId(), wallet.get(walletPosition.get(walletCount.get(index).getId())));
                                 neoWallets.add(list);
                                 gnt.setWallets(neoWallets);
-                                neoGnt.put(gnt.getName(), gnt);
+                                gnt.setType(2);
+                                neoGnt.put(gnt.getName()+"(NEO)", gnt);
                             }
                         }
                     }else {
                         for (TokenBean.ListBean gnt : response.body().data.getList()) {
-                            if (null != neoGnt.get(gnt.getName())) {
-                                TokenBean.ListBean bfGnt = neoGnt.get(gnt.getName());
-                                BigDecimal secPrice = new BigDecimal(AppUtil.toD(gnt.getBalance().replace("0x", "0")));
-                                gnt.setBalance(secPrice.divide(Constant.pEther).add(new BigDecimal(bfGnt.getBalance())).toString());
+                            if (null != neoGnt.get(gnt.getName()+"(ETH)")) {
+                                TokenBean.ListBean bfGnt = neoGnt.get(gnt.getName()+"(ETH)");
+                                BigDecimal secPrice = new BigDecimal(AppUtil.toD(gnt.getBalance().replace("0x", "0"))).divide(AppUtil.decimal(gnt.getDecimals()));
+
+                                gnt.setBalance(secPrice.add(new BigDecimal(bfGnt.getBalance())).toPlainString());
                                 NewNeoTokenListBean list = new NewNeoTokenListBean(walletCount.get(index).getName(), secPrice.toPlainString(), walletCount.get(index).getId(), wallet.get(walletPosition.get(walletCount.get(index).getId())));
                                 bfGnt.getWallets().add(list);
                                 gnt.setWallets(bfGnt.getWallets());
-                                neoGnt.put(gnt.getName(), gnt);
+                                gnt.setType(1);
+                                neoGnt.put(gnt.getName()+"(ETH)", gnt);
                             } else {
-                                BigDecimal currentPrice = new BigDecimal(AppUtil.toD(gnt.getBalance().replace("0x", "0")));
-                                gnt.setBalance(currentPrice.divide(Constant.pEther).toString());
+                                BigDecimal currentPrice = new BigDecimal(AppUtil.toD(gnt.getBalance().replace("0x", "0"))).divide(AppUtil.decimal(gnt.getDecimals()));
+                                gnt.setBalance(currentPrice.toPlainString());
                                 ArrayList<NewNeoTokenListBean> neoWallets = new ArrayList<>();
                                 NewNeoTokenListBean list = new NewNeoTokenListBean(walletCount.get(index).getName(), currentPrice.toPlainString(), walletCount.get(index).getId(), wallet.get(walletPosition.get(walletCount.get(index).getId())));
                                 neoWallets.add(list);
                                 gnt.setWallets(neoWallets);
-                                neoGnt.put(gnt.getName(), gnt);
+                                gnt.setType(1);
+                                neoGnt.put(gnt.getName()+"(ETH)", gnt);
                             }
                         }
                     }
                 }
-            }
-
-            @Override
-            public void onCacheSuccess(Response<LzyResponse<TokenBean>> response) {
-                super.onCacheSuccess(response);
-                //onSuccess(response);
             }
 
             @Override
@@ -680,17 +771,17 @@ public class WalletFragment extends BaseFragment {
             neoUsdPrice = neoUsdPrice.add(new BigDecimal(val.getBalance()).multiply(new BigDecimal(null == val.getGnt_category() ? "0.00" : null == val.getGnt_category().getCap() ? "0.00" : val.getGnt_category().getCap().getPrice_usd())));
         }
 
-        adapter.notifyDataSetChanged();
+        header.notifyDataSetChanged();
 
         totleCnyPrice = ethCnyPrice.add(neoCnyPrice);
         totleUsdDecimalPrice = ethUsdPrice.add(neoUsdPrice);
 
-        priceBean.ethCny = ethCnyPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
-        priceBean.ethUsd = ethUsdPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
-        priceBean.neoCny = neoCnyPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
-        priceBean.neoUsd = neoUsdPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
-        priceBean.totleCny = totleCnyPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
-        priceBean.totleUsd = totleUsdDecimalPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString();
+        priceBean.ethCny = ethCnyPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+        priceBean.ethUsd = ethUsdPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+        priceBean.neoCny = neoCnyPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+        priceBean.neoUsd = neoUsdPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+        priceBean.totleCny = totleCnyPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+        priceBean.totleUsd = totleUsdDecimalPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
 
         if (1 == App.get().getUnit()) {
             totleChPrice = (null == priceBean.totleCny ? "0.00" : priceBean.totleCny);
@@ -702,12 +793,11 @@ public class WalletFragment extends BaseFragment {
 
         swipeRefresh.setRefreshing(false);
 
-        //设置总资产
-        App.get().getSp().putString(App.isMain ? Constant.TOTAL_PRICE : Constant.TOTAL_TEST_PRICE, GsonUtils.objToJson(priceBean));
+        CacheUtils.setCache((App.isMain ? Constant.TOTAL_PRICE : Constant.TOTAL_TEST_PRICE)+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),priceBean);
 
-        //设置缓存列表
-        //设置 neo 列表
-        App.get().getSp().putString(App.isMain ? Constant.NEO_LIST : Constant.NEO_TEST_LIST, GsonUtils.objToJson(neoList));
+        CacheUtils.setCache((App.isMain ? Constant.NEO_LIST : Constant.NEO_TEST_LIST)+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),neoList);
+        isLoadSuccess=true;
+        isFirst=false;
     }
 
     @Override

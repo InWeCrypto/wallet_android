@@ -68,6 +68,16 @@
                     android:layout_marginTop="8dp"
                     android:textSize="14sp"
                     android:textColor="#B9B9B9" />
+
+                <TextView
+                    android:id="@+id/qindenglu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/img"
+                    android:textSize="14sp"
+                    android:text="@string/dengluzhuce"
+                    android:textColor="@color/c_333333" />
                 
                 <ImageView
                     android:layout_width="4.5dp"

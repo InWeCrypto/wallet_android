@@ -6,8 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inwecrypto.wallet.App;
@@ -22,6 +23,7 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.QuickActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.HotWalletActivity;
 import com.inwecrypto.wallet.ui.wallet.adapter.NeoWalletListAdapter;
 import com.lzy.okgo.model.Response;
@@ -32,6 +34,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 作者：xiaoji06 on 2018/1/8 11:08
@@ -39,20 +42,22 @@ import butterknife.BindView;
  * 功能：
  */
 
-public class NewNeoWalletListActivity extends BaseActivity {
+public class  NewNeoWalletListActivity extends BaseActivity {
 
     @BindView(R.id.wallet_list)
     RecyclerView walletList;
     @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout swipeRefresh;
-    @BindView(R.id.left)
-    FrameLayout left;
-    @BindView(R.id.txt_main_title)
-    TextView txtMainTitle;
-    @BindView(R.id.right)
-    FrameLayout right;
     @BindView(R.id.toolbar)
     SimpleToolbar toolbar;
+    @BindView(R.id.txt_left_title)
+    TextView txtLeftTitle;
+    @BindView(R.id.txt_main_title)
+    TextView txtMainTitle;
+    @BindView(R.id.txt_right_title)
+    TextView txtRightTitle;
+    @BindView(R.id.empty_ll)
+    LinearLayout emptyLl;
 
     private NeoWalletListAdapter adapter;
     private ArrayList<WalletBean> wallet = new ArrayList<>();
@@ -72,22 +77,27 @@ public class NewNeoWalletListActivity extends BaseActivity {
     @Override
     protected void initView() {
 
-        left.setOnClickListener(new View.OnClickListener() {
+        txtLeftTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        right.setOnClickListener(new View.OnClickListener() {
+        txtMainTitle.setText(R.string.qianbaoliebiao);
+
+        txtRightTitle.setCompoundDrawables(null, null, null, null);
+        txtRightTitle.setText(R.string.tianjiaqianbao);
+        txtRightTitle.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
+        txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getSupportFragmentManager();
                 CreateWalletFragment create = new CreateWalletFragment();
-                Bundle bundle=new Bundle();
-                bundle.putSerializable("wallets",wallet);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("wallets", wallet);
                 create.setArguments(bundle);
-                create.show(fm,"create");
+                create.show(fm, "create");
             }
         });
 
@@ -98,11 +108,11 @@ public class NewNeoWalletListActivity extends BaseActivity {
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, final int position) {
-                if (wallet.get(position).getCategory_id()==1){
+                if (wallet.get(position).getCategory_id() == 1) {
                     Intent intent = new Intent(mActivity, HotWalletActivity.class);
                     intent.putExtra("wallet", wallet.get(position));
                     finshTogo(intent);
-                }else {
+                } else {
                     Intent intent = new Intent(mActivity, NewNeoWalletActivity.class);
                     intent.putExtra("wallet", wallet.get(position));
                     finshTogo(intent);
@@ -123,11 +133,25 @@ public class NewNeoWalletListActivity extends BaseActivity {
                 getWalletOnNet();
             }
         });
+
+        if (wallet.size()==0){
+            emptyLl.setVisibility(View.VISIBLE);
+        }
+
+        if (App.get().getSp().getBoolean(Constant.FIRST_2,true)){
+            swipeRefresh.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent=new Intent(mActivity,QuickActivity.class);
+                    intent.putExtra("type",2);
+                    keepTogo(intent);
+                }
+            },300);
+        }
     }
 
     @Override
     protected void initData() {
-
     }
 
     private void getWalletOnNet() {
@@ -154,12 +178,10 @@ public class NewNeoWalletListActivity extends BaseActivity {
                 }
 
                 adapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
-                super.onCacheSuccess(response);
-                onSuccess(response);
+                if (wallet.size()==0){
+                    emptyLl.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -172,7 +194,7 @@ public class NewNeoWalletListActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 super.onFinish();
-                if (null!=swipeRefresh){
+                if (null != swipeRefresh) {
                     swipeRefresh.setRefreshing(false);
                 }
             }
@@ -181,12 +203,12 @@ public class NewNeoWalletListActivity extends BaseActivity {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode() == Constant.EVENT_WALLET||event.getEventCode() == Constant.EVENT_WALLET_DAIBI
+        if (event.getEventCode() == Constant.EVENT_WALLET || event.getEventCode() == Constant.EVENT_WALLET_DAIBI
                 || event.getEventCode() == Constant.EVENT_UNIT_CHANGE) {
             swipeRefresh.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (null!=swipeRefresh){
+                    if (null != swipeRefresh) {
                         swipeRefresh.setRefreshing(true);
                     }
                 }
@@ -194,5 +216,4 @@ public class NewNeoWalletListActivity extends BaseActivity {
             getWalletOnNet();
         }
     }
-
 }

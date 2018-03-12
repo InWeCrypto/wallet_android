@@ -30,7 +30,7 @@ public class TradingNoticeAdapter extends CommonAdapter<TradingNoticeBean> {
         holder.setText(R.id.order_time,trading.getTime());
         if ("ETH".equals(trading.getFlag())){
             BigDecimal currentPrice = new BigDecimal(AppUtil.toD(trading.getMoney().replace("0x", "0")));
-            currentPrice = currentPrice.divide(Constant.pEther, 4, BigDecimal.ROUND_HALF_UP);
+            currentPrice = currentPrice.divide(Constant.pEther, 4, BigDecimal.ROUND_DOWN);
             holder.setText(R.id.price,currentPrice.toPlainString());
         }else {
             holder.setText(R.id.price,trading.getMoney());

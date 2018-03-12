@@ -93,10 +93,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
-        <activity android:name="com.inwecrypto.wallet.ui.market.activity.MarketRemindActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
         <activity android:name="com.inwecrypto.wallet.ui.me.activity.MailListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
@@ -146,14 +142,6 @@
             android:screenOrientation="portrait"/>
 
 
-        <activity android:name="com.inwecrypto.wallet.ui.market.activity.MarketEditActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.market.activity.MarketAddActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
         <activity android:name="com.inwecrypto.wallet.ui.wallet.activity.ImportWalletTypeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
@@ -172,14 +160,6 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name="com.inwecrypto.wallet.ui.me.activity.FixNameActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.market.activity.MarketRemindAddActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.inwecrypto.wallet.ui.market.activity.MarketRemindEditActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
 
@@ -569,6 +549,17 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name=".ui.me.activity.YaoqinActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.news.InweHotBottomHistoryActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.QuickActivity"
+            android:theme="@style/NoTitleTranslucentTheme"
             android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>

@@ -131,6 +131,7 @@ public class TradingNoticeHistoryActivity extends BaseActivity {
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation("SYS_MSG_ORDER");
         if (null==conversation){
             isEnd=true;
+            swipeRefresh.setRefreshing(false);
             return;
         }
         //SDK初始化加载的聊天记录为20条，到顶时需要去DB里获取更多
@@ -138,6 +139,7 @@ public class TradingNoticeHistoryActivity extends BaseActivity {
         List<EMMessage> messages = conversation.loadMoreMsgFromDB(lastId, 20);
         if (null==messages){
             isEnd=true;
+            swipeRefresh.setRefreshing(false);
             return;
         }
         lastId=messages.get(messages.size()-1).getMsgId();
@@ -170,6 +172,7 @@ public class TradingNoticeHistoryActivity extends BaseActivity {
         if (null==conversation){
             isEnd=true;
             isFirst=true;
+            swipeRefresh.setRefreshing(false);
             return;
         }
         //获取此会话的所有消息
@@ -178,6 +181,7 @@ public class TradingNoticeHistoryActivity extends BaseActivity {
         if (null==messages){
             isEnd=true;
             isFirst=true;
+            swipeRefresh.setRefreshing(false);
             return;
         }
         data.clear();

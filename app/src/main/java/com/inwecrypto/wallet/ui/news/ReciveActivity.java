@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.zxing.WriterException;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonListBean;
@@ -114,6 +115,9 @@ public class ReciveActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        if (!App.get().isLogin()){
+            return;
+        }
         //获取钱包列表
         WalletApi.wallet(mActivity, new JsonCallback<LzyResponse<CommonListBean<WalletBean>>>() {
             @Override

@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.common.http.LzyResponse;
@@ -36,6 +37,7 @@ import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.lzy.okgo.model.Response;
 
 import java.lang.ref.ReferenceQueue;
@@ -151,6 +153,10 @@ public class ProjectNewsWebActivity extends BaseActivity {
                                     break;
                                 case 5:
                                     if (null != id) {
+                                        if (!App.get().isLogin()){
+                                            keepTogo(LoginActivity.class);
+                                            return;
+                                        }
                                         ZixunApi.newsCollect(this, id, true, new JsonCallback<LzyResponse<Object>>() {
                                             @Override
                                             public void onSuccess(Response<LzyResponse<Object>> response) {
@@ -222,7 +228,7 @@ public class ProjectNewsWebActivity extends BaseActivity {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
                 handler.proceed();    //表示等待证书响应
-                super.onReceivedSslError(view, handler, error);
+                //super.onReceivedSslError(view, handler, error);
                 // handler.cancel();      //表示挂起连接，为默认方式
                 // handler.handleMessage(null);    //可做其他处理
             }

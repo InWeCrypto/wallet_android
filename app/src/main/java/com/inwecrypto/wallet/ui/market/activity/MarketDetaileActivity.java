@@ -60,6 +60,7 @@ import com.inwecrypto.wallet.common.widget.chart.VolFormatter;
 import com.inwecrypto.wallet.common.widget.chart.bean.DataParse;
 import com.inwecrypto.wallet.common.widget.chart.bean.KLineBean;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.me.activity.AddMarketTipFragment;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -285,6 +286,10 @@ public class MarketDetaileActivity extends BaseActivity {
         tip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 FragmentManager fm = getSupportFragmentManager();
                 final AddMarketTipFragment improt = new AddMarketTipFragment();
                 Bundle bundle = new Bundle();
@@ -450,14 +455,14 @@ public class MarketDetaileActivity extends BaseActivity {
                     }
 
                     if (priceBean.get_$24h_change_cny().contains("-")) {
-                        charge24.setText(new BigDecimal(App.get().isZh() ? priceBean.get_$24h_change_cny() : priceBean.get_$24h_change()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
+                        charge24.setText(new BigDecimal(App.get().isZh() ? priceBean.get_$24h_change_cny() : priceBean.get_$24h_change()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString() + "%");
                         charge24.setTextColor(Color.parseColor("#e50370"));
                     } else {
-                        charge24.setText("+" + new BigDecimal(App.get().isZh() ? priceBean.get_$24h_change_cny() : priceBean.get_$24h_change()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "%");
+                        charge24.setText("+" + new BigDecimal(App.get().isZh() ? priceBean.get_$24h_change_cny() : priceBean.get_$24h_change()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString() + "%");
                         charge24.setTextColor(Color.parseColor("#74a700"));
                     }
-                    up24.setText(unit + new BigDecimal(App.get().isZh() ? priceBean.get_$24h_max_price_cny() : priceBean.get_$24h_max_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-                    down24.setText(unit + new BigDecimal(App.get().isZh() ? priceBean.get_$24h_min_price_cny() : priceBean.get_$24h_min_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
+                    up24.setText(unit + new BigDecimal(App.get().isZh() ? priceBean.get_$24h_max_price_cny() : priceBean.get_$24h_max_price()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                    down24.setText(unit + new BigDecimal(App.get().isZh() ? priceBean.get_$24h_min_price_cny() : priceBean.get_$24h_min_price()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
                 }
             }
         });

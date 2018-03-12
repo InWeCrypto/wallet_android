@@ -9,9 +9,11 @@ import android.util.EventLog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.TradingProjectDetaileBean;
@@ -23,6 +25,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.RatingBar;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.news.adapter.ProjectHomeAdapter;
 import com.lzy.okgo.model.Response;
 import com.suke.widget.SwitchButton;
@@ -71,6 +74,8 @@ public class ProjectHomeActivity extends BaseActivity {
     RecyclerView list;
     @BindView(R.id.dingzhi)
     SwitchButton dingzhi;
+    @BindView(R.id.zhidingrl)
+    RelativeLayout zhidingrl;
 
     private TradingProjectDetaileBean project;
 
@@ -101,6 +106,10 @@ public class ProjectHomeActivity extends BaseActivity {
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 if(null!=project.getCategory_user()&&project.getCategory_user().isIs_favorite()){
                     collectProject(false);
                 }else {
@@ -127,7 +136,7 @@ public class ProjectHomeActivity extends BaseActivity {
         blockChain.setText(project.getIndustry());
         if (null!=project.getCategory_score()){
             ratingbar.setStar((float) project.getCategory_score().getValue());
-            fenshu.setText(new BigDecimal(project.getCategory_score().getValue()).setScale(1, RoundingMode.HALF_UP).toPlainString()+" "+getString(R.string.yipingfen));
+            fenshu.setText(new BigDecimal(project.getCategory_score().getValue()).setScale(1, BigDecimal.ROUND_DOWN).toPlainString()+" "+getString(R.string.yipingfen));
         }
 
         state.setText(project.getType_name());
@@ -189,25 +198,39 @@ public class ProjectHomeActivity extends BaseActivity {
             dingzhi.setChecked(false);
         }
 
-        dingzhi.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(SwitchButton view, final boolean isChecked) {
-                ZixunApi.projectTop(this, project.getId(), isChecked, new JsonCallback<LzyResponse<Object>>() {
-                    @Override
-                    public void onSuccess(Response<LzyResponse<Object>> response) {
-                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_DINGZHI,isChecked));
-                    }
+        if (!App.get().isLogin()){
+            zhidingrl.setClickable(true);
+            zhidingrl.setFocusable(true);
+            zhidingrl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    keepTogo(LoginActivity.class);
+                }
+            });
+            dingzhi.setEnabled(false);
+            dingzhi.setClickable(false);
+            dingzhi.setFocusable(false);
+        }else {
+            dingzhi.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(SwitchButton view, final boolean isChecked) {
+                    ZixunApi.projectTop(this, project.getId(), isChecked, new JsonCallback<LzyResponse<Object>>() {
+                        @Override
+                        public void onSuccess(Response<LzyResponse<Object>> response) {
+                            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_DINGZHI,isChecked));
+                        }
 
-                    @Override
-                    public void onError(Response<LzyResponse<Object>> response) {
-                        super.onError(response);
-                        ToastUtil.show(R.string.caozuoshibai);
-                        dingzhi.setChecked(!isChecked);
-                    }
-                });
-            }
+                        @Override
+                        public void onError(Response<LzyResponse<Object>> response) {
+                            super.onError(response);
+                            ToastUtil.show(R.string.caozuoshibai);
+                            dingzhi.setChecked(!isChecked);
+                        }
+                    });
+                }
 
-        });
+            });
+        }
     }
 
     @Override

@@ -36,15 +36,15 @@ public class NewNeoGntAdapter extends CommonAdapter<TokenBean.ListBean> {
         holder.setText(R.id.name,gntBean.getName());
         BigInteger price=new BigInteger(AppUtil.reverseArray(gntBean.getBalance()));
         BigDecimal currentPrice = new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(gntBean.getDecimals()==null?"0":gntBean.getDecimals())));
-        Glide.with(mContext).load(gntBean.getGnt_category().getIcon()).transform(new GlideCircleTransform(mContext)).crossFade().into((ImageView) holder.getView(R.id.iv_img));
-        holder.setText(R.id.tv_price,currentPrice.setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
+        Glide.with(mContext).load(gntBean.getGnt_category().getIcon()).crossFade().into((ImageView) holder.getView(R.id.iv_img));
+        holder.setText(R.id.tv_price,currentPrice.setScale(8,BigDecimal.ROUND_DOWN).toPlainString());
         boolean isSee=App.get().getSp().getBoolean(Constant.MAIN_SEE,true);
         if (isSee){
             if (null!=gntBean.getGnt_category().getCap()){
                 if (1== App.get().getUnit()){
-                    holder.setText(R.id.tv_eth_ch_price,"￥"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    holder.setText(R.id.tv_eth_ch_price,"￥"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
                 }else {
-                    holder.setText(R.id.tv_eth_ch_price,"$"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    holder.setText(R.id.tv_eth_ch_price,"$"+currentPrice.multiply(new BigDecimal(gntBean.getGnt_category().getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
                 }
             }
             if (null==gntBean.getGnt_category().getCap()){

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CC000000">
+
+    <RelativeLayout
+        android:id="@+id/quickRl"
+        android:visibility="gone"
+        android:layout_gravity="right"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="56dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/quickline"
+            android:layout_toRightOf="@+id/quick"
+            android:layout_width="29dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="-6dp"
+            android:src="@mipmap/quickaddwalletline"/>
+
+        <ImageView
+            android:id="@+id/quick"
+            android:layout_below="@id/quickline"
+            android:layout_marginTop="-4dp"
+            android:layout_width="200dp"
+            android:layout_height="116dp"
+            android:src="@mipmap/quickaddwallet"/>
+
+        <ImageView
+            android:id="@+id/quickbtn"
+            android:layout_below="@+id/quick"
+            android:layout_width="100dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="60dp"
+            android:src="@mipmap/ikonw"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/addRl"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="16dp"
+        android:paddingTop="4dp"
+        android:layout_marginTop="@dimen/status_bar_height">
+
+        <ImageView
+            android:id="@+id/addkuang"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="126dp"
+            android:layout_marginBottom="4dp"
+            android:src="@mipmap/addwallettipkuang"/>
+
+        <ImageView
+            android:id="@+id/addline"
+            android:layout_below="@id/addkuang"
+            android:layout_width="29dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="116dp"
+            android:layout_marginBottom="3dp"
+            android:src="@mipmap/quickaddwalletline"/>
+
+        <ImageView
+            android:id="@+id/add"
+            android:layout_below="@id/addline"
+            android:layout_marginTop="-4dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/addwallettip"/>
+
+        <ImageView
+            android:id="@+id/addbtn"
+            android:layout_below="@+id/add"
+            android:layout_width="100dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="46dp"
+            android:src="@mipmap/ikonw"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/reciveRl"
+        android:visibility="gone"
+        android:layout_gravity="right"
+        android:layout_marginRight="66dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/recive"
+            android:layout_width="160dp"
+            android:layout_height="53dp"
+            android:src="@mipmap/recive_tip"/>
+
+        <ImageView
+            android:id="@+id/recive_arrow"
+            android:layout_toRightOf="@+id/recive"
+            android:layout_width="22dp"
+            android:layout_height="10dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="6dp"
+            android:src="@mipmap/recive_arrow"/>
+
+
+        <ImageView
+            android:id="@+id/recivebtn"
+            android:layout_below="@+id/recive"
+            android:layout_width="100dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="60dp"
+            android:src="@mipmap/ikonw"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/listRl"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/listkuang"
+            android:layout_width="80dp"
+            android:layout_height="74dp"
+            android:layout_marginLeft="66dp"
+            android:layout_marginBottom="4dp"
+            android:src="@mipmap/listkuang"/>
+
+        <ImageView
+            android:id="@+id/listline"
+            android:layout_below="@id/listkuang"
+            android:layout_width="38dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="96dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="3dp"
+            android:src="@mipmap/lineup"/>
+
+        <ImageView
+            android:id="@+id/list"
+            android:layout_below="@id/listline"
+            android:layout_marginTop="-4dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/listtip"/>
+
+        <ImageView
+            android:id="@+id/listbtn"
+            android:layout_below="@+id/list"
+            android:layout_width="100dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="34dp"
+            android:layout_marginLeft="46dp"
+            android:src="@mipmap/ikonw"/>
+
+    </RelativeLayout>
+
+
+</FrameLayout>

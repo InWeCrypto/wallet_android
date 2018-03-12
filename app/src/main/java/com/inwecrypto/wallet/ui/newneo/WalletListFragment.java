@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -37,7 +38,7 @@ public class WalletListFragment extends DialogFragment {
     private OnNextInterface listener;
     private RecyclerView list;
     private NewNeoWalletListPopupAdapter adapter;
-    private ArrayList<NewNeoTokenListBean> walletBeans=new ArrayList<>();
+    private ArrayList<NewNeoTokenListBean> walletBeans;
 
     @NonNull
     @Override
@@ -57,6 +58,19 @@ public class WalletListFragment extends DialogFragment {
         window.setAttributes(lp);
 
         walletBeans= (ArrayList<NewNeoTokenListBean>) getArguments().getSerializable("wallets");
+
+        if (null==walletBeans||(null!=walletBeans&&walletBeans.size()==0)){
+            walletBeans=new ArrayList<>();
+            dialog.findViewById(R.id.addFl).setVisibility(View.VISIBLE);
+            dialog.findViewById(R.id.addWallet).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null!=listener){
+                        listener.onNext(dialog);
+                    }
+                }
+            });
+        }
 
         list= (RecyclerView) dialog.findViewById(R.id.list);
 
@@ -99,7 +113,7 @@ public class WalletListFragment extends DialogFragment {
     }
 
     public interface OnNextInterface{
-        void onNext(String pass, Dialog dialog);
+        void onNext(Dialog dialog);
     }
 
     class SortByPrice implements Comparator {

@@ -427,30 +427,30 @@ public class NeoWalletActivity extends BaseActivity {
 
                 if (null!=response.body().data&&null!=response.body().data.getRecord()){
                     neoBean=response.body().data.getRecord();
-                    neo.setBalance(new BigDecimal(neoBean.getBalance()).setScale(0,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    neo.setBalance(new BigDecimal(neoBean.getBalance()).setScale(0,BigDecimal.ROUND_DOWN).toPlainString());
 
-                    gas.setBalance(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    gas.setBalance(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8,BigDecimal.ROUND_DOWN).toPlainString());
 
-                    getGas.setBalance(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).setScale(8,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    getGas.setBalance(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).setScale(8,BigDecimal.ROUND_DOWN).toPlainString());
 
-                    neoCap.setPrice_cny(new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    gasCap.setPrice_cny(new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    getGasCap.setPrice_cny(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    neoCap.setPrice_usd(new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    gasCap.setPrice_usd(new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    getGasCap.setPrice_usd(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
+                    neoCap.setPrice_cny(new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
+                    gasCap.setPrice_cny(new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
+                    getGasCap.setPrice_cny(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
+                    neoCap.setPrice_usd(new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
+                    gasCap.setPrice_usd(new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
+                    getGasCap.setPrice_usd(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
 
                     //计算总值
                     if (1 == App.get().getUnit()) {
                         BigDecimal neoBd=new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny()));
                         BigDecimal gasBd=new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
                         BigDecimal getGasBd = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
-                        TOKENPrice=neoBd.add(gasBd).add(getGasBd).setScale(2,BigDecimal.ROUND_HALF_UP);
+                        TOKENPrice=neoBd.add(gasBd).add(getGasBd).setScale(2,BigDecimal.ROUND_DOWN);
                     } else {
                         BigDecimal neoBd=new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd()));
                         BigDecimal gasBd=new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
                         BigDecimal getGasBd = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
-                        TOKENPrice=neoBd.add(gasBd).add(getGasBd).setScale(2,BigDecimal.ROUND_HALF_UP);
+                        TOKENPrice=neoBd.add(gasBd).add(getGasBd).setScale(2,BigDecimal.ROUND_DOWN);
                     }
 
                     neoGnt.setCap(neoCap);
@@ -490,11 +490,11 @@ public class NeoWalletActivity extends BaseActivity {
 
                 //计算总金额
                 if (1 == App.get().getUnit()) {
-                    tvPrice.setText(TOKENPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    titlePrice.setText("(￥" + TOKENPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                    tvPrice.setText(TOKENPrice.setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
+                    titlePrice.setText("(￥" + TOKENPrice.setScale(2,BigDecimal.ROUND_DOWN).toPlainString() + ")");
                 } else {
-                    tvPrice.setText(TOKENPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString());
-                    titlePrice.setText("($" + TOKENPrice.setScale(2,BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                    tvPrice.setText(TOKENPrice.setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
+                    titlePrice.setText("($" + TOKENPrice.setScale(2,BigDecimal.ROUND_DOWN).toPlainString() + ")");
                 }
             }
 

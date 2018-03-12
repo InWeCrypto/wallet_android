@@ -31,7 +31,7 @@
     <string name="zanwushuju">No Data</string>
     <string name="denglushibai">ailed to sign in</string>
     <string name="hangqingxiangqing">Market Details</string>
-    <string name="tianjiaqianbao">Add wallets</string>
+    <string name="tianjiaqianbao">Add</string>
     <string name="tianjiadaibi">Add tokens</string>
     <string name="shoukuanqueren">Receiving Confirmation</string>
     <string name="shoukuanxiangqing">Receiving Details</string>
@@ -300,7 +300,7 @@
     <string name="zhengshiwangluo">MainNet</string>
     <string name="yidenglu">logged in</string>
     <string name="renmingbi">CNY</string>
-    <string name="dangqianbanben">Current version： 1.0.0</string>
+    <string name="dangqianbanben">Current version： 1.0.1</string>
     <string name="qianbaochakan">Wallet Explore</string>
     <string name="keyongshuliang">Amount Available</string>
     <string name="tianjia">Add</string>
@@ -341,7 +341,7 @@
     <string name="baocun_">save</string>
     <string name="bianji_">edit</string>
     <string name="shanchu_">delete</string>
-    <string name="qianbaoliebiao">Manager Wallets</string>
+    <string name="qianbaoliebiao">Wallet List</string>
     <string name="chuanjianqianbao">Create Wallet</string>
     <string name="mimaguize">The password needs to contain at least 8 characters, with upper case, lower case and digits mixed. </string>
     <string name="querenmima">Confirm Password</string>
@@ -533,4 +533,15 @@
     <string name="zuigaozhibunengxiaoyudengyuzuidizhi">The highest value can not be less than or equal to the lowest value</string>
     <string name="trading_lishizixun">Follow-up</string>
     <string name="ksdaoru">Start Importing</string>
+    <string name="qita">Others</string>
+    <string name="ninzanshihaimeiyouqianbao">You don&#096;t have this type of wallet</string>
+    <string name="tianjiadaoruqianbao">Add/Import wallet</string>
+    <string name="suoyouzichan">All assets</string>
+    <string name="shuliang">Amount</string>
+    <string name="zanwuqianbaoqingzhiyoushangjiaotianjia">No wallet exist. Create wallets here</string>    <string name="huodongyijieshu">Campaign has ended</string>
+    <string name="kuanggongfeiyong">Mining Fee</string>
+    <string name="man">Slow</string>
+    <string name="kuai">Fast</string>
+    <string name="dangqianyue0">(Balance：0.00)</string>
+    <string name="dengluzhuce">Sign in / Sign up</string>
 </resources>

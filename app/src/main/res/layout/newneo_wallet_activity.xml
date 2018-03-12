@@ -54,21 +54,23 @@
                             <RelativeLayout
                                 android:id="@+id/card_rl"
                                 android:layout_width="match_parent"
-                                android:layout_height="200dp"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
                                 android:layout_centerVertical="true">
                                 <ImageView
-                                    android:layout_width="match_parent"
+                                    android:id="@+id/card_bg"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:scaleType="fitXY"
                                     android:src="@mipmap/cardbgxxhdpi"/>
 
                                 <LinearLayout
                                     android:id="@+id/name_ll"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="12dp"
-                                    android:layout_marginRight="12dp"
-                                    android:layout_marginTop="18dp"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginRight="8dp"
+                                    android:layout_marginTop="8dp"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
                                     <ImageView
@@ -139,9 +141,9 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentBottom="true"
-                                    android:layout_marginLeft="12dp"
-                                    android:layout_marginRight="12dp"
-                                    android:layout_marginBottom="18dp"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginRight="8dp"
+                                    android:paddingBottom="10dp"
                                     android:orientation="horizontal">
                                     <TextView
                                         android:id="@+id/address"

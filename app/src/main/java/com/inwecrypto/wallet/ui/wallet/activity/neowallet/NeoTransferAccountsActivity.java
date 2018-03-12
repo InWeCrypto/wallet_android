@@ -111,7 +111,7 @@ public class NeoTransferAccountsActivity extends BaseActivity {
             }
         });
 
-        tvCurrentPrice.setText("(" + getString(R.string.dangqianyue) + "：" + (type == 0 ? new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_HALF_UP).toPlainString() : new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString()) + ")");
+        tvCurrentPrice.setText("(" + getString(R.string.dangqianyue) + "：" + (type == 0 ? new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_DOWN).toPlainString() : new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_DOWN).toPlainString()) + ")");
 
         gasfeell.setVisibility(View.INVISIBLE);
 
@@ -193,7 +193,7 @@ public class NeoTransferAccountsActivity extends BaseActivity {
                                     intent.putExtra("unspent", utxo);
                                     intent.putExtra("wallet", wallet);
                                     intent.putExtra("type", type);
-                                    intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
+                                    intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(4,BigDecimal.ROUND_DOWN).toPlainString());
                                     intent.putExtra("hit", etHint.getText().toString().trim());
                                     if (type==0){
                                         intent.putExtra("unit", "(NEO)");

@@ -33,6 +33,6 @@ public class NewNeoWalletListPopupAdapter extends CommonAdapter<NewNeoTokenListB
             Glide.with(mContext).load(R.mipmap.neoxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));
         }
         holder.setText(R.id.name,listBean.getName());
-        holder.setText(R.id.amount,new BigDecimal(listBean.getPrice()).setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
+        holder.setText(R.id.amount,new BigDecimal(listBean.getPrice()).setScale(4,BigDecimal.ROUND_DOWN).toPlainString());
     }
 }

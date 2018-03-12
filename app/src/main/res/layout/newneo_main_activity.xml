@@ -89,6 +89,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginBottom="12dp"
                                 android:src="@mipmap/managewalletxxhdpi"/>
+
                         </LinearLayout>
 
                     </FrameLayout>

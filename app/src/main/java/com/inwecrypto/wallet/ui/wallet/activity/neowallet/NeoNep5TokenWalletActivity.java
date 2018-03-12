@@ -29,6 +29,7 @@ import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
 import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.DensityUtil;
+import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ScreenUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.EndLessOnScrollListener;
@@ -241,22 +242,22 @@ public class NeoNep5TokenWalletActivity extends BaseActivity {
         });
 
         if (null!=tokenBean.getGnt_category()&&null!=tokenBean.getGnt_category().getIcon()){
-            Glide.with(this).load(tokenBean.getGnt_category().getIcon()).transform(new GlideCircleTransform(this)).crossFade().into(ivImg);
+            Glide.with(this).load(tokenBean.getGnt_category().getIcon()).crossFade().into(ivImg);
         }
 
         BigInteger price=new BigInteger(AppUtil.reverseArray(tokenBean.getBalance()));
         tokenPrice=new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(tokenBean.getDecimals())));
-        tvPrice.setText(tokenPrice.setScale(4,BigDecimal.ROUND_HALF_UP).toPlainString());
+        tvPrice.setText(tokenPrice.setScale(4,BigDecimal.ROUND_DOWN).toPlainString());
 
         boolean isSee=App.get().getSp().getBoolean(Constant.MAIN_SEE,true);
         if (null!=tokenBean.getGnt_category()&&null!=tokenBean.getGnt_category().getCap()){
             if (isSee){
                 if (1 == App.get().getUnit()) {
-                    tvChPrice.setText("≈￥" + tokenPrice.multiply(new BigDecimal(tokenBean.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-                    titlePrice.setText("(￥" + tokenPrice.multiply(new BigDecimal(tokenBean.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                    tvChPrice.setText("≈￥" + tokenPrice.multiply(new BigDecimal(tokenBean.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                    titlePrice.setText("(￥" + tokenPrice.multiply(new BigDecimal(tokenBean.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString() + ")");
                 } else {
-                    tvChPrice.setText("≈$" + tokenPrice.multiply(new BigDecimal(tokenBean.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString());
-                    titlePrice.setText("($" + tokenPrice.multiply(new BigDecimal(tokenBean.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
+                    tvChPrice.setText("≈$" + tokenPrice.multiply(new BigDecimal(tokenBean.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                    titlePrice.setText("($" + tokenPrice.multiply(new BigDecimal(tokenBean.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString() + ")");
                 }
             }else {
                 if (1 == App.get().getUnit()) {
@@ -423,7 +424,9 @@ public class NeoNep5TokenWalletActivity extends BaseActivity {
             @Override
             public void onError(Response<LzyResponse<NeoOderBean>> response) {
                 super.onError(response);
-                ToastUtil.show(getString(R.string.load_error));
+                if (NetworkUtils.isConnected(mActivity)){
+                    ToastUtil.show(getString(R.string.load_error));
+                }
                 if (page!=0){
                     page--;
                 }
@@ -500,7 +503,7 @@ public class NeoNep5TokenWalletActivity extends BaseActivity {
                     tokenBean.setBalance(response.body().data.getBalance());
                     BigInteger price=new BigInteger(AppUtil.reverseArray(response.body().data.getBalance()));
                     tokenPrice=new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(response.body().data.getDecimals())));
-                    tvPrice.setText(tokenPrice.setScale(4, RoundingMode.HALF_UP).toPlainString());
+                    tvPrice.setText(tokenPrice.setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
 
                 }
             });

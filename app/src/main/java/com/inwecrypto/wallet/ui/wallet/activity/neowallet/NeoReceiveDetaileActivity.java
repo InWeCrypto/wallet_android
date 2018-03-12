@@ -89,9 +89,9 @@ public class NeoReceiveDetaileActivity extends BaseActivity {
         BigDecimal b = new BigDecimal(order.getValue());
         String amount="0.0000";
         if (isTnc){
-            amount=b.divide(new BigDecimal(10).pow(Integer.parseInt(decimals))).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString();
+            amount=b.divide(new BigDecimal(10).pow(Integer.parseInt(decimals))).setScale(4, BigDecimal.ROUND_DOWN).toPlainString();
         }else {
-            amount=b.setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString();
+            amount=b.setScale(4, BigDecimal.ROUND_DOWN).toPlainString();
         }
         price.setText("+"+amount);
 

@@ -15,9 +15,11 @@ import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CommonProjectBean;
 import com.inwecrypto.wallet.common.Constant;
+import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.suke.widget.SwitchButton;
 
 import org.greenrobot.eventbus.EventBus;
@@ -51,6 +53,8 @@ public class ProjectDetaileActivity extends BaseActivity {
     RelativeLayout historyll;
     @BindView(R.id.push)
     SwitchButton push;
+    @BindView(R.id.pushrl)
+    RelativeLayout pushrl;
 
     private CommonProjectBean marks;
 
@@ -107,15 +111,15 @@ public class ProjectDetaileActivity extends BaseActivity {
                         intent=new Intent(mActivity,ExchangeNoticeHistoryActivity.class);
                         keepTogo(intent);
                         break;
+//                    case 3:
+//                        intent=new Intent(mActivity,CandyBowHistoryActivity.class);
+//                        keepTogo(intent);
+//                        break;
                     case 3:
-                        intent=new Intent(mActivity,CandyBowHistoryActivity.class);
-                        keepTogo(intent);
-                        break;
-                    case 4:
                         intent=new Intent(mActivity,TradingNoticeHistoryActivity.class);
                         keepTogo(intent);
                         break;
-                    case 5:
+                    case 4:
                         intent=new Intent(mActivity,NoticeHistoryActivity.class);
                         keepTogo(intent);
                         break;
@@ -123,23 +127,43 @@ public class ProjectDetaileActivity extends BaseActivity {
             }
         });
 
-        push.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
-                //获取缓存文件
-                String projectJson = App.get().getSp().getString(App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST, Constant.BASE_PROJECT_JSON);
-                ArrayList<CommonProjectBean> list = GsonUtils.jsonToArrayList(projectJson, CommonProjectBean.class);
-                for (CommonProjectBean projectBean:list){
-                    if (projectBean.getId()==marks.getId()){
-                        projectBean.setOpenTip(isChecked);
-                        //设置缓存文件
-                        App.get().getSp().putString(App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST, GsonUtils.objToJson(list));
-                        EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_NOTIFY,isChecked));
+        if (!App.get().isLogin()){
+            pushrl.setClickable(true);
+            pushrl.setFocusable(true);
+            pushrl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    keepTogo(LoginActivity.class);
+                }
+            });
+            push.setEnabled(false);
+            push.setClickable(false);
+            push.setFocusable(false);
+        }else {
+
+            push.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                    if (!App.get().isLogin()){
+                        keepTogo(LoginActivity.class);
                         return;
                     }
+                    //获取缓存文件
+                    ArrayList<CommonProjectBean> list = CacheUtils.getCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
+                            +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
+                    for (CommonProjectBean projectBean:list){
+                        if (projectBean.getId()==marks.getId()){
+                            projectBean.setOpenTip(isChecked);
+                            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_NOTIFY,isChecked));
+                            //设置缓存文件
+                            CacheUtils.setCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
+                                    +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),list);
+                            return;
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override

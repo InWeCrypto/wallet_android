@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.exceptions.HyphenateException;
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseFragment;
@@ -19,11 +21,14 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
+import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.GsonUtils;
+import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.FixSwipeRecyclerView;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.news.CandyBowActivity;
 import com.inwecrypto.wallet.ui.news.ExchangeNoticeActivity;
 import com.inwecrypto.wallet.ui.news.InweHotActivity;
@@ -47,6 +52,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -112,11 +118,10 @@ public class CProjectFragment extends BaseFragment {
                     if (null!=data.get(menuBridge.getAdapterPosition()).getCommonProjectBean()){
                         data.get(menuBridge.getAdapterPosition()).getCommonProjectBean().setShow(false);
                         data.remove(menuBridge.getAdapterPosition());
-                        //设置缓存文件
-                        App.get().getSp().putString(App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST, GsonUtils.objToJson(marks));
-
                         adatpter.notifyItemRemoved(menuBridge.getAdapterPosition());
                         menuBridge.closeMenu();
+                        CacheUtils.setCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
+                                +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),marks);
                     }else {
                         ZixunApi.collectProject(this, data.get(menuBridge.getAdapterPosition()).getId(), false, new JsonCallback<LzyResponse<Object>>() {
                             @Override
@@ -158,23 +163,31 @@ public class CProjectFragment extends BaseFragment {
                             intent=new Intent(mActivity,ExchangeNoticeActivity.class);
                             i=2;
                             break;
+//                        case 3:
+//                            intent=new Intent(mActivity,CandyBowActivity.class);
+//                            i=3;
+//                            break;
                         case 3:
-                            intent=new Intent(mActivity,CandyBowActivity.class);
+                            if (!App.get().isLogin()){
+                                keepTogo(LoginActivity.class);
+                                return;
+                            }
+                            intent = new Intent(mActivity,TradingNoticeActivity.class);
                             i=3;
                             break;
                         case 4:
-                            intent = new Intent(mActivity,TradingNoticeActivity.class);
+                            if (!App.get().isLogin()){
+                                keepTogo(LoginActivity.class);
+                                return;
+                            }
+                            intent = new Intent(mActivity,NoticeActivity.class);
                             i=4;
                             break;
-                        case 5:
-                            intent = new Intent(mActivity,NoticeActivity.class);
-                            i=5;
-                            break;
                     }
-                    intent.putExtra("marks",marks.get(position));
+                    intent.putExtra("marks",marks.get(data.get(position).getCommonProjectBean().getId()));
                     keepTogo(intent);
                     if (marks.get(i).isHasMessage()){
-                        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(marks.get(i).getType());//指定会话消息未读数清零
+                        EMConversation conversation = EMClient.getInstance().chatManager().getConversation((i==3||i==4)?marks.get(i).getType():marks.get(i).getChatId());//指定会话消息未读数清零
                         if (null!=conversation){
                             conversation.markAllMessagesAsRead();
                         }
@@ -213,13 +226,21 @@ public class CProjectFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (!isFirst&&!isLoadSuccess&& NetworkUtils.isConnected(getContext())){
+            loadData();
+        }
     }
 
     @Override
     protected void loadData() {
+        if (!App.get().isLogin()){
+            refreshFix();
+            return;
+        }
         ZixunApi.getFavoriteProject(this, 1, new JsonCallback<LzyResponse<ProjectListBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<ProjectListBean>> response) {
+                isLoadSuccess=true;
                 LoadSuccess(response);
             }
 
@@ -238,6 +259,7 @@ public class CProjectFragment extends BaseFragment {
             @Override
             public void onFinish() {
                 super.onFinish();
+                isFirst=false;
                 EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH_SUC));
             }
         });
@@ -274,13 +296,15 @@ public class CProjectFragment extends BaseFragment {
         adatpter.notifyDataSetChanged();
 
         if (!response.isFromCache()){
-            //请求糖果盒信息
-            if (marks.get(3).isShow()){
-                getCandyMessage();
-            }else {
-                //获取聊天室信息
-                getIM();
-            }
+            //获取聊天室信息
+            getIM();
+//            //请求糖果盒信息
+//            if (marks.get(3).isShow()){
+//                getCandyMessage();
+//            }else {
+//                //获取聊天室信息
+//                getIM();
+//            }
         }
     }
 
@@ -293,8 +317,6 @@ public class CProjectFragment extends BaseFragment {
                         CandyBowBean.ListBean.DataBean candy=response.body().data.getList().getData().get(0);
                         marks.get(3).setTime(candy.getYear()+"-"+candy.getMonth()+"-"+candy.getDay());
                         marks.get(3).setLastMessage(candy.getDesc());
-                        //设置缓存文件
-                        App.get().getSp().putString(App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST, GsonUtils.objToJson(marks));
 
                         int i=0;
                         for (ProjectDetaileBean project:data){
@@ -304,6 +326,8 @@ public class CProjectFragment extends BaseFragment {
                             }
                             i++;
                         }
+                        CacheUtils.setCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
+                                +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),marks);
                     }
                 }
             }
@@ -323,29 +347,49 @@ public class CProjectFragment extends BaseFragment {
             public void run() {
                 Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
 
-                for (CommonProjectBean mark : marks) {
-                    if (null != conversations.get(mark.getType())) {
-                        if (conversations.get(mark.getType()).getUnreadMsgCount() > 0) {
-                            mark.setHasMessage(true);
+                Iterator<Map.Entry<String, EMConversation>> it = conversations.entrySet().iterator();
+
+                while(it.hasNext()){
+                    Map.Entry<String, EMConversation> entry = it.next();
+
+                    for (CommonProjectBean mark:marks){
+                        if (!entry.getKey().equals(mark.getType())) {
+                            //根据群组ID从服务器获取群组基本信息
+                            try {
+                                EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer(entry.getKey());
+                                if(group.getGroupName().contains(mark.getType().toUpperCase())){
+                                    mark.setChatId(entry.getKey());
+                                }else {
+                                    continue;
+                                }
+                            } catch (HyphenateException e) {
+                                e.printStackTrace();
+                                continue;
+                            }
                         }
-                        EMTextMessageBody body = (EMTextMessageBody) conversations.get(mark.getType()).getLastMessage().getBody();
-                        mark.setTime("" + sdr.format(new Date(conversations.get(mark.getType()).getLastMessage().getMsgTime())));
+                        EMConversation message=conversations.get(entry.getKey());
+                        EMTextMessageBody body = (EMTextMessageBody) message.getLastMessage().getBody();
+                        mark.setTime("" + sdr.format(new Date(message.getLastMessage().getMsgTime())));
                         String meg=body.getMessage().replace(":date",mark.getTime());
                         mark.setLastMessage(meg);
-                        int count=conversations.get(mark.getType()).getUnreadMsgCount();
+                        int count=message.getUnreadMsgCount();
                         if (count>0){
                             mark.setHasMessage(true);
                         }
+                        break;
                     }
+
                 }
-                //设置缓存文件
-                App.get().getSp().putString(App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST, GsonUtils.objToJson(marks));
+
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adatpter.notifyDataSetChanged();
                     }
                 });
+
+                CacheUtils.setCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
+                        +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),marks);
             }
         }).start();
     }
@@ -370,9 +414,6 @@ public class CProjectFragment extends BaseFragment {
     }
 
     private void refreshFix() {
-        //设置缓存文件
-        App.get().getSp().putString(App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST, GsonUtils.objToJson(marks));
-
         ArrayList<ProjectDetaileBean> fixed=new ArrayList<>();
 
         for (CommonProjectBean project:marks){
@@ -389,6 +430,9 @@ public class CProjectFragment extends BaseFragment {
         data.clear();
         data.addAll(totle);
         adatpter.notifyDataSetChanged();
+        //设置缓存文件
+        CacheUtils.setCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
+                +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),marks);
     }
 
 }

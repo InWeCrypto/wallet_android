@@ -119,40 +119,51 @@ public class Constant {
 
     public static final String IS_CHINESE="ischinese";
 
+    public static final String FIRST_1="first1";
+
+    public static final String FIRST_2="first2";
+
+    public static final String FIRST_3="first3";
+
+    public static final String FIRST_4="first4";
+
+    public static final String LOGIN_NAME="login_name";
+
     public static final String BASE_PROJECT_JSON="[\n" +
             " {\n" +
             "   \"id\":0,\n" +
             "   \"type\":\"sys_msg_inwehot\",\n" +
-            "   \"isShow\":true\n" +
+            "   \"isShow\":true,\n" +
+            "   \"chatId\":\"\"\n" +
             " },\n" +
             " {\n" +
             "   \"id\":1,\n" +
             "   \"type\":\"sys_msg_trading\",\n" +
-            "   \"isShow\":true\n" +
+            "   \"isShow\":true,\n" +
+            "   \"chatId\":\"\"\n" +
             " },\n" +
             " {\n" +
             "   \"id\":2,\n" +
             "   \"type\":\"sys_msg_exchangenotice\",\n" +
-            "   \"isShow\":true\n" +
+            "   \"isShow\":true,\n" +
+            "   \"chatId\":\"\"\n" +
             " },\n" +
+//            " {\n" +
+//            "   \"id\":3,\n" +
+//            "   \"type\":\"sys_msg_candybow\",\n" +
+//            "   \"isShow\":false\n" +
+//            " },\n" +
             " {\n" +
             "   \"id\":3,\n" +
-            "   \"type\":\"sys_msg_candybow\",\n" +
-            "   \"isShow\":false\n" +
-            " },\n" +
-            " {\n" +
-            "   \"id\":4,\n" +
             "   \"type\":\"sys_msg_order\",\n" +
             "   \"isShow\":true\n" +
             " },\n" +
             " {\n" +
-            "   \"id\":5,\n" +
+            "   \"id\":4,\n" +
             "   \"type\":\"sys_msg\",\n" +
             "   \"isShow\":true\n" +
             " }\n" +
             "]";
-
-    public static final String BASE_SORT="[{\"p\":0},{\"p\":1},{\"p\":2},{\"p\":3},{\"p\":4},{\"p\":5}]";
 
     public static final int EVENT_REFRESH=0;
 
@@ -232,6 +243,10 @@ public class Constant {
 
     public static final int EVENT_NOTIFY = 37;
 
+    public static final int EVENT_INWE_HOT_CLICK = 38;
+
+    public static final int EVENT_INWE_HOT_HISTORY_CLICK = 39;
+
     public static final int EVENT_TOKEN = 4009;
 
     public static final int PAGE_SIZE=20;
@@ -243,4 +258,5 @@ public class Constant {
     public static final String GUANCHA="2";
 
     public static final String CLOD="3";
+
 }

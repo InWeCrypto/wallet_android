@@ -299,7 +299,7 @@
     <string name="zhengshiwangluo">正式网络</string>
     <string name="yidenglu">已登录</string>
     <string name="renmingbi">人民币</string>
-    <string name="dangqianbanben">当前版本： 1.0.0</string>
+    <string name="dangqianbanben">当前版本： 1.0.1</string>
     <string name="qianbaochakan">钱包查看</string>
     <string name="keyongshuliang">可用数量</string>
     <string name="tianjia">添加</string>
@@ -475,7 +475,7 @@
     <string name="shizhi">市值</string>
     <string name="liutongliang">流通量</string>
     <string name="icojiage">ICO价格</string>
-    <string name="lingpaichiyouzhe">令牌持有人</string>
+    <string name="lingpaichiyouzhe">代币分布图</string>
     <string name="jiaoyitixing">交易提醒</string>
     <string name="shujuhuoqushibai">数据获取失败</string>
     <string name="shishihangqing">实时行情</string>
@@ -534,4 +534,16 @@
     <string name="zuigaozhibunengxiaoyudengyuzuidizhi">最高值不能小于等于最低值</string>
     <string name="trading_lishizixun">历史资讯</string>
     <string name="ksdaoru">导入</string>
+    <string name="qita">其它</string>
+    <string name="ninzanshihaimeiyouqianbao">您暂时还没有该类型的钱包</string>
+    <string name="tianjiadaoruqianbao">添加/导入钱包</string>
+    <string name="suoyouzichan">所有资产</string>
+    <string name="shuliang">数量</string>
+    <string name="zanwuqianbaoqingzhiyoushangjiaotianjia">暂无钱包，请至右上角“添加钱包”处创建钱包</string>
+    <string name="huodongyijieshu">活动已结束</string>
+    <string name="kuanggongfeiyong">矿工费用</string>
+    <string name="man">慢</string>
+    <string name="kuai">快</string>
+    <string name="dangqianyue0">(当前余额：0.00)</string>
+    <string name="dengluzhuce">登录/注册</string>
 </resources>

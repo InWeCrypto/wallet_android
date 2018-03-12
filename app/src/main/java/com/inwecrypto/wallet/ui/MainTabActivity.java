@@ -135,27 +135,29 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
             }
         }, 2000);
 
-        //开启服务
-        startService(new Intent(mActivity, MessageService.class));
+        if (App.get().isLogin()){
+            //开启服务
+            startService(new Intent(mActivity, MessageService.class));
 
-        if (isYaoqin && App.get().isZh()) {
-            content.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ZixunApi.getYaoqinKey(this, new JsonCallback<LzyResponse<YaoqinBean>>() {
-                        @Override
-                        public void onSuccess(final Response<LzyResponse<YaoqinBean>> response) {
-                            if (response.body().data.isCandy_bow_stat()) {
-                                //获取邀请码
-                                Intent intent = new Intent(mActivity, YaoqinActivity.class);
-                                String token = App.get().getSp().getString(App.isMain ? Constant.TOKEN : Constant.TEST_TOKEN);
-                                intent.putExtra("url", (App.isMain ? MAIN_YAOQIN : TEST_YAOQIN) + response.body().data.getCode() + "&token=" + token);
-                                keepTogo(intent);
+            if (isYaoqin && App.get().isZh()) {
+                content.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ZixunApi.getYaoqinKey(this, new JsonCallback<LzyResponse<YaoqinBean>>() {
+                            @Override
+                            public void onSuccess(final Response<LzyResponse<YaoqinBean>> response) {
+                                if (response.body().data.isCandy_bow_stat()) {
+                                    //获取邀请码
+                                    Intent intent = new Intent(mActivity, YaoqinActivity.class);
+                                    String token = App.get().getSp().getString(App.isMain ? Constant.TOKEN : Constant.TEST_TOKEN);
+                                    intent.putExtra("url", (App.isMain ? MAIN_YAOQIN : TEST_YAOQIN) + response.body().data.getCode() + "&token=" + token);
+                                    keepTogo(intent);
+                                }
                             }
-                        }
-                    });
-                }
-            },2000);
+                        });
+                    }
+                },2000);
+            }
         }
 
         //检查更新

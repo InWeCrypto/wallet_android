@@ -46,6 +46,8 @@ public abstract class BaseFragment extends Fragment {
     private boolean isViewInit;
     private boolean isLoadDate;
     protected boolean isLazyOpen;
+    protected boolean isLoadSuccess;
+    protected boolean isFirst=true;
 
 
     /**

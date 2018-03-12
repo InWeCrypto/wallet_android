@@ -96,9 +96,9 @@ public class NeoTransferAccountsDetaileActivity extends BaseActivity {
         BigDecimal b = new BigDecimal(order.getValue());
         String amount="0.0000";
         if (isTnc){
-            amount=b.divide(new BigDecimal(10).pow(Integer.parseInt(decimals))).setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString();
+            amount=b.divide(new BigDecimal(10).pow(Integer.parseInt(decimals))).setScale(4, BigDecimal.ROUND_DOWN).toPlainString();
         }else {
-            amount=b.setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString();
+            amount=b.setScale(4, BigDecimal.ROUND_DOWN).toPlainString();
         }
         if (order.getFrom().equals(order.getTo())){
             price.setText(amount);
@@ -106,7 +106,7 @@ public class NeoTransferAccountsDetaileActivity extends BaseActivity {
             price.setText("-" + amount);
         }
         BigDecimal s = new BigDecimal("0");
-        shouxufei.setText(getString(R.string.lingfushouxufei) + s.setScale(4, BigDecimal.ROUND_HALF_UP).toPlainString());
+        shouxufei.setText(getString(R.string.lingfushouxufei) + s.setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
         if (null==order.getConfirmTime()||order.getConfirmTime().equals("")) {
             Glide.with(this).load(R.mipmap.icon_processing).crossFade().into(status);
         } else {

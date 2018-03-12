@@ -47,7 +47,7 @@ public class ProjectHistoryFragment extends BaseFragment {
     private int type=-1;
     private int id;
 
-    private int page = 0;
+    private int page = 1;
     private boolean isEnd;
     private boolean isShow;
 

@@ -127,8 +127,8 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
         });
 
         BigInteger price = new BigInteger(AppUtil.reverseArray(tokenBean.getBalance()));
-        tvCurrentPrice.setText("(" + tokenBean.getName() + getString(R.string.keyongshuliang)+"：" + new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(tokenBean.getDecimals()))).setScale(8, BigDecimal.ROUND_HALF_UP).toPlainString() + ")");
-        gas = new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_HALF_UP).doubleValue();
+        tvCurrentPrice.setText("(" + tokenBean.getName() + getString(R.string.keyongshuliang)+"：" + new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(tokenBean.getDecimals()))).setScale(8, BigDecimal.ROUND_DOWN).toPlainString() + ")");
+        gas = new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_DOWN).doubleValue();
         if (gas == 0) {
             tvOk.setText(R.string.gasyuebuzu);
             tvOk.setBackgroundColor(Color.parseColor("#DADADA"));
@@ -203,7 +203,7 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
                                             intent.putExtra("wallet", wallet);
                                             intent.putExtra("token", tokenBean);
                                             intent.putExtra("to", etAddress.getText().toString().trim());
-                                            intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(4, RoundingMode.HALF_UP).toPlainString());
+                                            intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
                                             intent.putExtra("handfee", "0.0000");
                                             intent.putExtra("hit", etHint.getText().toString().trim());
                                             intent.putExtra("unit", tokenBean.getName());
@@ -215,7 +215,7 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
                                                 intent.putExtra("wallet", wallet);
                                                 intent.putExtra("token", tokenBean);
                                                 intent.putExtra("to", etAddress.getText().toString().trim());
-                                                intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(4, RoundingMode.HALF_UP).toPlainString());
+                                                intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
                                                 intent.putExtra("handfee", response.body().data.getGas_consumed());
                                                 intent.putExtra("hit", etHint.getText().toString().trim());
                                                 intent.putExtra("unit", tokenBean.getName());

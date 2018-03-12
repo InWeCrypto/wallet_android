@@ -46,6 +46,7 @@ public class App extends Application{
     private LoginBean loginBean;
     public static boolean isMain;
     private int defaultLangue=1;
+    private boolean isLogin;
 
     @Override
     public void onCreate() {
@@ -62,6 +63,13 @@ public class App extends Application{
                 defaultLangue=2;
             }
         }
+
+        if (null == App.get().getSp().getString(App.isMain?Constant.TOKEN:Constant.TEST_TOKEN) || "".equals(App.get().getSp().getString(App.isMain?Constant.TOKEN:Constant.TEST_TOKEN))){
+            isLogin=false;
+        }else {
+            isLogin=true;
+        }
+
         installCockroach();
         //初始化bugly
         CrashReport.initCrashReport(getApplicationContext(), Constant.CRASH_ID, false);
@@ -115,7 +123,7 @@ public class App extends Application{
 
     public LoginBean getLoginBean() {
         if (null==loginBean){
-            String json=sp.getString(Constant.USER_INFO);
+            String json=sp.getString(Constant.USER_INFO,"{}");
             loginBean= GsonUtils.jsonToObj(json,LoginBean.class);
         }
         return loginBean;
@@ -146,7 +154,7 @@ public class App extends Application{
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
         //log颜色级别，决定了log在控制台显示的颜色
         loggingInterceptor.setColorLevel(Level.INFO);
-        //builder.addInterceptor(loggingInterceptor);
+        builder.addInterceptor(loggingInterceptor);
         builder.connectTimeout(30, TimeUnit.SECONDS);
         builder.readTimeout(30, TimeUnit.SECONDS);
         builder.writeTimeout(30, TimeUnit.SECONDS);
@@ -244,5 +252,13 @@ public class App extends Application{
             return true;
         else
             return false;
+    }
+
+    public boolean isLogin() {
+        return isLogin;
+    }
+
+    public void setLogin(boolean login) {
+        isLogin = login;
     }
 }

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -45,6 +47,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.RatingBar;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.news.adapter.IcoProjectAdapter;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.CommonAdapter;
@@ -148,6 +151,10 @@ public class NoTradingProjectActivity extends BaseActivity {
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 //输入密码
                 FragmentManager fm = getSupportFragmentManager();
                 ProjectStartFragment input = new ProjectStartFragment();
@@ -209,7 +216,7 @@ public class NoTradingProjectActivity extends BaseActivity {
                 no.setText("No." + project.getCategory_score().getSort());
             }
             ratingbar.setStar((float) project.getCategory_score().getValue());
-            fenshu.setText(new BigDecimal(project.getCategory_score().getValue()).setScale(1, RoundingMode.HALF_UP).toPlainString()+"分");
+            fenshu.setText(new BigDecimal(project.getCategory_score().getValue()).setScale(1, BigDecimal.ROUND_DOWN).toPlainString()+"分");
         }else {
             ratingbar.setStar(0);
             fenshu.setText("0"+getString(R.string.fenshu));
@@ -266,6 +273,14 @@ public class NoTradingProjectActivity extends BaseActivity {
                     public boolean shouldOverrideUrlLoading(WebView view, String url) {
                         view.loadUrl(url);
                         return true;
+                    }
+
+                    @Override
+                    public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                        handler.proceed();    //表示等待证书响应
+                        //super.onReceivedSslError(view, handler, error);
+                        // handler.cancel();      //表示挂起连接，为默认方式
+                        // handler.handleMessage(null);    //可做其他处理
                     }
                 });
             }
@@ -391,7 +406,6 @@ public class NoTradingProjectActivity extends BaseActivity {
 
         selectPopupWin.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupHeight = selectPopupWin.getMeasuredHeight();  //获取测量后的高度
-        int[] location = new int[2];
 
         int width = (int) (ScreenUtils.getScreenWidth(this) / 2.1);
 
@@ -402,9 +416,8 @@ public class NoTradingProjectActivity extends BaseActivity {
         window.setTouchable(true);
         window.setBackgroundDrawable(new BitmapDrawable());
         window.update();
-        wallet.getLocationOnScreen(location);
         //这里就可自定义在上方和下方了 ，这种方式是为了确定在某个位置，某个控件的左边，右边，上边，下边都可以
-        window.showAtLocation(wallet, Gravity.NO_GRAVITY, (int) (location[0] + (wallet.getWidth() - width) / 2), location[1] - popupHeight);
+        window.showAtLocation(wallet, ((wallet.getWidth() - width) / 2),-(popupHeight+wallet.getHeight()), Gravity.NO_GRAVITY);
         walletAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
@@ -449,7 +462,6 @@ public class NoTradingProjectActivity extends BaseActivity {
 
         selectPopupWin.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupHeight = selectPopupWin.getMeasuredHeight();  //获取测量后的高度
-        int[] location = new int[2];
 
         int width = (int) (ScreenUtils.getScreenWidth(this) / 2.1);
 
@@ -460,9 +472,8 @@ public class NoTradingProjectActivity extends BaseActivity {
         window.setTouchable(true);
         window.setBackgroundDrawable(new BitmapDrawable());
         window.update();
-        explore.getLocationOnScreen(location);
         //这里就可自定义在上方和下方了 ，这种方式是为了确定在某个位置，某个控件的左边，右边，上边，下边都可以
-        window.showAtLocation(explore, Gravity.NO_GRAVITY, (int) (location[0] + (explore.getWidth() - width) / 2), location[1] - popupHeight);
+        window.showAsDropDown(explore, ((explore.getWidth() - width) / 2), -(popupHeight+explore.getHeight()), Gravity.NO_GRAVITY);
 
         exploreAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override

@@ -24,6 +24,7 @@ import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.service.MessageService;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.lzy.okgo.model.Response;
 
@@ -149,14 +150,20 @@ public class FixPassActivity extends BaseActivity {
                         EMClient.getInstance().logout(true);
                         App.get().getSp().putString(Constant.TOKEN,"");
                         App.get().getSp().putString(Constant.TEST_TOKEN,"");
+                        App.get().setLogin(false);
+                        App.get().setLoginBean(null);
+                        App.get().getSp().putString(Constant.USER_INFO,"{}");
                         AppManager.getAppManager().finishAllActivity();
+                        stopService(new Intent(mActivity, MessageService.class));
                         Intent intent=new Intent(mActivity, LoginActivity.class);
                         finshTogo(intent);
+                        hideFixLoading();
                     }
 
                     @Override
                     public void onError(Response<LzyResponse<Object>> response) {
                         super.onError(response);
+                        hideFixLoading();
                         if (response.getException().getMessage().contains("4004")){
                             ToastUtil.show(getString(R.string.mimazuixiaochangdu));
                         }else {
@@ -165,11 +172,6 @@ public class FixPassActivity extends BaseActivity {
                         return;
                     }
 
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        hideFixLoading();
-                    }
                 });
     }
 

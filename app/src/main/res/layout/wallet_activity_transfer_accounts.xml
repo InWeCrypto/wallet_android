@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
-            android:text="(当前余额：0.00)"
+            android:text="@string/dangqianyue0"
             android:textColor="@color/c_999999"
             android:textSize="10sp" />
     </LinearLayout>
@@ -149,7 +149,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GAS费用"
+            android:text="@string/kuanggongfeiyong"
             android:textColor="@color/c_000000"
             android:textSize="14dp" />
 
@@ -180,7 +180,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:text="慢"
+            android:text="@string/man"
             android:textColor="#C5C5C5"
             android:textSize="12dp" />
 
@@ -202,7 +202,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="快"
+            android:text="@string/kuai"
             android:textColor="#C5C5C5"
             android:textSize="12dp" />
     </LinearLayout>

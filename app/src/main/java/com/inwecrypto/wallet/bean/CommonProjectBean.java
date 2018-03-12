@@ -18,6 +18,7 @@ public class CommonProjectBean implements Serializable {
     private boolean hasMessage;
     private String time;
     private String lastMessage;
+    private String chatId;
     private boolean openTip=true;
 
     public CommonProjectBean(){
@@ -27,6 +28,14 @@ public class CommonProjectBean implements Serializable {
     public CommonProjectBean(String type,boolean isShow){
         this.type=type;
         this.isShow=isShow;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
 
     public boolean isOpenTip() {

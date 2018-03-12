@@ -24,17 +24,16 @@ import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.common.widget.MultiItemTypeSupport;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.news.adapter.InwehotAdapter;
+import com.inwecrypto.wallet.ui.news.adapter.InwehotNewsAdapter;
 import com.lzy.okgo.model.Response;
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 作者：xiaoji06 on 2018/2/8 20:01
@@ -59,18 +58,16 @@ public class InweHotActivity extends BaseActivity {
     SwipeRefreshLayoutCompat swipeRefresh;
     @BindView(R.id.line)
     View line;
-    @BindView(R.id.hot)
-    TextView hot;
-    @BindView(R.id.h24)
-    TextView h24;
     @BindView(R.id.views)
     TextView views;
+    @BindView(R.id.lishizixun)
+    TextView lishizixun;
     private int page = 1;
     private boolean isEnd;
 
     private CommonProjectBean marks;
 
-    private InwehotAdapter adapter;
+    private InwehotNewsAdapter adapter;
     private ArrayList<ArticleDetaileBean> data = new ArrayList<>();
 
     private boolean isFirst;
@@ -104,7 +101,33 @@ public class InweHotActivity extends BaseActivity {
             }
         });
 
-        adapter = new InwehotAdapter(this, R.layout.inwe_hot_item, data);
+        line.setVisibility(View.VISIBLE);
+        lishizixun.setVisibility(View.VISIBLE);
+
+        lishizixun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, InweHotBottomHistoryActivity.class);
+                keepTogo(intent);
+            }
+        });
+
+        adapter = new InwehotNewsAdapter(this, data, new MultiItemTypeSupport<ArticleDetaileBean>() {
+            @Override
+            public int getLayoutId(int itemType) {
+               if (itemType==1){
+                   return R.layout.inwe_hot_quick_item;
+               }else {
+                   return R.layout.inwe_hot_item;
+               }
+            }
+
+            @Override
+            public int getItemViewType(int position, ArticleDetaileBean articleDetaileBean) {
+                return articleDetaileBean.getType()==1?1:0;
+            }
+        });
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         list.setLayoutManager(linearLayoutManager);
@@ -124,21 +147,6 @@ public class InweHotActivity extends BaseActivity {
             }
         });
 
-        adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                Intent intent = new Intent(mActivity, ProjectNewsWebActivity.class);
-                intent.putExtra("title", data.get(position).getTitle());
-                intent.putExtra("url", (App.isMain ? Url.MAIN_NEWS : Url.TEST_NEWS) + data.get(position).getId());
-                intent.putExtra("id", data.get(position).getId());
-                keepTogo(intent);
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
     }
 
     @Override
@@ -199,8 +207,18 @@ public class InweHotActivity extends BaseActivity {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode()== Constant.EVENT_NOTIFY){
+        if (event.getEventCode() == Constant.EVENT_NOTIFY) {
             marks.setOpenTip((Boolean) event.getData());
+        }
+
+        if (event.getEventCode() == Constant.EVENT_INWE_HOT_CLICK){
+            if (null!=data&&data.size()>event.getKey1()){
+                Intent intent = new Intent(mActivity, ProjectNewsWebActivity.class);
+                intent.putExtra("title", data.get(event.getKey1()).getTitle());
+                intent.putExtra("url", (App.isMain ? Url.MAIN_NEWS : Url.TEST_NEWS) + data.get(event.getKey1()).getId());
+                intent.putExtra("id", data.get(event.getKey1()).getId());
+                keepTogo(intent);
+            }
         }
     }
 }

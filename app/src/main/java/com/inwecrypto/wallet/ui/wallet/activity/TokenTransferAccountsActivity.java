@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.GasBean;
@@ -81,8 +82,8 @@ public class TokenTransferAccountsActivity extends BaseActivity {
         wallet = (WalletBean) extras.getSerializable("wallet");
         gnt = (TokenBean.ListBean) extras.getSerializable("gnt");
         price = extras.getString("price");
-        low = new BigDecimal("25200000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000), 0, BigDecimal.ROUND_HALF_UP);
-        high = new BigDecimal("2520120000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000), 0, BigDecimal.ROUND_HALF_UP);
+        low = new BigDecimal("25200000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000), 0, BigDecimal.ROUND_DOWN);
+        high = new BigDecimal("2520120000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000), 0, BigDecimal.ROUND_DOWN);
         distance = high.subtract(low);
     }
 
@@ -150,7 +151,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                                 @Override
                                 public void onSuccess(Response<LzyResponse<ValueBean>> response) {
                                     BigDecimal currentPrice = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
-                                    BigDecimal price = new BigDecimal(etPrice.getText().toString()).multiply(Constant.pEther);
+                                    BigDecimal price = new BigDecimal(etPrice.getText().toString()).multiply(AppUtil.decimal(gnt.getDecimals()));
                                     hideFixLoading();
                                     if (currentPrice.subtract(price).doubleValue() >= 0) {
                                         Intent intent = new Intent(mActivity, TokenTransferAccountsConfirmActivity.class);
@@ -192,7 +193,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 });
             }
         });
-        gas.setText(low.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_UP).toString());
+        gas.setText(low.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_DOWN).toPlainString());
     }
 
     @Override
@@ -206,22 +207,22 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 if (currentGas.subtract(low).longValue() <= 0) {
                     position = 0;
                     gasBar.setProgress(position);
-                    gas.setText(low.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(low.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_DOWN).toPlainString());
                 } else if (currentGas.subtract(high).longValue() >= 0) {
                     position = 100;
                     gasBar.setProgress(position);
-                    gas.setText(high.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_UP).toString());
+                    gas.setText(high.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_DOWN).toPlainString());
                 } else {
-                    position = currentGas.subtract(low).divide(distance, 0, BigDecimal.ROUND_HALF_DOWN).setScale(0, BigDecimal.ROUND_HALF_DOWN).multiply(Constant.p100).floatValue();
+                    position = currentGas.subtract(low).divide(distance, 0, BigDecimal.ROUND_DOWN).setScale(0, BigDecimal.ROUND_HALF_DOWN).multiply(Constant.p100).floatValue();
                     gasBar.setProgress(position);
-                    gas.setText(new BigDecimal(position).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_DOWN).toString());
+                    gas.setText(new BigDecimal(position).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8, BigDecimal.ROUND_DOWN).toPlainString());
                 }
             }
 
             @Override
             public void onError(Response<LzyResponse<GasBean>> response) {
                 super.onError(response);
-                gas.setText(low.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_UP).toString());
+                gas.setText(low.divide(Constant.pEther).setScale(8, BigDecimal.ROUND_DOWN).toPlainString());
             }
 
             @Override
@@ -230,7 +231,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
                 gasBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
                     @Override
                     public void onProgressChanged(int progress, float progressFloat) {
-                        gas.setText(new BigDecimal(progressFloat).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_DOWN).toString());
+                        gas.setText(new BigDecimal(progressFloat).divide(Constant.p100).multiply(distance).add(low).divide(Constant.pEther).setScale(8, BigDecimal.ROUND_HALF_DOWN).toPlainString());
                     }
 
                     @Override
@@ -242,6 +243,16 @@ public class TokenTransferAccountsActivity extends BaseActivity {
 
                     }
                 });
+            }
+        });
+
+
+        //请求用户资产
+        WalletApi.balanceof(mActivity, gnt.getGnt_category().getAddress(), wallet.getAddress(), new JsonCallback<LzyResponse<ValueBean>>() {
+            @Override
+            public void onSuccess(Response<LzyResponse<ValueBean>> response) {
+                BigDecimal currentPrice = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
+                tvCurrentPrice.setText("("+getString(R.string.dangqianyue)+"："+currentPrice.divide(AppUtil.decimal(gnt.getDecimals()),4,BigDecimal.ROUND_DOWN).toString()+")");
             }
         });
     }

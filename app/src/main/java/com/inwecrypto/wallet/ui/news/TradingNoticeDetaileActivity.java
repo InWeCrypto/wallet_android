@@ -83,7 +83,7 @@ public class TradingNoticeDetaileActivity extends BaseActivity {
     protected void initData() {
         if ("ETH".equals(trading.getFlag())){
             BigDecimal currentPrice = new BigDecimal(AppUtil.toD(trading.getMoney().replace("0x", "0")));
-            currentPrice = currentPrice.divide(Constant.pEther, 4, BigDecimal.ROUND_HALF_UP);
+            currentPrice = currentPrice.divide(Constant.pEther, 4, BigDecimal.ROUND_DOWN);
             price.setText(currentPrice.toPlainString());
         }else {
             price.setText(trading.getMoney());
