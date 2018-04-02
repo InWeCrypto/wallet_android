@@ -28,6 +28,15 @@ public class ProjectMarketBean implements Serializable {
     private String pairce;
     private String volum_percent;
     private String update;
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public String getSort() {
         return sort;

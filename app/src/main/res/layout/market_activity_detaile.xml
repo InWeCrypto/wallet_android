@@ -6,14 +6,14 @@
     android:background="@color/c_ffffff"
     android:orientation="vertical">
 
-    <include layout="@layout/base_title_bar"/>
+    <include layout="@layout/base_title_bar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="12dp"
-        android:paddingLeft="10dp"
+        android:paddingLeft="15dp"
         android:paddingTop="12dp">
 
         <TextView
@@ -36,15 +36,15 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/tip"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:src="@mipmap/shishihangqing_xiaoxi"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/shishihangqing_xiaoxi" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="15dp"
                 android:text="@string/_24xiaoshizhangdie"
                 android:textColor="#ADADAD"
                 android:textSize="12sp" />
@@ -73,7 +73,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="15dp"
                 android:text="@string/_24xiaoshichengjiaoe"
                 android:textColor="#ADADAD"
                 android:textSize="12sp" />
@@ -91,11 +91,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:singleLine="true"
                 android:ellipsize="end"
+                android:singleLine="true"
+                android:text="+0.00%"
                 android:textColor="@color/c_333333"
-                android:textSize="12sp"
-                android:text="+0.00%"/>
+                android:textSize="12sp" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -106,11 +106,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:singleLine="true"
                 android:ellipsize="end"
+                android:singleLine="true"
+                android:text="0.00"
                 android:textColor="@color/c_333333"
-                android:textSize="12sp"
-                android:text="0.00"/>
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -152,11 +152,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/c_333333"
-                android:singleLine="true"
                 android:ellipsize="end"
-                android:textSize="12sp"
-                android:text="0.00"/>
+                android:singleLine="true"
+                android:text="0.00"
+                android:textColor="@color/c_333333"
+                android:textSize="12sp" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -167,18 +167,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/c_333333"
-                android:singleLine="true"
                 android:ellipsize="end"
-                android:textSize="12sp"
-                android:text="0.00"/>
+                android:singleLine="true"
+                android:text="0.00"
+                android:textColor="@color/c_333333"
+                android:textSize="12sp" />
 
         </LinearLayout>
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <RadioGroup
             android:id="@+id/rg"
@@ -191,13 +193,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/group_kline_selector"
                 android:button="@null"
                 android:gravity="center"
-                android:background="@drawable/group_kline_selector"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:text="1min"
-                android:checked="true"
                 android:textColor="#262626"
                 android:textSize="12sp" />
 
@@ -206,9 +207,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/group_kline_selector"
                 android:button="@null"
                 android:gravity="center"
-                android:background="@drawable/group_kline_selector"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:text="5min"
@@ -222,6 +223,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/group_kline_selector"
                 android:button="@null"
+                android:checked="true"
                 android:gravity="center"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
@@ -232,9 +234,9 @@
             <RadioButton
                 android:id="@+id/rb_f30"
                 android:layout_width="0dp"
-                android:background="@drawable/group_kline_selector"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/group_kline_selector"
                 android:button="@null"
                 android:gravity="center"
                 android:paddingBottom="8dp"
@@ -245,10 +247,10 @@
 
             <RadioButton
                 android:id="@+id/rb_h1"
-                android:background="@drawable/group_kline_selector"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/group_kline_selector"
                 android:button="@null"
                 android:gravity="center"
                 android:paddingBottom="8dp"
@@ -261,12 +263,12 @@
                 android:id="@+id/rb_d1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/group_kline_selector"
                 android:layout_weight="1"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
+                android:background="@drawable/group_kline_selector"
                 android:button="@null"
                 android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
                 android:text="@string/tian"
                 android:textColor="#262626"
                 android:textSize="12sp" />
@@ -275,8 +277,8 @@
                 android:id="@+id/rb_z1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/group_kline_selector"
                 android:layout_weight="1"
+                android:background="@drawable/group_kline_selector"
                 android:button="@null"
                 android:gravity="center"
                 android:paddingBottom="8dp"
@@ -291,9 +293,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#F6F6F6"
-            android:visibility="gone"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -308,9 +310,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:singleLine="true"
-                android:ellipsize="end"
                 android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="#262626"
                 android:textSize="10sp" />
 
@@ -327,9 +329,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:singleLine="true"
-                android:ellipsize="end"
                 android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="#262626"
                 android:textSize="10sp" />
 
@@ -347,8 +349,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:singleLine="true"
                 android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="#262626"
                 android:textSize="10sp" />
 
@@ -366,8 +368,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:singleLine="true"
                 android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="#262626"
                 android:textSize="10sp" />
 
@@ -385,8 +387,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:singleLine="true"
                 android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="#262626"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -395,7 +397,10 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -417,12 +422,12 @@
 
         <LinearLayout
             android:id="@+id/maLL"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="4dp"
-            android:paddingTop="4dp">
+            android:paddingTop="4dp"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/ma5"
@@ -461,9 +466,9 @@
                 android:layout_centerInParent="true"
                 android:padding="20dp"
                 android:text="@string/zanwushuju"
+                android:textColor="@color/c_ffffff"
                 android:textSize="13sp"
-                android:visibility="gone"
-                android:textColor="@color/c_ffffff"/>
+                android:visibility="gone" />
 
             <com.pnikosis.materialishprogress.ProgressWheel
                 android:id="@+id/progress"
@@ -473,11 +478,61 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="24dp"
                 app:matProg_barColor="@color/c_008c55"
-                app:matProg_progressIndeterminate="true"
-                app:matProg_barWidth="4dp"/>
-
+                app:matProg_barWidth="4dp"
+                app:matProg_progressIndeterminate="true" />
         </RelativeLayout>
-
     </FrameLayout>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="#FBFBFB"
+                android:paddingBottom="2dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="2dp"
+                android:text="@string/jiaoyishichang"
+                android:textColor="#8A8A8A"
+                android:textSize="12sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/market_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/more"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chakangengduojiaoyishichang"
+                    android:textColor="#8A8A8A"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="4.5dp"
+                    android:layout_height="8.5dp"
+                    android:layout_marginLeft="8dp"
+                    android:src="@mipmap/xiangmuchakan_fanhui" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>

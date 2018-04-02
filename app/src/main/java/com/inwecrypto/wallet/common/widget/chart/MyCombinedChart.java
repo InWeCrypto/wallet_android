@@ -34,18 +34,27 @@ public class MyCombinedChart extends CombinedChart {
     }
 
     public void setMarker(MyLeftMarkerView markerLeft, MyHMarkerView markerH, DataParse minuteHelper) {
+        if (null==markerLeft){
+            return;
+        }
         this.myMarkerViewLeft = markerLeft;
         this.myMarkerViewH = markerH;
         this.minuteHelper = minuteHelper;
     }
 
     public void setMarker(MyLeftMarkerView markerLeft, MyBottomMarkerView markerBottom, DataParse minuteHelper) {
+        if (null==markerLeft){
+            return;
+        }
         this.myMarkerViewLeft = markerLeft;
         this.myBottomMarkerView = markerBottom;
         this.minuteHelper = minuteHelper;
     }
 
     public void setMarker(MyLeftMarkerView markerLeft, MyBottomMarkerView markerBottom, MyHMarkerView markerH, DataParse minuteHelper) {
+        if (null==markerLeft){
+            return;
+        }
         this.myMarkerViewLeft = markerLeft;
         this.myBottomMarkerView = markerBottom;
         this.myMarkerViewH = markerH;

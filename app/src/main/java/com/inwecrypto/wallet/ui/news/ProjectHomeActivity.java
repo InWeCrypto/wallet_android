@@ -192,7 +192,7 @@ public class ProjectHomeActivity extends BaseActivity {
         txtMainTitle.requestFocus();
 
 
-        if (project.isIs_top()){
+        if (null!=project.getCategory_user()&&project.getCategory_user().isIs_top()){
             dingzhi.setChecked(true);
         }else {
             dingzhi.setChecked(false);

@@ -269,7 +269,9 @@ public class MarketTipActivity extends BaseActivity {
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        swipeRefresh.setRefreshing(false);
+                        if(null!=swipeRefresh){
+                            swipeRefresh.setRefreshing(false);
+                        }
                     }
                 });
     }

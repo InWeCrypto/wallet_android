@@ -15,6 +15,7 @@ import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 
 import butterknife.BindView;
 
@@ -100,6 +101,10 @@ public class SettingActivity extends BaseActivity {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 Intent intent=new Intent(mActivity,SettingTypeActivity.class);
                 intent.putExtra("type",3);
                 keepTogo(intent);

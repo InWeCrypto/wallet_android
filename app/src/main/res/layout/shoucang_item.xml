@@ -10,7 +10,8 @@
         android:id="@+id/img"
         android:layout_width="84dp"
         android:layout_height="56dp"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:layout_marginRight="12dp"/>
 
     <TextView
         android:id="@+id/title"
@@ -19,7 +20,6 @@
         android:layout_marginTop="4dp"
         android:singleLine="true"
         android:layout_toRightOf="@+id/img"
-        android:layout_marginLeft="12dp"
         android:ellipsize="end"
         android:textSize="13sp"
         android:textColor="@color/c_000000" />
@@ -30,7 +30,6 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:layout_toRightOf="@+id/img"
-        android:layout_marginLeft="12dp"
         android:layout_marginTop="8dp"
         android:layout_below="@+id/title"
         android:ellipsize="end"
@@ -58,7 +57,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_below="@+id/img"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/time"
+        android:layout_marginTop="24dp"
         android:background="#F6F6F6"/>
 </RelativeLayout>

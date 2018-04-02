@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -19,7 +20,6 @@ import android.view.WindowManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -36,6 +35,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
+import com.inwecrypto.wallet.base.BaseFragment;
 import com.inwecrypto.wallet.bean.TradingProjectDetaileBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
@@ -48,7 +48,11 @@ import com.inwecrypto.wallet.common.widget.RatingBar;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
+import com.inwecrypto.wallet.ui.me.adapter.CommonPagerAdapter;
 import com.inwecrypto.wallet.ui.news.adapter.IcoProjectAdapter;
+import com.inwecrypto.wallet.ui.news.fragment.NoTradingProjectFragment;
+import com.inwecrypto.wallet.ui.news.fragment.ProjectXiangmuFragment;
+import com.inwecrypto.wallet.ui.news.fragment.TradingProjectFragment;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
@@ -59,10 +63,10 @@ import org.greenrobot.eventbus.EventBus;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 作者：xiaoji06 on 2018/2/9 15:23
@@ -99,29 +103,27 @@ public class NoTradingProjectActivity extends BaseActivity {
     RatingBar ratingbar;
     @BindView(R.id.fenshu)
     TextView fenshu;
-    @BindView(R.id.time)
-    TextView time;
-    @BindView(R.id.info)
-    FrameLayout info;
-    @BindView(R.id.ico_list)
-    RecyclerView icoList;
-    @BindView(R.id.mPieChart)
-    PieChart mPieChart;
-    @BindView(R.id.line)
-    View line;
-    @BindView(R.id.chart)
-    FrameLayout chart;
-    @BindView(R.id.explore)
-    LinearLayout explore;
-    @BindView(R.id.wallet)
-    LinearLayout wallet;
-
+    @BindView(R.id.zonghe)
+    TextView zonghe;
+    @BindView(R.id.l1)
+    View l1;
+    @BindView(R.id.zonghell)
+    LinearLayout zonghell;
+    @BindView(R.id.xiangmu)
+    TextView xiangmu;
+    @BindView(R.id.l2)
+    View l2;
+    @BindView(R.id.xiangmull)
+    LinearLayout xiangmull;
+    @BindView(R.id.vp_list)
+    ViewPager vpList;
     private TradingProjectDetaileBean project;
-    private IcoProjectAdapter adapter;
 
-    private WebView mWebView = null;
-    private final ReferenceQueue<WebView> WEB_VIEW_QUEUE = new ReferenceQueue<>();
-
+    private ArrayList<BaseFragment> fragments;
+    private NoTradingProjectFragment tradingProjectFragment;
+    private ProjectXiangmuFragment xiangmuFragment;
+    private CommonPagerAdapter adapter;
+    private int type = 1;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -151,23 +153,23 @@ public class NoTradingProjectActivity extends BaseActivity {
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!App.get().isLogin()){
+                if (!App.get().isLogin()) {
                     keepTogo(LoginActivity.class);
                     return;
                 }
                 //输入密码
                 FragmentManager fm = getSupportFragmentManager();
                 ProjectStartFragment input = new ProjectStartFragment();
-                Bundle bundle=new Bundle();
-                if (null!=project.getCategory_user()&&null!=project.getCategory_user().getScore()){
-                    bundle.putBoolean("isSb",false);
-                    bundle.putString("num",project.getCategory_user().getScore());
-                }else {
-                    bundle.putBoolean("isSb",true);
-                    bundle.putString("num","0.0");
+                Bundle bundle = new Bundle();
+                if (null != project.getCategory_user() && null != project.getCategory_user().getScore()&& !project.getCategory_user().getScore().equals("0")) {
+                    bundle.putBoolean("isSb", true);
+                    bundle.putString("num", project.getCategory_user().getScore());
+                } else {
+                    bundle.putBoolean("isSb", false);
+                    bundle.putString("num", "0.0");
                 }
                 input.setArguments(bundle);
-                input.show(fm,"start");
+                input.show(fm, "start");
                 input.setOnNextListener(new ProjectStartFragment.OnNextInterface() {
                     @Override
                     public void onNext(final float fen, final Dialog dialog) {
@@ -175,15 +177,15 @@ public class NoTradingProjectActivity extends BaseActivity {
                                     @Override
                                     public void onSuccess(Response<LzyResponse<Object>> response) {
                                         ToastUtil.show(getString(R.string.pingfenchenggong));
-                                        if (null==project.getCategory_user()){
-                                            TradingProjectDetaileBean.CategoryUserBean categoryUserBean=new TradingProjectDetaileBean.CategoryUserBean();
-                                            categoryUserBean.setScore(fen+"");
+                                        if (null == project.getCategory_user()) {
+                                            TradingProjectDetaileBean.CategoryUserBean categoryUserBean = new TradingProjectDetaileBean.CategoryUserBean();
+                                            categoryUserBean.setScore(fen + "");
                                             project.setCategory_user(categoryUserBean);
-                                        }else {
-                                            project.getCategory_user().setScore(fen+"");
+                                        } else {
+                                            project.getCategory_user().setScore(fen + "");
                                         }
-                                        EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PINGLUN,fen+""));
-                                        dialog.dismiss();
+                                        EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PINGLUN, fen + ""));
+                                        dialog.cancel();
                                     }
 
                                     @Override
@@ -209,288 +211,104 @@ public class NoTradingProjectActivity extends BaseActivity {
         name.setText(project.getName());
         symble.setText("(" + project.getLong_name() + ")");
         blockChain.setText(project.getIndustry());
-        if (null!=project.getCategory_score()){
-            if (App.get().isZh()){
+        if (null != project.getCategory_score()) {
+            if (App.get().isZh()) {
                 no.setText("第" + project.getCategory_score().getSort() + "名");
-            }else {
+            } else {
                 no.setText("No." + project.getCategory_score().getSort());
             }
             ratingbar.setStar((float) project.getCategory_score().getValue());
-            fenshu.setText(new BigDecimal(project.getCategory_score().getValue()).setScale(1, BigDecimal.ROUND_DOWN).toPlainString()+"分");
-        }else {
+            fenshu.setText(new BigDecimal(project.getCategory_score().getValue()).setScale(1, BigDecimal.ROUND_DOWN).toPlainString() + getString(R.string.fenshu));
+        } else {
             ratingbar.setStar(0);
-            fenshu.setText("0"+getString(R.string.fenshu));
+            fenshu.setText("0" + getString(R.string.fenshu));
         }
 
-        explore.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
+        zonghell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null == project.getCategory_explorer()
-                        ||project.getCategory_explorer().size()==0) {
-                    ToastUtil.show(getString(R.string.wuliulanqi));
-                    return;
-                }
-                //弹出选择框
-                showExploreDialog();
+                vpList.setCurrentItem(0);
             }
         });
 
-        wallet.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
+        xiangmull.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null == project.getCategory_wallet()
-                        ||project.getCategory_wallet().size()==0) {
-                    ToastUtil.show(getString(R.string.wuqianbao));
-                    return;
-                }
-                //弹出选择框
-                showWalletDialog();
+                vpList.setCurrentItem(1);
             }
         });
 
-        if (null != project.getCategory_structure()) {
-            //设置 ico 结构
-            adapter = new IcoProjectAdapter(this, R.layout.ico_project_item, project.getCategory_structure());
-            icoList.setAdapter(adapter);
-            icoList.setLayoutManager(new LinearLayoutManager(this));
-            //图表
-            initChart();
-        }
+        vpList.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        if (null != project.getCategory_desc()) {
-            if (mWebView != null) {
-                mWebView.removeAllViews();
-                mWebView.destroy();
-            } else {
-                final WeakReference<WebView> webViewWeakReference =
-                        new WeakReference<>(new WebView(mActivity.getApplicationContext()), WEB_VIEW_QUEUE);
-                mWebView = webViewWeakReference.get();
-                mWebView = AppUtil.createWebView(mWebView, mActivity);
-                mWebView.setWebViewClient(new WebViewClient() {
-                    @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        view.loadUrl(url);
-                        return true;
-                    }
-
-                    @Override
-                    public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                        handler.proceed();    //表示等待证书响应
-                        //super.onReceivedSslError(view, handler, error);
-                        // handler.cancel();      //表示挂起连接，为默认方式
-                        // handler.handleMessage(null);    //可做其他处理
-                    }
-                });
             }
 
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            mWebView.setLayoutParams(params);
-            info.addView(mWebView);
-            mWebView.loadData(project.getCategory_desc().getContent(), "text/html; charset=UTF-8", null);
-        }
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        selectType(1);
+                        break;
+                    case 1:
+                        selectType(2);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        tradingProjectFragment = new NoTradingProjectFragment();
+        Bundle tradingBundle = new Bundle();
+        tradingBundle.putSerializable("project", project);
+        tradingProjectFragment.setArguments(tradingBundle);
+
+        xiangmuFragment = new ProjectXiangmuFragment();
+        Bundle xiangmuBundle = new Bundle();
+        xiangmuBundle.putSerializable("project", project);
+        xiangmuFragment.setArguments(xiangmuBundle);
+
+        fragments = new ArrayList<>();
+        fragments.add(tradingProjectFragment);
+        fragments.add(xiangmuFragment);
+
+
+        adapter = new CommonPagerAdapter(getSupportFragmentManager(), fragments);
+        vpList.setAdapter(adapter);
 
     }
 
-    private void initChart() {
-        mPieChart.setUsePercentValues(true);
-
-        mPieChart.setDescription("");  //设置描述信息
-
-        mPieChart.setExtraOffsets(5, 10, 5, 5);  //设置间距
-
-        mPieChart.setDragDecelerationFrictionCoef(0.95f);
-
-        mPieChart.setCenterText("");  //设置饼状图中间文字，我需求里面并没有用到这个。。
-
-        mPieChart.setDrawHoleEnabled(true);
-
-        mPieChart.setHoleColor(Color.WHITE);
-
-        mPieChart.setTransparentCircleColor(Color.WHITE);
-
-        mPieChart.setTransparentCircleAlpha(110);
-
-        mPieChart.setHoleRadius(58f);
-
-        mPieChart.setTransparentCircleRadius(61f);
-
-        mPieChart.setTouchEnabled(false);  //设置是否响应点击触摸
-
-        mPieChart.setDrawCenterText(true);  //设置是否绘制中心区域文字
-
-        mPieChart.setRotationAngle(0); //设置旋转角度
-
-        mPieChart.setRotationEnabled(true); //设置是否旋转
-
-        mPieChart.setHighlightPerTapEnabled(false);  //设置是否高亮显示触摸的区域
-
-        mPieChart.setData(getDefaultPieData());  //设置数据
-
-        mPieChart.setDrawMarkerViews(false);  //设置是否绘制标记
-
-        mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);  //设置动画效果
-
-        mPieChart.getLegend().setEnabled(false);
-    }
-
-    private PieData getDefaultPieData() {
-
-        ArrayList<Entry> entries = new ArrayList<Entry>();
-        ArrayList<Integer> colors = new ArrayList<>();  //控制不同绘制区域的颜色
-        ArrayList<String> names=new ArrayList<>();
-
-        int i = 0;
-        for (TradingProjectDetaileBean.CategoryStructureBean structureBean : project.getCategory_structure()) {
-            entries.add(new Entry(structureBean.getPercentage(), i));
-            colors.add(Color.parseColor(null==structureBean.getColor_value()?"#ffffff":structureBean.getColor_value()));
-            names.add(structureBean.getDesc());
-            i++;
+    private void selectType(int i) {
+        if (type == i) {
+            return;
         }
+        type = i;
+        l1.setVisibility(View.INVISIBLE);
+        l2.setVisibility(View.INVISIBLE);
 
+        zonghe.setTextColor(Color.parseColor("#ABABAB"));
+        xiangmu.setTextColor(Color.parseColor("#ABABAB"));
 
-        PieDataSet dataSet = new PieDataSet(entries, "");
-
-        dataSet.setSliceSpace(0f);
-
-        dataSet.setSelectionShift(5f);
-
-        dataSet.setColors(colors);
-
-        PieData data = new PieData(names, dataSet);
-
-        data.setValueFormatter(new PercentFormatter());
-
-        data.setValueTextSize(11f);
-
-        data.setValueTextColor(Color.TRANSPARENT);
-
-        mPieChart.highlightValues(null);
-
-        mPieChart.setDrawMarkerViews(false);
-
-        return data;
+        switch (type) {
+            case 1:
+                zonghe.setTextColor(getResources().getColor(R.color.c_FF6806));
+                l1.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                xiangmu.setTextColor(getResources().getColor(R.color.c_FF6806));
+                l2.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
 
     @Override
     protected void initData() {
 
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
-    private void showWalletDialog() {
-        View selectPopupWin = LayoutInflater.from(this).inflate(R.layout.popup_bottom_layout, null, false);
-        RecyclerView list = (RecyclerView) selectPopupWin.findViewById(R.id.list);
-
-        final ArrayList<String> data = new ArrayList<>();
-        for (TradingProjectDetaileBean.CategoryWalletBean wallet : project.getCategory_wallet()) {
-            data.add(wallet.getName());
-        }
-
-        list.setLayoutManager(new LinearLayoutManager(this));
-        CommonAdapter<String> walletAdapter = new CommonAdapter<String>(this, R.layout.popup_bottom_item, data) {
-            @Override
-            protected void convert(ViewHolder holder, String s, int position) {
-                if (position == (mDatas.size() - 1)) {
-                    holder.getView(R.id.line).setVisibility(View.INVISIBLE);
-                } else {
-                    holder.getView(R.id.line).setVisibility(View.VISIBLE);
-                }
-                holder.setText(R.id.title, s);
-            }
-        };
-        list.setAdapter(walletAdapter);
-
-
-        selectPopupWin.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int popupHeight = selectPopupWin.getMeasuredHeight();  //获取测量后的高度
-
-        int width = (int) (ScreenUtils.getScreenWidth(this) / 2.1);
-
-        final PopupWindow window = new PopupWindow(selectPopupWin, width, WindowManager.LayoutParams.WRAP_CONTENT);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        window.setFocusable(true);
-        window.setOutsideTouchable(true);
-        window.setTouchable(true);
-        window.setBackgroundDrawable(new BitmapDrawable());
-        window.update();
-        //这里就可自定义在上方和下方了 ，这种方式是为了确定在某个位置，某个控件的左边，右边，上边，下边都可以
-        window.showAtLocation(wallet, ((wallet.getWidth() - width) / 2),-(popupHeight+wallet.getHeight()), Gravity.NO_GRAVITY);
-        walletAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                Intent intent=new Intent(mActivity,ProjectNewsWebActivity.class);
-                intent.putExtra("title",project.getCategory_wallet().get(position).getName());
-                intent.putExtra("url",project.getCategory_wallet().get(position).getUrl());
-                intent.putExtra("show",false);
-                keepTogo(intent);
-                window.dismiss();
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
-    private void showExploreDialog() {
-        View selectPopupWin = LayoutInflater.from(this).inflate(R.layout.popup_bottom_layout, null, false);
-        RecyclerView list = (RecyclerView) selectPopupWin.findViewById(R.id.list);
-
-        final ArrayList<String> data = new ArrayList<>();
-        for (TradingProjectDetaileBean.CategoryExplorerBean explorer : project.getCategory_explorer()) {
-            data.add(explorer.getName());
-        }
-
-        list.setLayoutManager(new LinearLayoutManager(this));
-        CommonAdapter<String> exploreAdapter = new CommonAdapter<String>(this, R.layout.popup_bottom_item, data) {
-            @Override
-            protected void convert(ViewHolder holder, String s, int position) {
-                if (position == (mDatas.size() - 1)) {
-                    holder.getView(R.id.line).setVisibility(View.INVISIBLE);
-                } else {
-                    holder.getView(R.id.line).setVisibility(View.VISIBLE);
-                }
-                holder.setText(R.id.title, s);
-            }
-        };
-        list.setAdapter(exploreAdapter);
-
-        selectPopupWin.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int popupHeight = selectPopupWin.getMeasuredHeight();  //获取测量后的高度
-
-        int width = (int) (ScreenUtils.getScreenWidth(this) / 2.1);
-
-        final PopupWindow window = new PopupWindow(selectPopupWin, width, WindowManager.LayoutParams.WRAP_CONTENT);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        window.setFocusable(true);
-        window.setOutsideTouchable(true);
-        window.setTouchable(true);
-        window.setBackgroundDrawable(new BitmapDrawable());
-        window.update();
-        //这里就可自定义在上方和下方了 ，这种方式是为了确定在某个位置，某个控件的左边，右边，上边，下边都可以
-        window.showAsDropDown(explore, ((explore.getWidth() - width) / 2), -(popupHeight+explore.getHeight()), Gravity.NO_GRAVITY);
-
-        exploreAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                Intent intent=new Intent(mActivity,ProjectNewsWebActivity.class);
-                intent.putExtra("title",project.getCategory_explorer().get(position).getName());
-                intent.putExtra("url",project.getCategory_explorer().get(position).getUrl());
-                intent.putExtra("show",false);
-                keepTogo(intent);
-                window.dismiss();
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
-            }
-        });
     }
 
     @Override

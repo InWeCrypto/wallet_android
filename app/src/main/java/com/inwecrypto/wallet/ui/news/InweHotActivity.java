@@ -8,7 +8,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +32,7 @@ import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.news.adapter.InwehotNewsAdapter;
 import com.lzy.okgo.model.Response;
+import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,6 +72,8 @@ public class InweHotActivity extends BaseActivity {
     private CommonProjectBean marks;
 
     private InwehotNewsAdapter adapter;
+    private HeaderAndFooterWrapper footer;
+    private View footerView;
     private ArrayList<ArticleDetaileBean> data = new ArrayList<>();
 
     private boolean isFirst;
@@ -90,7 +96,7 @@ public class InweHotActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.inweerdian);
+        txtMainTitle.setText(R.string.dongtai);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -117,6 +123,8 @@ public class InweHotActivity extends BaseActivity {
             public int getLayoutId(int itemType) {
                if (itemType==1){
                    return R.layout.inwe_hot_quick_item;
+               }else if (itemType==2){
+                   return R.layout.jiaoyigonggao_item;
                }else {
                    return R.layout.inwe_hot_item;
                }
@@ -124,14 +132,36 @@ public class InweHotActivity extends BaseActivity {
 
             @Override
             public int getItemViewType(int position, ArticleDetaileBean articleDetaileBean) {
-                return articleDetaileBean.getType()==1?1:0;
+                return articleDetaileBean.getType()==1?1:(articleDetaileBean.getType()==16?2:0);
+            }
+        });
+
+        footer=new HeaderAndFooterWrapper(adapter);
+        footerView=LayoutInflater.from(this).inflate(R.layout.empty_view,null,false);
+        footer.addFootView(footerView);
+
+        swipeRefresh.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= 16) {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeOnGlobalLayoutListener(this);
+                }
+                else {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeGlobalOnLayoutListener(this);
+                }
+                swipeRefresh.getHeight(); // 获取高度
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) footerView.getLayoutParams();
+                params.height=swipeRefresh.getHeight()/4;
+                footerView.setLayoutParams(params);
             }
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         list.setLayoutManager(linearLayoutManager);
-        list.setAdapter(adapter);
+        list.setAdapter(footer);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -202,7 +232,7 @@ public class InweHotActivity extends BaseActivity {
             Collections.reverse(response.body().data.getData());
             data.addAll(0, response.body().data.getData());
         }
-        adapter.notifyItemRangeInserted(start, count);
+        footer.notifyItemRangeInserted(start, count);
     }
 
     @Override
@@ -217,6 +247,8 @@ public class InweHotActivity extends BaseActivity {
                 intent.putExtra("title", data.get(event.getKey1()).getTitle());
                 intent.putExtra("url", (App.isMain ? Url.MAIN_NEWS : Url.TEST_NEWS) + data.get(event.getKey1()).getId());
                 intent.putExtra("id", data.get(event.getKey1()).getId());
+                intent.putExtra("decs",data.get(event.getKey1()).getDesc());
+                intent.putExtra("img",data.get(event.getKey1()).getImg());
                 keepTogo(intent);
             }
         }

@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 
 public class Constant {
 
+    public static final String VERSION="version";
+
     public static final String CRASH_ID="383376bf9a";
 
     public static final String MAIN_WEB="http://inwecrypto.com";
@@ -129,6 +131,12 @@ public class Constant {
 
     public static final String LOGIN_NAME="login_name";
 
+    public static final String HIDE="hide";
+
+    public static final String SORT="sort";
+
+    public static final String SORT_UPDATE="sort_update";
+
     public static final String BASE_PROJECT_JSON="[\n" +
             " {\n" +
             "   \"id\":0,\n" +
@@ -138,24 +146,19 @@ public class Constant {
             " },\n" +
             " {\n" +
             "   \"id\":1,\n" +
-            "   \"type\":\"sys_msg_trading\",\n" +
+            "   \"type\":\"sys_msg_viewpoint\",\n" +
             "   \"isShow\":true,\n" +
             "   \"chatId\":\"\"\n" +
             " },\n" +
             " {\n" +
             "   \"id\":2,\n" +
-            "   \"type\":\"sys_msg_exchangenotice\",\n" +
+            "   \"type\":\"sys_msg_trading\",\n" +
             "   \"isShow\":true,\n" +
             "   \"chatId\":\"\"\n" +
             " },\n" +
-//            " {\n" +
-//            "   \"id\":3,\n" +
-//            "   \"type\":\"sys_msg_candybow\",\n" +
-//            "   \"isShow\":false\n" +
-//            " },\n" +
             " {\n" +
             "   \"id\":3,\n" +
-            "   \"type\":\"sys_msg_order\",\n" +
+            "   \"type\":\"sys_msg_rank\",\n" +
             "   \"isShow\":true\n" +
             " },\n" +
             " {\n" +
@@ -246,6 +249,8 @@ public class Constant {
     public static final int EVENT_INWE_HOT_CLICK = 38;
 
     public static final int EVENT_INWE_HOT_HISTORY_CLICK = 39;
+
+    public static final int EVENT_HIDE = 40;
 
     public static final int EVENT_TOKEN = 4009;
 

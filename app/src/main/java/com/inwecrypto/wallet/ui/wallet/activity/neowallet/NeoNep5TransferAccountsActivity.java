@@ -175,14 +175,14 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
                     ToastUtil.show(R.string.qingtianxiezhengquedejine);
                     return;
                 }
+                BigInteger price = new BigInteger(AppUtil.reverseArray(tokenBean.getBalance()));
+                if (new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(tokenBean.getDecimals()))).subtract(new BigDecimal(etPrice.getText().toString().trim())).floatValue()<0){
+                    ToastUtil.show(R.string.zhuanzhangtishi);
+                    return;
+                }
 
 //                if (new BigDecimal(etPrice.getText().toString().trim()).toPlainString().contains(".")){
 //                    ToastUtil.show(getString(R.string.zuixiaodanweishi1));
-//                    return;
-//                }
-//
-//                if ((new BigDecimal(neoBean.getBalance()).doubleValue()-new BigDecimal(etPrice.getText().toString().trim()).floatValue())<0){
-//                    ToastUtil.show(getString(R.string.zhuanzhangtishi));
 //                    return;
 //                }
 

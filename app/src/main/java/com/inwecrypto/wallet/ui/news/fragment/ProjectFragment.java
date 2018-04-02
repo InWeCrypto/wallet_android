@@ -16,6 +16,7 @@ import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
+import com.inwecrypto.wallet.common.widget.CustomLinearLayoutManager;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.news.NoTradingActivity;
 import com.inwecrypto.wallet.ui.news.TradingActivity;
@@ -29,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -47,7 +49,7 @@ public class ProjectFragment extends BaseFragment {
     private int type;
     private ArrayList<ProjectDetaileBean> data=new ArrayList<>();
     private ProjectAdatpter adatpter;
-    private LinearLayoutManager linearLayoutManager;
+    private CustomLinearLayoutManager linearLayoutManager;
 
     private ZixunFragment zixunFragment;
 
@@ -64,9 +66,10 @@ public class ProjectFragment extends BaseFragment {
 
         zixunFragment= (ZixunFragment) getParentFragment();
         adatpter=new ProjectAdatpter(mContext,R.layout.cproject_item ,data,type);
-        linearLayoutManager=new LinearLayoutManager(mContext);
+        linearLayoutManager=new CustomLinearLayoutManager(mContext);
         list.setLayoutManager(linearLayoutManager);
         list.setAdapter(adatpter);
+
         setList(list);
 
         adatpter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
@@ -102,7 +105,7 @@ public class ProjectFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
-        ZixunApi.getProject(this, type,1, new JsonCallback<LzyResponse<ProjectListBean>>() {
+        ZixunApi.getAllProject(this,1, new JsonCallback<LzyResponse<ProjectListBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<ProjectListBean>> response) {
                 isLoadSuccess=true;
@@ -167,6 +170,13 @@ public class ProjectFragment extends BaseFragment {
                                     int i=0;
                                     for (ProjectDetaileBean projectDetaileBean:data){
                                         JSONObject unit = prices.getJSONObject(projectDetaileBean.getUnit());
+                                        if ("-".equals(unit.getString("id"))){
+                                            projectDetaileBean.setHasMarket(false);
+                                            continue;
+                                        }else {
+                                            projectDetaileBean.setHasMarket(true);
+                                        }
+
                                         if (App.get().getUnit()==1){
                                             try{
                                                 projectDetaileBean.setPrice(unit.getString("price_cny"));

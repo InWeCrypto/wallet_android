@@ -1,5 +1,6 @@
 package com.inwecrypto.wallet.ui.news;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,8 +20,10 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
 import com.inwecrypto.wallet.ui.news.adapter.TradingMarketAdapter;
 import com.lzy.okgo.model.Response;
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.util.ArrayList;
 
@@ -81,6 +84,21 @@ public class TradingMarketActivity extends BaseActivity {
         layoutManager = new LinearLayoutManager(this);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                Intent intent=new Intent(mActivity,CommonWebActivity.class);
+                intent.putExtra("title", data.get(position).getPair());
+                intent.putExtra("url", data.get(position).getUrl());
+                keepTogo(intent);
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

@@ -84,7 +84,7 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
         price = extras.getString("price");
         oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(AppUtil.decimal(gnt.getDecimals())).setScale(0, BigDecimal.ROUND_DOWN).toPlainString(), 10).toString(16);
         gas = extras.getString("gas");
-        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(AppUtil.decimal(gnt.getDecimals())).divide(new BigDecimal(gnt.getGnt_category().getGas()), 0, BigDecimal.ROUND_DOWN).toPlainString(), 10).toString(16);
+        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(Constant.pEther).divide(new BigDecimal(gnt.getGnt_category().getGas()), 0, BigDecimal.ROUND_DOWN).toPlainString(), 10).toString(16);
         hit = extras.getString("hit");
         wallet = (WalletBean) extras.getSerializable("wallet");
     }
@@ -228,7 +228,8 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                 , wallet.getId()
                 , data
                 , wallet.getAddress()
-                , address, hit
+                , address
+                , hit
                 , oxPrice
                 , oxGas
                 , gnt.getName()

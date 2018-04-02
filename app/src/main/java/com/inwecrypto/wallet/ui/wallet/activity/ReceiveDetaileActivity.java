@@ -56,11 +56,13 @@ public class ReceiveDetaileActivity extends BaseActivity {
 
     private OrderBean order;
     private String unit;
+    private String decimal;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         order = (OrderBean) extras.getSerializable("order");
         unit=extras.getString("unit");
+        decimal=extras.getString("decimal");
     }
 
     @Override
@@ -90,7 +92,7 @@ public class ReceiveDetaileActivity extends BaseActivity {
             priceNum=order.getFee();
         }
         BigDecimal b = new BigDecimal(priceNum);
-        price.setText("+"+b.divide(Constant.pEther).setScale(4,BigDecimal.ROUND_DOWN).toPlainString());
+        price.setText("+"+b.divide(AppUtil.decimal(decimal)).setScale(4,BigDecimal.ROUND_DOWN).toPlainString());
 
         tvWalletAddress.setText(null!=order.getPay_address()?order.getPay_address():"");
         tvHeyueAddress.setText(null!=order.getReceive_address()?order.getReceive_address():"");

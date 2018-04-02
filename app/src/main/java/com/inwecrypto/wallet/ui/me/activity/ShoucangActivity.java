@@ -178,6 +178,8 @@ public class ShoucangActivity extends BaseActivity {
                 intent.putExtra("title",data.get(position).getTitle());
                 intent.putExtra("url", (App.isMain? Url.MAIN_NEWS:Url.TEST_NEWS)+data.get(position).getId());
                 intent.putExtra("id",data.get(position).getId());
+                intent.putExtra("decs",data.get(position).getDesc());
+                intent.putExtra("img",data.get(position).getImg());
                 keepTogo(intent);
             }
         });

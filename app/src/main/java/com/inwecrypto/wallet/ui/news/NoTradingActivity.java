@@ -1,12 +1,15 @@
 package com.inwecrypto.wallet.ui.news;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +34,7 @@ import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.news.adapter.InwehotAdapter;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
+import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -74,6 +78,8 @@ public class NoTradingActivity extends BaseActivity {
     TextView history;
     @BindView(R.id.projet)
     TextView projet;
+    @BindView(R.id.line2)
+    View line2;
 
     private InwehotAdapter adapter;
     private ArrayList<ArticleDetaileBean> data = new ArrayList<>();
@@ -87,12 +93,16 @@ public class NoTradingActivity extends BaseActivity {
 
     private TradingProjectDetaileBean tradingProject;
 
+    private HeaderAndFooterWrapper footer;
+    private View footerView;
+
     private int type;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         project = (ProjectDetaileBean) extras.getSerializable("project");
-        type=extras.getInt("type");
+        type = extras.getInt("type");
     }
 
 
@@ -116,12 +126,12 @@ public class NoTradingActivity extends BaseActivity {
         txtRightTitle1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null==tradingProject){
+                if (null == tradingProject) {
                     ToastUtil.show(R.string.shujuhuoqushibai);
                     return;
                 }
                 Intent intent = new Intent(mActivity, ProjectHomeActivity.class);
-                intent.putExtra("project",tradingProject);
+                intent.putExtra("project", tradingProject);
                 keepTogo(intent);
             }
         });
@@ -129,7 +139,7 @@ public class NoTradingActivity extends BaseActivity {
         txtRightTitle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!App.get().isLogin()){
+                if (!App.get().isLogin()) {
                     keepTogo(LoginActivity.class);
                     return;
                 }
@@ -152,10 +162,33 @@ public class NoTradingActivity extends BaseActivity {
         }
 
         adapter = new InwehotAdapter(this, R.layout.inwe_hot_item, data);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        footer=new HeaderAndFooterWrapper(adapter);
+        footerView= LayoutInflater.from(this).inflate(R.layout.empty_view,null,false);
+        footer.addFootView(footerView);
+
+        swipeRefresh.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= 16) {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeOnGlobalLayoutListener(this);
+                }
+                else {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeGlobalOnLayoutListener(this);
+                }
+                swipeRefresh.getHeight(); // 获取高度
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) footerView.getLayoutParams();
+                params.height=swipeRefresh.getHeight()/4;
+                footerView.setLayoutParams(params);
+            }
+        });
+
+        linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         list.setLayoutManager(linearLayoutManager);
-        list.setAdapter(adapter);
+        list.setAdapter(footer);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -174,10 +207,12 @@ public class NoTradingActivity extends BaseActivity {
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                Intent intent=new Intent(mActivity,ProjectNewsWebActivity.class);
-                intent.putExtra("title",data.get(position).getTitle());
-                intent.putExtra("url", (App.isMain? Url.MAIN_NEWS:Url.TEST_NEWS)+data.get(position).getId());
-                intent.putExtra("id",data.get(position).getId());
+                Intent intent = new Intent(mActivity, ProjectNewsWebActivity.class);
+                intent.putExtra("title", data.get(position).getTitle());
+                intent.putExtra("url", (App.isMain ? Url.MAIN_NEWS : Url.TEST_NEWS) + data.get(position).getId());
+                intent.putExtra("id", data.get(position).getId());
+                intent.putExtra("decs",data.get(position).getDesc());
+                intent.putExtra("img",data.get(position).getImg());
                 keepTogo(intent);
             }
 
@@ -190,43 +225,29 @@ public class NoTradingActivity extends BaseActivity {
         gaikuang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null==tradingProject){
+                if (null == tradingProject) {
                     ToastUtil.show(R.string.shujuhuoqushibai);
                     return;
                 }
                 Intent intent = new Intent(mActivity, NoTradingProjectActivity.class);
-                intent.putExtra("project",tradingProject);
+                intent.putExtra("project", tradingProject);
                 keepTogo(intent);
             }
         });
 
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null==tradingProject){
-                    ToastUtil.show(R.string.shujuhuoqushibai);
-                    return;
-                }
-                Intent intent = new Intent(mActivity, ProjectHistoryActivity.class);
-                intent.putExtra("project",tradingProject);
-                keepTogo(intent);
-            }
-        });
+        history.setVisibility(View.GONE);
+        line2.setVisibility(View.GONE);
 
         projet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null==tradingProject){
+                if (null == tradingProject) {
                     ToastUtil.show(R.string.shujuhuoqushibai);
                     return;
                 }
-                if (null!=tradingProject&&null!=tradingProject.getCategory_presentation()){
-                    Intent intent=new Intent(mActivity,ProjectNewsWebActivity.class);
-                    intent.putExtra("title",project.getName());
-                    intent.putExtra("content", tradingProject.getCategory_presentation().getContent());
-                    intent.putExtra("show",false);
-                    keepTogo(intent);
-                }
+                Intent intent = new Intent(mActivity, ProjectHistoryActivity.class);
+                intent.putExtra("project", tradingProject);
+                keepTogo(intent);
             }
         });
     }
@@ -271,7 +292,7 @@ public class NoTradingActivity extends BaseActivity {
         ZixunApi.getProjectDetaile(this, project.getId(), new JsonCallback<LzyResponse<TradingProjectDetaileBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<TradingProjectDetaileBean>> response) {
-                tradingProject=response.body().data;
+                tradingProject = response.body().data;
             }
 
             @Override
@@ -303,8 +324,11 @@ public class NoTradingActivity extends BaseActivity {
             count = response.body().data.getData().size();
             Collections.reverse(response.body().data.getData());
             data.addAll(0, response.body().data.getData());
+            if (data.size()==1){
+                linearLayoutManager.setStackFromEnd(false);
+            }
         }
-        adapter.notifyItemRangeInserted(start, count);
+        footer.notifyItemRangeInserted(start, count);
     }
 
     private void collectProject(final boolean isCllect) {
@@ -323,43 +347,56 @@ public class NoTradingActivity extends BaseActivity {
     }
 
     private void changeStart(boolean isCllect) {
-        if (isCllect){
+        if (isCllect) {
             //已收藏
             txtRightTitle2.setImageResource(R.mipmap.xiangmuzhuye_xing_cio);
-        }else {
+        } else {
             //未收藏
             txtRightTitle2.setImageResource(R.mipmap.zhuye_jiaoyizhong_xing_ico);
         }
-        if (null==project.getCategory_user()){
-            ProjectDetaileBean.CategoryUserBean categoryUserBean=new ProjectDetaileBean.CategoryUserBean();
+        if (null == project.getCategory_user()) {
+            ProjectDetaileBean.CategoryUserBean categoryUserBean = new ProjectDetaileBean.CategoryUserBean();
             categoryUserBean.setIs_favorite(isCllect);
             project.setCategory_user(categoryUserBean);
-        }else {
+        } else {
             project.getCategory_user().setIs_favorite(isCllect);
         }
-        EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH,0));
+        EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH, 0));
     }
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode()==Constant.EVENT_SHOUCANG){
+        if (event.getEventCode() == Constant.EVENT_SHOUCANG) {
             changeStart((Boolean) event.getData());
         }
 
-        if (event.getEventCode()==Constant.EVENT_DINGZHI){
-            if (null==project.getCategory_user()){
+        if (event.getEventCode() == Constant.EVENT_DINGZHI) {
+            if (null == project.getCategory_user()) {
                 project.setCategory_user(new ProjectDetaileBean.CategoryUserBean());
             }
             project.getCategory_user().setIs_top((Boolean) event.getData());
-            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH,type));
+
+            if(null==tradingProject.getCategory_user()){
+                tradingProject.setCategory_user(new TradingProjectDetaileBean.CategoryUserBean());
+            }
+            tradingProject.getCategory_user().setIs_top((Boolean) event.getData());
+
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH, type));
         }
 
-        if (event.getEventCode()==Constant.EVENT_PINGLUN){
-            if (null==project.getCategory_user()){
+        if (event.getEventCode() == Constant.EVENT_PINGLUN) {
+            if (null == project.getCategory_user()) {
                 project.setCategory_user(new ProjectDetaileBean.CategoryUserBean());
             }
             project.getCategory_user().setScore((String) event.getData());
-            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH,type));
+
+            if(null==tradingProject.getCategory_user()){
+                tradingProject.setCategory_user(new TradingProjectDetaileBean.CategoryUserBean());
+            }
+            tradingProject.getCategory_user().setScore((String) event.getData());
+
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH, type));
         }
     }
+
 }

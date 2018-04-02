@@ -4,10 +4,12 @@ import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.bean.ArticleListBean;
 import com.inwecrypto.wallet.bean.ArticleTagsBean;
 import com.inwecrypto.wallet.bean.CandyBowBean;
+import com.inwecrypto.wallet.bean.CommonDataBean;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
 import com.inwecrypto.wallet.bean.ExchangeNoticeListBean;
 import com.inwecrypto.wallet.bean.ProjectListBean;
 import com.inwecrypto.wallet.bean.ProjectMarketBean;
+import com.inwecrypto.wallet.bean.Rank1Bean;
 import com.inwecrypto.wallet.bean.SearchBean;
 import com.inwecrypto.wallet.bean.TradingProjectDetaileBean;
 import com.inwecrypto.wallet.bean.WalletBean;
@@ -26,6 +28,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.sql.CommonDataSource;
 
 /**
  * 作者：xiaoji06 on 2018/2/9 20:36
@@ -65,6 +69,20 @@ public class ZixunApi {
     }
 
     /**
+     * 获取项目
+     * @param object
+     * @param page
+     * @param callback
+     */
+    public static void getAllProject(Object object,int page,JsonCallback<LzyResponse<ProjectListBean>> callback){
+        OkGo.<LzyResponse<ProjectListBean>>get(Url.ALL_PROJECT+"per_page=1000&page="+page)
+                .tag(object)
+                .cacheKey(Url.ALL_PROJECT+App.isMain)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(callback);
+    }
+
+    /**
      * 获取inwe 热点
      * @param object
      * @param page
@@ -76,6 +94,7 @@ public class ZixunApi {
                 .execute(callback);
     }
 
+
     /**
      * 获取inwe 热点
      * @param object
@@ -84,6 +103,18 @@ public class ZixunApi {
      */
     public static void getInweHotHistory(Object object,int page,String type,JsonCallback<LzyResponse<ArticleListBean>> callback){
         OkGo.<LzyResponse<ArticleListBean>>get(Url.INWE_HOT_HISTORY+page+"&"+type)
+                .tag(object)
+                .execute(callback);
+    }
+
+    /**
+     * 获取inwe 热点
+     * @param object
+     * @param page
+     * @param callback
+     */
+    public static void getInweView(Object object,int page,JsonCallback<LzyResponse<ArticleListBean>> callback){
+        OkGo.<LzyResponse<ArticleListBean>>get(Url.INWE_VIEW+page)
                 .tag(object)
                 .execute(callback);
     }
@@ -380,6 +411,47 @@ public class ZixunApi {
     public static void cancleDot(Object object,String id,JsonCallback<LzyResponse<Object>> callback){
         OkGo.<LzyResponse<Object>>put(Url.CANCLE_DOT+id+"/undot")
                 .tag(object)
+                .execute(callback);
+    }
+
+    /**
+     * 获取指定项目
+     * @param object
+     * @param projects
+     * @param callback
+     */
+    public static void getFixProject(Object object, String projects,JsonCallback<LzyResponse<ProjectListBean>> callback){
+        OkGo.<LzyResponse<ProjectListBean>>get(Url.FIX_PROJECT+projects+"&per_page=1000&page=1")
+                .tag(object)
+                .cacheKey(Url.FIX_PROJECT+projects+App.isMain)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(callback);
+    }
+
+    /**
+     * 获取轮播图
+     * @param object
+     * @param callback
+     */
+    public static void getScrollInweHot(Object object,JsonCallback<LzyResponse<ArticleListBean>> callback){
+        OkGo.<LzyResponse<ArticleListBean>>get(Url.ARTICLE_SCROLL)
+                .tag(object)
+                .cacheKey(Url.ARTICLE_SCROLL+App.isMain)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(callback);
+    }
+
+
+    /**
+     * 获取市值排行
+     * @param object
+     * @param callback
+     */
+    public static void getMarketCap(Object object,JsonCallback<LzyResponse<ArrayList<Rank1Bean>>> callback){
+        OkGo.<LzyResponse<ArrayList<Rank1Bean>>>get(Url.MARKET_CAP)
+                .tag(object)
+                .cacheKey(Url.MARKET_CAP+App.isMain)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
 

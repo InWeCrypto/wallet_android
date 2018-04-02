@@ -192,12 +192,14 @@ public class MailListActivity extends BaseActivity {
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode()== Constant.EVENT_REFERSH){
+        if (event.getEventCode()== Constant.EVENT_REFRESH){
             if (1==event.getKey1()){
+                vpList.setCurrentItem(0);
                 selectType(1);
             }
 
             if (2==event.getKey1()){
+                vpList.setCurrentItem(1);
                 selectType(2);
             }
         }
@@ -234,14 +236,11 @@ public class MailListActivity extends BaseActivity {
 
     private void showSelectDialog() {
 
-        View selectPopupWin = LayoutInflater.from(this).inflate(R.layout.view_popup_wallet_detaile, null, false);
+        View selectPopupWin = LayoutInflater.from(this).inflate(R.layout.view_popup_add_contact, null, false);
         TextView zhujici = (TextView) selectPopupWin.findViewById(R.id.zhujici);
         TextView keystore = (TextView) selectPopupWin.findViewById(R.id.keystore);
         TextView delete = (TextView) selectPopupWin.findViewById(R.id.delete);
 
-        selectPopupWin.findViewById(R.id.word).setVisibility(View.GONE);
-        selectPopupWin.findViewById(R.id.transfer).setVisibility(View.GONE);
-        selectPopupWin.findViewById(R.id.delete_wallet).setVisibility(View.GONE);
         zhujici.setText("ETH");
         keystore.setText("NEO");
         delete.setText("BTC");

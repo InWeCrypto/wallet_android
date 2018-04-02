@@ -152,6 +152,17 @@ public static final int *;
 -keepclasseswithmembers class * {
     public <init>(android.content.Context);
 }
+
+
+-keep class com.tencent.mm.opensdk.** {
+*;
+}
+-keep class com.tencent.wxop.** {
+*;
+}
+-keep class com.tencent.mm.sdk.** {
+*;
+}
 #-------------------------------------------------------------------------
 
 #---------------------------------3.与js互相调用的类------------------------

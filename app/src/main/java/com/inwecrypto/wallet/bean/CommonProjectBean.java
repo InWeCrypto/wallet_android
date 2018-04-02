@@ -20,6 +20,7 @@ public class CommonProjectBean implements Serializable {
     private String lastMessage;
     private String chatId;
     private boolean openTip=true;
+    private int messageCount;
 
     public CommonProjectBean(){
 
@@ -28,6 +29,14 @@ public class CommonProjectBean implements Serializable {
     public CommonProjectBean(String type,boolean isShow){
         this.type=type;
         this.isShow=isShow;
+    }
+
+    public int getMessageCount() {
+        return messageCount;
+    }
+
+    public void setMessageCount(int messageCount) {
+        this.messageCount = messageCount;
     }
 
     public String getChatId() {

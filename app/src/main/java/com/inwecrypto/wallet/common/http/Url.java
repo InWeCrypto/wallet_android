@@ -70,9 +70,9 @@ public class Url {
 
     public static String PROJECT = BASE_2 + "/category?type=";
 
-    public static String INWE_HOT = BASE_2 + "/article?inwe_hot&page=";
+    public static String INWE_HOT = BASE_2 + "/article?is_not_category&type=[1,2,3,6,16]&page=";
 
-    public static String TRADING_VIEW = BASE_2 + "/article?type=4&page=";
+    public static String TRADING_VIEW = BASE_2 + "/article?type=[4,7]&page=";
 
     public static String EXCHANGE_NOTICE = BASE_2 + "/exchange_notice?page=";
 
@@ -102,7 +102,31 @@ public class Url {
 
     public static String INWE_HOT_HISTORY = BASE_2 + "/article?page=";
 
+    public static String FIX_PROJECT = BASE_2 + "/category?units=";
 
+    public static String FEED_BACK = BASE_2 + "/user/feedbackc";
+
+    public static String ALL_PROJECT = BASE_2 + "/category?";
+
+    public static String ARTICLE_SCROLL = BASE_2 + "/article?is_scroll&page=1&per_page=5";
+
+    public static String INWE_VIEW = BASE_2 + "/article?type=[12,13,14,15]&page=";
+
+    public static String GNT_SORT = BASE_2 + "/api/user-gnt-sort-all";
+
+    public static String USER_LANG = BASE_2 + "/user/lang";
+
+    public static String MARKET_CAP = BASE_2 + "/token_rank/market_cap";
+
+    public static String MARKET_CAP_DATE = BASE_2 + "/token_rank/market_cap/";
+
+    public static String EXCHANGES = BASE_2 + " /token_rank/exchanges";
+
+    public static String DAPP = BASE_2 + " /token_rank/dapp";
+
+    public static String CATEGORY_RANKING = BASE_2 + "/token_rank/category";
+
+    public static String ARTICLE_RANKING = BASE_2 + "/article?sort_desc=click_rate&per_page=50";
 
 
     public static String MAIN_NEWS = "http://inwecrypto.com/newsdetail2?art_id=";
@@ -113,10 +137,9 @@ public class Url {
 
     public static String TEST_YAOQIN = "http://testnet.inwecrypto.com/share2app?code=";
 
+    public static String MAIN_HELP = "http://inwecrypto.com/helpcenter?lang=";
 
-
-
-
+    public static String TEST_HELP = "http://testnet.inwecrypto.com/helpcenter?lang=";
 
 
 
@@ -327,7 +350,7 @@ public class Url {
 
         SEARCH = BASE_2+"/search/";
 
-        USER_CONTACT=BASE_2+"/api/contact?"+(App.isMain ?"ico_id=":"category_id=");
+        USER_CONTACT=BASE_2+"/api/contact?category_id=";
 
         USER_CONTACT_ADD=BASE_2+"/api/contact";
 
@@ -363,9 +386,9 @@ public class Url {
 
         PROJECT = BASE_2 + "/category?type=";
 
-        INWE_HOT = BASE_2 + "/article?inwe_hot&page=";
+        INWE_HOT = BASE_2 + "/article?is_not_category&type=[1,2,3,6,16]&page=";
 
-        TRADING_VIEW = BASE_2 + "/article?type=4&page=";
+        TRADING_VIEW = BASE_2 + "/article?type=[4,7]&page=";
 
         EXCHANGE_NOTICE = BASE_2 + "/exchange_notice?page=";
 
@@ -394,6 +417,32 @@ public class Url {
         CANCLE_DOT=BASE_2+"/category/";
 
         INWE_HOT_HISTORY = BASE_2 + "/article?page=";
+
+        FIX_PROJECT = BASE_2 + "/category?units=";
+
+        FEED_BACK = BASE_2 + "/user/feedbackc";
+
+        ALL_PROJECT = BASE_2 + "/category?";
+
+        ARTICLE_SCROLL = BASE_2 + "/article?is_scroll&page=1&per_page=5";
+
+        INWE_VIEW = BASE_2 + "/article?type=[12,13,14,15]&page=";
+
+        GNT_SORT = BASE_2 + "/api/user-gnt-sort-all";
+
+        USER_LANG = BASE_2 + "/user/lang";
+
+        MARKET_CAP = BASE_2 + "/token_rank/market_cap";
+
+        MARKET_CAP_DATE = BASE_2 + "/token_rank/market_cap/";
+
+        EXCHANGES = BASE_2 + " /token_rank/exchanges";
+
+        DAPP = BASE_2 + " /token_rank/dapp";
+
+        CATEGORY_RANKING = BASE_2 + "/token_rank/category";
+
+        ARTICLE_RANKING = BASE_2 + "/article?sort_desc=click_rate&per_page=50";
     }
 
 }

@@ -27,7 +27,7 @@ public class AllGntAdapter extends CommonAdapter<GntBean> {
 
     @Override
     protected void convert(ViewHolder holder, GntBean gntBean, int position) {
-        Glide.with(mContext).load(gntBean.getIcon()).crossFade().transform(new GlideCircleTransform(mContext)).into((ImageView) holder.getView(R.id.img));
+        Glide.with(mContext).load(gntBean.getIcon()).crossFade().into((ImageView) holder.getView(R.id.img));
         holder.setText(R.id.name,gntBean.getName());
         if (!gntBean.isSelect()){
             Glide.with(mContext).load(R.mipmap.newneonoselectxxhdpi).crossFade().into((ImageView) holder.getView(R.id.select));

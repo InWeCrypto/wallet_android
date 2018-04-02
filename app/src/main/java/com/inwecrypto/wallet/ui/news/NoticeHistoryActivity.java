@@ -65,6 +65,7 @@ public class NoticeHistoryActivity extends BaseActivity {
     private ArrayList<NoticeBean> data=new ArrayList<>();
 
     private SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private EndLessOnScrollListener scrollListener;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -91,7 +92,7 @@ public class NoticeHistoryActivity extends BaseActivity {
         layoutManager = new LinearLayoutManager(this);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
-        list.addOnScrollListener(new EndLessOnScrollListener(layoutManager) {
+        scrollListener=new EndLessOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore() {
                 if (isEnd) {
@@ -103,13 +104,15 @@ public class NoticeHistoryActivity extends BaseActivity {
                     loadMore();
                 }
             }
-        });
+        };
+        list.addOnScrollListener(scrollListener);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 isEnd = false;
+                scrollListener.reset();
                 initData();
             }
         });

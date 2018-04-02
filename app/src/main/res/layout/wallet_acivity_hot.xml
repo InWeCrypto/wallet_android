@@ -207,6 +207,7 @@
 
                                 <LinearLayout
                                     android:id="@+id/tokensale"
+                                    android:visibility="gone"
                                     android:clickable="true"
                                     android:layout_width="0dp"
                                     android:layout_weight="1.5"
@@ -232,7 +233,8 @@
                                 <View
                                     android:layout_width="0.5dp"
                                     android:layout_height="32dp"
-                                    android:background="#3C8F79"/>
+                                    android:background="#3C8F79"
+                                    android:visibility="gone"/>
 
                                 <LinearLayout
                                     android:id="@+id/news"
@@ -340,6 +342,48 @@
                     </LinearLayout>
 
                 </android.support.design.widget.CollapsingToolbarLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="6dp"
+                        android:textSize="11sp"
+                        android:textColor="#9B9B9B"
+                        android:text="@string/zichan"/>
+
+                    <LinearLayout
+                        android:id="@+id/hidell"
+                        android:clickable="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="6dp"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:gravity="center_vertical"
+                        android:layout_gravity="right">
+                        <ImageView
+                            android:id="@+id/hide"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@mipmap/hide_zero_normal"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:textSize="11sp"
+                            android:textColor="#9B9B9B"
+                            android:text="@string/yincangshuliangwei0debizhogn"/>
+                    </LinearLayout>
+
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

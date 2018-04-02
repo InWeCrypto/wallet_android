@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#D2D2D2">
+    android:background="#ebebeb">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -59,12 +59,11 @@
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingBottom="14dp">
+        android:layout_weight="1">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
     </com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat>
 
     <View

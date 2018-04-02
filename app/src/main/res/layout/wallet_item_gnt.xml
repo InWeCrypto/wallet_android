@@ -11,7 +11,7 @@
         android:layout_marginTop="32dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="32dp"
-        android:scaleType="centerInside"
+        android:scaleType="fitXY"
         android:src="@mipmap/project_icon_neo"/>
 
     <TextView

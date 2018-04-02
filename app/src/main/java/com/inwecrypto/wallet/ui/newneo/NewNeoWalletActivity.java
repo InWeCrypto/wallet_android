@@ -26,14 +26,17 @@ import android.widget.TextView;
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
+import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.TokenBean;
 import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
+import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.inwecrypto.wallet.common.util.AppUtil;
+import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ScreenUtils;
@@ -43,6 +46,7 @@ import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.QuickActivity;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.WalletTipOneActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.neowallet.GetGasActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoNep5TokenWalletActivity;
@@ -61,6 +65,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -152,8 +157,13 @@ public class NewNeoWalletActivity extends BaseActivity {
     SwipeRefreshLayoutCompat swipeRefresh;
     @BindView(R.id.card_bg)
     ImageView cardBg;
+    @BindView(R.id.hide)
+    ImageView hide;
+    @BindView(R.id.hidell)
+    LinearLayout hidell;
 
     private ArrayList<TokenBean.ListBean> data = new ArrayList<>();
+    private ArrayList<TokenBean.ListBean> showData = new ArrayList<>();
     private NewNeoGntAdapter adapter;
 
     private WalletBean wallet;
@@ -172,6 +182,8 @@ public class NewNeoWalletActivity extends BaseActivity {
     private String neoTotleUsdPrice = "0.00";
     private String gasTotleUsdrice = "0.00";
     private MaterialDialog mMaterialDialog;
+
+    private boolean isHide;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -194,6 +206,9 @@ public class NewNeoWalletActivity extends BaseActivity {
         appbarlayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (null==swipeRefresh){
+                    return;
+                }
                 if (verticalOffset >= 0) {
                     swipeRefresh.setEnabled(true);
                 } else {
@@ -276,6 +291,10 @@ public class NewNeoWalletActivity extends BaseActivity {
         token.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 if (null == wallet || null == neoBean) {
                     ToastUtil.show(R.string.wallet_data_error);
                     return;
@@ -305,6 +324,10 @@ public class NewNeoWalletActivity extends BaseActivity {
         getgasll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 if (null == wallet || null == neoBean) {
                     ToastUtil.show(R.string.wallet_data_error);
                     return;
@@ -369,11 +392,24 @@ public class NewNeoWalletActivity extends BaseActivity {
         news.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.show(getString(R.string.jinqingqidai));
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
+                StringBuilder sb=new StringBuilder();
+                sb.append("[\"NEO\",\"GAS\"");
+
+                for (TokenBean.ListBean token:data){
+                    sb.append(",\""+token.getName().toUpperCase()+"\"");
+                }
+                sb.append("]");
+                Intent intent=new Intent(mActivity,NewsProjectActivity.class);
+                intent.putExtra("projects",sb.toString());
+                keepTogo(intent);
             }
         });
 
-        adapter = new NewNeoGntAdapter(this, R.layout.newneo_token_item, data);
+        adapter = new NewNeoGntAdapter(this, R.layout.newneo_token_item, showData);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
@@ -414,8 +450,12 @@ public class NewNeoWalletActivity extends BaseActivity {
         list.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
             @Override
             public void onItemClick(SwipeMenuBridge menuBridge) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 if (menuBridge.getPosition() == 0) {//删除
-                    WalletApi.userGntDelete(mActivity, data.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
+                    WalletApi.userGntDelete(mActivity, showData.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
                         @Override
                         public void onSuccess(Response<LzyResponse<Object>> response) {
                             list.smoothCloseMenu();
@@ -432,7 +472,7 @@ public class NewNeoWalletActivity extends BaseActivity {
                     });
 
                 } else if (menuBridge.getPosition() == 1) {//顶置
-                    WalletApi.userGnt(mActivity, data.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
+                    WalletApi.userGnt(mActivity, showData.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
                         @Override
                         public void onSuccess(Response<LzyResponse<Object>> response) {
                             list.smoothCloseMenu();
@@ -460,7 +500,7 @@ public class NewNeoWalletActivity extends BaseActivity {
                 Intent intent = new Intent(mActivity, NeoNep5TokenWalletActivity.class);
                 intent.putExtra("wallet", wallet);
                 intent.putExtra("neo", neoBean);
-                intent.putExtra("token", data.get(position));
+                intent.putExtra("token", showData.get(position));
                 keepTogo(intent);
             }
         });
@@ -471,12 +511,49 @@ public class NewNeoWalletActivity extends BaseActivity {
             changeSee(0, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
         }
 
+
+        isHide=App.get().getSp().getBoolean(Constant.HIDE,false);
+        if (isHide){
+            hide.setImageResource(R.mipmap.hide_zero_selecte);
+        }else {
+            hide.setImageResource(R.mipmap.hide_zero_normal);
+        }
+
+        hidell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isHide){
+                    isHide=false;
+                    hide.setImageResource(R.mipmap.hide_zero_normal);
+                }else {
+                    isHide=true;
+                    hide.setImageResource(R.mipmap.hide_zero_selecte);
+                }
+                showData.clear();
+                //刷新数据
+                if (isHide){
+                    for (int i=0;i<data.size();i++){
+                        BigDecimal currentPrice = new BigDecimal(AppUtil.toD(data.get(i).getBalance().replace("0x", "0")));
+                        if (currentPrice.floatValue()!=0){
+                            showData.add(data.get(i));
+                        }
+                    }
+                }else {
+                    showData.addAll(data);
+                }
+
+                adapter.notifyDataSetChanged();
+                App.get().getSp().putBoolean(Constant.HIDE,isHide);
+                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_HIDE,isHide));
+            }
+        });
+
         name.setText(wallet.getName());
         address.setText(wallet.getAddress());
         switch (new Integer(wallet.getType())) {
             case 0:
-                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                if (wallets.contains(wallet.getAddress())) {
+                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "").toLowerCase();
+                if (wallets.contains(wallet.getAddress().toLowerCase())) {
                     state.setVisibility(View.GONE);
                 } else {
                     state.setVisibility(View.VISIBLE);
@@ -545,74 +622,27 @@ public class NewNeoWalletActivity extends BaseActivity {
 
     private void refershData() {
 
+        if (!App.get().isLogin()){
+            LzyResponse<TokenBean> response=CacheUtils.getCache(Url.CONVERSION+"/"+wallet.getId()+ App.isMain);
+            if (null!=response){
+                setData(response);
+            }
+            if (null != swipeRefresh) {
+                swipeRefresh.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefresh.setRefreshing(false);
+                    }
+                });
+            }
+            return;
+        }
+
         //请求资产
         WalletApi.conversion(this, wallet.getId(), new JsonCallback<LzyResponse<TokenBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<TokenBean>> response) {
-                if (null == amount || null == topPrice) {
-                    return;
-                }
-                data.clear();
-                TOKENPrice = new BigDecimal("0.00");
-
-                if (null != response.body().data && null != response.body().data.getRecord()) {
-                    neoBean = response.body().data.getRecord();
-
-                    neoPrice.setText(new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_DOWN).toPlainString());
-
-
-                    tvPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_DOWN).toPlainString());
-
-                    getgas.setText("(" + new BigDecimal(neoBean.getGnt().get(0).getAvailable()).setScale(8, BigDecimal.ROUND_DOWN).toPlainString() +getString(R.string.ketiqu)+")");
-
-                    if (1 == App.get().getUnit()) {
-                        neoTotleChPrice = new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                        gasTotleChPrice = new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                    } else {
-                        neoTotleUsdPrice = new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                        gasTotleUsdrice = new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                    }
-
-                    //计算总值
-                    if (1 == App.get().getUnit()) {
-                        BigDecimal neoBd = new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny()));
-                        BigDecimal gasBd = new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
-                        BigDecimal getGasBd = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
-                        TOKENPrice = neoBd.add(gasBd).add(getGasBd).setScale(2, BigDecimal.ROUND_DOWN);
-                    } else {
-                        BigDecimal neoBd = new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd()));
-                        BigDecimal gasBd = new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
-                        BigDecimal getGasBd = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
-                        TOKENPrice = neoBd.add(gasBd).add(getGasBd).setScale(2, BigDecimal.ROUND_DOWN);
-                    }
-                }
-
-                if (null != response.body().data.getList() && response.body().data.getList().size() > 0) {
-                    data.addAll(response.body().data.getList());
-                }
-
-                adapter.notifyDataSetChanged();
-                //计算金额
-                for (int i = 0; i < data.size(); i++) {
-                    BigInteger price = new BigInteger(AppUtil.reverseArray(data.get(i).getBalance()));
-                    BigDecimal currentPrice = new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(data.get(i).getDecimals())));
-                    if (null != data.get(i).getGnt_category().getCap()) {
-                        if (1 == App.get().getUnit()) {
-                            TOKENPrice = TOKENPrice.add(currentPrice.multiply(new BigDecimal(data.get(i).getGnt_category().getCap().getPrice_cny())));
-                        } else {
-                            TOKENPrice = TOKENPrice.add(currentPrice.multiply(new BigDecimal(data.get(i).getGnt_category().getCap().getPrice_usd())));
-                        }
-                    }
-                }
-
-                //计算总金额
-                if (1 == App.get().getUnit()) {
-                    totleChPrice = TOKENPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                    changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
-                } else {
-                    totleUsdPrice = TOKENPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                    changeSee(0, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
-                }
+                setData(response.body());
             }
 
             @Override
@@ -624,8 +654,10 @@ public class NewNeoWalletActivity extends BaseActivity {
             @Override
             public void onError(Response<LzyResponse<TokenBean>> response) {
                 super.onError(response);
-                if (NetworkUtils.isConnected(mActivity)){
-                    ToastUtil.show(getString(R.string.load_error));
+                if (App.get().isLogin()){
+                    if (NetworkUtils.isConnected(mActivity)){
+                        ToastUtil.show(getString(R.string.load_error));
+                    }
                 }
             }
 
@@ -637,6 +669,85 @@ public class NewNeoWalletActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void setData(LzyResponse<TokenBean> response) {
+        if (null == amount || null == topPrice) {
+            return;
+        }
+        data.clear();
+        TOKENPrice = new BigDecimal("0.00");
+
+        if (null != response.data && null != response.data.getRecord()) {
+            neoBean = response.data.getRecord();
+
+            neoPrice.setText(new BigDecimal(neoBean.getBalance()).setScale(0, BigDecimal.ROUND_DOWN).toPlainString());
+
+
+            tvPrice.setText(new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_DOWN).toPlainString());
+
+            getgas.setText("(" + new BigDecimal(neoBean.getGnt().get(0).getAvailable()).setScale(8, BigDecimal.ROUND_DOWN).toPlainString() +getString(R.string.ketiqu)+")");
+
+            if (1 == App.get().getUnit()) {
+                neoTotleChPrice = new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+                gasTotleChPrice = new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+            } else {
+                neoTotleUsdPrice = new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+                gasTotleUsdrice = new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+            }
+
+            //计算总值
+            if (1 == App.get().getUnit()) {
+                BigDecimal neoBd = new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_cny()));
+                BigDecimal gasBd = new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
+                BigDecimal getGasBd = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_cny()));
+                TOKENPrice = neoBd.add(gasBd).add(getGasBd).setScale(2, BigDecimal.ROUND_DOWN);
+            } else {
+                BigDecimal neoBd = new BigDecimal(neoBean.getBalance()).multiply(new BigDecimal(neoBean.getCap().getPrice_usd()));
+                BigDecimal gasBd = new BigDecimal(neoBean.getGnt().get(0).getBalance()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
+                BigDecimal getGasBd = new BigDecimal(neoBean.getGnt().get(0).getAvailable()).multiply(new BigDecimal(neoBean.getGnt().get(0).getCap().getPrice_usd()));
+                TOKENPrice = neoBd.add(gasBd).add(getGasBd).setScale(2, BigDecimal.ROUND_DOWN);
+            }
+        }
+
+        showData.clear();
+        if (null != response.data.getList() && response.data.getList().size() > 0) {
+            data.addAll(response.data.getList());
+        }
+
+        if (App.get().getSp().getBoolean(Constant.HIDE,false)){
+            for (int i=0;i<data.size();i++){
+                BigInteger price = new BigInteger(AppUtil.reverseArray(data.get(i).getBalance()));
+                if (price.floatValue()!=0){
+                    showData.add(data.get(i));
+                }
+            }
+        }else {
+            showData.addAll(data);
+        }
+
+        adapter.notifyDataSetChanged();
+        //计算金额
+        for (int i = 0; i < data.size(); i++) {
+            BigInteger price = new BigInteger(AppUtil.reverseArray(data.get(i).getBalance()));
+            BigDecimal currentPrice = new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(data.get(i).getDecimals())));
+            if (null != data.get(i).getGnt_category().getCap()) {
+                if (1 == App.get().getUnit()) {
+                    TOKENPrice = TOKENPrice.add(currentPrice.multiply(new BigDecimal(data.get(i).getGnt_category().getCap().getPrice_cny())));
+                } else {
+                    TOKENPrice = TOKENPrice.add(currentPrice.multiply(new BigDecimal(data.get(i).getGnt_category().getCap().getPrice_usd())));
+                }
+            }
+        }
+
+        //计算总金额
+        if (1 == App.get().getUnit()) {
+            totleChPrice = TOKENPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+            changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
+        } else {
+            totleUsdPrice = TOKENPrice.setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+            changeSee(0, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
+        }
     }
 
     @Override
@@ -653,9 +764,9 @@ public class NewNeoWalletActivity extends BaseActivity {
             wallet.setType("0");
             switch (new Integer(wallet.getType())) {
                 case 0:
-                    String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
-                    if (wallets.contains(wallet.getAddress()) || walletsZjc.contains(wallet.getAddress())) {
+                    String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "").toLowerCase();
+                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "").toLowerCase();
+                    if (wallets.contains(wallet.getAddress().toLowerCase()) || walletsZjc.contains(wallet.getAddress().toLowerCase())) {
                         state.setVisibility(View.GONE);
                     } else {
                         state.setVisibility(View.VISIBLE);
@@ -687,8 +798,8 @@ public class NewNeoWalletActivity extends BaseActivity {
         TextView keystore = (TextView) selectPopupWin.findViewById(R.id.keystore);
         TextView delete = (TextView) selectPopupWin.findViewById(R.id.delete);
 
-        String wallets = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
-        if (wallets.contains(wallet.getAddress())) {
+        String wallets = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "").toLowerCase();
+        if (wallets.contains(wallet.getAddress().toLowerCase())) {
             hit.setVisibility(View.GONE);
             zhujici.setVisibility(View.GONE);
         }
@@ -741,7 +852,7 @@ public class NewNeoWalletActivity extends BaseActivity {
                                 Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                                 Account account = null;
                                 for (int i = 0; i < accounts.length; i++) {
-                                    if (accounts[i].name.equals(wallet.getAddress())) {
+                                    if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                         //accountManager.getUserData(accounts[i], pass.getText().toString());
                                         keystore = accountManager.getUserData(accounts[i], "wallet");
                                         account = accounts[i];
@@ -818,7 +929,7 @@ public class NewNeoWalletActivity extends BaseActivity {
                                 Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                                 Account account = null;
                                 for (int i = 0; i < accounts.length; i++) {
-                                    if (accounts[i].name.equals(wallet.getAddress())) {
+                                    if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                         //accountManager.getUserData(accounts[i], pass.getText().toString());
                                         keystore = accountManager.getUserData(accounts[i], "wallet");
                                         account = accounts[i];
@@ -840,9 +951,9 @@ public class NewNeoWalletActivity extends BaseActivity {
                                 }
                                 accountManager.setUserData(account, "type", Constant.BEIFEN);
 
-                                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                                if (!wallets.contains(wallet.getAddress())) {
-                                    wallets = wallets + wallet.getAddress() + ",";
+                                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "") .toLowerCase();
+                                if (!wallets.contains(wallet.getAddress().toLowerCase())) {
+                                    wallets = wallets + wallet.getAddress().toLowerCase() + ",";
                                     App.get().getSp().putString(Constant.WALLETS_BEIFEN, wallets);
                                 }
                                 final String finalKeys = keystore;
@@ -877,6 +988,10 @@ public class NewNeoWalletActivity extends BaseActivity {
                 input.setOnNextListener(new InputPassFragment.OnNextInterface() {
                     @Override
                     public void onNext(final String passWord, final Dialog dialog) {
+                        if (!App.get().isLogin()){
+                            keepTogo(LoginActivity.class);
+                            return;
+                        }
                         if (passWord.length() == 0) {
                             ToastUtil.show(getString(R.string.qingshurumima));
                             return;
@@ -891,7 +1006,7 @@ public class NewNeoWalletActivity extends BaseActivity {
                                 Account account = null;
 
                                 for (int i = 0; i < accounts.length; i++) {
-                                    if (accounts[i].name.equals(wallet.getAddress())) {
+                                    if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                         account = accounts[i];
                                         //accountManager.getUserData(accounts[i], pass.getText().toString());
                                         keystore = accountManager.getUserData(accounts[i], "wallet");
@@ -919,8 +1034,8 @@ public class NewNeoWalletActivity extends BaseActivity {
                                             accountManager.removeAccount(finalAccount, null, null);
                                         }
                                         String walletStr = App.get().getSp().getString(Constant.WALLETS, "");
-                                        if (walletStr.contains(wallet.getAddress())) {
-                                            walletStr = walletStr.replace(wallet.getAddress(), "");
+                                        if (walletStr.contains(wallet.getAddress().toLowerCase())) {
+                                            walletStr = walletStr.replace(wallet.getAddress().toLowerCase(), "");
                                             App.get().getSp().putString(Constant.WALLETS, walletStr);
                                         }
                                         runOnUiThread(new Runnable() {
@@ -1021,6 +1136,10 @@ public class NewNeoWalletActivity extends BaseActivity {
                 ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (!App.get().isLogin()){
+                            keepTogo(LoginActivity.class);
+                            return;
+                        }
                         WalletApi.wallet(mActivity, wallet.getId(), new JsonCallback<LzyResponse<Object>>() {
                             @Override
                             public void onSuccess(Response<LzyResponse<Object>> response) {

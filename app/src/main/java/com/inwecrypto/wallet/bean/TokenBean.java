@@ -1020,6 +1020,15 @@ public class TokenBean implements Serializable{
         private GntCategoryBeanX gnt_category;
         private ArrayList<NewNeoTokenListBean> wallets;
         private int type;
+        private int sort;
+
+        public int getSort() {
+            return sort;
+        }
+
+        public void setSort(int sort) {
+            this.sort = sort;
+        }
 
         public int getType() {
             return type;

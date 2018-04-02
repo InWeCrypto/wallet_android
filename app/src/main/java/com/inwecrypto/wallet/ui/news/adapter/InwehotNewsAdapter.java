@@ -48,25 +48,30 @@ public class InwehotNewsAdapter extends MultiItemCommonAdapter<ArticleDetaileBea
     protected void convert(ViewHolder holder, ArticleDetaileBean articleDetaileBean, final int position) {
         if (getItemViewType(position)==1){
             holder.setText(R.id.time, AppUtil.getGTime(articleDetaileBean.getCreated_at()));
-            holder.setText(R.id.title,articleDetaileBean.getTitle());
+            holder.setText(R.id.title,null==articleDetaileBean.getTitle()?"":articleDetaileBean.getTitle());
             holder.setText(R.id.content,articleDetaileBean.getDesc());
-        }else {
+        }else if (getItemViewType(position)==2){
             holder.setText(R.id.time, AppUtil.getGTime(articleDetaileBean.getCreated_at()));
-            holder.setText(R.id.title,articleDetaileBean.getTitle());
+            holder.setText(R.id.from,articleDetaileBean.getAuthor());
+            holder.setText(R.id.order_time, AppUtil.getGTime(articleDetaileBean.getCreated_at()));
+            holder.setText(R.id.content,articleDetaileBean.getTitle());
+        }else{
+                holder.setText(R.id.time, AppUtil.getGTime(articleDetaileBean.getCreated_at()));
+                holder.setText(R.id.title,null==articleDetaileBean.getTitle()?"":articleDetaileBean.getTitle());
 
-            holder.getView(R.id.img).setLayoutParams(params);
-            if (null!=articleDetaileBean.getImg()){
-                Glide.with(mContext)
-                        .load(articleDetaileBean.getImg())
-                        .placeholder(R.mipmap.zhanweitu_ico)
-                        .crossFade()
-                        .into((ImageView) holder.getView(R.id.img));
-            }else {
-                Glide.with(mContext)
-                        .load(R.mipmap.zhanweitu_ico)
-                        .crossFade()
-                        .into((ImageView) holder.getView(R.id.img));
-            }
+                holder.getView(R.id.img).setLayoutParams(params);
+                if (null!=articleDetaileBean.getImg()){
+                    Glide.with(mContext)
+                            .load(articleDetaileBean.getImg())
+                            .placeholder(R.mipmap.zhanweitu_ico)
+                            .crossFade()
+                            .into((ImageView) holder.getView(R.id.img));
+                }else {
+                    Glide.with(mContext)
+                            .load(R.mipmap.zhanweitu_ico)
+                            .crossFade()
+                            .into((ImageView) holder.getView(R.id.img));
+                }
         }
 
         holder.getView(R.id.card).setOnClickListener(new View.OnClickListener() {

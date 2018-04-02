@@ -22,6 +22,7 @@ public class SwipeRefreshLayoutCompat extends SwipeRefreshLayout {
     // 出发事件的最短距离
     private int mTouchSlop;
 
+
     public SwipeRefreshLayoutCompat(Context context, AttributeSet attrs) {
         super(context, attrs);
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
@@ -80,5 +81,4 @@ public class SwipeRefreshLayoutCompat extends SwipeRefreshLayout {
         else
             return ViewCompat.canScrollVertically(target,-1);
     }
-
 }

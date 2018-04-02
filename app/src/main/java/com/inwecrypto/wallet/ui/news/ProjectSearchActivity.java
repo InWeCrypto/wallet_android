@@ -73,6 +73,7 @@ public class ProjectSearchActivity extends BaseActivity {
     private boolean isShow;
 
     private LinearLayoutManager layoutManager;
+    private EndLessOnScrollListener scrollListener;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -167,8 +168,7 @@ public class ProjectSearchActivity extends BaseActivity {
         layoutManager = new LinearLayoutManager(this);
         list.setLayoutManager(layoutManager);
         list.setAdapter(newsAdapter);
-
-        list.addOnScrollListener(new EndLessOnScrollListener(layoutManager) {
+        scrollListener=new EndLessOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore() {
                 if (isEnd) {
@@ -185,7 +185,8 @@ public class ProjectSearchActivity extends BaseActivity {
                     }
                 }
             }
-        });
+        };
+        list.addOnScrollListener(scrollListener);
 
 
         projectAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
@@ -215,6 +216,8 @@ public class ProjectSearchActivity extends BaseActivity {
                 intent.putExtra("title",news.get(position).getTitle());
                 intent.putExtra("url", (App.isMain? Url.MAIN_NEWS:Url.TEST_NEWS)+news.get(position).getId());
                 intent.putExtra("id",news.get(position).getId());
+                intent.putExtra("decs",news.get(position).getDesc());
+                intent.putExtra("img","");
                 keepTogo(intent);
             }
 

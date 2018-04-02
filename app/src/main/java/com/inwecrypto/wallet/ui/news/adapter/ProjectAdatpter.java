@@ -50,17 +50,25 @@ public class ProjectAdatpter extends CommonAdapter<ProjectDetaileBean> {
         }
         holder.setText(R.id.price,null==projectDetaileBean.getPrice()?((App.get().getUnit()==1?"¥":"$")+"0.00"):((App.get().getUnit()==1?"¥":"$")+new BigDecimal(projectDetaileBean.getPrice()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString()));
 
-        if (null!=projectDetaileBean.getCharge()){
-            if (!projectDetaileBean.getCharge().contains("-")){
-                holder.setText(R.id.charge,null==projectDetaileBean.getCharge()?"+0.00%":("+"+projectDetaileBean.getCharge()+"%"));
-                holder.getView(R.id.charge).setBackgroundResource(R.drawable.project_up_bg);
+        if (projectDetaileBean.isHasMarket()){
+            holder.getView(R.id.charge).setVisibility(View.VISIBLE);
+            holder.getView(R.id.price).setVisibility(View.VISIBLE);
+            if (null!=projectDetaileBean.getCharge()){
+                if (!projectDetaileBean.getCharge().contains("-")){
+                    holder.setText(R.id.charge,null==projectDetaileBean.getCharge()?"+0.00%":("+"+projectDetaileBean.getCharge()+"%"));
+                    holder.getView(R.id.charge).setBackgroundResource(R.drawable.project_up_bg);
+                }else {
+                    holder.setText(R.id.charge,null==projectDetaileBean.getCharge()?"-0.00%":(projectDetaileBean.getCharge()+"%"));
+                    holder.getView(R.id.charge).setBackgroundResource(R.drawable.project_down_bg);
+                }
             }else {
-                holder.setText(R.id.charge,null==projectDetaileBean.getCharge()?"-0.00%":(projectDetaileBean.getCharge()+"%"));
-                holder.getView(R.id.charge).setBackgroundResource(R.drawable.project_down_bg);
+                holder.setText(R.id.charge,"+0.00%");
+                holder.getView(R.id.charge).setBackgroundResource(R.drawable.project_up_bg);
             }
         }else {
-            holder.setText(R.id.charge,"+0.00%");
-            holder.getView(R.id.charge).setBackgroundResource(R.drawable.project_up_bg);
+            holder.getView(R.id.charge).setVisibility(View.INVISIBLE);
+            holder.getView(R.id.price).setVisibility(View.INVISIBLE);
         }
+
     }
 }

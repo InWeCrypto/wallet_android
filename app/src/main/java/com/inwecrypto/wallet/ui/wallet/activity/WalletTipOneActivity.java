@@ -42,11 +42,15 @@ public class WalletTipOneActivity extends BaseActivity {
     private ArrayList<String> data=new ArrayList<>();
     private String zjc;
     private WalletBean wallet;
+    private boolean isNew;
+    private boolean isEth;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         zjc = extras.getString("zjc");
         wallet= (WalletBean) extras.getSerializable("wallet");
+        isNew=extras.getBoolean("isNew");
+        isEth=extras.getBoolean("isEth");
     }
 
     @Override
@@ -69,6 +73,8 @@ public class WalletTipOneActivity extends BaseActivity {
                 Intent intent=new Intent(mActivity,WalletTipTwoActivity.class);
                 intent.putExtra("data",data);
                 intent.putExtra("wallet",wallet);
+                intent.putExtra("isNew",isNew);
+                intent.putExtra("isEth",isEth);
                 keepTogo(intent);
             }
         });

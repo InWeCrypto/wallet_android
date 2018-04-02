@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.inwecrypto.wallet.common.widget.FixSwipeRecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.inwecrypto.wallet.common.widget.FixSwipeRecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/loginll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_ffffff"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#A5A5A5"
+            android:textSize="13sp"
+            android:text="@string/guanzhuganxinqudexiangmu"/>
+
+        <net.qiujuer.genius.ui.widget.Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="66dp"
+            android:layout_marginRight="66dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/login_bg"
+            android:text="@string/dengluzhuce"
+            android:textSize="14sp"
+            android:textColor="@color/c_ffffff"
+            app:gTouchCornerRadius="12dp"
+            app:gTouchDurationRate="0.7"
+            app:gTouchEffect="ripple" />
+
+    </LinearLayout>
+
+</FrameLayout>

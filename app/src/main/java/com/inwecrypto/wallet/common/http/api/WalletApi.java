@@ -9,7 +9,9 @@ import com.inwecrypto.wallet.bean.UtxoBean;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.inwecrypto.wallet.bean.BpsBean;
 import com.inwecrypto.wallet.bean.CategoryBean;
@@ -33,6 +35,10 @@ import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by Administrator on 2017/8/4.
  * 功能描述：
@@ -44,8 +50,16 @@ public class WalletApi {
     public static void wallet(Object object,JsonCallback<LzyResponse<CommonListBean<WalletBean>>> callback){
         OkGo.<LzyResponse<CommonListBean<WalletBean>>>get(Url.WALLET)
                 .tag(object)
-                .cacheKey(Constant.WALLETS+ App.isMain+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()))
+                .cacheKey(Constant.WALLETS+ App.isMain+(null==App.get().getLoginBean()?App.get().getSp().getString(Constant.LOGIN_NAME+App.isMain):App.get().getLoginBean().getEmail()))
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(callback);
+    }
+
+    public static void addWallet(Object object,JsonCallback<LzyResponse<CommonListBean<WalletBean>>> callback){
+        OkGo.<LzyResponse<CommonListBean<WalletBean>>>get(Url.WALLET)
+                .tag(object)
+                .cacheKey(Constant.WALLETS+"zixun"+ App.isMain+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()))
+                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
                 .execute(callback);
     }
 
@@ -128,7 +142,7 @@ public class WalletApi {
         params.put("page",page+"");
         OkGo.<LzyResponse<CommonListBean<OrderBean>>>get(Url.WALLET_ORDER)
                 .tag(object)
-                .cacheKey(Constant.WALLET_ORDER+wallet_id+flag+ App.isMain)
+                .cacheKey(Constant.WALLET_ORDER+wallet_id+flag+asset_id+ App.isMain)
                 .params(params)
                 .execute(callback);
     }
@@ -396,6 +410,8 @@ public class WalletApi {
     public static void getNeoGntInfo(Object object, String address,String wallet, JsonCallback<LzyResponse<NewNeoGntInfoBean>> callback){
         OkGo.<LzyResponse<NewNeoGntInfoBean>>get(Url.GET_NEO_GNT_INFO+address.replace("0x","")+"&wallet="+wallet)
                 .tag(object)
+                .cacheKey(Url.GET_NEO_GNT_INFO+"/"+address+wallet+ App.isMain)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(callback);
     }
 
@@ -421,6 +437,23 @@ public class WalletApi {
         OkGo.<LzyResponse<IcoGas>>post(Url.GET_NEO_NEP5_GAS)
                 .tag(object)
                 .params(params)
+                .execute(callback);
+    }
+
+    public static void setSort(Object object, ArrayList<TokenBean.ListBean> neoList, JsonCallback<LzyResponse<Object>> callback){
+        JSONObject params=new JSONObject();
+        JSONArray list=new JSONArray();
+        try {
+            for (TokenBean.ListBean entry : neoList) {
+                list.put(entry.getName());
+            }
+            params.putOpt("list",list);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        OkGo.<LzyResponse<Object>>put(Url.GNT_SORT)
+                .tag(object)
+                .upJson(params)
                 .execute(callback);
     }
 }

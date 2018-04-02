@@ -23,9 +23,9 @@ public class ExchangeNoticeAdapater extends CommonAdapter<ExchangeNoticeBean>{
 
     @Override
     protected void convert(ViewHolder holder, ExchangeNoticeBean exchangeNoticeBean, int position) {
-        holder.setText(R.id.time,exchangeNoticeBean.getCreated_at());
+        holder.setText(R.id.time,AppUtil.getGTime(exchangeNoticeBean.getCreated_at()));
         holder.setText(R.id.from,null==exchangeNoticeBean.getSource_name()?"":exchangeNoticeBean.getSource_name());
-        holder.setText(R.id.order_time,exchangeNoticeBean.getCreated_at());
+        holder.setText(R.id.order_time,AppUtil.getGTime(exchangeNoticeBean.getCreated_at()));
         holder.setText(R.id.content, exchangeNoticeBean.getContent());
 
     }

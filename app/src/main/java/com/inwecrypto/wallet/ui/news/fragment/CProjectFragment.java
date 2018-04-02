@@ -1,43 +1,30 @@
 package com.inwecrypto.wallet.ui.news.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMGroup;
-import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.exceptions.HyphenateException;
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseFragment;
-import com.inwecrypto.wallet.bean.CandyBowBean;
-import com.inwecrypto.wallet.bean.CommonProjectBean;
 import com.inwecrypto.wallet.bean.ProjectDetaileBean;
 import com.inwecrypto.wallet.bean.ProjectListBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
-import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.DensityUtil;
-import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.FixSwipeRecyclerView;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
-import com.inwecrypto.wallet.ui.news.CandyBowActivity;
-import com.inwecrypto.wallet.ui.news.ExchangeNoticeActivity;
-import com.inwecrypto.wallet.ui.news.InweHotActivity;
 import com.inwecrypto.wallet.ui.news.NoTradingActivity;
-import com.inwecrypto.wallet.ui.news.NoticeActivity;
 import com.inwecrypto.wallet.ui.news.TradingActivity;
-import com.inwecrypto.wallet.ui.news.TradingNoticeActivity;
-import com.inwecrypto.wallet.ui.news.TradingViewActivity;
-import com.inwecrypto.wallet.ui.news.ZixunFragment;
 import com.inwecrypto.wallet.ui.news.adapter.CProjectAdatpter;
 import com.lzy.okgo.model.Response;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
@@ -47,15 +34,15 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 
+import net.qiujuer.genius.ui.widget.Button;
+
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * 作者：xiaoji06 on 2018/2/8 14:52
@@ -67,16 +54,15 @@ public class CProjectFragment extends BaseFragment {
 
     @BindView(R.id.list)
     FixSwipeRecyclerView list;
+    @BindView(R.id.login)
+    Button login;
+    @BindView(R.id.loginll)
+    LinearLayout loginll;
 
-    private ArrayList<CommonProjectBean> marks;
-    private ArrayList<ProjectDetaileBean> data=new ArrayList<>();
+    private ArrayList<ProjectDetaileBean> data = new ArrayList<>();
     private CProjectAdatpter adatpter;
     private LinearLayoutManager linearLayoutManager;
-    private ZixunFragment zixunFragment;
-    private ArrayList<ProjectDetaileBean> projectlist=new ArrayList<>();
-
-    private SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+    private ArrayList<ProjectDetaileBean> projectlist = new ArrayList<>();
 
     @Override
     protected int setLayoutID() {
@@ -89,10 +75,8 @@ public class CProjectFragment extends BaseFragment {
         setOpenEventBus(true);
         setLazyOpen(true);
 
-        zixunFragment= (ZixunFragment) getParentFragment();
-        marks= (ArrayList<CommonProjectBean>) getArguments().getSerializable("marks");
-        adatpter=new CProjectAdatpter(mContext,R.layout.cproject_item ,data);
-        linearLayoutManager=new LinearLayoutManager(mContext);
+        adatpter = new CProjectAdatpter(mContext, R.layout.cproject_item, data);
+        linearLayoutManager = new LinearLayoutManager(mContext);
         list.setLayoutManager(linearLayoutManager);
 
         list.setSwipeMenuCreator(new SwipeMenuCreator() {
@@ -115,132 +99,85 @@ public class CProjectFragment extends BaseFragment {
             @Override
             public void onItemClick(final SwipeMenuBridge menuBridge) {
                 if (menuBridge.getPosition() == 0) {//取消收藏
-                    if (null!=data.get(menuBridge.getAdapterPosition()).getCommonProjectBean()){
-                        data.get(menuBridge.getAdapterPosition()).getCommonProjectBean().setShow(false);
-                        data.remove(menuBridge.getAdapterPosition());
-                        adatpter.notifyItemRemoved(menuBridge.getAdapterPosition());
-                        menuBridge.closeMenu();
-                        CacheUtils.setCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
-                                +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),marks);
-                    }else {
-                        ZixunApi.collectProject(this, data.get(menuBridge.getAdapterPosition()).getId(), false, new JsonCallback<LzyResponse<Object>>() {
-                            @Override
-                            public void onSuccess(Response<LzyResponse<Object>> response) {
-                                loadData();
-                                menuBridge.closeMenu();
-                            }
+                    ZixunApi.collectProject(this, data.get(menuBridge.getAdapterPosition()).getId(), false, new JsonCallback<LzyResponse<Object>>() {
+                        @Override
+                        public void onSuccess(Response<LzyResponse<Object>> response) {
+                            loadData();
+                            menuBridge.closeMenu();
+                        }
 
-                            @Override
-                            public void onError(Response<LzyResponse<Object>> response) {
-                                super.onError(response);
-                                ToastUtil.show(getString(R.string.caozuoshibai));
-                            }
-                        });
-                    }
+                        @Override
+                        public void onError(Response<LzyResponse<Object>> response) {
+                            super.onError(response);
+                            ToastUtil.show(getString(R.string.caozuoshibai));
+                        }
+                    });
                 }
             }
         });
-
-        zixunFragment.getPullExtend().setRecyclerView(list);
-        setList(list);
 
         list.setSwipeItemClickListener(new SwipeItemClickListener() {
             @Override
             public void onItemClick(View itemView, final int position) {
-                if (data.get(position).isCommonProject()){
-                    int i=0;
-                    Intent intent=null;
-                    switch (data.get(position).getCommonProjectBean().getId()){
-                        case 0:
-                            intent=new Intent(mActivity,InweHotActivity.class);
-                            i=0;
-                            break;
-                        case 1:
-                            intent=new Intent(mActivity,TradingViewActivity.class);
-                            i=1;
-                            break;
-                        case 2:
-                            intent=new Intent(mActivity,ExchangeNoticeActivity.class);
-                            i=2;
-                            break;
-//                        case 3:
-//                            intent=new Intent(mActivity,CandyBowActivity.class);
-//                            i=3;
-//                            break;
-                        case 3:
-                            if (!App.get().isLogin()){
-                                keepTogo(LoginActivity.class);
-                                return;
-                            }
-                            intent = new Intent(mActivity,TradingNoticeActivity.class);
-                            i=3;
-                            break;
-                        case 4:
-                            if (!App.get().isLogin()){
-                                keepTogo(LoginActivity.class);
-                                return;
-                            }
-                            intent = new Intent(mActivity,NoticeActivity.class);
-                            i=4;
-                            break;
-                    }
-                    intent.putExtra("marks",marks.get(data.get(position).getCommonProjectBean().getId()));
+                if (1 == data.get(position).getType()) {
+                    Intent intent = new Intent(mActivity, TradingActivity.class);
+                    intent.putExtra("project", data.get(position));
+                    intent.putExtra("type", 0);
                     keepTogo(intent);
-                    if (marks.get(i).isHasMessage()){
-                        EMConversation conversation = EMClient.getInstance().chatManager().getConversation((i==3||i==4)?marks.get(i).getType():marks.get(i).getChatId());//指定会话消息未读数清零
-                        if (null!=conversation){
-                            conversation.markAllMessagesAsRead();
+                } else {
+                    Intent intent = new Intent(mActivity, NoTradingActivity.class);
+                    intent.putExtra("project", data.get(position));
+                    intent.putExtra("type", 0);
+                    keepTogo(intent);
+                }
+                if (null != data.get(position).getCategory_user()
+                        && data.get(position).getCategory_user().isIs_favorite_dot()) {
+                    ZixunApi.cancleDot(this, data.get(position).getId(), new JsonCallback<LzyResponse<Object>>() {
+                        @Override
+                        public void onSuccess(Response<LzyResponse<Object>> response) {
+                            data.get(position).getCategory_user().setIs_favorite_dot(false);
+                            adatpter.notifyItemChanged(position);
                         }
-                        marks.get(i).setHasMessage(false);
-                        refreshFix();
-                    }
-                }else {
-                    if (1==data.get(position).getType()){
-                        Intent intent=new Intent(mActivity, TradingActivity.class);
-                        intent.putExtra("project",data.get(position));
-                        intent.putExtra("type",0);
-                        keepTogo(intent);
-                    }else {
-                        Intent intent=new Intent(mActivity, NoTradingActivity.class);
-                        intent.putExtra("project",data.get(position));
-                        intent.putExtra("type",0);
-                        keepTogo(intent);
-                    }
-                    if (null!=data.get(position).getCategory_user()
-                            &&data.get(position).getCategory_user().isIs_favorite_dot()){
-                        ZixunApi.cancleDot(this, data.get(position).getId(), new JsonCallback<LzyResponse<Object>>() {
-                            @Override
-                            public void onSuccess(Response<LzyResponse<Object>> response) {
-                                data.get(position).getCategory_user().setIs_favorite_dot(false);
-                                adatpter.notifyItemChanged(position);
-                            }
-                        });
-                    }
+                    });
                 }
             }
         });
 
-
+        if (App.get().isLogin()){
+            loginll.setVisibility(View.GONE);
+        }else {
+            loginll.setVisibility(View.VISIBLE);
+            login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    keepTogo(LoginActivity.class);
+                }
+            });
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!isFirst&&!isLoadSuccess&& NetworkUtils.isConnected(getContext())){
-            loadData();
+        if (App.get().isLogin()){
+            loginll.setVisibility(View.GONE);
+            if (!isFirst && !isLoadSuccess && NetworkUtils.isConnected(getContext())) {
+                loadData();
+            }
+        }else {
+            loginll.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     protected void loadData() {
-        if (!App.get().isLogin()){
-            refreshFix();
+        if (!App.get().isLogin()) {
             return;
         }
         ZixunApi.getFavoriteProject(this, 1, new JsonCallback<LzyResponse<ProjectListBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<ProjectListBean>> response) {
-                isLoadSuccess=true;
+                isLoadSuccess = true;
                 LoadSuccess(response);
             }
 
@@ -259,180 +196,39 @@ public class CProjectFragment extends BaseFragment {
             @Override
             public void onFinish() {
                 super.onFinish();
-                isFirst=false;
+                isFirst = false;
                 EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH_SUC));
             }
         });
     }
 
     private void LoadSuccess(Response<LzyResponse<ProjectListBean>> response) {
-        ArrayList<ProjectDetaileBean> fixed=new ArrayList<>();
-
-        for (CommonProjectBean project:marks){
-            if (project.isShow()){
-                ProjectDetaileBean projectDetaileBean=new ProjectDetaileBean();
-                projectDetaileBean.setCommonProject(true);
-                projectDetaileBean.setCommonProjectBean(project);
-                fixed.add(projectDetaileBean);
-            }
-        }
-        ArrayList<ProjectDetaileBean> top=new ArrayList<>();
+        ArrayList<ProjectDetaileBean> top = new ArrayList<>();
         projectlist.clear();
-        ArrayList<ProjectDetaileBean> totle=new ArrayList<>();
-        if (null!=response.body().data.getData()){
-            for (ProjectDetaileBean projectBean:response.body().data.getData()){
-                if (null!=projectBean.getCategory_user()&&projectBean.getCategory_user().isIs_top()){
+        ArrayList<ProjectDetaileBean> totle = new ArrayList<>();
+        if (null != response.body().data.getData()) {
+            for (ProjectDetaileBean projectBean : response.body().data.getData()) {
+                if (null != projectBean.getCategory_user() && projectBean.getCategory_user().isIs_top()) {
                     top.add(projectBean);
-                }else {
+                } else {
                     projectlist.add(projectBean);
                 }
             }
-            totle.addAll(fixed);
-            projectlist.addAll(0,top);
+            projectlist.addAll(0, top);
             totle.addAll(projectlist);
         }
         data.clear();
         data.addAll(totle);
         adatpter.notifyDataSetChanged();
 
-        if (!response.isFromCache()){
-            //获取聊天室信息
-            getIM();
-//            //请求糖果盒信息
-//            if (marks.get(3).isShow()){
-//                getCandyMessage();
-//            }else {
-//                //获取聊天室信息
-//                getIM();
-//            }
-        }
-    }
-
-    private void getCandyMessage() {
-        ZixunApi.getCandybow(this, 1, new JsonCallback<LzyResponse<CandyBowBean>>() {
-            @Override
-            public void onSuccess(Response<LzyResponse<CandyBowBean>> response) {
-                if (null!=response.body().data){
-                    if (null!=response.body().data.getList().getData()){
-                        CandyBowBean.ListBean.DataBean candy=response.body().data.getList().getData().get(0);
-                        marks.get(3).setTime(candy.getYear()+"-"+candy.getMonth()+"-"+candy.getDay());
-                        marks.get(3).setLastMessage(candy.getDesc());
-
-                        int i=0;
-                        for (ProjectDetaileBean project:data){
-                            if (project.getCommonProjectBean().getId()==3){
-                                adatpter.notifyItemRemoved(i);
-                                return;
-                            }
-                            i++;
-                        }
-                        CacheUtils.setCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
-                                +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),marks);
-                    }
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                //获取聊天室信息
-                getIM();
-            }
-        });
-    }
-
-    private void getIM() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
-
-                Iterator<Map.Entry<String, EMConversation>> it = conversations.entrySet().iterator();
-
-                while(it.hasNext()){
-                    Map.Entry<String, EMConversation> entry = it.next();
-
-                    for (CommonProjectBean mark:marks){
-                        if (!entry.getKey().equals(mark.getType())) {
-                            //根据群组ID从服务器获取群组基本信息
-                            try {
-                                EMGroup group = EMClient.getInstance().groupManager().getGroupFromServer(entry.getKey());
-                                if(group.getGroupName().contains(mark.getType().toUpperCase())){
-                                    mark.setChatId(entry.getKey());
-                                }else {
-                                    continue;
-                                }
-                            } catch (HyphenateException e) {
-                                e.printStackTrace();
-                                continue;
-                            }
-                        }
-                        EMConversation message=conversations.get(entry.getKey());
-                        EMTextMessageBody body = (EMTextMessageBody) message.getLastMessage().getBody();
-                        mark.setTime("" + sdr.format(new Date(message.getLastMessage().getMsgTime())));
-                        String meg=body.getMessage().replace(":date",mark.getTime());
-                        mark.setLastMessage(meg);
-                        int count=message.getUnreadMsgCount();
-                        if (count>0){
-                            mark.setHasMessage(true);
-                        }
-                        break;
-                    }
-
-                }
-
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adatpter.notifyDataSetChanged();
-                    }
-                });
-
-                CacheUtils.setCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
-                        +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),marks);
-            }
-        }).start();
     }
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
 
-        if (event.getEventCode()==Constant.EVENT_REFERSH&&event.getKey1()==0){
+        if (event.getEventCode() == Constant.EVENT_REFERSH && event.getKey1() == 0) {
             loadData();
         }
 
-        if (event.getEventCode()==Constant.EVENT_FIX){
-            if (!marks.get(event.getKey1()).isShow()){
-                marks.get(event.getKey1()).setShow(true);
-                refreshFix();
-            }
-        }
-
-        if (event.getEventCode()==Constant.EVENT_ZIXUN_MESSAGE){
-            getIM();
-        }
     }
-
-    private void refreshFix() {
-        ArrayList<ProjectDetaileBean> fixed=new ArrayList<>();
-
-        for (CommonProjectBean project:marks){
-            if (project.isShow()){
-                ProjectDetaileBean projectDetaileBean=new ProjectDetaileBean();
-                projectDetaileBean.setCommonProject(true);
-                projectDetaileBean.setCommonProjectBean(project);
-                fixed.add(projectDetaileBean);
-            }
-        }
-        ArrayList<ProjectDetaileBean> totle=new ArrayList<>();
-        totle.addAll(fixed);
-        totle.addAll(projectlist);
-        data.clear();
-        data.addAll(totle);
-        adatpter.notifyDataSetChanged();
-        //设置缓存文件
-        CacheUtils.setCache((App.isMain?Constant.PROJECT_JSON_MAIN:Constant.PROJECT_JSON_TEST)
-                +(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()),marks);
-    }
-
 }

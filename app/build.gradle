@@ -7,8 +7,8 @@ android {
         applicationId "com.inwecrypto.wallet"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 20180306
-        versionName "1.0.1"
+        versionCode 20180325
+        versionName "2.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -103,4 +103,6 @@ dependencies {
     compile 'com.haibin:calendarview:3.2.3'
     compile 'com.hyphenate:hyphenate-sdk-lite:3.3.0'
     implementation files('libs/aliyun-oss-sdk-android-2.3.0.jar')
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    compile 'com.kelin.scrollablepanel:library:1.2.0'
 }

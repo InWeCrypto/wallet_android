@@ -100,24 +100,20 @@ public class ProjectDetaileActivity extends BaseActivity {
                 Intent intent=null;
                 switch (marks.getId()){
                     case 0:
-                        intent=new Intent(mActivity,InweHotHistoryActivity.class);
+                        intent=new Intent(mActivity,InweHotBottomHistoryActivity.class);
                         keepTogo(intent);
                         break;
                     case 1:
-                        intent=new Intent(mActivity,TradingViewHistoryActivity.class);
+                        intent=new Intent(mActivity,InweViewHistoryActivity.class);
                         keepTogo(intent);
                         break;
                     case 2:
-                        intent=new Intent(mActivity,ExchangeNoticeHistoryActivity.class);
+                        intent=new Intent(mActivity,TradingViewHistoryActivity.class);
                         keepTogo(intent);
                         break;
-//                    case 3:
-//                        intent=new Intent(mActivity,CandyBowHistoryActivity.class);
-//                        keepTogo(intent);
-//                        break;
                     case 3:
-                        intent=new Intent(mActivity,TradingNoticeHistoryActivity.class);
-                        keepTogo(intent);
+//                        intent=new Intent(mActivity,TradingNoticeHistoryActivity.class);
+//                        keepTogo(intent);
                         break;
                     case 4:
                         intent=new Intent(mActivity,NoticeHistoryActivity.class);

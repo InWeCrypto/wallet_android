@@ -13,14 +13,19 @@ import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.common.Constant;
+import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.Url;
+import com.inwecrypto.wallet.common.http.api.MeApi;
+import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.LocaleUtils;
+import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.MainTabActivity;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
+import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -130,20 +135,40 @@ public class SettingTypeActivity extends BaseActivity {
                             finish();
                             return;
                         }
-                        if (selectPosition==1) {//中文
-                           App.get().getSp().putBoolean(Constant.IS_CHINESE,true);
-                            LocaleUtils.updateLocale(mActivity, LocaleUtils.LOCALE_CHINESE);
-                        } else{//英文
-                            LocaleUtils.updateLocale(mActivity, LocaleUtils.LOCALE_ENGLISH);
-                            App.get().getSp().putBoolean(Constant.IS_CHINESE,false);
-                        }
-                        App.get().getSp().putBoolean(Constant.LANGUE_CHANGE,true);
-                        //
-                        //设置语言
-                        AppUtil.changeAppLanguage(mActivity);
-                        App.get().getSp().putBoolean(Constant.NEED_RESTART,true);
-                        Intent intent=new Intent(mActivity, MainTabActivity.class);
-                        finshTogo(intent);
+                        showFixLoading();
+                        MeApi.changeLang(this, selectPosition == 1 ? "zh" : "en"
+                                , new JsonCallback<LzyResponse<Object>>() {
+                                    @Override
+                                    public void onSuccess(Response<LzyResponse<Object>> response) {
+                                        if (selectPosition==1) {//中文
+                                            App.get().getSp().putBoolean(Constant.IS_CHINESE,true);
+                                            LocaleUtils.updateLocale(mActivity, LocaleUtils.LOCALE_CHINESE);
+                                        } else{//英文
+                                            LocaleUtils.updateLocale(mActivity, LocaleUtils.LOCALE_ENGLISH);
+                                            App.get().getSp().putBoolean(Constant.IS_CHINESE,false);
+                                        }
+                                        App.get().getSp().putBoolean(Constant.LANGUE_CHANGE,true);
+                                        //
+                                        //设置语言
+                                        AppUtil.changeAppLanguage(mActivity);
+                                        App.get().getSp().putBoolean(Constant.NEED_RESTART,true);
+
+                                        Intent intent=new Intent(mActivity, MainTabActivity.class);
+                                        finshTogo(intent);
+                                    }
+
+                                    @Override
+                                    public void onError(Response<LzyResponse<Object>> response) {
+                                        super.onError(response);
+                                        ToastUtil.show(R.string.xiugaishibai);
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        super.onFinish();
+                                        hideFixLoading();
+                                    }
+                                });
                         break;
                 }
             }

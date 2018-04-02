@@ -1,6 +1,7 @@
 package com.inwecrypto.wallet.ui.market.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -42,11 +45,14 @@ import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.KLBean;
 import com.inwecrypto.wallet.bean.PriceBean;
+import com.inwecrypto.wallet.bean.ProjectMarketBean;
 import com.inwecrypto.wallet.bean.TradingProjectDetaileBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
+import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.api.MarketApi;
 import com.inwecrypto.wallet.common.http.api.UserApi;
+import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
@@ -62,10 +68,16 @@ import com.inwecrypto.wallet.common.widget.chart.bean.KLineBean;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.me.activity.AddMarketTipFragment;
+import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
+import com.inwecrypto.wallet.ui.news.ProjectNewsWebActivity;
+import com.inwecrypto.wallet.ui.news.TradingMarketActivity;
+import com.inwecrypto.wallet.ui.news.TradingProjectActivity;
+import com.inwecrypto.wallet.ui.news.adapter.TradingMarketAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
 import com.pnikosis.materialishprogress.ProgressWheel;
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -156,8 +168,12 @@ public class MarketDetaileActivity extends BaseActivity {
     ProgressWheel progress;
     @BindView(R.id.stateRL)
     RelativeLayout stateRL;
+    @BindView(R.id.market_list)
+    RecyclerView marketList;
+    @BindView(R.id.more)
+    LinearLayout more;
 
-    private String type = "1m";
+    private String type = "15m";
     private DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     //X轴标签的类
@@ -183,6 +199,10 @@ public class MarketDetaileActivity extends BaseActivity {
     private RotateAnimation rotate;
     private boolean isFinish = true;
 
+    private TradingMarketAdapter adapter;
+
+    private ArrayList<ProjectMarketBean> data=new ArrayList<>();
+
     @Override
     protected void getBundleExtras(Bundle extras) {
         project = (TradingProjectDetaileBean) extras.getSerializable("project");
@@ -196,6 +216,7 @@ public class MarketDetaileActivity extends BaseActivity {
     @Override
     protected void initView() {
 
+        txtMainTitle.setText(project.getUnit());
         txtLeftTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,7 +231,36 @@ public class MarketDetaileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startAnimat();
-                getChart();
+                initData();
+            }
+        });
+
+        adapter = new TradingMarketAdapter(this, R.layout.trading_market_item, data);
+        marketList.setLayoutManager(new LinearLayoutManager(this));
+        marketList.setAdapter(adapter);
+        marketList.setNestedScrollingEnabled(false);
+
+        adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                Intent intent=new Intent(mActivity,CommonWebActivity.class);
+                intent.putExtra("title", data.get(position).getPair());
+                intent.putExtra("url", data.get(position).getUrl());
+                keepTogo(intent);
+            }
+
+            @Override
+            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
+                return false;
+            }
+        });
+
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity,TradingMarketActivity.class);
+                intent.putExtra("project",project);
+                keepTogo(intent);
             }
         });
 
@@ -272,13 +322,13 @@ public class MarketDetaileActivity extends BaseActivity {
         initChartVolume();
         setChartListener();
 
-        if (null!=project.getCategory_user()){
-            if (project.getCategory_user().isIs_market_follow()){
+        if (null != project.getCategory_user()) {
+            if (project.getCategory_user().isIs_market_follow()) {
                 tip.setImageResource(R.mipmap.shishihangqing_xiaoxi);
-            }else {
+            } else {
                 tip.setImageResource(R.mipmap.shishihangqing_xiaoxihui);
             }
-        }else {
+        } else {
             tip.setImageResource(R.mipmap.shishihangqing_xiaoxihui);
         }
 
@@ -286,24 +336,24 @@ public class MarketDetaileActivity extends BaseActivity {
         tip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!App.get().isLogin()){
+                if (!App.get().isLogin()) {
                     keepTogo(LoginActivity.class);
                     return;
                 }
                 FragmentManager fm = getSupportFragmentManager();
                 final AddMarketTipFragment improt = new AddMarketTipFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("price", null==project.getIco().getPrice_usd()?"0.00":project.getIco().getPrice_usd());
-                bundle.putString("high",null==project.getCategory_user().getMarket_hige()?"0":project.getCategory_user().getMarket_hige());
-                bundle.putString("low",null==project.getCategory_user().getMarket_lost()?"0":project.getCategory_user().getMarket_lost());
+                bundle.putString("price", null == project.getIco().getPrice_usd() ? "0.00" : project.getIco().getPrice_usd());
+                bundle.putString("high", (null == project.getCategory_user() || null == project.getCategory_user().getMarket_hige() )? "0" : project.getCategory_user().getMarket_hige());
+                bundle.putString("low", (null == project.getCategory_user() || null == project.getCategory_user().getMarket_lost()) ? "0" : project.getCategory_user().getMarket_lost());
                 improt.setArguments(bundle);
                 improt.show(fm, "tip");
                 improt.setOnNextListener(new AddMarketTipFragment.OnNextInterface() {
                     @Override
-                    public void onNext(String hight, String low, Dialog dialog) {
+                    public void onNext(final String hight, final String low, Dialog dialog) {
                         showFixLoading();
                         UserApi.follow(mActivity
-                                , project.getId()+""
+                                , project.getId() + ""
                                 , true
                                 , hight
                                 , low
@@ -313,10 +363,17 @@ public class MarketDetaileActivity extends BaseActivity {
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
+                                                if (null==project.getCategory_user()){
+                                                    project.setCategory_user(new TradingProjectDetaileBean.CategoryUserBean());
+                                                }
+                                                project.getCategory_user().setIs_market_follow(true);
+                                                project.getCategory_user().setMarket_hige(hight);
+                                                project.getCategory_user().setMarket_lost(low);
+
                                                 tip.setImageResource(R.mipmap.shishihangqing_xiaoxi);
                                                 improt.dismiss();
                                                 ToastUtil.show(getString(R.string.tianjiatixingchenggong));
-                                                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_TIP));
+                                                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_TIP,hight,low));
                                             }
                                         });
                                     }
@@ -342,9 +399,34 @@ public class MarketDetaileActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        txtMainTitle.setText(project.getUnit());
 
         getChart();
+
+        ZixunApi.getMarkets(this, project.getUnit(), new JsonCallback<LzyResponse<ArrayList<ProjectMarketBean>>>() {
+            @Override
+            public void onSuccess(Response<LzyResponse<ArrayList<ProjectMarketBean>>> response) {
+                data.clear();
+                if (null!=response.body().data){
+                    if (response.body().data.size()>5){
+                        data.add(response.body().data.get(0));
+                        data.add(response.body().data.get(1));
+                        data.add(response.body().data.get(2));
+                        data.add(response.body().data.get(3));
+                        data.add(response.body().data.get(4));
+                    }else {
+                        data.addAll(response.body().data);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(Response<LzyResponse<ArrayList<ProjectMarketBean>>> response) {
+                super.onError(response);
+                ToastUtil.show(getString(R.string.load_error));
+            }
+
+        });
     }
 
     private void getChart() {
@@ -363,6 +445,9 @@ public class MarketDetaileActivity extends BaseActivity {
 
             @Override
             public void onSuccess(Response<LzyResponse<ArrayList<KLBean>>> response) {
+                if (null==mChartKline){
+                    return;
+                }
                 if (null != response) {
                     if (null == response.body().data || response.body().data.size() == 0) {
                         stateRL.setVisibility(View.VISIBLE);
@@ -437,6 +522,9 @@ public class MarketDetaileActivity extends BaseActivity {
         MarketApi.getCurrentPrice(this, project.getUnit(), new JsonCallback<LzyResponse<PriceBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<PriceBean>> response) {
+                if (null==usdPrice){
+                    return;
+                }
                 if (null != response.body().data) {
                     PriceBean priceBean = response.body().data;
                     usdPrice.setText("$" + decimalFormat.format(Float.parseFloat(priceBean.getPrice())));

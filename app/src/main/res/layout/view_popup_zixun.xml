@@ -25,6 +25,7 @@
         
         <LinearLayout
             android:id="@+id/saoyisao"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="12dp"
@@ -50,6 +51,7 @@
 
         <View
             android:id="@+id/hit"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginLeft="8dp"
@@ -69,7 +71,7 @@
             <ImageView
                 android:layout_width="14dp"
                 android:layout_height="14dp"
-                android:src="@mipmap/zhuye_tianjiaqianbao_ico"/>
+                android:src="@mipmap/zhuye_tianjiaqianbao_xin"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -102,7 +104,7 @@
             <ImageView
                 android:layout_width="14dp"
                 android:layout_height="14dp"
-                android:src="@mipmap/zhuye_shoukuan_ico"/>
+                android:src="@mipmap/zhuye_shoufukuan_xin"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

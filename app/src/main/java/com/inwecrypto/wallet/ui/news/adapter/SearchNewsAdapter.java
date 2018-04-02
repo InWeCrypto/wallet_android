@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.SearchBean;
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -24,6 +25,6 @@ public class SearchNewsAdapter extends CommonAdapter<SearchBean.DataBean> {
     @Override
     protected void convert(ViewHolder holder, SearchBean.DataBean dataBean, int position) {
         holder.setText(R.id.title,dataBean.getTitle());
-        holder.setText(R.id.time,dataBean.getCreated_at());
+        holder.setText(R.id.time, AppUtil.getGTime(dataBean.getCreated_at()));
     }
 }

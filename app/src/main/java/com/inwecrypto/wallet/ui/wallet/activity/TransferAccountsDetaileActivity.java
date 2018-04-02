@@ -63,11 +63,13 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
 
     private OrderBean order;
     private String unit;
+    private String decimal;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         order = (OrderBean) extras.getSerializable("order");
         unit=extras.getString("unit");
+        decimal=extras.getString("decimal");
     }
 
     @Override
@@ -97,7 +99,7 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
             priceNum=order.getFee();
         }
         BigDecimal b = new BigDecimal(priceNum);
-        price.setText("-" + b.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
+        price.setText("-" + b.divide(AppUtil.decimal(decimal)).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
 
         String gasNum="0.0000";
         if (null!=order.getHandle_fee()){

@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.AdsBean;
+import com.inwecrypto.wallet.bean.ArticleDetaileBean;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 
@@ -35,7 +36,7 @@ import com.inwecrypto.wallet.common.util.DensityUtil;
 public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageChangeListener {
 
     private ViewPager mViewPager;
-    private List<AdsBean.ListBean> data;
+    private List<ArticleDetaileBean> data;
     private MyPagerAdapter mAdapter;
     private Context context;
     private int currentViewPagerItem;
@@ -77,7 +78,7 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
      * @param parent 界面
      * @param data 广告数据
      */
-    public void setPagerAdapter(OnGetAdsViewPager parent, List<AdsBean.ListBean> data){
+    public void setPagerAdapter(OnGetAdsViewPager parent, List<ArticleDetaileBean> data){
         if (null == data || data.size()<=0){
             return;
         }
@@ -114,7 +115,7 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
         pointLL.removeAllViews();
         points=new ArrayList<>();
         View point=null;
-        LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(DensityUtil.dip2px(context,6),DensityUtil.dip2px(context,6));
+        LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(DensityUtil.dip2px(context,8),DensityUtil.dip2px(context,8));
         params.leftMargin=DensityUtil.dip2px(context,8);
         for (int i=0;i<totleSize;i++){
             point=new View(context);
@@ -190,11 +191,19 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
 
     private void checkPoint() {
         int select=currentViewPagerItem%totleSize;
+        LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(DensityUtil.dip2px(context,8),DensityUtil.dip2px(context,8));
+        params.leftMargin=DensityUtil.dip2px(context,8);
+
+        LinearLayout.LayoutParams unparams=new LinearLayout.LayoutParams(DensityUtil.dip2px(context,8),DensityUtil.dip2px(context,2));
+        unparams.leftMargin=DensityUtil.dip2px(context,8);
+
         for (int i=0;i<totleSize;i++){
             if (i==select){
-                points.get(i).setBackgroundResource(R.drawable.circle_wihit_bg);
+                points.get(i).setBackgroundResource(R.drawable.home_ad_select_bg);
+                points.get(i).setLayoutParams(params);
             }else {
-                points.get(i).setBackgroundResource(R.drawable.circle_gray_broder_bg);
+                points.get(i).setBackgroundResource(R.drawable.home_ad_unselect_bg);
+                points.get(i).setLayoutParams(unparams);
             }
         }
     }
@@ -239,6 +248,11 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
             if(!"".equals(url)){
                 Glide.with(context)
                         .load(url)
+                        .crossFade()
+                        .into(ret);
+            }else {
+                Glide.with(context)
+                        .load(R.mipmap.zhanweitu_ico)
                         .crossFade()
                         .into(ret);
             }
@@ -287,6 +301,9 @@ public class AutoLoopViewPager extends FrameLayout implements ViewPager.OnPageCh
             switch (msg.what) {
                 case 0:
                     OnGetAdsViewPager parent = mWeakReference.get();
+                    if (null==parent){
+                        return;
+                    }
                     if (null == parent.getAdsViewPager()){
                         return;
                     }

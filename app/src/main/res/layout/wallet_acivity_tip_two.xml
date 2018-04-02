@@ -8,78 +8,78 @@
 
     <include layout="@layout/base_title_bar"/>
 
-    <android.support.v4.widget.Space
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/zhujici_tip4"
-        android:textSize="20dp"
-        android:textColor="#000000"/>
-
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="80"
-        android:orientation="vertical">
-        <ScrollView
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="80dp"
-            android:background="@drawable/round_6dp_gray_efefef_bg"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:padding="6dp">
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <com.zhy.view.flowlayout.TagFlowLayout
-                android:id="@+id/top"
-                android:layout_width="fill_parent"
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="20dp"/>
+                android:text="@string/zhujici_tip4"
+                android:textSize="18dp"
+                android:textColor="@color/c_333333"/>
 
-        </ScrollView>
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp"/>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:minHeight="80dp"
-            android:padding="6dp">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_6dp_zjc_bg"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:minHeight="50dp"
+                android:padding="10dp">
+                <com.zhy.view.flowlayout.TagFlowLayout
+                    android:id="@+id/top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+
             <com.zhy.view.flowlayout.TagFlowLayout
                 android:id="@+id/below"
-                android:layout_width="fill_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </ScrollView>
 
-    </LinearLayout>
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="100dp"/>
 
-    <TextView
-        android:id="@+id/add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/c_ffffff"
-        android:textSize="14sp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:gravity="center"
-        android:background="@drawable/new_orgen_bg"
-        android:text="@string/queding"/>
+            <TextView
+                android:id="@+id/add"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_ffffff"
+                android:textSize="14sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:gravity="center"
+                android:background="@drawable/new_orgen_bg"
+                android:text="@string/queding"/>
 
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"/>
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp"/>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.inwecrypto.wallet.ui.me.adapter;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -29,11 +30,16 @@ public class ShoucangAdapter extends CommonAdapter<ArticleDetaileBean> {
     protected void convert(ViewHolder holder, ArticleDetaileBean articleDetaileBean, int position) {
         holder.setText(R.id.title,articleDetaileBean.getTitle());
         holder.setText(R.id.time,articleDetaileBean.getCreated_at());
-        if (null!=articleDetaileBean.getImg()){
-            Glide.with(mContext)
-                    .load(articleDetaileBean.getImg())
-                    .crossFade()
-                    .into((ImageView) holder.getView(R.id.img));
+        if (articleDetaileBean.getType()==1){
+            holder.getView(R.id.img).setVisibility(View.GONE);
+        }else {
+            holder.getView(R.id.img).setVisibility(View.VISIBLE);
+            if (null!=articleDetaileBean.getImg()){
+                Glide.with(mContext)
+                        .load(articleDetaileBean.getImg())
+                        .crossFade()
+                        .into((ImageView) holder.getView(R.id.img));
+            }
         }
     }
 }

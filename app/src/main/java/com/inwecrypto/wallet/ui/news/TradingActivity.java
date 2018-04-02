@@ -1,21 +1,17 @@
 package com.inwecrypto.wallet.ui.news;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.inwecrypto.wallet.App;
@@ -23,8 +19,6 @@ import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.ArticleDetaileBean;
 import com.inwecrypto.wallet.bean.ArticleListBean;
-import com.inwecrypto.wallet.bean.CandyBowBean;
-import com.inwecrypto.wallet.bean.ExchangeNoticeBean;
 import com.inwecrypto.wallet.bean.ProjectDetaileBean;
 import com.inwecrypto.wallet.bean.TradingProjectDetaileBean;
 import com.inwecrypto.wallet.common.Constant;
@@ -32,30 +26,22 @@ import com.inwecrypto.wallet.common.http.LzyResponse;
 import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.api.ZixunApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
-import com.inwecrypto.wallet.common.util.DensityUtil;
-import com.inwecrypto.wallet.common.util.ScreenUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
-import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.market.activity.MarketDetaileActivity;
-import com.inwecrypto.wallet.ui.news.adapter.ExchangeNoticeAdapater;
 import com.inwecrypto.wallet.ui.news.adapter.InwehotAdapter;
 import com.lzy.okgo.model.Response;
-import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
-import com.zhy.adapter.recyclerview.base.ViewHolder;
+import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.IllegalFormatCodePointException;
-import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 作者：xiaoji06 on 2018/2/9 10:57
@@ -91,6 +77,8 @@ public class TradingActivity extends BaseActivity {
 
     private InwehotAdapter adapter;
     private ArrayList<ArticleDetaileBean> data=new ArrayList<>();
+    private HeaderAndFooterWrapper footer;
+    private View footerView;
 
     private int page=1;
     private boolean isEnd;
@@ -102,6 +90,7 @@ public class TradingActivity extends BaseActivity {
     private TradingProjectDetaileBean tradingProject;
 
     private int type;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -163,10 +152,33 @@ public class TradingActivity extends BaseActivity {
         }
 
         adapter=new InwehotAdapter(this,R.layout.inwe_hot_item,data);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        footer=new HeaderAndFooterWrapper(adapter);
+        footerView= LayoutInflater.from(this).inflate(R.layout.empty_view,null,false);
+        footer.addFootView(footerView);
+
+        swipeRefresh.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= 16) {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeOnGlobalLayoutListener(this);
+                }
+                else {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeGlobalOnLayoutListener(this);
+                }
+                swipeRefresh.getHeight(); // 获取高度
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) footerView.getLayoutParams();
+                params.height=swipeRefresh.getHeight()/4;
+                footerView.setLayoutParams(params);
+            }
+        });
+
+        linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         list.setLayoutManager(linearLayoutManager);
-        list.setAdapter(adapter);
+        list.setAdapter(footer);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -189,6 +201,8 @@ public class TradingActivity extends BaseActivity {
                 intent.putExtra("title",data.get(position).getTitle());
                 intent.putExtra("url", (App.isMain? Url.MAIN_NEWS:Url.TEST_NEWS)+data.get(position).getId());
                 intent.putExtra("id",data.get(position).getId());
+                intent.putExtra("decs",data.get(position).getDesc());
+                intent.putExtra("img",data.get(position).getImg());
                 keepTogo(intent);
             }
 
@@ -202,18 +216,12 @@ public class TradingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //弹出选择框
-                showSelectDialog();
-            }
-        });
-
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                //showSelectDialog();
                 if (null==tradingProject){
                     ToastUtil.show(getString(R.string.shujuhuoqushibai));
                     return;
                 }
-                Intent intent=new Intent(mActivity,ProjectHistoryActivity.class);
+                Intent intent=new Intent(mActivity,TradingProjectActivity.class);
                 intent.putExtra("project",tradingProject);
                 keepTogo(intent);
             }
@@ -226,81 +234,24 @@ public class TradingActivity extends BaseActivity {
                     ToastUtil.show(getString(R.string.shujuhuoqushibai));
                     return;
                 }
-                if (null!=tradingProject&&null!=tradingProject.getCategory_presentation()){
-                    Intent intent=new Intent(mActivity,ProjectNewsWebActivity.class);
-                    intent.putExtra("title",project.getName());
-                    intent.putExtra("content", tradingProject.getCategory_presentation().getContent());
-                    intent.putExtra("show",false);
-                    keepTogo(intent);
-                }
-            }
-        });
-    }
-
-    private void showSelectDialog() {
-        View selectPopupWin = LayoutInflater.from(this).inflate(R.layout.popup_bottom_layout, null, false);
-        RecyclerView list = (RecyclerView) selectPopupWin.findViewById(R.id.list);
-
-        final ArrayList<String> data=new ArrayList<>();
-        data.add(getString(R.string.xiangmuquanlan));
-        data.add(getString(R.string.shishihangqing));
-        data.add(getString(R.string.jiaoyishichang));
-
-        list.setLayoutManager(new LinearLayoutManager(this));
-        list.setAdapter(new CommonAdapter<String>(this,R.layout.popup_bottom_item,data){
-            @Override
-            protected void convert(ViewHolder holder, String s, int position) {
-                if (position==(mDatas.size()-1)){
-                    holder.getView(R.id.line).setVisibility(View.INVISIBLE);
-                }else {
-                    holder.getView(R.id.line).setVisibility(View.VISIBLE);
-                }
-                holder.setText(R.id.title,s);
+                Intent intent=new Intent(mActivity,ProjectHistoryActivity.class);
+                intent.putExtra("project",tradingProject);
+                keepTogo(intent);
             }
         });
 
-        selectPopupWin.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int popupHeight = selectPopupWin.getMeasuredHeight();  //获取测量后的高度
-
-        int width=(int) (ScreenUtils.getScreenWidth(this)/3.2);
-
-        final PopupWindow window = new PopupWindow(selectPopupWin, width, WindowManager.LayoutParams.WRAP_CONTENT);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        window.setFocusable(true);
-        window.setOutsideTouchable(true);
-        window.setTouchable(true);
-        window.setBackgroundDrawable(new BitmapDrawable());
-        window.update();
-        //这里就可自定义在上方和下方了 ，这种方式是为了确定在某个位置，某个控件的左边，右边，上边，下边都可以
-        window.showAsDropDown(gaikuang, ((gaikuang.getWidth()-width)/2), -(popupHeight+gaikuang.getHeight()), Gravity.NO_GRAVITY);
-
-        ((CommonAdapter)list.getAdapter()).setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
+        history.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+            public void onClick(View v) {
+
                 if (null==tradingProject){
                     ToastUtil.show(getString(R.string.shujuhuoqushibai));
                     return;
                 }
-                Intent intent=null;
-                switch (position){
-                    case 0:
-                        intent=new Intent(mActivity,TradingProjectActivity.class);
-                        break;
-                    case 1:
-                        intent=new Intent(mActivity,MarketDetaileActivity.class);
-                        break;
-                    case 2:
-                        intent=new Intent(mActivity,TradingMarketActivity.class);
-                        break;
-                }
+
+                Intent intent=new Intent(mActivity,MarketDetaileActivity.class);
                 intent.putExtra("project",tradingProject);
                 keepTogo(intent);
-                window.dismiss();
-            }
-
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                return false;
             }
         });
     }
@@ -377,8 +328,11 @@ public class TradingActivity extends BaseActivity {
             count=response.body().data.getData().size();
             Collections.reverse(response.body().data.getData());
             data.addAll(0,response.body().data.getData());
+            if (data.size()==1){
+                linearLayoutManager.setStackFromEnd(false);
+            }
         }
-        adapter.notifyItemRangeInserted(start,count);
+        footer.notifyItemRangeInserted(start,count);
     }
 
     private void collectProject(final boolean isCllect){
@@ -411,6 +365,16 @@ public class TradingActivity extends BaseActivity {
         }else {
             project.getCategory_user().setIs_favorite(isCllect);
         }
+
+        if (null!=tradingProject){
+            if (null==tradingProject.getCategory_user()){
+                TradingProjectDetaileBean.CategoryUserBean categoryUserBean=new TradingProjectDetaileBean.CategoryUserBean();
+                categoryUserBean.setIs_favorite(isCllect);
+                tradingProject.setCategory_user(categoryUserBean);
+            }else {
+                tradingProject.getCategory_user().setIs_favorite(isCllect);
+            }
+        }
         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH,0));
     }
 
@@ -425,6 +389,12 @@ public class TradingActivity extends BaseActivity {
                 project.setCategory_user(new ProjectDetaileBean.CategoryUserBean());
             }
             project.getCategory_user().setIs_top((Boolean) event.getData());
+
+            if(null==tradingProject.getCategory_user()){
+                tradingProject.setCategory_user(new TradingProjectDetaileBean.CategoryUserBean());
+            }
+            tradingProject.getCategory_user().setIs_top((Boolean) event.getData());
+
             EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH,type));
         }
 
@@ -433,6 +403,10 @@ public class TradingActivity extends BaseActivity {
                 project.setCategory_user(new ProjectDetaileBean.CategoryUserBean());
             }
             project.getCategory_user().setScore((String) event.getData());
+            if (null==tradingProject.getCategory_user()){
+                tradingProject.setCategory_user(new TradingProjectDetaileBean.CategoryUserBean());
+            }
+            tradingProject.getCategory_user().setScore((String) event.getData());
             EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH,type));
         }
 
@@ -441,6 +415,16 @@ public class TradingActivity extends BaseActivity {
                 project.setCategory_user(new ProjectDetaileBean.CategoryUserBean());
             }
             project.getCategory_user().setIs_market_follow(true);
+            project.getCategory_user().setMarket_hige(event.getStr1());
+            project.getCategory_user().setMarket_lost(event.getStr2());
+
+            if (null==tradingProject.getCategory_user()){
+                tradingProject.setCategory_user(new TradingProjectDetaileBean.CategoryUserBean());
+            }
+            tradingProject.getCategory_user().setIs_market_follow(true);
+            tradingProject.getCategory_user().setMarket_hige(event.getStr1());
+            tradingProject.getCategory_user().setMarket_lost(event.getStr2());
+
             EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_REFERSH,type));
         }
     }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#D2D2D2">
+    android:background="#ebebeb">
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -122,6 +122,7 @@
                 android:layout_width="16dp"
                 android:layout_height="12dp"
                 android:layout_marginRight="2dp"
+                android:visibility="gone"
                 android:src="@mipmap/xiangmuzhuye_caidan"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -144,10 +145,11 @@
             android:background="@drawable/gaundian_bg"
             android:clickable="true"
             android:gravity="center"
-            android:text="@string/trading_lishizixun"
+            android:text="@string/shishihangqing"
             android:textSize="14sp"
             android:textColor="#626262"/>
         <View
+            android:id="@+id/line2"
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="#DEDEDE"/>
@@ -160,7 +162,7 @@
             android:background="@drawable/gaundian_bg"
             android:clickable="true"
             android:gravity="center"
-            android:text="@string/xiangmujieshao"
+            android:text="@string/lishizixun"
             android:textSize="14sp"
             android:textColor="#626262"/>
     </LinearLayout>

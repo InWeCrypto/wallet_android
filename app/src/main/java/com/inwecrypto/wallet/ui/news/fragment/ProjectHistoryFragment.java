@@ -55,6 +55,7 @@ public class ProjectHistoryFragment extends BaseFragment {
 
     private InweHotHistoryAdapter adapter;
     private ArrayList<ArticleDetaileBean> data=new ArrayList<>();
+    private EndLessOnScrollListener scrollListener;
 
     @Override
     protected int setLayoutID() {
@@ -71,7 +72,7 @@ public class ProjectHistoryFragment extends BaseFragment {
         layoutManager = new LinearLayoutManager(mContext);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
-        list.addOnScrollListener(new EndLessOnScrollListener(layoutManager) {
+        scrollListener=new EndLessOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore() {
                 if (isEnd) {
@@ -84,7 +85,8 @@ public class ProjectHistoryFragment extends BaseFragment {
                     loadData();
                 }
             }
-        });
+        };
+        list.addOnScrollListener(scrollListener);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -92,6 +94,8 @@ public class ProjectHistoryFragment extends BaseFragment {
             public void onRefresh() {
                 page = 1;
                 isEnd = false;
+                isShow=false;
+                scrollListener.reset();
                 loadData();
             }
         });
@@ -102,6 +106,8 @@ public class ProjectHistoryFragment extends BaseFragment {
                 intent.putExtra("title",data.get(position).getTitle());
                 intent.putExtra("url", (App.isMain? Url.MAIN_NEWS:Url.TEST_NEWS)+data.get(position).getId());
                 intent.putExtra("id",data.get(position).getId());
+                intent.putExtra("decs",data.get(position).getDesc());
+                intent.putExtra("img",data.get(position).getImg());
                 keepTogo(intent);
             }
 

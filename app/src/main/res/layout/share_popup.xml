@@ -130,33 +130,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/jietu"
-            android:clickable="true"
-            android:visibility="gone"
-            android:background="?android:selectableItemBackground"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:src="@mipmap/fenxiang_jietu"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/jietu"
-                android:layout_marginTop="6dp"
-                android:textSize="12sp"
-                android:textColor="#7E7E7E"/>
-
-        </LinearLayout>
-
-
     </LinearLayout>
 
     <View
@@ -223,9 +196,34 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/jietu"
+            android:clickable="true"
+            android:background="?android:selectableItemBackground"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@mipmap/fenxiang_jietu"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/changtufenxiang"
+                android:layout_marginTop="6dp"
+                android:textSize="12sp"
+                android:textColor="#7E7E7E"/>
+
+        </LinearLayout>
+
         <View
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:layout_height="0dp"/>
 
     </LinearLayout>

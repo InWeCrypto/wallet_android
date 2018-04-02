@@ -168,5 +168,19 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/upRl"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/up"
+            android:layout_width="260dp"
+            android:layout_height="144dp"
+            android:src="@mipmap/uphit"/>
+    </RelativeLayout>
+
 
 </FrameLayout>

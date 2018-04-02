@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/c_ffffff">
+    
+    <include layout="@layout/base_title_bar"/>
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#F8F8F8"/>
+
+    <RadioGroup
+        android:id="@+id/typeRg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginLeft="11dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/gongneng"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gongnengjianyi"
+            android:textSize="13sp"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textColor="@drawable/feed_back_text_selector"
+            android:background="@drawable/feed_back_select"
+            android:button="@null"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/jianyi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/neirongjianyi"
+            android:textSize="13sp"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:layout_marginLeft="8dp"
+            android:textColor="@drawable/feed_back_text_selector"
+            android:background="@drawable/feed_back_select"
+            android:button="@null"/>
+
+        <RadioButton
+            android:id="@+id/qita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/qita"
+            android:textSize="13sp"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:layout_marginLeft="8dp"
+            android:textColor="@drawable/feed_back_text_selector"
+            android:background="@drawable/feed_back_select"
+            android:button="@null"/>
+
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#F8F8F8"/>
+
+    <EditText
+        android:id="@+id/et_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:minHeight="260dp"
+        android:hint="@string/womenxiwangqintingninbaoguideyijianyufankui"
+        android:background="@drawable/feed_back_bg"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:cursorVisible="true"
+        android:gravity="top|left"
+        android:inputType="textMultiLine"
+        android:padding="8dp"
+        android:textColor="@color/c_333333"
+        android:textCursorDrawable='@null'
+        android:textColorHint="@color/c_cfcfcf"
+        android:textSize="13sp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#F8F8F8"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="23dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:textColor="@color/c_333333"
+            android:textSize="13sp"
+            android:text="@string/lianxifangshi"/>
+
+
+
+        <EditText
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/lianxifangshitip"
+            android:background="@drawable/feed_back_bg"
+            android:cursorVisible="true"
+            android:gravity="left"
+            android:inputType="text"
+            android:padding="8dp"
+            android:textColor="@color/c_333333"
+            android:textCursorDrawable='@null'
+            android:textColorHint="@color/c_cfcfcf"
+            android:textSize="13sp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="48dp"/>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/tv_tijiao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/c_ffffff"
+        android:textSize="14sp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="54dp"
+        android:gravity="center"
+        android:background="@drawable/new_orgen_bg"
+        android:text="@string/tijiao"/>
+    
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+</LinearLayout>

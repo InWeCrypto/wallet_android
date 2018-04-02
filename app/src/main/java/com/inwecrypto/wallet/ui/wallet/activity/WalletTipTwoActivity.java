@@ -1,5 +1,6 @@
 package com.inwecrypto.wallet.ui.wallet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.inwecrypto.wallet.App;
+import com.inwecrypto.wallet.ui.newneo.NewNeoWalletActivity;
+import com.inwecrypto.wallet.ui.newneo.NewNeoWalletListActivity;
+import com.inwecrypto.wallet.ui.newneo.NewNewAddNeoSuccessActivity;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -55,11 +59,15 @@ public class WalletTipTwoActivity extends BaseActivity {
     private ArrayList<String> selectData = new ArrayList<>();
 
     private WalletBean wallet;
+    private boolean isNew;
+    private boolean isEth;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
         wallet= (WalletBean) extras.getSerializable("wallet");
         data = extras.getStringArrayList("data");
+        isNew=extras.getBoolean("isNew",false);
+        isEth=extras.getBoolean("isEth",false);
         showData.addAll(data);
         Collections.shuffle(showData);
     }
@@ -95,15 +103,32 @@ public class WalletTipTwoActivity extends BaseActivity {
                 if (isRight){
                     ToastUtil.show(getString(R.string.zhujicibeifenchenggong));
 
-                    String wallets = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
-                    if (!wallets.contains(wallet.getAddress())) {
-                        wallets = wallets + wallet.getAddress() + ",";
+                    String wallets = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "").toLowerCase();
+                    if (!wallets.contains(wallet.getAddress().toLowerCase())) {
+                        wallets = wallets + wallet.getAddress().toLowerCase() + ",";
                         App.get().getSp().putString(Constant.WALLETS_ZJC_BEIFEN, wallets);
                     }
                     AppManager.getAppManager().finishActivity(WalletTipOneActivity.class);
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
                     EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_TIP_SUCCESS));
-                    finish();
+                    if (isNew){
+                        if (isEth){
+                            AppManager.getAppManager().finishActivity(AddEthSuccessActivity.class);
+                            AppManager.getAppManager().finishActivity(NewNeoWalletListActivity.class);
+                            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
+                            Intent intent = new Intent(mActivity, HotWalletActivity.class);
+                            intent.putExtra("wallet", wallet);
+                            finshTogo(intent);
+                        }else {
+                            AppManager.getAppManager().finishActivity(NewNewAddNeoSuccessActivity.class);
+                            AppManager.getAppManager().finishActivity(NewNeoWalletListActivity.class);
+                            Intent intent = new Intent(mActivity, NewNeoWalletActivity.class);
+                            intent.putExtra("wallet", wallet);
+                            finshTogo(intent);
+                        }
+                    }else {
+                        finish();
+                    }
                 }else {
                     ToastUtil.show(getString(R.string.zhujicishunxucuowu_qingchongxinjiancha));
                 }

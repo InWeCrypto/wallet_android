@@ -137,15 +137,7 @@ public class TransferAccountsActivity extends BaseActivity {
                         BigDecimal price = new BigDecimal(etPrice.getText().toString()).add(new BigDecimal(gas.getText().toString())).multiply(Constant.pEther);
                             hideLoading();
                         if (currentPrice.subtract(price).doubleValue()>=0){
-                            if (isClod){
-                                Intent intent=new Intent(mActivity,WatchEthTransferAccountsConfirmActivity.class);
-                                intent.putExtra("address",etAddress.getText().toString().toLowerCase());
-                                intent.putExtra("price",etPrice.getText().toString());
-                                intent.putExtra("gas",gas.getText().toString());
-                                intent.putExtra("hit",etHint.getText().toString());
-                                intent.putExtra("wallet",wallet);
-                                keepTogo(intent);
-                            }else {
+                            if (!isClod){
                                 Intent intent=new Intent(mActivity,TransferAccountsConfirmActivity.class);
                                 intent.putExtra("address",etAddress.getText().toString());
                                 intent.putExtra("price",etPrice.getText().toString());

@@ -80,14 +80,6 @@ public class NewsShareFragment extends DialogFragment{
                 }
             }
         });
-        dialog.findViewById(R.id.jietu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null!=listener){
-                    listener.onNext(4,dialog);
-                }
-            }
-        });
         dialog.findViewById(R.id.shoucang).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,6 +93,15 @@ public class NewsShareFragment extends DialogFragment{
             public void onClick(View v) {
                 if (null!=listener){
                     listener.onNext(6,dialog);
+                }
+            }
+        });
+
+        dialog.findViewById(R.id.jietu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null!=listener){
+                    listener.onNext(7,dialog);
                 }
             }
         });

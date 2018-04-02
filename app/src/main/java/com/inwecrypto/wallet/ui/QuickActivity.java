@@ -10,10 +10,7 @@ import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.common.Constant;
-import com.inwecrypto.wallet.common.util.AppManager;
 import com.inwecrypto.wallet.common.util.DensityUtil;
-import com.inwecrypto.wallet.common.util.ScreenUtils;
-import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 
 import butterknife.BindView;
@@ -62,14 +59,18 @@ public class QuickActivity extends BaseActivity {
     ImageView listbtn;
     @BindView(R.id.listRl)
     RelativeLayout listRl;
+    @BindView(R.id.up)
+    ImageView up;
+    @BindView(R.id.upRl)
+    RelativeLayout upRl;
 
-    private int type=1;
+    private int type = 1;
     private int y;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-        type=extras.getInt("type");
-        y=extras.getInt("y");
+        type = extras.getInt("type");
+        y = extras.getInt("y");
 
     }
 
@@ -80,24 +81,24 @@ public class QuickActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        switch (type){
+        switch (type) {
             case 1:
-                if (!App.get().isZh()){
+                if (!App.get().isZh()) {
                     list.setImageResource(R.mipmap.listtipen);
                     listbtn.setImageResource(R.mipmap.ikonwen);
                 }
                 listRl.setVisibility(View.VISIBLE);
-                listRl.setY(y- DensityUtil.dip2px(this,12));
+                listRl.setY(y - DensityUtil.dip2px(this, 12));
                 listbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        App.get().getSp().putBoolean(Constant.FIRST_1,false);
+                        App.get().getSp().putBoolean(Constant.FIRST_1, false);
                         finish();
                     }
                 });
                 break;
             case 2:
-                if (!App.get().isZh()){
+                if (!App.get().isZh()) {
                     add.setImageResource(R.mipmap.addtipen);
                     addbtn.setImageResource(R.mipmap.ikonwen);
                 }
@@ -105,14 +106,14 @@ public class QuickActivity extends BaseActivity {
                 addbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        App.get().getSp().putBoolean(Constant.FIRST_2,false);
+                        App.get().getSp().putBoolean(Constant.FIRST_2, false);
                         finish();
                     }
                 });
                 break;
 
             case 3:
-                if (!App.get().isZh()){
+                if (!App.get().isZh()) {
                     quick.setImageResource(R.mipmap.quicktipen);
                     quickbtn.setImageResource(R.mipmap.ikonwen);
                 }
@@ -120,14 +121,14 @@ public class QuickActivity extends BaseActivity {
                 quickbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        App.get().getSp().putBoolean(Constant.FIRST_3,false);
+                        App.get().getSp().putBoolean(Constant.FIRST_3, false);
                         finish();
                     }
                 });
                 break;
 
             case 4:
-                if (!App.get().isZh()){
+                if (!App.get().isZh()) {
                     recive.setImageResource(R.mipmap.receivtipen);
                     recivebtn.setImageResource(R.mipmap.ikonwen);
                 }
@@ -136,7 +137,7 @@ public class QuickActivity extends BaseActivity {
                 recivebtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        App.get().getSp().putBoolean(Constant.FIRST_4,false);
+                        App.get().getSp().putBoolean(Constant.FIRST_4, false);
                         finish();
                     }
                 });

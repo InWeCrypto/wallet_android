@@ -26,6 +26,7 @@ import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.me.activity.AboutUsActivity;
 import com.inwecrypto.wallet.ui.me.activity.CommonWebActivity;
+import com.inwecrypto.wallet.ui.me.activity.HelpCenterActivity;
 import com.inwecrypto.wallet.ui.me.activity.MailListActivity;
 import com.inwecrypto.wallet.ui.me.activity.MarketTipActivity;
 import com.inwecrypto.wallet.ui.me.activity.SettingActivity;
@@ -79,6 +80,8 @@ public class MeFragment extends BaseFragment {
     RelativeLayout yaoqing;
     @BindView(R.id.zhangben)
     RelativeLayout zhangben;
+    @BindView(R.id.help)
+    RelativeLayout help;
     @BindView(R.id.qindenglu)
     TextView qindenglu;
 
@@ -198,6 +201,14 @@ public class MeFragment extends BaseFragment {
             }
         });
 
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mActivity, HelpCenterActivity.class);
+                mActivity.keepTogo(intent);
+            }
+        });
+
         aboutUs.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -211,9 +222,7 @@ public class MeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (!isFirst&&!isLoadSuccess){
-            loadData();
-        }
+        loadData();
     }
 
     @Override

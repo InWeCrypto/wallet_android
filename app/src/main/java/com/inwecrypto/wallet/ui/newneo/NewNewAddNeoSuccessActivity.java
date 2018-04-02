@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inwecrypto.wallet.R;
@@ -11,13 +12,14 @@ import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.AppManager;
+import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
-import com.inwecrypto.wallet.ui.wallet.activity.AddWalletListActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.neowallet.NeoWalletActivity;
+import com.inwecrypto.wallet.ui.wallet.activity.WalletTipOneActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/7/27.
@@ -27,20 +29,29 @@ import butterknife.BindView;
 
 public class NewNewAddNeoSuccessActivity extends BaseActivity {
 
+
     @BindView(R.id.txt_left_title)
     TextView txtLeftTitle;
     @BindView(R.id.txt_main_title)
     TextView txtMainTitle;
     @BindView(R.id.txt_right_title)
     TextView txtRightTitle;
-    @BindView(R.id.tv_go)
-    TextView tvGo;
+    @BindView(R.id.toolbar)
+    SimpleToolbar toolbar;
+    @BindView(R.id.tv_beifen)
+    TextView tvBeifen;
+    @BindView(R.id.gotoWallet)
+    TextView gotoWallet;
+    @BindView(R.id.img)
+    ImageView img;
 
     private WalletBean wallet;
+    private String zjc;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-        wallet= (WalletBean) extras.getSerializable("wallet");
+        wallet = (WalletBean) extras.getSerializable("wallet");
+        zjc=extras.getString("zjc");
     }
 
     @Override
@@ -58,18 +69,31 @@ public class NewNewAddNeoSuccessActivity extends BaseActivity {
         });
         txtMainTitle.setText(R.string.tianjiaqianbao);
         txtRightTitle.setVisibility(View.GONE);
-        tvGo.setOnClickListener(new View.OnClickListener() {
+        img.setImageResource(R.mipmap.s_neo_walllet);
+        tvBeifen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, WalletTipOneActivity.class);
+                intent.putExtra("zjc", zjc);
+                intent.putExtra("wallet", wallet);
+                intent.putExtra("isNew",true);
+                intent.putExtra("isEth",false);
+                keepTogo(intent);
+            }
+        });
+        gotoWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gotoWallet();
             }
         });
     }
+
     private void gotoWallet() {
         AppManager.getAppManager().finishActivity(NewNeoWalletListActivity.class);
         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
-        Intent intent=new Intent(mActivity,NewNeoWalletActivity.class);
-        intent.putExtra("wallet",wallet);
+        Intent intent = new Intent(mActivity, NewNeoWalletActivity.class);
+        intent.putExtra("wallet", wallet);
         finshTogo(intent);
     }
 
@@ -92,5 +116,4 @@ public class NewNewAddNeoSuccessActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 }

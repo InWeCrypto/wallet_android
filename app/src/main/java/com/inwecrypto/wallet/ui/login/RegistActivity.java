@@ -24,6 +24,7 @@ import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.api.UserApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AppManager;
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
@@ -37,6 +38,7 @@ import com.lzy.okgo.model.Response;
 import net.qiujuer.genius.ui.widget.Button;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 
@@ -245,18 +247,34 @@ public class RegistActivity extends BaseActivity {
                         App.get().setLogin(true);
                         App.get().getSp().putBoolean(Constant.NEED_RESTART,true);
                         App.get().getSp().putString(Constant.LOGIN_NAME+App.isMain,email.getText().toString().trim());
+
+                        boolean needUpdate=false;
+                        if (AppUtil.getVersion(mActivity)>App.get().getSp().getInt(Constant.VERSION,0)){
+                            needUpdate=true;
+                            App.get().getSp().putInt(Constant.VERSION,AppUtil.getVersion(mActivity));
+                        }
                         ArrayList<CommonProjectBean> mainCacheMarks= CacheUtils.getCache(Constant.PROJECT_JSON_MAIN+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
                         ArrayList<CommonProjectBean> testCacheMarks= CacheUtils.getCache(Constant.PROJECT_JSON_TEST+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
                         ArrayList<CommonProjectBean> marks=new ArrayList<>();
-                        if (null==mainCacheMarks||null==testCacheMarks){
+                        if (needUpdate||null==mainCacheMarks||null==testCacheMarks){
                             marks=GsonUtils.jsonToArrayList(Constant.BASE_PROJECT_JSON, CommonProjectBean.class);
                         }
-                        if (null==mainCacheMarks){
+                        if (needUpdate||null==mainCacheMarks){
                             CacheUtils.setCache(Constant.PROJECT_JSON_MAIN+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()), marks);
                         }
-                        if (null==testCacheMarks){
+                        if (needUpdate||null==testCacheMarks){
                             CacheUtils.setCache(Constant.PROJECT_JSON_TEST+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()), marks);
                         }
+
+                        if (null!=response.body().data.getWallet_gnt_sort()){
+                            final HashMap<String,Integer> sort=new HashMap<>();
+                            //获取排序
+                            for (int i=0;i<response.body().data.getWallet_gnt_sort().size();i++){
+                                sort.put(response.body().data.getWallet_gnt_sort().get(i),i);
+                            }
+                            CacheUtils.setCache(Constant.SORT+App.isMain,sort);
+                        }
+
                         Intent intent=new Intent(mActivity,MainTabActivity.class);
                         intent.putExtra("isYaoqin",true);
                         finshTogo(intent);

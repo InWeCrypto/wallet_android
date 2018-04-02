@@ -55,6 +55,7 @@ public class ProjectBottomHistoryFragment extends BaseFragment {
 
     private InwehotNewsHistoryAdapter adapter;
     private ArrayList<ArticleDetaileBean> data=new ArrayList<>();
+    private EndLessOnScrollListener scrollListener;
 
     @Override
     protected int setLayoutID() {
@@ -79,13 +80,13 @@ public class ProjectBottomHistoryFragment extends BaseFragment {
 
             @Override
             public int getItemViewType(int position, ArticleDetaileBean articleDetaileBean) {
-                return articleDetaileBean.getType()==1?1:0;
+                return (articleDetaileBean.getType()==1||articleDetaileBean.getType()==16)?1:0;
             }
         });
         layoutManager = new LinearLayoutManager(mContext);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
-        list.addOnScrollListener(new EndLessOnScrollListener(layoutManager) {
+        scrollListener=new EndLessOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore() {
                 if (isEnd) {
@@ -98,7 +99,8 @@ public class ProjectBottomHistoryFragment extends BaseFragment {
                     loadData();
                 }
             }
-        });
+        };
+        list.addOnScrollListener(scrollListener);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -106,6 +108,8 @@ public class ProjectBottomHistoryFragment extends BaseFragment {
             public void onRefresh() {
                 page = 1;
                 isEnd = false;
+                isShow=false;
+                scrollListener.reset();
                 loadData();
             }
         });
@@ -121,19 +125,19 @@ public class ProjectBottomHistoryFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
-        String typeStr="inwe_hot";
+        String typeStr="is_not_category";
         switch (type){
             case 1:
-                typeStr="inwe_hot";
+                typeStr="is_not_category&type=[1,2,3,6,16]";
                 break;
             case 2:
-                typeStr="is_scroll";
+                typeStr="is_not_category&type=16";
                 break;
             case 3:
-                typeStr="type=1";
+                typeStr="is_not_category&type=1";
                 break;
             case 4:
-                typeStr="other";
+                typeStr="is_not_category&type=[2,3,6]";
                 break;
         }
         ZixunApi.getInweHotHistory(this, page, typeStr, new JsonCallback<LzyResponse<ArticleListBean>>() {
@@ -186,6 +190,8 @@ public class ProjectBottomHistoryFragment extends BaseFragment {
                 intent.putExtra("title",data.get(event.getKey2()).getTitle());
                 intent.putExtra("url", (App.isMain? Url.MAIN_NEWS:Url.TEST_NEWS)+data.get(event.getKey2()).getId());
                 intent.putExtra("id",data.get(event.getKey2()).getId());
+                intent.putExtra("decs",data.get(event.getKey2()).getDesc());
+                intent.putExtra("img",data.get(event.getKey2()).getImg());
                 keepTogo(intent);
             }
         }

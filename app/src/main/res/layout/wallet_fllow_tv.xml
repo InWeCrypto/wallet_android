@@ -2,7 +2,6 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textSize="12sp"
-    android:layout_margin="4dp"
-    android:text="#949494"
-    android:textColor="#949494"/>
+    android:textSize="16sp"
+    android:layout_margin="3dp"
+    android:textColor="@color/c_333333"/>

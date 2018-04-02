@@ -176,15 +176,7 @@ public class NeoTransferAccountsActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<LzyResponse<UtxoBean>> response) {
                         if (null != response) {
-                            if (isClod) {
-                                Intent intent = new Intent(mActivity, WatchNeoTransferAccountsNfcActivity.class);
-                                intent.putExtra("wallet", wallet);
-                                intent.putExtra("address", etAddress.getText().toString().trim());
-                                intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).doubleValue());
-                                intent.putExtra("type", type);
-                                intent.putExtra("unspent", response.body());
-                                keepTogo(intent);
-                            } else {
+                            if (!isClod){
                                 if (null != response.body().data.getResult()) {
 
                                     String utxo = GsonUtils.objToJson(response.body().data.getResult());

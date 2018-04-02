@@ -35,8 +35,8 @@ public class InweHotHistoryAdapter extends CommonAdapter<ArticleDetaileBean> {
         if (null!=articleDetaileBean.getImg()){
             Glide.with(mContext)
                     .load(articleDetaileBean.getImg())
-                    .placeholder(R.mipmap.zhanweitu_ico)
                     .crossFade()
+                    .error(R.mipmap.zhanweitu_ico)
                     .into((ImageView) holder.getView(R.id.img));
         }else {
             Glide.with(mContext)

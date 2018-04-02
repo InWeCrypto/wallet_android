@@ -7,7 +7,9 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,11 +30,13 @@ import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.news.adapter.InwehotAdapter;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
+import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 作者：xiaoji06 on 2018/2/8 20:01
@@ -56,20 +60,24 @@ public class TradingViewActivity extends BaseActivity {
     View line;
     @BindView(R.id.views)
     TextView views;
+    @BindView(R.id.lishizixun)
+    TextView lishizixun;
 
-    private int page=1;
+    private int page = 1;
     private boolean isEnd;
 
     private CommonProjectBean marks;
+    private HeaderAndFooterWrapper footer;
+    private View footerView;
 
     private InwehotAdapter adapter;
-    private ArrayList<ArticleDetaileBean> data=new ArrayList<>();
+    private ArrayList<ArticleDetaileBean> data = new ArrayList<>();
 
     private boolean isFirst;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
-        marks= (CommonProjectBean) extras.getSerializable("marks");
+        marks = (CommonProjectBean) extras.getSerializable("marks");
     }
 
     @Override
@@ -85,33 +93,67 @@ public class TradingViewActivity extends BaseActivity {
                 finish();
             }
         });
-        txtMainTitle.setText(R.string.jiaoyishitu);
+        txtMainTitle.setText(R.string.qiwang);
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mActivity,ProjectDetaileActivity.class);
-                intent.putExtra("marks",marks);
+                Intent intent = new Intent(mActivity, ProjectDetaileActivity.class);
+                intent.putExtra("marks", marks);
                 keepTogo(intent);
             }
         });
 
-        adapter=new InwehotAdapter(this,R.layout.inwe_hot_item,data);
+        line.setVisibility(View.VISIBLE);
+        lishizixun.setVisibility(View.VISIBLE);
+
+        lishizixun.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, TradingViewHistoryActivity.class);
+                keepTogo(intent);
+            }
+        });
+
+        adapter = new InwehotAdapter(this, R.layout.inwe_hot_item, data);
+
+        footer=new HeaderAndFooterWrapper(adapter);
+        footerView= LayoutInflater.from(this).inflate(R.layout.empty_view,null,false);
+        footer.addFootView(footerView);
+
+        swipeRefresh.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= 16) {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeOnGlobalLayoutListener(this);
+                }
+                else {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeGlobalOnLayoutListener(this);
+                }
+                swipeRefresh.getHeight(); // 获取高度
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) footerView.getLayoutParams();
+                params.height=swipeRefresh.getHeight()/4;
+                footerView.setLayoutParams(params);
+            }
+        });
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         list.setLayoutManager(linearLayoutManager);
-        list.setAdapter(adapter);
+        list.setAdapter(footer);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (isFirst){
+                if (isFirst) {
                     page++;
-                }else {
-                    page=1;
+                } else {
+                    page = 1;
                 }
-                isEnd=false;
+                isEnd = false;
                 initData();
             }
         });
@@ -119,10 +161,12 @@ public class TradingViewActivity extends BaseActivity {
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                Intent intent=new Intent(mActivity,ProjectNewsWebActivity.class);
-                intent.putExtra("title",data.get(position).getTitle());
-                intent.putExtra("url", (App.isMain? Url.MAIN_NEWS:Url.TEST_NEWS)+data.get(position).getId());
-                intent.putExtra("id",data.get(position).getId());
+                Intent intent = new Intent(mActivity, ProjectNewsWebActivity.class);
+                intent.putExtra("title", data.get(position).getTitle());
+                intent.putExtra("url", (App.isMain ? Url.MAIN_NEWS : Url.TEST_NEWS) + data.get(position).getId());
+                intent.putExtra("id", data.get(position).getId());
+                intent.putExtra("decs", data.get(position).getDesc());
+                intent.putExtra("img", data.get(position).getImg());
                 keepTogo(intent);
             }
 
@@ -138,9 +182,9 @@ public class TradingViewActivity extends BaseActivity {
         ZixunApi.getTradingView(this, page, new JsonCallback<LzyResponse<ArticleListBean>>() {
             @Override
             public void onSuccess(Response<LzyResponse<ArticleListBean>> response) {
-                if (!response.isFromCache()){
-                    if (!isFirst){
-                        isFirst=true;
+                if (!response.isFromCache()) {
+                    if (!isFirst) {
+                        isFirst = true;
                     }
                 }
                 LoadSuccess(response);
@@ -150,7 +194,7 @@ public class TradingViewActivity extends BaseActivity {
             public void onError(Response<LzyResponse<ArticleListBean>> response) {
                 super.onError(response);
                 ToastUtil.show(getString(R.string.load_error));
-                if (page!=1){
+                if (page != 1) {
                     page--;
                 }
             }
@@ -166,32 +210,32 @@ public class TradingViewActivity extends BaseActivity {
     }
 
     private void LoadSuccess(Response<LzyResponse<ArticleListBean>> response) {
-        int start=0;
-        int count=0;
-        if (page==1){
+        int start = 0;
+        int count = 0;
+        if (page == 1) {
             data.clear();
-            if (1>=response.body().data.getLast_page()){
-                isEnd=true;
+            if (1 >= response.body().data.getLast_page()) {
+                isEnd = true;
                 swipeRefresh.setEnabled(false);
             }
-        }else {
-            if (page>=response.body().data.getLast_page()){
-                isEnd=true;
+        } else {
+            if (page >= response.body().data.getLast_page()) {
+                isEnd = true;
                 swipeRefresh.setEnabled(false);
             }
         }
 
-        if (null!=response.body().data.getData()){
-            count=response.body().data.getData().size();
+        if (null != response.body().data.getData()) {
+            count = response.body().data.getData().size();
             Collections.reverse(response.body().data.getData());
-            data.addAll(0,response.body().data.getData());
+            data.addAll(0, response.body().data.getData());
         }
-        adapter.notifyItemRangeInserted(start,count);
+        footer.notifyItemRangeInserted(start, count);
     }
 
     @Override
     protected void EventBean(BaseEventBusBean event) {
-        if (event.getEventCode()== Constant.EVENT_NOTIFY){
+        if (event.getEventCode() == Constant.EVENT_NOTIFY) {
             marks.setOpenTip((Boolean) event.getData());
         }
     }

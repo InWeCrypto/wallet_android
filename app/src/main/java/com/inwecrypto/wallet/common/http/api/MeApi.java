@@ -21,6 +21,9 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.callback.StringCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by Administrator on 2017/8/4.
  * 功能描述：
@@ -129,6 +132,34 @@ public class MeApi {
     public static void check(Object object,StringCallback callback){
         OkGo.<String>get(Url.UPDATE)
                 .tag(object)
+                .execute(callback);
+    }
+
+    public static void feedBack(Object object,int type,String content,String contact,JsonCallback<LzyResponse<Object>> callback){
+        JSONObject params=new JSONObject();
+        try {
+            params.putOpt("type",type);
+            params.putOpt("content",content);
+            params.putOpt("contact",contact);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        OkGo.<LzyResponse<Object>>post(Url.FEED_BACK)
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+    public static void changeLang(Object object,String lang,JsonCallback<LzyResponse<Object>> callback){
+        JSONObject params=new JSONObject();
+        try {
+            params.putOpt("lang",lang);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        OkGo.<LzyResponse<Object>>put(Url.USER_LANG)
+                .tag(object)
+                .upJson(params)
                 .execute(callback);
     }
 }

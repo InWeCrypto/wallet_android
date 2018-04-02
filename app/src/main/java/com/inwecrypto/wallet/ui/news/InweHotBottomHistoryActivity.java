@@ -94,9 +94,9 @@ public class InweHotBottomHistoryActivity extends BaseActivity {
 
         mDataList.clear();
         mDataList.add(getString(R.string.quanbu));
-        mDataList.add(getString(R.string.erdianzixun));
+        mDataList.add(getString(R.string.jiaoyisuogonggao));
         mDataList.add(getString(R.string._24xiaoshizixun));
-        mDataList.add(getString(R.string.qita));
+        mDataList.add(getString(R.string.xinwen));
 
         ProjectBottomHistoryFragment fragment1 = new ProjectBottomHistoryFragment();
         Bundle bundle1 = new Bundle();

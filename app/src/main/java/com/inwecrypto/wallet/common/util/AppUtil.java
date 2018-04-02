@@ -257,6 +257,8 @@ public class AppUtil {
         //允许截图
         webView.setDrawingCacheEnabled(true);
 
+        webView.setBackgroundColor(Color.WHITE);
+
         webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         webView.setDownloadListener(new DownloadListener() {
@@ -593,5 +595,23 @@ public class AppUtil {
 
     public static BigDecimal decimal(String decimal){
         return new BigDecimal(Math.pow(10,Double.parseDouble(decimal)));
+    }
+
+    /**
+     * get App versionCode
+     * @param context
+     * @return
+     */
+    public String getVersionCode(Context context){
+        PackageManager packageManager=context.getPackageManager();
+        PackageInfo packageInfo;
+        String versionCode="";
+        try {
+            packageInfo=packageManager.getPackageInfo(context.getPackageName(),0);
+            versionCode=packageInfo.versionCode+"";
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionCode;
     }
 }

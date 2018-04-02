@@ -48,16 +48,23 @@ public class WelcomeActivity extends BaseActivity {
             findViewById(android.R.id.content).postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
+                    boolean needUpdate=false;
+                    if (AppUtil.getVersion(mActivity)>App.get().getSp().getInt(Constant.VERSION,0)){
+                        needUpdate=true;
+                        App.get().getSp().putInt(Constant.VERSION,AppUtil.getVersion(mActivity));
+                    }
+
                     ArrayList<CommonProjectBean> mainCacheMarks= CacheUtils.getCache(Constant.PROJECT_JSON_MAIN+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
                     ArrayList<CommonProjectBean> testCacheMarks= CacheUtils.getCache(Constant.PROJECT_JSON_TEST+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
                     ArrayList<CommonProjectBean> marks=new ArrayList<>();
-                    if (null==mainCacheMarks||null==testCacheMarks){
+                    if (needUpdate||null==mainCacheMarks||null==testCacheMarks){
                         marks=GsonUtils.jsonToArrayList(Constant.BASE_PROJECT_JSON, CommonProjectBean.class);
                     }
-                    if (null==mainCacheMarks){
+                    if (needUpdate||null==mainCacheMarks){
                         CacheUtils.setCache(Constant.PROJECT_JSON_MAIN+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()), marks);
                     }
-                    if (null==testCacheMarks){
+                    if (needUpdate||null==testCacheMarks){
                         CacheUtils.setCache(Constant.PROJECT_JSON_TEST+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()), marks);
                     }
                     Intent intent = new Intent(WelcomeActivity.this, MainTabActivity.class);

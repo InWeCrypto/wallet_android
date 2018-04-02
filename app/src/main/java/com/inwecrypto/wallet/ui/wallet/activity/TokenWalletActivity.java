@@ -19,6 +19,7 @@ import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.BpsBean;
 import com.inwecrypto.wallet.bean.CommonListBean;
 import com.inwecrypto.wallet.bean.MinBlockBean;
+import com.inwecrypto.wallet.bean.NeoOderBean;
 import com.inwecrypto.wallet.bean.OrderBean;
 import com.inwecrypto.wallet.bean.TokenBean;
 import com.inwecrypto.wallet.bean.ValueBean;
@@ -31,6 +32,7 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.imageloader.GlideCircleTransform;
 import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.inwecrypto.wallet.common.util.AppUtil;
+import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ScreenUtils;
@@ -39,6 +41,7 @@ import com.inwecrypto.wallet.common.widget.EndLessOnScrollListener;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.wallet.adapter.RecordAdapter;
 import com.lzy.okgo.model.Response;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
@@ -122,6 +125,7 @@ public class TokenWalletActivity extends BaseActivity {
     private boolean isEnd;
     private boolean isShow;
     private LinearLayoutManager layoutManager;
+    private EndLessOnScrollListener scrollListener;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -199,6 +203,10 @@ public class TokenWalletActivity extends BaseActivity {
         llZhuanzhang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 if (isEth) {
                     if (wallet.getType().equals(Constant.GUANCHA)) {
                         ToastUtil.show(getString(R.string.zanbuzhichiguanchaqianbaozhuanzhang));
@@ -271,7 +279,7 @@ public class TokenWalletActivity extends BaseActivity {
         layoutManager = new LinearLayoutManager(this);
         walletList.setLayoutManager(layoutManager);
         walletList.setAdapter(adapter);
-        walletList.addOnScrollListener(new EndLessOnScrollListener(layoutManager) {
+        scrollListener=new EndLessOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore() {
                 if (isEnd) {
@@ -284,7 +292,8 @@ public class TokenWalletActivity extends BaseActivity {
                     initData();
                 }
             }
-        });
+        };
+        walletList.addOnScrollListener(scrollListener);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -292,6 +301,8 @@ public class TokenWalletActivity extends BaseActivity {
             public void onRefresh() {
                 page = 0;
                 isEnd = false;
+                isShow = false;
+                scrollListener.reset();
                 initData();
             }
         });
@@ -302,11 +313,13 @@ public class TokenWalletActivity extends BaseActivity {
                     Intent intent = new Intent(mActivity, TransferAccountsDetaileActivity.class);
                     intent.putExtra("order", mails.get(position));
                     intent.putExtra("unit", isEth ? "ether" : gnt.getName().toLowerCase());
+                    intent.putExtra("decimal",isEth ? "18":gnt.getDecimals());
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(mActivity, ReceiveDetaileActivity.class);
                     intent.putExtra("order", mails.get(position));
                     intent.putExtra("unit", isEth ? "ether" : gnt.getName().toLowerCase());
+                    intent.putExtra("decimal",isEth ? "18":gnt.getDecimals());
                     startActivity(intent);
                 }
             }
@@ -322,7 +335,9 @@ public class TokenWalletActivity extends BaseActivity {
         //保存 minBlock
         currentBlock = new BigDecimal(App.get().getSp().getString(Constant.CURRENT_BLOCK, "0")).doubleValue();
 
-        startRound();
+        if (App.get().isLogin()){
+            startRound();
+        }
     }
 
 
@@ -437,98 +452,138 @@ public class TokenWalletActivity extends BaseActivity {
         if (isEth) {
             flag = wallet.getCategory().getName();
             String sb = "[" + wallet.getId() + "]";
-            WalletApi.conversionWallet(mActivity, sb.toString(), new JsonCallback<LzyResponse<CommonListBean<WalletCountBean>>>() {
-                @Override
-                public void onSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
-                    if (null == tvPrice || null == tvChPrice || null == titlePrice) {
-                        return;
-                    }
-                    totleEther = totleEther.multiply(new BigDecimal(0));
-                    totlePrice = totlePrice.multiply(new BigDecimal(0));
-                    ArrayList<WalletCountBean> walletPrices = response.body().data.getList();
-                    BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
-                    totleEther = totleEther.add(currentPrice);
-                    if (1 == App.get().getUnit()) {
-                        totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == walletPrices.get(0).getCategory().getCap() ? "0" : walletPrices.get(0).getCategory().getCap().getPrice_cny()))).setScale(2, BigDecimal.ROUND_DOWN);
-                        tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_DOWN).toString());
-                        tvChPrice.setText("≈￥" + totlePrice.toString());
-                        titlePrice.setText("(￥" + totlePrice.toString() + ")");
-                    } else {
-                        totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == walletPrices.get(0).getCategory().getCap() ? "0" : walletPrices.get(0).getCategory().getCap().getPrice_usd()))).setScale(2, BigDecimal.ROUND_DOWN);
-                        tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_DOWN).toString());
-                        tvChPrice.setText("≈$" + totlePrice.toString());
-                        titlePrice.setText("($" + totlePrice.toString() + ")");
-                    }
+            if (!App.get().isLogin()){
+                LzyResponse<CommonListBean<WalletCountBean>> response= CacheUtils.getCache(Constant.CONVERSION+sb.toString()+ App.isMain);
+                if (null!=response){
+                    setEthBanlance(response);
                 }
+            }else {
+                WalletApi.conversionWallet(mActivity, sb.toString(), new JsonCallback<LzyResponse<CommonListBean<WalletCountBean>>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
+                        setEthBanlance(response.body());
+                    }
 
-                @Override
-                public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
-                    super.onCacheSuccess(response);
-                    onSuccess(response);
-                }
+                    @Override
+                    public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
+                        super.onCacheSuccess(response);
+                        onSuccess(response);
+                    }
 
-            });
+                });
+            }
         } else {
             flag = gnt.getName();
-            //请求用户资产
-            WalletApi.balanceof(mActivity, gnt.getGnt_category().getAddress(), wallet.getAddress(), new JsonCallback<LzyResponse<ValueBean>>() {
-                @Override
-                public void onSuccess(Response<LzyResponse<ValueBean>> response) {
-                    if (null == tvPrice || null == tvChPrice || null == titlePrice) {
-                        return;
+            if (!App.get().isLogin()){
+                LzyResponse<ValueBean> response= CacheUtils.getCache(Constant.BALANCEOF+gnt.getGnt_category().getAddress()+wallet.getAddress());
+                if (null!=response){
+                    setGntBanlance(response);
+                }
+            }else {
+                //请求用户资产
+                WalletApi.balanceof(mActivity, gnt.getGnt_category().getAddress(), wallet.getAddress(), new JsonCallback<LzyResponse<ValueBean>>() {
+                    @Override
+                    public void onSuccess(Response<LzyResponse<ValueBean>> response) {
+                        setGntBanlance(response.body());
                     }
-                    //进行计算
-                    tokenEther = new BigDecimal(AppUtil.toD(response.body().data.getValue().replace("0x", "0")));
-                    tvPrice.setText(tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).setScale(4, BigDecimal.ROUND_DOWN).toString());
-                    if (1 == App.get().getUnit()) {
-                        tvChPrice.setText("≈￥" + tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toString());
-                        titlePrice.setText("(￥" + tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toString() + ")");
-                    } else {
-                        tvChPrice.setText("≈$" + tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toString());
-                        titlePrice.setText("($" + tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toString() + ")");
+
+                    @Override
+                    public void onCacheSuccess(Response<LzyResponse<ValueBean>> response) {
+                        super.onCacheSuccess(response);
+                        onSuccess(response);
+                    }
+                });
+            }
+        }
+
+        if (!App.get().isLogin()){
+            LzyResponse<CommonListBean<OrderBean>> response= CacheUtils.getCache(Constant.WALLET_ORDER+wallet.getId()+flag+(isEth ? Constant.ETH_ORDER_ASSET_ID : gnt.getGnt_category().getAddress().toLowerCase())+ App.isMain);
+            if (null!=response){
+                LoadSuccess(response);
+            }
+            if (null != swipeRefresh) {
+                swipeRefresh.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefresh.setRefreshing(false);
+                    }
+                });
+            }
+            return;
+        }else {
+            //请求交易记录
+            WalletApi.walletOrder(this, page, wallet.getId(), flag, isEth ? Constant.ETH_ORDER_ASSET_ID : gnt.getGnt_category().getAddress().toLowerCase(), new JsonCallback<LzyResponse<CommonListBean<OrderBean>>>() {
+                @Override
+                public void onSuccess(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
+                    LoadSuccess(response.body());
+                }
+
+                @Override
+                public void onCacheSuccess(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
+                    super.onCacheSuccess(response);
+                    onSuccess(response);
+                }
+
+                @Override
+                public void onError(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
+                    super.onError(response);
+                    if (App.get().isLogin()){
+                        if (NetworkUtils.isConnected(mActivity)){
+                            ToastUtil.show(getString(R.string.load_error));
+                        }
+                    }
+                    if (page != 0) {
+                        page--;
                     }
                 }
 
                 @Override
-                public void onCacheSuccess(Response<LzyResponse<ValueBean>> response) {
-                    super.onCacheSuccess(response);
-                    onSuccess(response);
+                public void onFinish() {
+                    super.onFinish();
+                    if (null != swipeRefresh) {
+                        swipeRefresh.setRefreshing(false);
+                    }
                 }
             });
         }
+    }
 
-        //请求交易记录
-        WalletApi.walletOrder(this, page, wallet.getId(), flag, isEth ? Constant.ETH_ORDER_ASSET_ID : gnt.getGnt_category().getAddress().toLowerCase(), new JsonCallback<LzyResponse<CommonListBean<OrderBean>>>() {
-            @Override
-            public void onSuccess(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
-                LoadSuccess(response);
-            }
+    private void setGntBanlance(LzyResponse<ValueBean> response) {
+        if (null == tvPrice || null == tvChPrice || null == titlePrice) {
+            return;
+        }
+        //进行计算
+        tokenEther = new BigDecimal(AppUtil.toD(response.data.getValue().replace("0x", "0")));
+        tvPrice.setText(tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).setScale(4, BigDecimal.ROUND_DOWN).toString());
+        if (1 == App.get().getUnit()) {
+            tvChPrice.setText("≈￥" + tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toString());
+            titlePrice.setText("(￥" + tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_cny())).setScale(2, BigDecimal.ROUND_DOWN).toString() + ")");
+        } else {
+            tvChPrice.setText("≈$" + tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toString());
+            titlePrice.setText("($" + tokenEther.divide(AppUtil.decimal(gnt.getDecimals())).multiply(new BigDecimal(null == gnt.getGnt_category().getCap() ? "0" : gnt.getGnt_category().getCap().getPrice_usd())).setScale(2, BigDecimal.ROUND_DOWN).toString() + ")");
+        }
+    }
 
-            @Override
-            public void onCacheSuccess(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
-                super.onCacheSuccess(response);
-                onSuccess(response);
-            }
-
-            @Override
-            public void onError(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
-                super.onError(response);
-                if (NetworkUtils.isConnected(mActivity)){
-                    ToastUtil.show(getString(R.string.load_error));
-                }
-                if (page != 0) {
-                    page--;
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                if (null != swipeRefresh) {
-                    swipeRefresh.setRefreshing(false);
-                }
-            }
-        });
+    private void setEthBanlance(LzyResponse<CommonListBean<WalletCountBean>> response) {
+        if (null == tvPrice || null == tvChPrice || null == titlePrice) {
+            return;
+        }
+        totleEther = totleEther.multiply(new BigDecimal(0));
+        totlePrice = totlePrice.multiply(new BigDecimal(0));
+        ArrayList<WalletCountBean> walletPrices = response.data.getList();
+        BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
+        totleEther = totleEther.add(currentPrice);
+        if (1 == App.get().getUnit()) {
+            totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == walletPrices.get(0).getCategory().getCap() ? "0" : walletPrices.get(0).getCategory().getCap().getPrice_cny()))).setScale(2, BigDecimal.ROUND_DOWN);
+            tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_DOWN).toString());
+            tvChPrice.setText("≈￥" + totlePrice.toString());
+            titlePrice.setText("(￥" + totlePrice.toString() + ")");
+        } else {
+            totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == walletPrices.get(0).getCategory().getCap() ? "0" : walletPrices.get(0).getCategory().getCap().getPrice_usd()))).setScale(2, BigDecimal.ROUND_DOWN);
+            tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_DOWN).toString());
+            tvChPrice.setText("≈$" + totlePrice.toString());
+            titlePrice.setText("($" + totlePrice.toString() + ")");
+        }
     }
 
     @Override
@@ -544,21 +599,21 @@ public class TokenWalletActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private void LoadSuccess(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
+    private void LoadSuccess(LzyResponse<CommonListBean<OrderBean>> response) {
         if (page == 0) {
             mails.clear();
-            if (null != response.body().data.getList()) {
-                if (response.body().data.getList().size() < 10) {
+            if (null != response.data.getList()) {
+                if (response.data.getList().size() < 10) {
                     isEnd = true;
                 }
-                mails.addAll(response.body().data.getList());
+                mails.addAll(response.data.getList());
             }
         } else {
-            if (null != response.body().data.getList()) {
-                if (response.body().data.getList().size() < 10) {
+            if (null != response.data.getList()) {
+                if (response.data.getList().size() < 10) {
                     isEnd = true;
                 }
-                mails.addAll(response.body().data.getList());
+                mails.addAll(response.data.getList());
             }
         }
         adapter.notifyDataSetChanged();

@@ -7,7 +7,9 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.news.adapter.NoticeAdapter;
 import com.inwecrypto.wallet.ui.news.adapter.TradingNoticeAdapter;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
+import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,10 +70,14 @@ public class NoticeActivity extends BaseActivity {
     private ArrayList<NoticeBean> data=new ArrayList<>();
 
     private boolean isFirst;
+    private HeaderAndFooterWrapper footer;
+    private View footerView;
 
     private String lastId;
 
     private SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -102,10 +109,33 @@ public class NoticeActivity extends BaseActivity {
         });
 
         adapter=new NoticeAdapter(this,R.layout.jiaoyigonggao_item,data);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        footer=new HeaderAndFooterWrapper(adapter);
+        footerView= LayoutInflater.from(this).inflate(R.layout.empty_view,null,false);
+        footer.addFootView(footerView);
+
+        swipeRefresh.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= 16) {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeOnGlobalLayoutListener(this);
+                }
+                else {
+                    swipeRefresh.getViewTreeObserver()
+                            .removeGlobalOnLayoutListener(this);
+                }
+                swipeRefresh.getHeight(); // 获取高度
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) footerView.getLayoutParams();
+                params.height=swipeRefresh.getHeight()/4;
+                footerView.setLayoutParams(params);
+            }
+        });
+
+        linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         list.setLayoutManager(linearLayoutManager);
-        list.setAdapter(adapter);
+        list.setAdapter(footer);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -169,7 +199,7 @@ public class NoticeActivity extends BaseActivity {
             totle.add(tradingNotice);
         }
         data.addAll(0,totle);
-        adapter.notifyDataSetChanged();
+        footer.notifyDataSetChanged();
     }
 
     @Override
@@ -205,7 +235,10 @@ public class NoticeActivity extends BaseActivity {
             totle.add(tradingNotice);
         }
         data.addAll(totle);
-        adapter.notifyDataSetChanged();
+        if (data.size()==1){
+            linearLayoutManager.setStackFromEnd(false);
+        }
+        footer.notifyDataSetChanged();
     }
 
 

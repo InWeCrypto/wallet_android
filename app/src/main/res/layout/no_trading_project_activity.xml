@@ -1,79 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/c_ffffff"
     android:orientation="vertical">
 
-    <include layout="@layout/base_title_bar"/>
+    <include layout="@layout/base_title_bar" />
 
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="18dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="18dp"
-            android:orientation="vertical">
+            android:paddingRight="20dp">
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:scaleType="fitXY" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/img"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:scaleType="fitXY"/>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#262626"
-                            android:textSize="16sp"/>
-
-                        <TextView
-                            android:id="@+id/symble"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="2dp"
-                            android:textColor="#262626"
-                            android:textSize="13sp"/>
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/block_chain"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:textColor="@color/c_333333"
-                        android:textSize="11sp"/>
-
-                </LinearLayout>
-
-                <android.support.v4.widget.Space
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -81,275 +41,233 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/price"
+                        android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/c_333333"
-                        android:textSize="20sp"/>
+                        android:textColor="#262626"
+                        android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/charge"
+                        android:id="@+id/symble"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
-                        android:textColor="#FF680F"
-                        android:textSize="11sp"/>
-
+                        android:textColor="#262626"
+                        android:textSize="13sp" />
                 </LinearLayout>
-
-            </LinearLayout>
-
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="18dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#F6F6F6"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="13dp"
-                android:paddingBottom="13dp"
-                android:layout_gravity="center_vertical">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/no"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="15sp"
-                        android:textColor="@color/c_333333"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp"
-                        android:textColor="#C5C5C5"
-                        android:text="@string/guanzhuredu"/>
-
-                </LinearLayout>
-                <View
-                    android:layout_width="0.5dp"
-                    android:layout_height="34dp"
-                    android:background="#F6F6F6"/>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <com.inwecrypto.wallet.common.widget.RatingBar
-                            android:id="@+id/ratingbar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:layout_gravity="center"
-                            android:clickable="false"
-                            app:clickable="false"
-                            app:starCount="5"
-                            app:starEmpty="@mipmap/xiangmugaikuang_xing"
-                            app:starFill="@mipmap/xiangmugaikuang_xing_s"
-                            app:starHalf="@mipmap/xiangmugaikuang_xing"
-                            app:starImageSize="12dp"
-                            app:starPadding="4dp"
-                            app:starStep="1.5"
-                            app:stepSize="Full"/>
-
-                        <TextView
-                            android:id="@+id/fenshu"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/c_333333"
-                            android:textSize="15sp"/>
-
-                    </LinearLayout>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:textSize="11sp"
-                        android:textColor="#C5C5C5"
-                        android:text="@string/yonghupingfen"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#F6F6F6"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:textColor="@color/c_333333"
-                android:text="@string/xiangguanxinxi"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-                
-                <ImageView
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:src="@mipmap/xiangmugaikuang_shijian"/>
 
                 <TextView
-                    android:id="@+id/time"
+                    android:id="@+id/block_chain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:textColor="#FF571F"
-                    android:textSize="13sp"/>
-                
-            </LinearLayout>
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/c_333333"
+                    android:textSize="11sp" />
 
-            <FrameLayout
-                android:id="@+id/info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="20dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#F6F6F6"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:textSize="15sp"
-                android:textColor="@color/c_333333"
-                android:text="@string/icojiegou"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/ico_list"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:paddingTop="18dp"
-                    android:layout_height="wrap_content"/>
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <com.github.mikephil.charting.charts.PieChart
-                        android:id="@+id/mPieChart"
-                        android:layout_width="124dp"
-                        android:layout_height="124dp"/>
-                </FrameLayout>
             </LinearLayout>
 
             <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="160dp" />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-
-    <View
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#DEDEDE"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <FrameLayout
-            android:id="@+id/chart"
-            android:layout_width="0dp"
-            android:layout_weight="87"
-            android:visibility="gone"
-            android:background="@drawable/gaundian_bg"
-            android:layout_height="match_parent">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="12dp"
-                android:layout_gravity="center"
-                android:src="@mipmap/xiangmuzhuye_jianpan"/>
-        </FrameLayout>
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="#DEDEDE"
-            android:visibility="gone"/>
-
-        <LinearLayout
-            android:id="@+id/explore"
-            android:layout_width="0dp"
-            android:layout_weight="333"
-            android:background="@drawable/gaundian_bg"
-            android:clickable="true"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_height="match_parent">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="12dp"
-                android:src="@mipmap/xiangmuzhuye_caidan"/>
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_marginLeft="2dp"
-                android:text="@string/liulanqi"
-                android:textColor="#626262"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/c_333333"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/charge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:textColor="#FF680F"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
+
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="18dp" />
 
         <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="#DEDEDE"/>
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#F6F6F6" />
 
         <LinearLayout
-            android:id="@+id/wallet"
-            android:layout_width="0dp"
-            android:layout_weight="333"
-            android:background="@drawable/gaundian_bg"
-            android:clickable="true"
-            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="13dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="13dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/c_333333"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/guanzhuredu"
+                    android:textColor="#C5C5C5"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="34dp"
+                android:background="#F6F6F6" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.inwecrypto.wallet.common.widget.RatingBar
+                        android:id="@+id/ratingbar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:clickable="false"
+                        app:clickable="false"
+                        app:starCount="5"
+                        app:starEmpty="@mipmap/xiangmugaikuang_xing"
+                        app:starFill="@mipmap/xiangmugaikuang_xing_s"
+                        app:starHalf="@mipmap/xiangmugaikuang_xing"
+                        app:starImageSize="12dp"
+                        app:starPadding="4dp"
+                        app:starStep="1.5"
+                        app:stepSize="Full" />
+
+                    <TextView
+                        android:id="@+id/fenshu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/c_333333"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/yonghupingfen"
+                    android:textColor="#C5C5C5"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="#F8F8F8"
             android:orientation="horizontal"
-            android:layout_height="match_parent">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="12dp"
-                android:src="@mipmap/xiangmuzhuye_caidan"/>
-            <TextView
+            android:paddingBottom="4dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <LinearLayout
+                android:id="@+id/zonghell"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_marginLeft="2dp"
-                android:text="@string/qianbao"
-                android:textColor="#626262"/>
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/zonghe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="6dp"
+                    android:paddingTop="10dp"
+                    android:text="综合信息"
+                    android:textColor="#FF6806"
+                    android:textSize="13sp" />
+
+                <View
+                    android:id="@+id/l1"
+                    android:layout_width="20dp"
+                    android:layout_height="2dp"
+                    android:background="#FF6806" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/xiangmull"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/xiangmu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingBottom="6dp"
+                    android:paddingTop="10dp"
+                    android:text="项目概况"
+                    android:textColor="#ABABAB"
+                    android:textSize="13sp" />
+
+                <View
+                    android:id="@+id/l2"
+                    android:layout_width="20dp"
+                    android:layout_height="2dp"
+                    android:background="#FF6806"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
         </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 
 </LinearLayout>

@@ -323,7 +323,7 @@ public class GetGasActivity extends BaseActivity {
                         final AccountManager accountManager = AccountManager.get(mActivity);
                         Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                         for (int i = 0; i < accounts.length; i++) {
-                            if (accounts[i].name.equals(wallet.getAddress())) {
+                            if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                 //accountManager.getUserData(accounts[i], pass.getText().toString());
                                 b = accountManager.getUserData(accounts[i], "wallet");
                                 break;
@@ -348,7 +348,6 @@ public class GetGasActivity extends BaseActivity {
                             Tx tx=wallet.createClaimTx(new BigDecimal(neoBean.getGnt().get(0).getAvailable()).doubleValue(),wallet.address(),unspent);
                             data=tx.getData();
                             order="0x"+tx.getID();
-
                         } catch (Exception e) {
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -421,15 +420,7 @@ public class GetGasActivity extends BaseActivity {
             @Override
             public void onSuccess(Response<LzyResponse<UtxoBean>> response) {
                 if (null!=response){
-                    if (isClod){
-                        Intent intent = new Intent(mActivity,WatchNeoTransferAccountsNfcActivity.class);
-                        intent.putExtra("wallet",wallet);
-                        intent.putExtra("address",wallet.getAddress());
-                        intent.putExtra("price",new BigDecimal(neoBean.getBalance()).doubleValue());
-                        intent.putExtra("type",0);
-                        intent.putExtra("unspent",response.body());
-                        keepTogo(intent);
-                    }else {
+                    if (!isClod){
                         if (null!=response.body().data.getResult()){
                             String utxo=GsonUtils.objToJson(response.body().data.getResult());
                             srartTransfer(utxo);
@@ -474,7 +465,7 @@ public class GetGasActivity extends BaseActivity {
                         final AccountManager accountManager = AccountManager.get(mActivity);
                         Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                         for (int i = 0; i < accounts.length; i++) {
-                            if (accounts[i].name.equals(wallet.getAddress())) {
+                            if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                 //accountManager.getUserData(accounts[i], pass.getText().toString());
                                 b = accountManager.getUserData(accounts[i], "wallet");
                                 break;

@@ -18,27 +18,58 @@
             android:orientation="vertical">
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="46dp"/>
+                android:layout_height="40dp"/>
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@mipmap/tishi"/>
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@mipmap/new_hit"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="36dp"/>
+                android:layout_height="15dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/xuyaobeifen"
-                android:textSize="20dp"
-                android:textColor="#000000"/>
+                android:textSize="12dp"
+                android:textColor="@color/c_333333"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="24dp"/>
+                android:layout_height="40dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zhujici"
+                android:textSize="14dp"
+                android:textColor="@color/c_333333"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_6dp_zjc_bg"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:padding="10dp">
+
+                <com.zhy.view.flowlayout.TagFlowLayout
+                    android:id="@+id/id_flowlayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+            </FrameLayout>
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="60dp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -47,11 +78,11 @@
                 android:textSize="12dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:textColor="#000000"/>
+                android:textColor="@color/c_333333"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="10dp"/>
+                android:layout_height="16dp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -60,11 +91,11 @@
                 android:textSize="12dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:textColor="#000000"/>
+                android:textColor="@color/c_333333"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="10dp"/>
+                android:layout_height="16dp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -73,31 +104,11 @@
                 android:textSize="12dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:textColor="#000000"/>
+                android:textColor="@color/c_333333"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="24dp"/>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="120dp"
-                android:background="@drawable/round_6dp_gray_efefef_bg"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:padding="6dp">
-
-                <com.zhy.view.flowlayout.TagFlowLayout
-                    android:id="@+id/id_flowlayout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"/>
-
-            </FrameLayout>
-
-            <android.support.v4.widget.Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp"/>
+                android:layout_height="26dp"/>
 
             <TextView
                 android:id="@+id/add"
@@ -111,7 +122,7 @@
                 android:layout_marginRight="25dp"
                 android:gravity="center"
                 android:background="@drawable/new_orgen_bg"
-                android:text="@string/jinruqianbaokaishibeifen"/>
+                android:text="@string/kaishibeifenzhujici"/>
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"

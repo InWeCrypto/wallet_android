@@ -24,6 +24,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.QuickActivity;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.HotWalletActivity;
 import com.inwecrypto.wallet.ui.wallet.adapter.NeoWalletListAdapter;
 import com.lzy.okgo.model.Response;
@@ -92,6 +93,10 @@ public class  NewNeoWalletListActivity extends BaseActivity {
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 FragmentManager fm = getSupportFragmentManager();
                 CreateWalletFragment create = new CreateWalletFragment();
                 Bundle bundle = new Bundle();
@@ -160,12 +165,12 @@ public class  NewNeoWalletListActivity extends BaseActivity {
             public void onSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
                 wallet.clear();
                 if (null != response.body().data.getList()) {
-                    String wallets = App.get().getSp().getString(Constant.WALLETS, "");
-                    String wallets_beifen = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
+                    String wallets = App.get().getSp().getString(Constant.WALLETS, "").toLowerCase();
+                    String wallets_beifen = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "").toLowerCase();
+                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "").toLowerCase();
                     for (int i = 0; i < response.body().data.getList().size(); i++) {
-                        if (wallets.contains(response.body().data.getList().get(i).getAddress())) {
-                            if (wallets_beifen.contains(response.body().data.getList().get(i).getAddress()) || walletsZjc.contains(response.body().data.getList().get(i).getAddress())) {
+                        if (wallets.contains(response.body().data.getList().get(i).getAddress().toLowerCase())) {
+                            if (wallets_beifen.contains(response.body().data.getList().get(i).getAddress().toLowerCase()) || walletsZjc.contains(response.body().data.getList().get(i).getAddress().toLowerCase())) {
                                 response.body().data.getList().get(i).setType(Constant.BEIFEN);
                             } else {
                                 response.body().data.getList().get(i).setType(Constant.ZHENGCHANG);
@@ -176,12 +181,14 @@ public class  NewNeoWalletListActivity extends BaseActivity {
                         wallet.add(response.body().data.getList().get(i));
                     }
                 }
-
-                adapter.notifyDataSetChanged();
-
-                if (wallet.size()==0){
-                    emptyLl.setVisibility(View.VISIBLE);
+                if (null!=emptyLl){
+                    if (wallet.size()==0){
+                        emptyLl.setVisibility(View.VISIBLE);
+                    }else {
+                        emptyLl.setVisibility(View.GONE);
+                    }
                 }
+                adapter.notifyDataSetChanged();
             }
 
             @Override

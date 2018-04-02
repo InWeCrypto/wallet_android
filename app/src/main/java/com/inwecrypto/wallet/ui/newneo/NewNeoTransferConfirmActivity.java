@@ -146,7 +146,7 @@ public class NewNeoTransferConfirmActivity extends BaseActivity {
                         final AccountManager accountManager = AccountManager.get(mActivity);
                         Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                         for (int i = 0; i < accounts.length; i++) {
-                            if (accounts[i].name.equals(wallet.getAddress())) {
+                            if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                 //accountManager.getUserData(accounts[i], pass.getText().toString());
                                 b = accountManager.getUserData(accounts[i], "wallet");
                                 break;

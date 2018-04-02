@@ -47,6 +47,23 @@
             app:starPadding="10dp"
             app:starStep="0.1"
             app:stepSize="Half"/>
+        <com.inwecrypto.wallet.common.widget.RatingBar
+            android:id="@+id/ratingbar_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:focusable="false"
+            app:starCount="5"
+            app:starEmpty="@mipmap/xiangmugaikuang_xing"
+            app:starFill="@mipmap/xiangmugaikuang_xing_s"
+            app:starHalf="@mipmap/xiangmugaikuang_xing"
+            app:starImageSize="30dp"
+            app:starPadding="10dp"
+            app:starStep="0.1"
+            app:stepSize="Half"
+            app:clickable="false"/>
     </FrameLayout>
 
     <Space

@@ -8,19 +8,19 @@
     <include layout="@layout/base_title_bar"/>
 
     <ImageView
-        android:layout_width="265dp"
-        android:layout_height="186dp"
-        android:layout_marginTop="55dp"
+        android:id="@+id/img"
+        android:layout_width="144dp"
+        android:layout_height="122dp"
+        android:layout_marginTop="80dp"
         android:layout_gravity="center_horizontal"
-        android:layout_centerInParent="true"
-        android:src="@mipmap/pic_sucess"/>
+        android:layout_centerInParent="true"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/tianjiachenggong"
         android:textSize="18dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="40dp"
         android:textColor="@color/c_008c55"
         android:layout_gravity="center_horizontal"/>
 
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:text="@string/keystorebeifentishi"
         android:textSize="14dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="60dp"
         android:layout_marginLeft="34dp"
         android:layout_marginRight="34dp"
         android:textColor="#666666"
@@ -39,9 +39,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-
+ß
     <TextView
-        android:id="@+id/tv_go"
+        android:id="@+id/tv_beifen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/c_ffffff"
@@ -52,10 +52,24 @@
         android:layout_marginRight="25dp"
         android:gravity="center"
         android:background="@drawable/new_orgen_bg"
-        android:text="@string/jinruqianbaokaishibeifen"/>
+        android:text="@string/kaishibeifenzhujici"/>
 
     <android.support.v4.widget.Space
         android:layout_width="match_parent"
-        android:layout_height="46dp" />
+        android:layout_height="12dp" />
+
+    <TextView
+        android:id="@+id/gotoWallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#666666"
+        android:padding="8dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/zanbubeifenzhijiejinruqianbao"
+        android:textSize="14sp"/>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="32dp" />
 
 </LinearLayout>

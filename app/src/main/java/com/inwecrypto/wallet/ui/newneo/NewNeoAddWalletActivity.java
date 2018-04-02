@@ -175,10 +175,11 @@ public class NewNeoAddWalletActivity extends BaseActivity {
                     String address="";
                     final String json=wallet.toKeyStore(etPs.getText().toString());
                     address=wallet.address();
+                    final String zjc=wallet.mnemonic(App.get().isZh()?"zh_CN":"en_US");
                     final String finalAddress = address.toLowerCase();
                     if (null!=wallets){
                         for (WalletBean walletBean:wallets){
-                            if (address.contains(walletBean.getAddress().toLowerCase())){
+                            if (address.toLowerCase().contains(walletBean.getAddress().toLowerCase())){
                                 mActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -190,7 +191,7 @@ public class NewNeoAddWalletActivity extends BaseActivity {
                             }
                         }
                     }
-                    WalletApi.wallet(mActivity,1,etName.getText().toString() , finalAddress,"", new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
+                    WalletApi.wallet(mActivity,1,etName.getText().toString() , address,"", new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
                         @Override
                         public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
                             //将钱包保存到ACCOUNTMANAGER
@@ -211,6 +212,7 @@ public class NewNeoAddWalletActivity extends BaseActivity {
                                     WalletBean.CategoryBean category=new WalletBean.CategoryBean();
                                     category.setName("ETH");
                                     walletBean.setCategory(category);
+                                    intent.putExtra("zjc",zjc);
                                     intent.putExtra("wallet",walletBean);
                                     finshTogo(intent);
                                 }
@@ -267,6 +269,7 @@ public class NewNeoAddWalletActivity extends BaseActivity {
                     Wallet neowallet = Neomobile.new_();
                     final String keyStore = neowallet.toKeyStore(etPs.getText().toString().trim());
                     String address = neowallet.address();
+                    final String zjc=neowallet.mnemonic(App.get().isZh()?"zh_CN":"en_US");
                     final String finalAddress = address;
                     if (null != wallets) {
                         for (WalletBean walletBean : wallets) {
@@ -317,6 +320,7 @@ public class NewNeoAddWalletActivity extends BaseActivity {
                                     WalletBean.CategoryBean category = new WalletBean.CategoryBean();
                                     category.setName("NEO");
                                     walletBean.setCategory(category);
+                                    intent.putExtra("zjc",zjc);
                                     intent.putExtra("wallet", walletBean);
                                     finshTogo(intent);
                                 }

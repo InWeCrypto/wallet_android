@@ -57,6 +57,7 @@ public class TradingNoticeHistoryActivity extends BaseActivity {
 
     private TradingNoticeHistoryAdapter adapter;
     private ArrayList<TradingNoticeBean> data=new ArrayList<>();
+    private EndLessOnScrollListener scrollListener;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -83,7 +84,7 @@ public class TradingNoticeHistoryActivity extends BaseActivity {
         layoutManager = new LinearLayoutManager(this);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
-        list.addOnScrollListener(new EndLessOnScrollListener(layoutManager) {
+        scrollListener=new EndLessOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore() {
                 if (isEnd) {
@@ -95,13 +96,16 @@ public class TradingNoticeHistoryActivity extends BaseActivity {
                     loadMore();
                 }
             }
-        });
+        };
+        list.addOnScrollListener(scrollListener);
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 isEnd = false;
+                isShow=false;
+                scrollListener.reset();
                 initData();
             }
         });

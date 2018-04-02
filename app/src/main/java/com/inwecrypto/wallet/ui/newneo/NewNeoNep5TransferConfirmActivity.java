@@ -193,7 +193,7 @@ public class NewNeoNep5TransferConfirmActivity extends BaseActivity {
                         final AccountManager accountManager = AccountManager.get(mActivity);
                         Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                         for (int i = 0; i < accounts.length; i++) {
-                            if (accounts[i].name.equals(wallet.getAddress())) {
+                            if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                 //accountManager.getUserData(accounts[i], pass.getText().toString());
                                 b = accountManager.getUserData(accounts[i], "wallet");
                                 break;
@@ -216,7 +216,12 @@ public class NewNeoNep5TransferConfirmActivity extends BaseActivity {
                         String order = "";
                         try {
                             amount = new BigDecimal(price).multiply(new BigDecimal(10).pow(Integer.parseInt(tokenBean.getDecimals()))).longValue();
-                            Tx tx = wallet.createNep5Tx(tokenBean.getGnt_category().getAddress(), Neomobile.decodeAddress(wallet.address()), Neomobile.decodeAddress(etAddress.getText().toString().trim()), 0d, amount, unspent);
+                            Tx tx = wallet.createNep5Tx(tokenBean.getGnt_category().getAddress()
+                                    , Neomobile.decodeAddress(wallet.address())
+                                    , Neomobile.decodeAddress(etAddress.getText().toString().trim())
+                                    , 0d
+                                    , amount
+                                    , unspent);
                             data = tx.getData();
                             order = "0x" + tx.getID();
                         } catch (Exception e) {

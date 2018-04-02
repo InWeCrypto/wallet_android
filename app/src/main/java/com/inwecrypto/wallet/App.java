@@ -29,6 +29,8 @@ import com.inwecrypto.wallet.bean.LoginBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.SPUtils;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.wanjian.cockroach.Cockroach;
 
 import okhttp3.OkHttpClient;
@@ -48,14 +50,26 @@ public class App extends Application{
     private int defaultLangue=1;
     private boolean isLogin;
 
+    public static final String APP_ID="wxd346a4033d5a09a3";
+    public static IWXAPI api;
+
     @Override
     public void onCreate() {
         super.onCreate();
         this.app=this;
 
+        // android 7.0系统解决拍照的问题
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
+
+        //初始化微信
+        api = WXAPIFactory.createWXAPI(this,APP_ID,false);
+        api.registerApp(APP_ID);
+
         //初始化SP
         sp=new SPUtils(this, Constant.SP_NAME);
-        isMain=sp.getBoolean(Constant.NET,true);
+        isMain=sp.getBoolean(Constant.NET,false);
         if (sp.getBoolean(Constant.UNIT_CHANGE,false)){
             if (isZh()){
                 defaultLangue=1;
@@ -92,8 +106,10 @@ public class App extends Application{
         if (!sp.getBoolean(Constant.LANGUE_CHANGE,false)){
             if (isLocle()){
                 sp.putBoolean(Constant.IS_CHINESE,true);
+                defaultLangue=1;
             }else {
                 sp.putBoolean(Constant.IS_CHINESE,false);
+                defaultLangue=2;
             }
         }
         Locale _UserLocale= LocaleUtils.getUserLocale(this);
@@ -231,14 +247,6 @@ public class App extends Application{
             }
         });
 
-    }
-
-    private static void enabledStrictMode() {
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
-                .detectAll() //
-                .penaltyLog() //
-                .penaltyDeath() //
-                .build());
     }
 
     public boolean isZh() {

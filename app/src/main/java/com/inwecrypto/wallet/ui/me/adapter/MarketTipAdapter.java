@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.ProjectDetaileBean;
 import com.zhy.adapter.recyclerview.CommonAdapter;
@@ -32,10 +33,14 @@ public class MarketTipAdapter extends CommonAdapter<ProjectDetaileBean> {
                     .crossFade()
                     .into((ImageView) holder.getView(R.id.img));
         }
+        holder.setText(R.id.name,projectDetaileBean.getName());
+        holder.setText(R.id.smbyle,"("+projectDetaileBean.getLong_name()+")");
         if (null!=projectDetaileBean.getIco()){
-            holder.setText(R.id.name,projectDetaileBean.getIco().getName());
-            holder.setText(R.id.smbyle,"("+projectDetaileBean.getIco().getSymbol()+")");
-            holder.setText(R.id.price,"$"+projectDetaileBean.getIco().getPrice_usd());
+            if (App.get().getUnit()==1){
+                holder.setText(R.id.price,"¥"+projectDetaileBean.getIco().getPrice_cny());
+            }else {
+                holder.setText(R.id.price,"$"+projectDetaileBean.getIco().getPrice_usd());
+            }
             holder.setText(R.id.charge,"("+projectDetaileBean.getIco().getPercent_change_24h()+"%)");
             if (projectDetaileBean.getIco().getPercent_change_24h().contains("-")){
                 holder.setText(R.id.charge,"("+projectDetaileBean.getIco().getPercent_change_24h()+"%)");
@@ -47,17 +52,21 @@ public class MarketTipAdapter extends CommonAdapter<ProjectDetaileBean> {
         }else {
             holder.setText(R.id.name,"");
             holder.setText(R.id.smbyle,"()");
-            holder.setText(R.id.price,"$----");
+            if (App.get().getUnit()==1){
+                holder.setText(R.id.price,"¥----");
+            }else {
+                holder.setText(R.id.price,"$----");
+            }
             holder.setText(R.id.charge,"(--)");
 
         }
 
         if (null!=projectDetaileBean.getCategory_user()){
-            holder.setText(R.id.hight,mContext.getString(R.string.above)+" $"+projectDetaileBean.getCategory_user().getMarket_hige());
-            holder.setText(R.id.low,mContext.getString(R.string.above)+" $"+projectDetaileBean.getCategory_user().getMarket_lost());
+            holder.setText(R.id.hight,mContext.getString(R.string.jiageshangxian_me)+" $"+projectDetaileBean.getCategory_user().getMarket_hige());
+            holder.setText(R.id.low,mContext.getString(R.string.jiagexiaxian_me)+" $"+projectDetaileBean.getCategory_user().getMarket_lost());
         }else {
-            holder.setText(R.id.hight,mContext.getString(R.string.above)+" $----");
-            holder.setText(R.id.low,mContext.getString(R.string.above)+" $----");
+            holder.setText(R.id.hight,mContext.getString(R.string.jiageshangxian_me)+" $----");
+            holder.setText(R.id.low,mContext.getString(R.string.jiagexiaxian_me)+" $----");
         }
     }
 }

@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,10 +31,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.event.KeyEvent;
 import com.inwecrypto.wallet.ui.ScanActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.AddWalletListActivity;
 import com.inwecrypto.wallet.ui.wallet.activity.HotWalletActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.ImportWalletActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.ImportWalletTypeActivity;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
@@ -94,6 +93,11 @@ public class  NewImprotWalletActivity extends BaseActivity {
 
     private boolean isNeo;
 
+    private String type1="";
+    private String type2="";
+    private String type3="";
+    private String type4="";
+
     @Override
     protected void getBundleExtras(Bundle extras) {
         wallets = (ArrayList<WalletBean>) extras.getSerializable("wallets");
@@ -149,6 +153,34 @@ public class  NewImprotWalletActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 selectType(4);
+            }
+        });
+
+        etInfo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                switch (type){
+                    case 1:
+                        type1=s.toString();
+                        break;
+                    case 2:
+                        type2=s.toString();
+                        break;
+                    case 3:
+                        type3=s.toString();
+                        break;
+                    case 4:
+                        type4=s.toString();
+                        break;
+                }
             }
         });
 
@@ -240,9 +272,9 @@ public class  NewImprotWalletActivity extends BaseActivity {
                     switch (type){
                         case 1:
                             wallet=Ethmobile.fromKeyStore(scanKey,pass);
-                            address=wallet.address().toLowerCase();
+                            address=wallet.address();
                             json=scanKey;
-                            if (!scanKey.toLowerCase().contains(address.replace("0x",""))){
+                            if (!scanKey.toLowerCase().contains(address.toLowerCase().replace("0x",""))){
                                 mActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -254,12 +286,12 @@ public class  NewImprotWalletActivity extends BaseActivity {
                             break;
                         case 2:
                             wallet=Ethmobile.fromMnemonic(scanKey,App.get().isZh()?"zh_CN":"en_US");
-                            address=wallet.address().toLowerCase();
+                            address=wallet.address();
                             json=wallet.toKeyStore(pass);
                             break;
                         case 3:
                             wallet=Ethmobile.fromPrivateKey(AppUtil.hexStringToBytes(scanKey));
-                            address=wallet.address().toLowerCase();
+                            address=wallet.address();
                             json=wallet.toKeyStore(pass);
                             break;
                         case 4:
@@ -279,7 +311,7 @@ public class  NewImprotWalletActivity extends BaseActivity {
                     }
 
                     final String finalJson = json;
-                    final String finalAddress = address;
+                    final String finalAddress = address.toLowerCase();
                     WalletApi.wallet(mActivity,1, name, address,"", new JsonCallback<LzyResponse<CommonRecordBean<WalletBean>>>() {
                         @Override
                         public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
@@ -395,7 +427,7 @@ public class  NewImprotWalletActivity extends BaseActivity {
 
                     if (null != wallets) {
                         for (WalletBean walletBean : wallets) {
-                            if (address.contains(walletBean.getAddress())) {
+                            if (address.toLowerCase().contains(walletBean.getAddress().toLowerCase())) {
                                 mActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -409,7 +441,7 @@ public class  NewImprotWalletActivity extends BaseActivity {
                     }
 
                     final String finalKeystory = keystory;
-                    final String finalAddress = address;
+                    final String finalAddress = address.toLowerCase();
                     String hashAddress = "";
                     try {
                         hashAddress = Neomobile.decodeAddress(address);
@@ -429,7 +461,7 @@ public class  NewImprotWalletActivity extends BaseActivity {
                         public void onSuccess(final Response<LzyResponse<CommonRecordBean<WalletBean>>> response) {
                             if (4 != type) {
                                 //将钱包保存到ACCOUNTMANAGER
-                                saveWallet(finalKeystory, finalAddress, pass, name, Constant.ZHENGCHANG);
+                                saveWallet(finalKeystory, finalAddress.toLowerCase(), pass, name, Constant.ZHENGCHANG);
                             }
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
@@ -510,21 +542,25 @@ public class  NewImprotWalletActivity extends BaseActivity {
         switch (type) {
             case 1:
                 etInfo.setHint(R.string.keystore_hit);
+                etInfo.setText(type1);
                 keystore.setTextColor(getResources().getColor(R.color.c_0A9234));
                 l1.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 etInfo.setHint(R.string.zhujici_hit);
+                etInfo.setText(type2);
                 word.setTextColor(getResources().getColor(R.color.c_0A9234));
                 l2.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 etInfo.setHint(R.string.siyao_hit);
+                etInfo.setText(type3);
                 key.setTextColor(getResources().getColor(R.color.c_0A9234));
                 l3.setVisibility(View.VISIBLE);
                 break;
             case 4:
                 etInfo.setHint(R.string.guancha_hit);
+                etInfo.setText(type4);
                 address.setTextColor(getResources().getColor(R.color.c_0A9234));
                 l4.setVisibility(View.VISIBLE);
                 break;

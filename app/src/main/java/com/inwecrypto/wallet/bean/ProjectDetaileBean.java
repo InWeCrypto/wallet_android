@@ -61,6 +61,15 @@ public class ProjectDetaileBean implements Serializable {
     private String charge;
     private String time;
     private String message;
+    private boolean hasMarket=true;
+
+    public boolean isHasMarket() {
+        return hasMarket;
+    }
+
+    public void setHasMarket(boolean hasMarket) {
+        this.hasMarket = hasMarket;
+    }
 
     public String getTime() {
         return time;

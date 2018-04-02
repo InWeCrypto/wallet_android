@@ -1,5 +1,8 @@
 package com.inwecrypto.wallet.common.widget.chart;
 
+import com.inwecrypto.wallet.App;
+import com.inwecrypto.wallet.R;
+
 import java.text.DecimalFormat;
 
 /**
@@ -17,9 +20,9 @@ public class MyUtils {
         int e = (int) Math.floor(Math.log10(num));
 
         if (e >= 8) {
-            return "亿";
+            return App.get().getResources().getString(R.string.yi);
         } else if (e >= 4) {
-            return "万";
+            return App.get().getResources().getString(R.string.wan);
         } else {
             return "";
         }

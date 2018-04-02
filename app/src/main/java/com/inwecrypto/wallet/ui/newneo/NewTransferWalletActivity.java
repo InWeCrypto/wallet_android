@@ -23,12 +23,10 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.event.KeyEvent;
 import com.inwecrypto.wallet.ui.ScanActivity;
-import com.inwecrypto.wallet.ui.wallet.activity.WatchImportWalletTypeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import ethmobile.Ethmobile;
 import neomobile.Neomobile;
 import neomobile.Wallet;
@@ -224,7 +222,7 @@ public class NewTransferWalletActivity extends BaseActivity {
                             wallet = Ethmobile.fromKeyStore(scanKey, pass);
                             keystory = scanKey;
                             address = wallet.address();
-                            if (!address.toLowerCase().equals(watchWallet.getAddress())) {
+                            if (!address.toLowerCase().equals(watchWallet.getAddress().toLowerCase())) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -239,7 +237,7 @@ public class NewTransferWalletActivity extends BaseActivity {
                             wallet = Ethmobile.fromMnemonic(scanKey,App.get().isZh()?"zh_CN":"en_US");
                             address = wallet.address();
                             keystory = wallet.toKeyStore(pass);
-                            if (!address.toLowerCase().equals(watchWallet.getAddress())) {
+                            if (!address.toLowerCase().equals(watchWallet.getAddress().toLowerCase())) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -254,7 +252,7 @@ public class NewTransferWalletActivity extends BaseActivity {
                             wallet = Ethmobile.fromPrivateKey(AppUtil.hexStringToBytes(scanKey));
                             address = wallet.address();
                             keystory = wallet.toKeyStore(pass);
-                            if (!address.toLowerCase().equals(watchWallet.getAddress())) {
+                            if (!address.toLowerCase().equals(watchWallet.getAddress().toLowerCase())) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -266,7 +264,7 @@ public class NewTransferWalletActivity extends BaseActivity {
                             }
                             break;
                         case 4:
-                            address = scanKey.toLowerCase();
+                            address = scanKey;
                             break;
                     }
 
@@ -289,7 +287,6 @@ public class NewTransferWalletActivity extends BaseActivity {
                         public void run() {
                             hideLoading();
                             ToastUtil.show(getString(R.string.qianbaozhuanhuachenggong));
-                            AppManager.getAppManager().finishActivity(WatchImportWalletTypeActivity.class);
                             EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WATCH_TRANSFER));
                             finish();
                         }
@@ -334,7 +331,7 @@ public class NewTransferWalletActivity extends BaseActivity {
                             wallet = Neomobile.fromKeyStore(scanKey, pass);
                             keystory = scanKey;
                             address = wallet.address();
-                            if (!address.equals(watchWallet.getAddress())) {
+                            if (!address.toLowerCase().equals(watchWallet.getAddress().toLowerCase())) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -349,7 +346,7 @@ public class NewTransferWalletActivity extends BaseActivity {
                             wallet = Neomobile.fromMnemonic(scanKey,App.get().isZh()?"zh_CN":"en_US");
                             address = wallet.address();
                             keystory = wallet.toKeyStore(pass);
-                            if (!address.equals(watchWallet.getAddress())) {
+                            if (!address.toLowerCase().equals(watchWallet.getAddress().toLowerCase())) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -364,7 +361,7 @@ public class NewTransferWalletActivity extends BaseActivity {
                             wallet = Neomobile.fromWIF(scanKey);
                             address = wallet.address();
                             keystory = wallet.toKeyStore(pass);
-                            if (!address.equals(watchWallet.getAddress())) {
+                            if (!address.toLowerCase().equals(watchWallet.getAddress().toLowerCase())) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -392,14 +389,13 @@ public class NewTransferWalletActivity extends BaseActivity {
                         return;
                     }
 
-                    saveWallet(keystory, address, pass, watchWallet.getName(), Constant.ZHENGCHANG);
+                    saveWallet(keystory, address.toLowerCase(), pass, watchWallet.getName(), Constant.ZHENGCHANG);
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             hideLoading();
                             ToastUtil.show(getString(R.string.qianbaozhuanhuachenggong));
-                            AppManager.getAppManager().finishActivity(WatchImportWalletTypeActivity.class);
                             EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WATCH_TRANSFER));
                             finish();
                         }

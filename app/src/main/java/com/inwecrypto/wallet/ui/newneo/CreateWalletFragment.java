@@ -32,6 +32,8 @@ public class CreateWalletFragment extends DialogFragment {
     private ArrayList<WalletBean> wallets;
     private boolean isNeo=true;
     private boolean isImport;
+    private boolean hasType;
+    private boolean isEth;
 
     @NonNull
     @Override
@@ -51,6 +53,12 @@ public class CreateWalletFragment extends DialogFragment {
         window.setAttributes(lp);
 
         wallets= (ArrayList<WalletBean>) getArguments().getSerializable("wallets");
+
+        hasType=getArguments().getBoolean("hasType",false);
+
+        if (hasType){
+            isEth=getArguments().getBoolean("isEth",false);
+        }
 
         addLayout = (LinearLayout) dialog.findViewById(R.id.add_newwallet_layout);
         typeLayout = (LinearLayout) dialog.findViewById(R.id.wallet_type_layout);//付款详情
@@ -110,10 +118,30 @@ public class CreateWalletFragment extends DialogFragment {
                 case R.id.import_wallet:
                     isImport=true;
                 case R.id.add_new:
-                    addLayout.startAnimation(slide_left_to_left);
-                    addLayout.setVisibility(View.GONE);
-                    typeLayout.startAnimation(slide_right_to_left);
-                    typeLayout.setVisibility(View.VISIBLE);
+                    if (hasType){
+                        if (isEth){
+                            isNeo=false;
+                        }else {
+                            isNeo=true;
+                        }
+                        if (isImport){
+                            Intent intent=new Intent(getActivity(),NewImprotWalletActivity.class);
+                            intent.putExtra("wallets",wallets);
+                            intent.putExtra("isNeo",isNeo);
+                            startActivity(intent);
+                            CreateWalletFragment.this.getDialog().cancel();
+                        }else {
+                            addLayout.startAnimation(slide_left_to_left);
+                            addLayout.setVisibility(View.GONE);
+                            innerTypeLayout.startAnimation(slide_right_to_left);
+                            innerTypeLayout.setVisibility(View.VISIBLE);
+                        }
+                    }else {
+                        addLayout.startAnimation(slide_left_to_left);
+                        addLayout.setVisibility(View.GONE);
+                        typeLayout.startAnimation(slide_right_to_left);
+                        typeLayout.setVisibility(View.VISIBLE);
+                    }
                     break;
                 case R.id.eth:
                     isNeo=false;
@@ -140,10 +168,17 @@ public class CreateWalletFragment extends DialogFragment {
                     typeLayout.setVisibility(View.GONE);
                     break;
                 case R.id.back2:
-                    typeLayout.startAnimation(slide_left_to_left_in);
-                    typeLayout.setVisibility(View.VISIBLE);
-                    innerTypeLayout.startAnimation(slide_left_to_right);
-                    innerTypeLayout.setVisibility(View.GONE);
+                    if (hasType){
+                        addLayout.startAnimation(slide_left_to_left_in);
+                        addLayout.setVisibility(View.VISIBLE);
+                        innerTypeLayout.startAnimation(slide_left_to_right);
+                        innerTypeLayout.setVisibility(View.GONE);
+                    }else {
+                        typeLayout.startAnimation(slide_left_to_left_in);
+                        typeLayout.setVisibility(View.VISIBLE);
+                        innerTypeLayout.startAnimation(slide_left_to_right);
+                        innerTypeLayout.setVisibility(View.GONE);
+                    }
                     break;
                 default:
                     break;

@@ -9,12 +9,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 
 import com.inwecrypto.wallet.R;
+import com.inwecrypto.wallet.common.util.ToastUtil;
 
 import java.math.BigDecimal;
 
@@ -187,6 +189,21 @@ public class RatingBar extends LinearLayout {
             addView(imageView);
         }
         setStar(starStep);
+    }
+
+    private boolean isInter=true;
+
+    public void setIsInter(boolean isInter){
+        this.isInter=isInter;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (!isInter){
+            ToastUtil.show(getContext().getString(R.string.gaixiangmuyijngpingfen));
+            return false;
+        }
+        return super.onInterceptTouchEvent(ev);
     }
 
     /**

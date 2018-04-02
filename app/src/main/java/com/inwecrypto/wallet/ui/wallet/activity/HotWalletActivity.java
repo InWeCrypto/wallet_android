@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +24,6 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
@@ -39,6 +37,7 @@ import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AnimUtil;
 import com.inwecrypto.wallet.common.util.AppUtil;
+import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ScreenUtils;
@@ -48,9 +47,10 @@ import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.common.widget.SwipeRefreshLayoutCompat;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.QuickActivity;
+import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.newneo.InputPassFragment;
-import com.inwecrypto.wallet.ui.newneo.NewNeoReciveActivity;
 import com.inwecrypto.wallet.ui.newneo.NewTransferWalletActivity;
+import com.inwecrypto.wallet.ui.newneo.NewsProjectActivity;
 import com.inwecrypto.wallet.ui.wallet.adapter.GntAdapter;
 import com.lzy.okgo.model.Response;
 import com.r0adkll.slidr.Slidr;
@@ -66,14 +66,12 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import ethmobile.Ethmobile;
 import ethmobile.Wallet;
 import me.grantland.widget.AutofitTextView;
@@ -147,7 +145,13 @@ public class HotWalletActivity extends BaseActivity {
     SwipeRefreshLayoutCompat swipeRefresh;
     @BindView(R.id.card_bg)
     ImageView cardBg;
+    @BindView(R.id.hide)
+    ImageView hide;
+    @BindView(R.id.hidell)
+    LinearLayout hidell;
+
     private ArrayList<TokenBean.ListBean> data = new ArrayList<>();
+    private ArrayList<TokenBean.ListBean> showData = new ArrayList<>();
     private GntAdapter adapter;
 
     private WalletBean wallet;
@@ -169,6 +173,8 @@ public class HotWalletActivity extends BaseActivity {
     private String neoTotleChPrice = "0.00";
     private String neoTotleUsdPrice = "0.00";
 
+    private boolean isHide;
+
     @Override
     protected void getBundleExtras(Bundle extras) {
         wallet = (WalletBean) extras.getSerializable("wallet");
@@ -182,8 +188,8 @@ public class HotWalletActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) cardBg.getLayoutParams();
-        params.height= (int) ((ScreenUtils.getScreenWidth(this)-DensityUtil.dip2px(this,52))/1956.0*1176.0);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) cardBg.getLayoutParams();
+        params.height = (int) ((ScreenUtils.getScreenWidth(this) - DensityUtil.dip2px(this, 52)) / 1956.0 * 1176.0);
         cardBg.setLayoutParams(params);
 
         SlidrConfig config = new SlidrConfig.Builder()
@@ -205,6 +211,9 @@ public class HotWalletActivity extends BaseActivity {
         appbarlayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (null==swipeRefresh){
+                    return;
+                }
                 if (verticalOffset >= 0) {
                     swipeRefresh.setEnabled(true);
                 } else {
@@ -266,6 +275,10 @@ public class HotWalletActivity extends BaseActivity {
         token.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 Intent intent = new Intent(mActivity, AddTokenActivity.class);
                 intent.putExtra("id", wallet.getCategory_id());
                 intent.putExtra("walletId", wallet.getId());
@@ -332,11 +345,24 @@ public class HotWalletActivity extends BaseActivity {
         news.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.show(getString(R.string.jinqingqidai));
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
+                StringBuilder sb = new StringBuilder();
+                sb.append("[\"ETH\"");
+
+                for (TokenBean.ListBean token : data) {
+                    sb.append(",\"" + token.getName().toUpperCase() + "\"");
+                }
+                sb.append("]");
+                Intent intent = new Intent(mActivity, NewsProjectActivity.class);
+                intent.putExtra("projects", sb.toString());
+                keepTogo(intent);
             }
         });
 
-        adapter = new GntAdapter(this, R.layout.wallet_item, data);
+        adapter = new GntAdapter(this, R.layout.wallet_item, showData);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
@@ -367,8 +393,12 @@ public class HotWalletActivity extends BaseActivity {
         list.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
             @Override
             public void onItemClick(SwipeMenuBridge menuBridge) {
+                if (!App.get().isLogin()){
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
                 if (menuBridge.getPosition() == 0) {//删除
-                    WalletApi.userGntDelete(mActivity, data.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
+                    WalletApi.userGntDelete(mActivity, showData.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
                         @Override
                         public void onSuccess(Response<LzyResponse<Object>> response) {
                             list.smoothCloseMenu();
@@ -385,7 +415,7 @@ public class HotWalletActivity extends BaseActivity {
                     });
 
                 } else if (menuBridge.getPosition() == 1) {//顶置
-                    WalletApi.userGnt(mActivity, data.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
+                    WalletApi.userGnt(mActivity, showData.get(menuBridge.getAdapterPosition()).getId(), new JsonCallback<LzyResponse<Object>>() {
                         @Override
                         public void onSuccess(Response<LzyResponse<Object>> response) {
                             list.smoothCloseMenu();
@@ -424,7 +454,7 @@ public class HotWalletActivity extends BaseActivity {
                 }
                 Intent intent = new Intent(mActivity, TokenWalletActivity.class);
                 intent.putExtra("isEht", false);
-                intent.putExtra("gnt", data.get(position));
+                intent.putExtra("gnt", showData.get(position));
                 intent.putExtra("wallet", wallet);
                 keepTogo(intent);
             }
@@ -443,12 +473,48 @@ public class HotWalletActivity extends BaseActivity {
             changeSee(0, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
         }
 
+        isHide=App.get().getSp().getBoolean(Constant.HIDE,false);
+        if (isHide){
+            hide.setImageResource(R.mipmap.hide_zero_selecte);
+        }else {
+            hide.setImageResource(R.mipmap.hide_zero_normal);
+        }
+
+        hidell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isHide){
+                    isHide=false;
+                    hide.setImageResource(R.mipmap.hide_zero_normal);
+                }else {
+                    isHide=true;
+                    hide.setImageResource(R.mipmap.hide_zero_selecte);
+                }
+                showData.clear();
+                //刷新数据
+                if (isHide){
+                    for (int i=0;i<data.size();i++){
+                        BigDecimal currentPrice = new BigDecimal(AppUtil.toD(data.get(i).getBalance().replace("0x", "0")));
+                        if (currentPrice.floatValue()!=0){
+                            showData.add(data.get(i));
+                        }
+                    }
+                }else {
+                    showData.addAll(data);
+                }
+
+                adapter.notifyDataSetChanged();
+                App.get().getSp().putBoolean(Constant.HIDE,isHide);
+                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_HIDE,isHide));
+            }
+        });
+
         name.setText(wallet.getName());
         address.setText(wallet.getAddress());
         switch (new Integer(wallet.getType())) {
             case 0:
-                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                if (wallets.contains(wallet.getAddress())) {
+                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "").toLowerCase();
+                if (wallets.contains(wallet.getAddress().toLowerCase())) {
                     state.setVisibility(View.GONE);
                 } else {
                     state.setVisibility(View.VISIBLE);
@@ -483,18 +549,18 @@ public class HotWalletActivity extends BaseActivity {
             timer.schedule(task, 30000, 30000);
         }
 
-        if (App.get().getSp().getBoolean(Constant.FIRST_4,true)){
+        if (App.get().getSp().getBoolean(Constant.FIRST_4, true)) {
             swipeRefresh.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    int[] location=new int[2];
+                    int[] location = new int[2];
                     recive.getLocationOnScreen(location);
-                    Intent intent=new Intent(mActivity,QuickActivity.class);
-                    intent.putExtra("type",4);
-                    intent.putExtra("y",location[1]);
+                    Intent intent = new Intent(mActivity, QuickActivity.class);
+                    intent.putExtra("type", 4);
+                    intent.putExtra("y", location[1]);
                     keepTogo(intent);
                 }
-            },300);
+            }, 300);
         }
     }
 
@@ -519,108 +585,153 @@ public class HotWalletActivity extends BaseActivity {
         isEth = false;
         isToken = false;
         String sb = "[" + wallet.getId() + "]";
-        WalletApi.conversionWallet(mActivity, sb.toString(), new JsonCallback<LzyResponse<CommonListBean<WalletCountBean>>>() {
-            @Override
-            public void onSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
-                if (null == topPrice || null == amount || null == neoPrice || null == neoChPrice) {
-                    return;
-                }
-                ETHEther = ETHEther.multiply(new BigDecimal(0));
-                ETHPrice = ETHPrice.multiply(new BigDecimal(0));
-                ArrayList<WalletCountBean> walletPrices = response.body().data.getList();
-                BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
-                ETHEther = ETHEther.add(currentPrice).divide(Constant.pEther, 4, BigDecimal.ROUND_DOWN);
-                if (1 == App.get().getUnit()) {
-                    ETHPrice = ETHPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_cny())));
-                    neoPrice.setText(ETHEther.toString());
-                    neoTotleChPrice=ETHPrice.setScale(2, BigDecimal.ROUND_DOWN).toString();
-                } else {
-                    ETHPrice = ETHPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_usd())));
-                    neoPrice.setText(ETHEther.toString());
-                    neoTotleUsdPrice=ETHPrice.setScale(2, BigDecimal.ROUND_DOWN).toString();
+
+        if (!App.get().isLogin()){
+            LzyResponse<CommonListBean<WalletCountBean>> response= CacheUtils.getCache(Constant.CONVERSION+sb.toString()+ App.isMain);
+            if (null!=response){
+                setBanlance(response);
+            }
+        }else {
+            WalletApi.conversionWallet(mActivity, sb.toString(), new JsonCallback<LzyResponse<CommonListBean<WalletCountBean>>>() {
+                @Override
+                public void onSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
+                    setBanlance(response.body());
+
                 }
 
-                isEth = true;
-                if (isToken) {
-                    //计算总金额
-                    if (1 == App.get().getUnit()) {
-                        totleChPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                        changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
-                    } else {
-                        totleUsdPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                        changeSee(0, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
+                @Override
+                public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
+                    super.onCacheSuccess(response);
+                    onSuccess(response);
+                }
+            });
+        }
+
+        if (!App.get().isLogin()){
+            LzyResponse<TokenBean> response= CacheUtils.getCache(Constant.CONVERSION+sb.toString()+ App.isMain);
+            if (null!=response){
+                setGnt(response);
+            }
+            if (null != swipeRefresh) {
+                swipeRefresh.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefresh.setRefreshing(false);
                     }
-                }
-
+                });
             }
-
-            @Override
-            public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
-                super.onCacheSuccess(response);
-                onSuccess(response);
-            }
-        });
-
-        //请求代币列表
-        WalletApi.conversion(mActivity, wallet.getId(), new JsonCallback<LzyResponse<TokenBean>>() {
-            @Override
-            public void onSuccess(Response<LzyResponse<TokenBean>> response) {
-                if (null == amount || null == topPrice) {
-                    return;
+            return;
+        }else {
+            //请求代币列表
+            WalletApi.conversion(mActivity, wallet.getId(), new JsonCallback<LzyResponse<TokenBean>>() {
+                @Override
+                public void onSuccess(Response<LzyResponse<TokenBean>> response) {
+                    setGnt(response.body());
                 }
-                data.clear();
-                if (null != response.body().data && response.body().data.getList().size() > 0) {
-                    data.addAll(response.body().data.getList());
-                }
-                adapter.notifyDataSetChanged();
-                TOKENPrice = new BigDecimal("0.00");
-                //计算金额
-                for (TokenBean.ListBean token : data) {
-                    BigDecimal currentPrice = new BigDecimal(AppUtil.toD(token.getBalance().replace("0x", "0")));
-                    if (null != token.getGnt_category().getCap()) {
 
-                        if (1 == App.get().getUnit()) {
-                            TOKENPrice = TOKENPrice.add(currentPrice.divide(AppUtil.decimal(token.getDecimals())).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_cny())));
-                        } else {
-                            TOKENPrice = TOKENPrice.add(currentPrice.divide(AppUtil.decimal(token.getDecimals())).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_usd())));
+                @Override
+                public void onCacheSuccess(Response<LzyResponse<TokenBean>> response) {
+                    super.onCacheSuccess(response);
+                    onSuccess(response);
+                }
+
+                @Override
+                public void onError(Response<LzyResponse<TokenBean>> response) {
+                    super.onError(response);
+                    if (App.get().isLogin()){
+                        if (NetworkUtils.isConnected(mActivity)) {
+                            ToastUtil.show(getString(R.string.load_error));
                         }
                     }
                 }
-                isToken = true;
-                if (isEth) {
-                    //计算总金额
-                    if (1 == App.get().getUnit()) {
-                        totleChPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                        changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
-                    } else {
-                        totleUsdPrice=TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                        changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
+
+                @Override
+                public void onFinish() {
+                    super.onFinish();
+                    if (null != swipeRefresh) {
+                        swipeRefresh.setRefreshing(false);
                     }
                 }
-            }
+            });
+        }
+    }
 
-            @Override
-            public void onCacheSuccess(Response<LzyResponse<TokenBean>> response) {
-                super.onCacheSuccess(response);
-                onSuccess(response);
-            }
-
-            @Override
-            public void onError(Response<LzyResponse<TokenBean>> response) {
-                super.onError(response);
-                if (NetworkUtils.isConnected(mActivity)){
-                    ToastUtil.show(getString(R.string.load_error));
+    private void setGnt(LzyResponse<TokenBean> response) {
+        if (null == amount || null == topPrice) {
+            return;
+        }
+        data.clear();
+        showData.clear();
+        if (null != response.data && response.data.getList().size() > 0) {
+            data.addAll(response.data.getList());
+        }
+        if (App.get().getSp().getBoolean(Constant.HIDE,false)){
+            for (int i=0;i<data.size();i++){
+                BigDecimal currentPrice = new BigDecimal(AppUtil.toD(data.get(i).getBalance().replace("0x", "0")));
+                if (currentPrice.floatValue()!=0){
+                    showData.add(data.get(i));
                 }
             }
+        }else {
+            showData.addAll(data);
+        }
+        adapter.notifyDataSetChanged();
+        TOKENPrice = new BigDecimal("0.00");
+        //计算金额
+        for (TokenBean.ListBean token : data) {
+            BigDecimal currentPrice = new BigDecimal(AppUtil.toD(token.getBalance().replace("0x", "0")));
+            if (null != token.getGnt_category().getCap()) {
 
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                if (null != swipeRefresh) {
-                    swipeRefresh.setRefreshing(false);
+                if (1 == App.get().getUnit()) {
+                    TOKENPrice = TOKENPrice.add(currentPrice.divide(AppUtil.decimal(token.getDecimals())).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_cny())));
+                } else {
+                    TOKENPrice = TOKENPrice.add(currentPrice.divide(AppUtil.decimal(token.getDecimals())).multiply(new BigDecimal(token.getGnt_category().getCap().getPrice_usd())));
                 }
             }
-        });
+        }
+        isToken = true;
+        if (isEth) {
+            //计算总金额
+            if (1 == App.get().getUnit()) {
+                totleChPrice = TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+                changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
+            } else {
+                totleUsdPrice = TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+                changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
+            }
+        }
+    }
+
+    private void setBanlance(LzyResponse<CommonListBean<WalletCountBean>> response) {
+        if (null == topPrice || null == amount || null == neoPrice || null == neoChPrice) {
+            return;
+        }
+        ETHEther = ETHEther.multiply(new BigDecimal(0));
+        ETHPrice = ETHPrice.multiply(new BigDecimal(0));
+        ArrayList<WalletCountBean> walletPrices = response.data.getList();
+        BigDecimal currentPrice = new BigDecimal(AppUtil.toD(walletPrices.get(0).getBalance().replace("0x", "0")));
+        ETHEther = ETHEther.add(currentPrice).divide(Constant.pEther, 4, BigDecimal.ROUND_DOWN);
+        if (1 == App.get().getUnit()) {
+            ETHPrice = ETHPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_cny())));
+            neoPrice.setText(ETHEther.toString());
+            neoTotleChPrice = ETHPrice.setScale(2, BigDecimal.ROUND_DOWN).toString();
+        } else {
+            ETHPrice = ETHPrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(walletPrices.get(0).getCategory().getCap().getPrice_usd())));
+            neoPrice.setText(ETHEther.toString());
+            neoTotleUsdPrice = ETHPrice.setScale(2, BigDecimal.ROUND_DOWN).toString();
+        }
+
+        isEth = true;
+        if (isToken) {
+            //计算总金额
+            if (1 == App.get().getUnit()) {
+                totleChPrice = TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+                changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
+            } else {
+                totleUsdPrice = TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
+                changeSee(0, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
+            }
+        }
     }
 
     @Override
@@ -637,9 +748,9 @@ public class HotWalletActivity extends BaseActivity {
             wallet.setType("0");
             switch (new Integer(wallet.getType())) {
                 case 0:
-                    String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
-                    if (wallets.contains(wallet.getAddress()) || walletsZjc.contains(wallet.getAddress())) {
+                    String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "").toLowerCase();
+                    String walletsZjc = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "").toLowerCase();
+                    if (wallets.contains(wallet.getAddress().toLowerCase()) || walletsZjc.contains(wallet.getAddress().toLowerCase())) {
                         state.setVisibility(View.GONE);
                     } else {
                         state.setVisibility(View.VISIBLE);
@@ -662,14 +773,14 @@ public class HotWalletActivity extends BaseActivity {
 
         View selectPopupWin = LayoutInflater.from(this).inflate(R.layout.view_popup_wallet_detaile, null, false);
         View hit = selectPopupWin.findViewById(R.id.hit);
-        final TextView zhujici = (TextView) selectPopupWin.findViewById(R.id.zhujici);
+        final View zhujicill = selectPopupWin.findViewById(R.id.zhujicill);
         TextView keystore = (TextView) selectPopupWin.findViewById(R.id.keystore);
         TextView delete = (TextView) selectPopupWin.findViewById(R.id.delete);
 
-        String wallets = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "");
-        if (wallets.contains(wallet.getAddress())) {
+        String wallets = App.get().getSp().getString(Constant.WALLETS_ZJC_BEIFEN, "").toLowerCase();
+        if (wallets.contains(wallet.getAddress().toLowerCase())) {
             hit.setVisibility(View.GONE);
-            zhujici.setVisibility(View.GONE);
+            zhujicill.setVisibility(View.GONE);
         }
 
         final PopupWindow window = new PopupWindow(selectPopupWin, DensityUtil.dip2px(this, 140), WindowManager.LayoutParams.WRAP_CONTENT);
@@ -697,7 +808,7 @@ public class HotWalletActivity extends BaseActivity {
             }
         });
 
-        zhujici.setOnClickListener(new View.OnClickListener() {
+        zhujicill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //输入密码
@@ -720,7 +831,7 @@ public class HotWalletActivity extends BaseActivity {
                                 Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                                 Account account = null;
                                 for (int i = 0; i < accounts.length; i++) {
-                                    if (accounts[i].name.equals(wallet.getAddress())) {
+                                    if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                         //accountManager.getUserData(accounts[i], pass.getText().toString());
                                         b = accountManager.getUserData(accounts[i], "wallet");
                                         account = accounts[i];
@@ -742,7 +853,7 @@ public class HotWalletActivity extends BaseActivity {
                                 }
                                 String zjc = "";
                                 try {
-                                    zjc = ethWallet.mnemonic(App.get().isZh()?"zh_CN":"en_US");
+                                    zjc = ethWallet.mnemonic(App.get().isZh() ? "zh_CN" : "en_US");
                                 } catch (Exception e) {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -797,7 +908,7 @@ public class HotWalletActivity extends BaseActivity {
                                 Account[] accounts = accountManager.getAccountsByType("com.inwecrypto.wallet");
                                 Account account = null;
                                 for (int i = 0; i < accounts.length; i++) {
-                                    if (accounts[i].name.equals(wallet.getAddress())) {
+                                    if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                         //accountManager.getUserData(accounts[i], pass.getText().toString());
                                         b = accountManager.getUserData(accounts[i], "wallet");
                                         account = accounts[i];
@@ -832,9 +943,9 @@ public class HotWalletActivity extends BaseActivity {
                                 }
                                 accountManager.setUserData(account, "type", Constant.BEIFEN);
 
-                                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "");
-                                if (!wallets.contains(wallet.getAddress())) {
-                                    wallets = wallets + wallet.getAddress() + ",";
+                                String wallets = App.get().getSp().getString(Constant.WALLETS_BEIFEN, "").toLowerCase();
+                                if (!wallets.contains(wallet.getAddress().toLowerCase())) {
+                                    wallets = wallets + wallet.getAddress().toLowerCase() + ",";
                                     App.get().getSp().putString(Constant.WALLETS_BEIFEN, wallets);
                                 }
                                 final String finalKeys = keys;
@@ -846,7 +957,7 @@ public class HotWalletActivity extends BaseActivity {
                                         state.setVisibility(View.GONE);
                                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_WALLET));
                                         Intent intent1 = new Intent(Intent.ACTION_SEND);
-                                        intent1.putExtra(Intent.EXTRA_TEXT,finalKeys);
+                                        intent1.putExtra(Intent.EXTRA_TEXT, finalKeys);
                                         intent1.setType("text/plain");
                                         startActivity(Intent.createChooser(intent1, "share"));
                                     }
@@ -869,6 +980,10 @@ public class HotWalletActivity extends BaseActivity {
                 input.setOnNextListener(new InputPassFragment.OnNextInterface() {
                     @Override
                     public void onNext(final String passWord, final Dialog dialog) {
+                        if (!App.get().isLogin()){
+                            keepTogo(LoginActivity.class);
+                            return;
+                        }
                         if (passWord.length() == 0) {
                             ToastUtil.show(getString(R.string.qingshurumima));
                             return;
@@ -883,7 +998,7 @@ public class HotWalletActivity extends BaseActivity {
                                 Account account = null;
 
                                 for (int i = 0; i < accounts.length; i++) {
-                                    if (accounts[i].name.equals(wallet.getAddress())) {
+                                    if (accounts[i].name.toLowerCase().equals(wallet.getAddress().toLowerCase())) {
                                         account = accounts[i];
                                         //accountManager.getUserData(accounts[i], pass.getText().toString());
                                         b = accountManager.getUserData(accounts[i], "wallet");
@@ -991,7 +1106,7 @@ public class HotWalletActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(mActivity, NewTransferWalletActivity.class);
                 intent.putExtra("wallet", wallet);
-                intent.putExtra("isNeo",false);
+                intent.putExtra("isNeo", false);
                 keepTogo(intent);
                 window.dismiss();
             }
@@ -1012,6 +1127,10 @@ public class HotWalletActivity extends BaseActivity {
                 ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (!App.get().isLogin()){
+                            keepTogo(LoginActivity.class);
+                            return;
+                        }
                         WalletApi.wallet(mActivity, wallet.getId(), new JsonCallback<LzyResponse<Object>>() {
                             @Override
                             public void onSuccess(Response<LzyResponse<Object>> response) {
@@ -1087,5 +1206,4 @@ public class HotWalletActivity extends BaseActivity {
             task = null;
         }
     }
-
 }

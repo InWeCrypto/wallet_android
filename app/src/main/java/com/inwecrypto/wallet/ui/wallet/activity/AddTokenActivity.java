@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -58,6 +60,7 @@ public class AddTokenActivity extends BaseActivity {
 
     private AllGntAdapter adapter;
     private ArrayList<GntBean> data = new ArrayList<>();
+    private ArrayList<GntBean> beforeData = new ArrayList<>();
 
     private int id;
     private int walletId;
@@ -161,31 +164,33 @@ public class AddTokenActivity extends BaseActivity {
             }
         });
 
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
+        search.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-                if ((actionId == 0 || actionId == 3) && event != null) {
-                    boolean has=false;
-                    for (int i=0;i<data.size();i++){
-                        if (data.get(i).getName().toUpperCase().equals(search.getText().toString().toUpperCase())){
-                            has=true;
-                            position=i;
-                            break;
-                        }
-                    }
-                    if (has){
-                        move(position);
-                    }else {
-                        ToastUtil.show(getString(R.string.weizhaodaogaidaibi));
-                    }
-                    return true;
-                }
-                return false;
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length()>0){
+                    ArrayList<GntBean> nowData = new ArrayList<>();
+                    for (GntBean gnt:beforeData){
+                        if (gnt.getName().toUpperCase().contains(s.toString().toUpperCase())){
+                            nowData.add(gnt);
+                        }
+                    }
+                    data.clear();
+                    data.addAll(nowData);
+                    adapter.notifyDataSetChanged();
+                }else {
+                    data.clear();
+                    data.addAll(beforeData);
+                    adapter.notifyDataSetChanged();
+                }
+            }
         });
     }
 
@@ -202,8 +207,10 @@ public class AddTokenActivity extends BaseActivity {
             @Override
             public void onSuccess(Response<LzyResponse<CommonListBean<GntBean>>> response) {
                 data.clear();
+                beforeData.clear();
                 if (null != response.body().data && null != response.body().data.getList()) {
                     data.addAll(response.body().data.getList());
+                    beforeData.addAll(response.body().data.getList());
                 }
                 adapter.notifyDataSetChanged();
                 swipeRefresh.setRefreshing(false);
