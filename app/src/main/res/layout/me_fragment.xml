@@ -285,6 +285,47 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/xiangmuchakan_fanhui"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@+id/img3"
+                    android:layout_marginTop="12dp"
+                    android:background="#F6F6F6"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/pinglun"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:clickable="true"
+                android:background="@drawable/wode_bg">
+
+                <ImageView
+                    android:id="@+id/img8"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:src="@mipmap/pinglun_icon"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/c_333333"
+                    android:layout_toRightOf="@+id/img8"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="17dp"
+                    android:textSize="13sp"
+                    android:text="@string/wopinglundexiangmu"/>
+
+                <ImageView
+                    android:layout_width="4.5dp"
+                    android:layout_height="8.5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/xiangmuchakan_fanhui"/>
             </RelativeLayout>
 
             <Space

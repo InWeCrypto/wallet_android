@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -125,7 +126,15 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
 
         //预加载网页
         mWebView = new WebView(this);
+        mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.loadUrl(Constant.MAIN_WEB);
+        mWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+        });
         mWebView.postDelayed(new Runnable() {
             @Override
             public void run() {

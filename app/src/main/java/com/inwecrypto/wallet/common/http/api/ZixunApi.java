@@ -7,12 +7,23 @@ import com.inwecrypto.wallet.bean.CandyBowBean;
 import com.inwecrypto.wallet.bean.CommonDataBean;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
 import com.inwecrypto.wallet.bean.ExchangeNoticeListBean;
+import com.inwecrypto.wallet.bean.MarketCapBean;
+import com.inwecrypto.wallet.bean.MarketPriceBean;
+import com.inwecrypto.wallet.bean.PingjiaBean;
+import com.inwecrypto.wallet.bean.ProjectAnalysisBean;
+import com.inwecrypto.wallet.bean.ProjectDetailAnalysisBean;
 import com.inwecrypto.wallet.bean.ProjectListBean;
 import com.inwecrypto.wallet.bean.ProjectMarketBean;
 import com.inwecrypto.wallet.bean.Rank1Bean;
+import com.inwecrypto.wallet.bean.Rank2Bean;
+import com.inwecrypto.wallet.bean.Rank3Bean;
+import com.inwecrypto.wallet.bean.Rank4Bean;
+import com.inwecrypto.wallet.bean.Rank5Bean;
 import com.inwecrypto.wallet.bean.SearchBean;
+import com.inwecrypto.wallet.bean.TagBean;
 import com.inwecrypto.wallet.bean.TradingProjectDetaileBean;
 import com.inwecrypto.wallet.bean.WalletBean;
+import com.inwecrypto.wallet.bean.XiangmuPingjiaBean;
 import com.inwecrypto.wallet.bean.YaoqinBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
@@ -452,6 +463,175 @@ public class ZixunApi {
                 .tag(object)
                 .cacheKey(Url.MARKET_CAP+App.isMain)
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(callback);
+    }
+
+    /**
+     * 获取市值排行
+     * @param object
+     * @param callback
+     */
+    public static void getExchanges(Object object,JsonCallback<LzyResponse<ArrayList<Rank2Bean>>> callback){
+        OkGo.<LzyResponse<ArrayList<Rank2Bean>>>get(Url.EXCHANGES)
+                .tag(object)
+                .cacheKey(Url.EXCHANGES+App.isMain)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(callback);
+    }
+
+    /**
+     * 获取市值排行
+     * @param object
+     * @param callback
+     */
+    public static void getDapp(Object object,JsonCallback<LzyResponse<ArrayList<Rank3Bean>>> callback){
+        OkGo.<LzyResponse<ArrayList<Rank3Bean>>>get(Url.DAPP)
+                .tag(object)
+                .cacheKey(Url.DAPP+App.isMain)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(callback);
+    }
+
+    /**
+     * 获取市值排行
+     * @param object
+     * @param callback
+     */
+    public static void getCategoryRanking(Object object,JsonCallback<LzyResponse<ArrayList<Rank4Bean>>> callback){
+        OkGo.<LzyResponse<ArrayList<Rank4Bean>>>get(Url.CATEGORY_RANKING)
+                .tag(object)
+                .cacheKey(Url.CATEGORY_RANKING+App.isMain)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(callback);
+    }
+
+    /**
+     * 获取市值排行
+     * @param object
+     * @param callback
+     */
+    public static void getHotArticle(Object object,JsonCallback<LzyResponse<Rank5Bean>> callback){
+        OkGo.<LzyResponse<Rank5Bean>>get(Url.ARTICLE_RANKING)
+                .tag(object)
+                .cacheKey(Url.ARTICLE_RANKING+App.isMain)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(callback);
+    }
+
+
+    /**
+     * 获取当前评价
+     * @param object
+     * @param callback
+     */
+    public static void getCurComment(Object object,String id,JsonCallback<LzyResponse<PingjiaBean>> callback){
+        OkGo.<LzyResponse<PingjiaBean>>get(Url.COMMENT_INFO+id+"/get_cur_user_comment")
+                .tag(object)
+                .execute(callback);
+    }
+
+    /**
+     * 获取当前评价
+     * @param object
+     * @param callback
+     */
+    public static void postComment(Object object,String id
+            ,float score
+            ,String comment
+            ,int type,JsonCallback<LzyResponse<PingjiaBean>> callback){
+        JSONObject params=new JSONObject();
+        try {
+            params.putOpt("score",score);
+            params.putOpt("category_comment",comment);
+            params.putOpt("category_comment_tag_id",type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<LzyResponse<PingjiaBean>>post(Url.COMMENT_INFO+id+"/comment")
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+
+    /**
+     * 获取项目分析
+     * @param object
+     * @param callback
+     */
+    public static void getProjectAnalysis(Object object,String id,JsonCallback<LzyResponse<ProjectAnalysisBean>> callback){
+        OkGo.<LzyResponse<ProjectAnalysisBean>>get(Url.COMMENT_INFO+id+"/rough_analysis")
+                .tag(object)
+                .execute(callback);
+    }
+
+    /**
+     * 获取详细评价
+     * @param object
+     * @param callback
+     */
+    public static void getProjectDetailAnalysis(Object object,String id,String type,JsonCallback<LzyResponse<ArrayList<ProjectDetailAnalysisBean>>> callback){
+        OkGo.<LzyResponse<ArrayList<ProjectDetailAnalysisBean>>>get(Url.COMMENT_INFO+id+"/detail_analysis/"+type)
+                .tag(object)
+                .execute(callback);
+    }
+
+    /**
+     * 获取 项目评价标签
+     * @param object
+     * @param callback
+     */
+    public static void getProjectTag(Object object,String id,JsonCallback<LzyResponse<ArrayList<TagBean>>> callback){
+        OkGo.<LzyResponse<ArrayList<TagBean>>>get(Url.COMMENT_INFO+id+"/comment_tags")
+                .tag(object)
+                .execute(callback);
+    }
+
+
+    /**
+     * 获取 项目评价
+     * @param object
+     * @param callback
+     */
+    public static void getProjectComment(Object object,String id,String filter,int page,JsonCallback<LzyResponse<XiangmuPingjiaBean>> callback){
+        OkGo.<LzyResponse<XiangmuPingjiaBean>>get(Url.COMMENT_INFO+id+"/comment?page="+page+"&filter="+filter)
+                .tag(object)
+                .execute(callback);
+    }
+
+
+    /**
+     * 获取 项目评价
+     * @param object
+     * @param callback
+     */
+    public static void getProjectComment(Object object,String id,String start,String end,int page,JsonCallback<LzyResponse<XiangmuPingjiaBean>> callback){
+        OkGo.<LzyResponse<XiangmuPingjiaBean>>get(Url.COMMENT_INFO+id+"/comment?page="+page+"&start="+start+"&end="+end)
+                .tag(object)
+                .execute(callback);
+    }
+
+
+    /**
+     * 获取 项目评价
+     * @param object
+     * @param callback
+     */
+    public static void getMarketCap(Object object,String token,JsonCallback<LzyResponse<MarketCapBean>> callback){
+        OkGo.<LzyResponse<MarketCapBean>>get(Url.RANK_MARKET_CAP+token)
+                .tag(object)
+                .execute(callback);
+    }
+
+    /**
+     * 获取 项目评价
+     * @param object
+     * @param callback
+     */
+    public static void getMarketPrice(Object object,JsonCallback<LzyResponse<MarketPriceBean>> callback){
+        OkGo.<LzyResponse<MarketPriceBean>>get(Url.TOTLE_MARKET)
+                .tag(object)
                 .execute(callback);
     }
 

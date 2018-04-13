@@ -53,11 +53,18 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.lzy.okgo.model.Response;
+import com.readystatesoftware.chuck.internal.ui.MainActivity;
+import com.tencent.connect.share.QQShare;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -113,6 +120,7 @@ public class ProjectNewsWebActivity extends BaseActivity implements EasyPermissi
 
     private String decs;
     private String img;
+    private Tencent mTencent;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -150,6 +158,7 @@ public class ProjectNewsWebActivity extends BaseActivity implements EasyPermissi
                 finish();
             }
         });
+        mTencent = Tencent.createInstance("1106826620", App.get());
 
         if (isShowMore) {
             txtRightTitle.setVisibility(View.VISIBLE);
@@ -183,12 +192,21 @@ public class ProjectNewsWebActivity extends BaseActivity implements EasyPermissi
                                     dialog.dismiss();
                                     break;
                                 case 2:
-                                    Intent qqIntent = new Intent(Intent.ACTION_SEND);
-                                    qqIntent.setPackage("com.tencent.mobileqq");
-                                    qqIntent.setType("text/plain");
-                                    qqIntent.putExtra(Intent.EXTRA_TEXT, title + "\n" + url.replace("newsdetail2","newsdetail"));
-                                    startActivity(qqIntent);
-                                    dialog.dismiss();
+                                    final Bundle params = new Bundle();
+                                    params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
+                                    params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
+                                    params.putString(QQShare.SHARE_TO_QQ_SUMMARY,  content);
+                                    params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  url);
+                                    params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, img);
+                                    params.putString(QQShare.SHARE_TO_QQ_APP_NAME,  "InweCrypto");
+                                    mTencent.shareToQQ(mActivity, params, null);
+
+//                                    Intent qqIntent = new Intent(Intent.ACTION_SEND);
+//                                    qqIntent.setPackage("com.tencent.mobileqq");
+//                                    qqIntent.setType("text/plain");
+//                                    qqIntent.putExtra(Intent.EXTRA_TEXT, title + "\n" + url.replace("newsdetail2","newsdetail"));
+//                                    startActivity(qqIntent);
+//                                    dialog.dismiss();
                                     break;
                                 case 3:
                                     Uri content_url = Uri.parse("https://t.me/share/url?text=" + title + "&url=" + url.replace("newsdetail2","newsdetail"));
@@ -411,7 +429,12 @@ public class ProjectNewsWebActivity extends BaseActivity implements EasyPermissi
                     });
 
                 } catch (Exception e) {
-                    ToastUtil.show("图片保存失败!");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.show(getString(R.string.tupianbaocunshibai));
+                        }
+                    });
                     return;
                 }finally {
                     runOnUiThread(new Runnable() {

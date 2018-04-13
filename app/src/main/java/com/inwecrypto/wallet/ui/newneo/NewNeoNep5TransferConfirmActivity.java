@@ -279,7 +279,11 @@ public class NewNeoNep5TransferConfirmActivity extends BaseActivity {
                         super.onError(response);
                         hideFixLoading();
                         if (response.getException().getMessage().contains("wallet_error")) {
-                            ToastUtil.show(getString(R.string.inner_error) + response.getException().getMessage());
+                            if (response.getException().getMessage().contains("4006")){
+                                ToastUtil.show(R.string.ninhaiyouweiwanchengdedingdan);
+                            }else {
+                                ToastUtil.show(getString(R.string.inner_error) + response.getException().getMessage());
+                            }
                         } else {
                             ToastUtil.show(getString(R.string.load_error));
                         }

@@ -138,10 +138,10 @@
                         app:starCount="5"
                         app:starEmpty="@mipmap/xiangmugaikuang_xing"
                         app:starFill="@mipmap/xiangmugaikuang_xing_s"
-                        app:starHalf="@mipmap/xiangmugaikuang_xing"
+                        app:starHalf="@mipmap/xiangmugaikuang_xing_half"
                         app:starImageSize="12dp"
                         app:starPadding="4dp"
-                        app:starStep="1.5"
+                        app:starStep="0.1"
                         app:stepSize="Full"/>
 
                     <TextView

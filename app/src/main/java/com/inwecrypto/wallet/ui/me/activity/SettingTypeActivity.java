@@ -123,7 +123,7 @@ public class SettingTypeActivity extends BaseActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Intent intent=new Intent(mActivity, LoginActivity.class);
+                                        Intent intent=new Intent(mActivity, MainTabActivity.class);
                                         finshTogo(intent);
                                         hideFixLoading();
                                     }
@@ -147,6 +147,9 @@ public class SettingTypeActivity extends BaseActivity {
                                             LocaleUtils.updateLocale(mActivity, LocaleUtils.LOCALE_ENGLISH);
                                             App.get().getSp().putBoolean(Constant.IS_CHINESE,false);
                                         }
+                                        App.get().getSp().putInt(Constant.UNIT_TYPE,selectPosition);
+                                        App.get().getSp().putBoolean(Constant.UNIT_CHANGE,true);
+
                                         App.get().getSp().putBoolean(Constant.LANGUE_CHANGE,true);
                                         //
                                         //设置语言

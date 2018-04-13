@@ -213,5 +213,9 @@ public class ProjectFragment extends BaseFragment {
         if (event.getEventCode()== Constant.EVENT_REFERSH&&event.getKey1()==type){
             loadData();
         }
+
+        if (event.getEventCode() ==Constant.EVENT_UNIT_CHANGE){
+            adatpter.notifyDataSetChanged();
+        }
     }
 }

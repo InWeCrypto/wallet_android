@@ -7,199 +7,221 @@
     android:background="@color/c_ffffff"
     android:orientation="vertical">
 
-    <include layout="@layout/base_title_bar"/>
+    <include layout="@layout/base_title_bar" />
 
-        <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="18dp">
+            android:layout_height="wrap_content"
+            android:background="@color/c_ffffff"
+            app:elevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="4dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
-
-                <ImageView
-                    android:id="@+id/img"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:scaleType="fitXY"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_scrollFlags="scroll|snap"
+                android:paddingTop="18dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp">
+
+                    <ImageView
+                        android:id="@+id/img"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:scaleType="fitXY" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:ellipsize="end"
+                                android:textColor="#262626"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/symble"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:ellipsize="end"
+                                android:layout_marginLeft="2dp"
+                                android:textColor="#262626"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/block_chain"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:textColor="@color/c_333333"
+                            android:textSize="11sp" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#262626"
-                            android:textSize="16sp"/>
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/symble"
+                            android:id="@+id/price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="$0.00"
+                            android:textColor="@color/c_333333"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/charge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
                             android:layout_marginLeft="2dp"
-                            android:textColor="#262626"
-                            android:textSize="13sp"/>
+                            android:text="(0.00%)"
+                            android:textColor="#008C55"
+                            android:textSize="11sp" />
+
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/block_chain"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:textColor="@color/c_333333"
-                        android:textSize="11sp"/>
-
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/volume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:paddingRight="20dp"
+                    android:text="Volume (24h)：0.00"
+                    android:textColor="#ACACAC"
+                    android:textSize="9sp" />
 
                 <Space
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$0.00"
-                        android:textColor="@color/c_333333"
-                        android:textSize="20sp"/>
-
-                    <TextView
-                        android:id="@+id/charge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginLeft="2dp"
-                        android:text="(0.00%)"
-                        android:textColor="#008C55"
-                        android:textSize="11sp"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/volume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:paddingRight="20dp"
-                android:text="Volume (24h)：0.00"
-                android:textColor="#ACACAC"
-                android:textSize="9sp"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="18dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="#F6F6F6"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingBottom="13dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="13dp">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/no"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/c_333333"
-                        android:textSize="15sp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="@string/guanzhuredu"
-                        android:textColor="#C5C5C5"
-                        android:textSize="11sp"/>
-
-                </LinearLayout>
                 <View
-                    android:layout_width="0.5dp"
-                    android:layout_height="34dp"
-                    android:background="#F6F6F6"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="#F6F6F6" />
+
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:gravity="center_vertical"
+                    android:paddingBottom="13dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="13dp">
+
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-                        <com.inwecrypto.wallet.common.widget.RatingBar
-                            android:id="@+id/ratingbar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:layout_gravity="center"
-                            android:clickable="false"
-                            app:clickable="false"
-                            app:starCount="5"
-                            app:starEmpty="@mipmap/xiangmugaikuang_xing"
-                            app:starFill="@mipmap/xiangmugaikuang_xing_s"
-                            app:starHalf="@mipmap/xiangmugaikuang_xing"
-                            app:starImageSize="12dp"
-                            app:starPadding="4dp"
-                            app:starStep="1.5"
-                            app:stepSize="Full"/>
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/fenshu"
+                            android:id="@+id/no"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="2dp"
                             android:textColor="@color/c_333333"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/guanzhuredu"
+                            android:textColor="#C5C5C5"
+                            android:textSize="11sp" />
 
                     </LinearLayout>
-                    <TextView
-                        android:layout_width="wrap_content"
+
+                    <View
+                        android:layout_width="0.5dp"
+                        android:layout_height="34dp"
+                        android:background="#F6F6F6" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="@string/yonghupingfen"
-                        android:textColor="#C5C5C5"
-                        android:textSize="11sp"/>
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.inwecrypto.wallet.common.widget.RatingBar
+                                android:id="@+id/ratingbar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_gravity="center"
+                                android:clickable="false"
+                                app:clickable="false"
+                                app:starCount="5"
+                                app:starEmpty="@mipmap/xiangmugaikuang_xing"
+                                app:starFill="@mipmap/xiangmugaikuang_xing_s"
+                                app:starHalf="@mipmap/xiangmugaikuang_xing_half"
+                                app:starImageSize="12dp"
+                                app:starPadding="4dp"
+                                app:starStep="1.5"
+                                app:stepSize="Full" />
+
+                            <TextView
+                                android:id="@+id/fenshu"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:textColor="@color/c_333333"
+                                android:textSize="15sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/yonghupingfen"
+                            android:textColor="#C5C5C5"
+                            android:textSize="11sp" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -219,6 +241,7 @@
                     android:clickable="true"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/zonghe"
                         android:layout_width="wrap_content"
@@ -228,13 +251,43 @@
                         android:paddingTop="10dp"
                         android:text="@string/zonghexinxi"
                         android:textColor="#FF6806"
-                        android:textSize="13sp"/>
+                        android:textSize="13sp" />
 
                     <View
                         android:id="@+id/l1"
                         android:layout_width="20dp"
                         android:layout_height="2dp"
-                        android:background="#FF6806"/>
+                        android:background="#FF6806" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/yonghull"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/yonghu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:paddingBottom="6dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/yonghupingjia"
+                        android:textColor="#ABABAB"
+                        android:textSize="13sp" />
+
+                    <View
+                        android:id="@+id/l2"
+                        android:layout_width="20dp"
+                        android:layout_height="2dp"
+                        android:background="#FF6806"
+                        android:visibility="invisible" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -246,6 +299,7 @@
                     android:clickable="true"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/xiangmu"
                         android:layout_width="wrap_content"
@@ -256,21 +310,33 @@
                         android:paddingTop="10dp"
                         android:text="@string/xiangmugaikuang"
                         android:textColor="#ABABAB"
-                        android:textSize="13sp"/>
+                        android:textSize="13sp" />
 
                     <View
-                        android:id="@+id/l2"
+                        android:id="@+id/l3"
                         android:layout_width="20dp"
                         android:layout_height="2dp"
                         android:background="#FF6806"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
                 </LinearLayout>
 
             </LinearLayout>
 
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:elevation="0dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:fillViewport="true"
+            android:descendantFocusability="blocksDescendants">
             <android.support.v4.view.ViewPager
                 android:id="@+id/vp_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.design.widget.CoordinatorLayout>
+
 </LinearLayout>

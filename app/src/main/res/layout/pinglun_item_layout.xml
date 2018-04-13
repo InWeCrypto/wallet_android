@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="20dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/img"
+            android:layout_marginLeft="7dp"
+            android:textSize="16sp"
+            android:textColor="#262626"/>
+
+        <TextView
+            android:id="@+id/long_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/name"
+            android:layout_alignBaseline="@+id/name"
+            android:layout_marginLeft="2dp"
+            android:textSize="11sp"
+            android:textColor="#262626"/>
+
+        <TextView
+            android:id="@+id/net"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:layout_toRightOf="@id/img"
+            android:layout_marginLeft="7dp"
+            android:layout_below="@+id/name"
+            android:textColor="#333333"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#FFFCF1"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingTop="5dp"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#333333"
+            android:textSize="13sp"
+            android:text="@string/pingfen"/>
+
+        <com.inwecrypto.wallet.common.widget.RatingBar
+            android:id="@+id/ratingbar"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:focusable="false"
+            app:starCount="5"
+            app:starEmpty="@mipmap/xiangmugaikuang_xing"
+            app:starFill="@mipmap/xiangmugaikuang_xing_s"
+            app:starHalf="@mipmap/xiangmugaikuang_xing_half"
+            app:starImageSize="10dp"
+            app:starPadding="3dp"
+            app:starStep="0.1"
+            app:stepSize="Half"
+            app:clickable="false"/>
+
+        <TextView
+            android:id="@+id/fenshu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF7E00"
+            android:textSize="13sp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="10dp"
+        android:background="#F6F6F6"/>
+
+</LinearLayout>

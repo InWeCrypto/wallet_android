@@ -43,6 +43,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.service.MessageService;
+import com.inwecrypto.wallet.ui.MainTabActivity;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.lzy.okgo.model.Response;
 import com.suke.widget.SwitchButton;
@@ -178,7 +179,7 @@ public class UserActivity extends BaseActivity implements EasyPermissions.Permis
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Intent intent=new Intent(mActivity, LoginActivity.class);
+                                Intent intent=new Intent(mActivity, MainTabActivity.class);
                                 finshTogo(intent);
                                 hideFixLoading();
                             }

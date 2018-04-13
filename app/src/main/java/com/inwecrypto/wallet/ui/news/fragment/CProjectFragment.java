@@ -230,5 +230,9 @@ public class CProjectFragment extends BaseFragment {
             loadData();
         }
 
+        if (event.getEventCode() ==Constant.EVENT_UNIT_CHANGE){
+            adatpter.notifyDataSetChanged();
+        }
+
     }
 }

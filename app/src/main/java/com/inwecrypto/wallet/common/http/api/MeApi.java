@@ -1,6 +1,10 @@
 package com.inwecrypto.wallet.common.http.api;
 
 import com.inwecrypto.wallet.App;
+import com.inwecrypto.wallet.bean.PingjiaBean;
+import com.inwecrypto.wallet.bean.PingjiaInfoBean;
+import com.inwecrypto.wallet.bean.PingjiaReplyBean;
+import com.inwecrypto.wallet.bean.ReplyBean;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
@@ -160,6 +164,44 @@ public class MeApi {
         OkGo.<LzyResponse<Object>>put(Url.USER_LANG)
                 .tag(object)
                 .upJson(params)
+                .execute(callback);
+    }
+
+    public static void getComment(Object object,JsonCallback<LzyResponse<ArrayList<PingjiaBean>>> callback){
+        OkGo.<LzyResponse<ArrayList<PingjiaBean>>>get(Url.COMMENT)
+                .tag(object)
+                .execute(callback);
+    }
+
+    public static void getCommentInfo(Object object,String id,String uid,JsonCallback<LzyResponse<PingjiaInfoBean>> callback){
+        OkGo.<LzyResponse<PingjiaInfoBean>>get(Url.COMMENT_INFO+id+"/comment/"+uid)
+                .tag(object)
+                .execute(callback);
+    }
+
+    public static void getCommentReply(Object object,String id,String uid,JsonCallback<LzyResponse<PingjiaReplyBean>> callback){
+        OkGo.<LzyResponse<PingjiaReplyBean>>get(Url.COMMENT_INFO+id+"/comment/"+uid+"/reply")
+                .tag(object)
+                .execute(callback);
+    }
+
+    public static void postCommentReply(Object object,String id,String uid,String content,JsonCallback<LzyResponse<Object>> callback){
+        JSONObject params=new JSONObject();
+        try {
+            params.putOpt("content",content);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        OkGo.<LzyResponse<Object>>post(Url.COMMENT_INFO+id+"/comment/"+uid+"/reply")
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+
+    public static void postReply(Object object,String id,String uid,String type,JsonCallback<LzyResponse<ReplyBean>> callback){
+        OkGo.<LzyResponse<ReplyBean>>post(Url.COMMENT_INFO+id+"/comment/"+uid+"/reply/"+type)
+                .tag(object)
                 .execute(callback);
     }
 }

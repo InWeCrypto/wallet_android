@@ -26,6 +26,7 @@ import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.common.util.CacheUtils;
 import com.inwecrypto.wallet.common.util.GsonUtils;
+import com.inwecrypto.wallet.common.util.LocaleUtils;
 import com.inwecrypto.wallet.common.util.NetworkUtils;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
@@ -36,6 +37,7 @@ import com.lzy.okgo.model.Response;
 
 import net.qiujuer.genius.ui.widget.Button;
 
+import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -171,21 +173,21 @@ public class LoginActivity extends BaseActivity {
                                 App.get().getSp().putBoolean(Constant.NEED_RESTART,true);
                                 App.get().getSp().putString(Constant.LOGIN_NAME+App.isMain,email.getText().toString().trim());
 
-                                boolean needUpdate=false;
-                                if (AppUtil.getVersion(mActivity)>App.get().getSp().getInt(Constant.VERSION,0)){
-                                    needUpdate=true;
-                                    App.get().getSp().putInt(Constant.VERSION,AppUtil.getVersion(mActivity));
-                                }
+//                                boolean needUpdate=false;
+//                                if (AppUtil.getVersion(mActivity)>App.get().getSp().getInt(Constant.VERSION,0)){
+//                                    needUpdate=true;
+//                                    App.get().getSp().putInt(Constant.VERSION,AppUtil.getVersion(mActivity));
+//                                }
                                 ArrayList<CommonProjectBean> mainCacheMarks= CacheUtils.getCache(Constant.PROJECT_JSON_MAIN+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
                                 ArrayList<CommonProjectBean> testCacheMarks= CacheUtils.getCache(Constant.PROJECT_JSON_TEST+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()));
                                 ArrayList<CommonProjectBean> marks=new ArrayList<>();
-                                if (needUpdate||null==mainCacheMarks||null==testCacheMarks){
+                                if (null==mainCacheMarks||null==testCacheMarks){
                                     marks=GsonUtils.jsonToArrayList(Constant.BASE_PROJECT_JSON, CommonProjectBean.class);
                                 }
-                                if (needUpdate||null==mainCacheMarks){
+                                if (null==mainCacheMarks){
                                     CacheUtils.setCache(Constant.PROJECT_JSON_MAIN+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()), marks);
                                 }
-                                if (needUpdate||null==testCacheMarks){
+                                if (null==testCacheMarks){
                                     CacheUtils.setCache(Constant.PROJECT_JSON_TEST+(null==App.get().getLoginBean()?"":App.get().getLoginBean().getEmail()), marks);
                                 }
 
@@ -197,6 +199,22 @@ public class LoginActivity extends BaseActivity {
                                     }
                                     CacheUtils.setCache(Constant.SORT+App.isMain,sort);
                                 }
+
+                                boolean isZh=true;
+                                if (response.body().data.getLang().equals("zh")){
+                                    isZh=true;
+                                }else {
+                                    isZh=false;
+                                }
+
+                                if (App.get().isZh()!=isZh){
+                                    LocaleUtils.updateLocale(mActivity, LocaleUtils.LOCALE_ENGLISH);
+                                    App.get().getSp().putBoolean(Constant.IS_CHINESE,isZh);
+                                    App.get().getSp().putInt(Constant.UNIT_TYPE,isZh?1:2);
+                                    //设置语言
+                                    AppUtil.changeAppLanguage(mActivity);
+                                }
+
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {

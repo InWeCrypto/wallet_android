@@ -47,7 +47,7 @@ public class App extends Application{
     private SPUtils sp;
     private LoginBean loginBean;
     public static boolean isMain;
-    private int defaultLangue=1;
+    private int defaultLangue=2;
     private boolean isLogin;
 
     public static final String APP_ID="wxd346a4033d5a09a3";
@@ -69,7 +69,7 @@ public class App extends Application{
 
         //初始化SP
         sp=new SPUtils(this, Constant.SP_NAME);
-        isMain=sp.getBoolean(Constant.NET,false);
+        isMain=sp.getBoolean(Constant.NET,true);
         if (sp.getBoolean(Constant.UNIT_CHANGE,false)){
             if (isZh()){
                 defaultLangue=1;
@@ -154,7 +154,7 @@ public class App extends Application{
     }
 
     public int getUnit() {//1.人民币  2.美元
-        return sp.getInt(Constant.UNIT_TYPE,defaultLangue);
+        return sp.getInt(Constant.UNIT_TYPE);
     }
 
 

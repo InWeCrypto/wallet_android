@@ -262,7 +262,7 @@ public class HelpCenterActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mWebView.loadUrl((App.isMain?Url.MAIN_HELP:Url.TEST_HELP) +(App.get().isZh()?"zh":"en"));
+        mWebView.loadUrl((App.isMain?Url.MAIN_HELP:Url.TEST_HELP) +(App.get().isZh()?"zh":"en")+"/helpcenter");
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -472,7 +472,7 @@ public class WalletFragment extends BaseFragment {
                     });
                 }
             };
-            timer.schedule(task, 30000, 30000);
+            timer.schedule(task, 60000, 60000);
         }
         if (null == swipeRefresh) {
             return;
@@ -1074,6 +1074,9 @@ public class WalletFragment extends BaseFragment {
     }
 
     private void changeSee(int unit, boolean isSee) {
+        if (null==amount){
+            return;
+        }
         if (isSee) {
             if (unit == 1) {
                 amount.setText("￥ " + totleChPrice);

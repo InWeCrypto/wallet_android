@@ -252,6 +252,18 @@ public class Constant {
 
     public static final int EVENT_HIDE = 40;
 
+    public static final int EVENT_PINGJIA = 41;
+
+    public static final int EVENT_PAIXU1 = 42;
+
+    public static final int EVENT_PAIXU2 = 43;
+
+    public static final int EVENT_PAIXU3 = 44;
+
+    public static final int EVENT_PAIXU4 = 45;
+
+    public static final int EVENT_PINGJIA_SUC = 46;
+
     public static final int EVENT_TOKEN = 4009;
 
     public static final int PAGE_SIZE=20;

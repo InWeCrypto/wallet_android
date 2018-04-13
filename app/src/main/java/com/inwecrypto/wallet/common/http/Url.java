@@ -120,13 +120,22 @@ public class Url {
 
     public static String MARKET_CAP_DATE = BASE_2 + "/token_rank/market_cap/";
 
-    public static String EXCHANGES = BASE_2 + " /token_rank/exchanges";
+    public static String EXCHANGES = BASE_2 + "/token_rank/exchanges";
 
-    public static String DAPP = BASE_2 + " /token_rank/dapp";
+    public static String DAPP = BASE_2 + "/token_rank/dapp";
 
     public static String CATEGORY_RANKING = BASE_2 + "/token_rank/category";
 
     public static String ARTICLE_RANKING = BASE_2 + "/article?sort_desc=click_rate&per_page=50";
+
+    public static String COMMENT = BASE_2 + "/user/category/comment";
+
+    public static String COMMENT_INFO = BASE_2 + "/category/";
+
+    public static String RANK_MARKET_CAP = BASE_2 + "/token_rank/market_cap/";
+
+    public static String TOTLE_MARKET = BASE_2 + "/ico/total_market_value";
+
 
 
     public static String MAIN_NEWS = "http://inwecrypto.com/newsdetail2?art_id=";
@@ -137,9 +146,9 @@ public class Url {
 
     public static String TEST_YAOQIN = "http://testnet.inwecrypto.com/share2app?code=";
 
-    public static String MAIN_HELP = "http://inwecrypto.com/helpcenter?lang=";
+    public static String MAIN_HELP = "http://inwecrypto.com/";
 
-    public static String TEST_HELP = "http://testnet.inwecrypto.com/helpcenter?lang=";
+    public static String TEST_HELP = "http://testnet.inwecrypto.com/";
 
 
 
@@ -436,13 +445,21 @@ public class Url {
 
         MARKET_CAP_DATE = BASE_2 + "/token_rank/market_cap/";
 
-        EXCHANGES = BASE_2 + " /token_rank/exchanges";
+        EXCHANGES = BASE_2 + "/token_rank/exchanges";
 
-        DAPP = BASE_2 + " /token_rank/dapp";
+        DAPP = BASE_2 + "/token_rank/dapp";
 
         CATEGORY_RANKING = BASE_2 + "/token_rank/category";
 
         ARTICLE_RANKING = BASE_2 + "/article?sort_desc=click_rate&per_page=50";
+
+        COMMENT = BASE_2 + "/user/category/comment";
+
+        COMMENT_INFO = BASE_2 + "/category/";
+
+        RANK_MARKET_CAP = BASE_2 + "/token_rank/market_cap/";
+
+        TOTLE_MARKET = BASE_2 + "/ico/total_market_value";
     }
 
 }

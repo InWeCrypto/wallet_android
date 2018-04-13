@@ -24,8 +24,8 @@ public class SearchProjectAdapter extends CommonAdapter<ProjectDetaileBean>{
 
     @Override
     protected void convert(ViewHolder holder, ProjectDetaileBean projectDetaileBean, int position) {
-        holder.setText(R.id.unit,projectDetaileBean.getUnit());
-        holder.setText(R.id.name,projectDetaileBean.getName());
+        holder.setText(R.id.unit,projectDetaileBean.getName());
+        holder.setText(R.id.name,projectDetaileBean.getLong_name());
         holder.setText(R.id.block_chain,projectDetaileBean.getIndustry());
         Glide.with(mContext)
                 .load(projectDetaileBean.getImg())

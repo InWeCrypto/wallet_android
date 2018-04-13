@@ -50,12 +50,12 @@ public class NeoRecordAdapter extends CommonAdapter<NeoOderBean.ListBean> {
         }else {
             amount=new BigDecimal(neoOderBean.getValue()).setScale(8,BigDecimal.ROUND_DOWN).toPlainString();
         }
-        if (neoOderBean.getFrom().equals(neoOderBean.getTo())){
+        if (neoOderBean.getFrom().toLowerCase().equals(neoOderBean.getTo().toLowerCase())){
             Glide.with(mContext).load(R.mipmap.zizhuanxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));
             holder.setText(R.id.price,amount);
             //holder.setTextColor(R.id.price, Color.parseColor("#000000"));
             holder.setTextColor(R.id.hit,Color.parseColor("#333333"));
-        }else if (neoOderBean.getFrom().equals(address)){
+        }else if (neoOderBean.getFrom().toLowerCase().equals(address.toLowerCase())){
             Glide.with(mContext).load(R.mipmap.zhuanchuxxhdpi).crossFade().into((ImageView) holder.getView(R.id.img));
             holder.setText(R.id.price,"-"+amount);
             //holder.setTextColor(R.id.hit,Color.parseColor("#737373"));

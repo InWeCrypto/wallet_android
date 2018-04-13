@@ -203,7 +203,7 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
                                             intent.putExtra("wallet", wallet);
                                             intent.putExtra("token", tokenBean);
                                             intent.putExtra("to", etAddress.getText().toString().trim());
-                                            intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
+                                            intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(new BigDecimal(tokenBean.getDecimals()).intValue(), BigDecimal.ROUND_DOWN).toPlainString());
                                             intent.putExtra("handfee", "0.0000");
                                             intent.putExtra("hit", etHint.getText().toString().trim());
                                             intent.putExtra("unit", tokenBean.getName());
@@ -215,7 +215,7 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
                                                 intent.putExtra("wallet", wallet);
                                                 intent.putExtra("token", tokenBean);
                                                 intent.putExtra("to", etAddress.getText().toString().trim());
-                                                intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
+                                                intent.putExtra("price", new BigDecimal(etPrice.getText().toString().trim()).setScale(new BigDecimal(tokenBean.getDecimals()).intValue(), BigDecimal.ROUND_DOWN).toPlainString());
                                                 intent.putExtra("handfee", response.body().data.getGas_consumed());
                                                 intent.putExtra("hit", etHint.getText().toString().trim());
                                                 intent.putExtra("unit", tokenBean.getName());

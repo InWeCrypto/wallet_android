@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#F6F6F6">
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wodepingjia"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:textColor="#333333"/>
+        
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginRight="10dp"
+            android:padding="6dp"
+            android:layout_gravity="right"
+            android:src="@mipmap/close_pingjia"/>
+    </FrameLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"/>
+
+    <FrameLayout
+        android:id="@+id/imgll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="54dp"
+            android:layout_marginRight="54dp"
+            android:orientation="vertical"
+            android:background="@drawable/round_4dp_white_bg">
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="16sp"
+                    android:textColor="#333333"/>
+
+                <TextView
+                    android:id="@+id/long_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/name"
+                    android:layout_marginLeft="5dp"
+                    android:layout_centerVertical="true"
+                    android:textSize="10sp"
+                    android:textColor="#C9C6C6"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/net"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#333333"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/pingfenbg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/pingfen_bg"
+                    android:scaleType="fitXY"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:text="@string/wodepingfen"
+                    android:layout_gravity="center"
+                    android:textColor="#ACACAC"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/fenshu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:textColor="#333333"/>
+
+            <com.inwecrypto.wallet.common.widget.RatingBar
+                android:id="@+id/ratingbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:focusable="false"
+                app:starCount="5"
+                app:starEmpty="@mipmap/xiangmugaikuang_xing"
+                app:starFill="@mipmap/xiangmugaikuang_xing_s"
+                app:starHalf="@mipmap/xiangmugaikuang_xing_half"
+                app:starImageSize="14dp"
+                app:starPadding="7dp"
+                app:starStep="0.1"
+                app:stepSize="Half"
+                app:clickable="false"/>
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="13dp"
+                android:src="@mipmap/pingjia_left"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="8dp"/>
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="#333333"
+                android:textSize="13sp"/>
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="13dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="right"
+                android:src="@mipmap/pingjia_right"/>
+
+        </LinearLayout>
+    </FrameLayout>
+    
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="12"/>
+
+    <FrameLayout
+        android:id="@+id/detaile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="54dp"
+        android:clickable="true"
+        android:background="@drawable/round_4dp_white_bg">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ACACAC"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical"
+            android:text="@string/quchakanpingjiaxiangqing"/>
+        <ImageView
+            android:layout_width="4.5dp"
+            android:layout_height="8.5dp"
+            android:layout_gravity="right|center_vertical"
+            android:src="@mipmap/xiangmuchakan_fanhui"/>
+    </FrameLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="18"/>
+
+    <net.qiujuer.genius.ui.widget.Button
+        android:id="@+id/share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="54dp"
+        android:layout_marginRight="54dp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/login_bg"
+        android:text="@string/changtufenxiang"
+        android:textSize="14sp"
+        android:textColor="@color/c_ffffff"
+        app:gTouchCornerRadius="12dp"
+        app:gTouchDurationRate="0.7"
+        app:gTouchEffect="ripple" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"/>
+
+</LinearLayout>

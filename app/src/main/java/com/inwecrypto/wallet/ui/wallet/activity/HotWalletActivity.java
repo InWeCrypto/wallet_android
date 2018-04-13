@@ -33,6 +33,7 @@ import com.inwecrypto.wallet.bean.WalletBean;
 import com.inwecrypto.wallet.bean.WalletCountBean;
 import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.http.LzyResponse;
+import com.inwecrypto.wallet.common.http.Url;
 import com.inwecrypto.wallet.common.http.api.WalletApi;
 import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.util.AnimUtil;
@@ -608,7 +609,7 @@ public class HotWalletActivity extends BaseActivity {
         }
 
         if (!App.get().isLogin()){
-            LzyResponse<TokenBean> response= CacheUtils.getCache(Constant.CONVERSION+sb.toString()+ App.isMain);
+            LzyResponse<TokenBean> response= CacheUtils.getCache(Url.CONVERSION+"/"+wallet.getId()+ App.isMain);
             if (null!=response){
                 setGnt(response);
             }
@@ -697,7 +698,7 @@ public class HotWalletActivity extends BaseActivity {
                 changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
             } else {
                 totleUsdPrice = TOKENPrice.add(ETHPrice).setScale(2, BigDecimal.ROUND_DOWN).toPlainString();
-                changeSee(1, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
+                changeSee(0, App.get().getSp().getBoolean(Constant.MAIN_SEE, true));
             }
         }
     }

@@ -575,12 +575,12 @@ public class TokenWalletActivity extends BaseActivity {
         totleEther = totleEther.add(currentPrice);
         if (1 == App.get().getUnit()) {
             totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == walletPrices.get(0).getCategory().getCap() ? "0" : walletPrices.get(0).getCategory().getCap().getPrice_cny()))).setScale(2, BigDecimal.ROUND_DOWN);
-            tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_DOWN).toString());
+            tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
             tvChPrice.setText("≈￥" + totlePrice.toString());
             titlePrice.setText("(￥" + totlePrice.toString() + ")");
         } else {
             totlePrice = totlePrice.add(currentPrice.divide(Constant.pEther).multiply(new BigDecimal(null == walletPrices.get(0).getCategory().getCap() ? "0" : walletPrices.get(0).getCategory().getCap().getPrice_usd()))).setScale(2, BigDecimal.ROUND_DOWN);
-            tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_DOWN).toString());
+            tvPrice.setText(totleEther.divide(Constant.pEther).setScale(4, BigDecimal.ROUND_HALF_UP).toString());
             tvChPrice.setText("≈$" + totlePrice.toString());
             titlePrice.setText("($" + totlePrice.toString() + ")");
         }

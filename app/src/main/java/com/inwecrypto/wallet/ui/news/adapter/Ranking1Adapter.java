@@ -1,6 +1,7 @@
 package com.inwecrypto.wallet.ui.news.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +10,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.Rank1Bean;
+import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.DensityUtil;
 import com.inwecrypto.wallet.common.util.ScreenUtils;
+import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.kelin.scrollablepanel.library.PanelAdapter;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 /**
@@ -32,6 +40,9 @@ public class Ranking1Adapter extends PanelAdapter {
     private Context context;
 
     private ArrayList<Rank1Bean> data;
+
+    private boolean isUp=true;
+    private int type=0;
 
     public Ranking1Adapter(Context context){
         this.context=context;
@@ -76,23 +87,82 @@ public class Ranking1Adapter extends PanelAdapter {
     }
 
     private void setDateView(int row, int column, DateViewHolder holder) {
+        holder.num.setTextColor(Color.parseColor("#888888"));
+        holder.num.setBackgroundResource(R.drawable.candy_wight_bg);
         switch (column){
             case 1:
-                holder.num.setText(data.get(row-1).getVolume());
+                if (App.get().getUnit()==1){
+                    String volume="0.00";
+                    if (new BigDecimal(data.get(row-1).getVolume_cny()).floatValue() < 10000) {
+                        volume=data.get(row-1).getVolume_cny();
+                    } else if (new BigDecimal(data.get(row-1).getVolume_cny()).floatValue() < 100000000) {
+                        volume=new BigDecimal(data.get(row-1).getVolume_cny()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
+                    } else {
+                        volume=new BigDecimal(data.get(row-1).getVolume_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                    }
+                    holder.num.setText("¥"+volume);
+                }else {
+                    String volume="0.00";
+                    if (new BigDecimal(data.get(row-1).getVolume()).floatValue() < 10000) {
+                        volume=data.get(row-1).getVolume();
+                    } else if (new BigDecimal(data.get(row-1).getVolume()).floatValue() < 100000000) {
+                        volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
+                    } else {
+                        volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                    }
+                    holder.num.setText("$"+volume);
+                }
                 break;
             case 2:
-                holder.num.setText(data.get(row-1).getPrice());
+                if (App.get().getUnit()==1){
+                    holder.num.setText("¥"+data.get(row-1).getPrice_cny());
+                }else {
+                    holder.num.setText("$"+data.get(row-1).getPrice());
+                }
                 break;
             case 3:
-                holder.num.setText(data.get(row-1).getChange());
+                if (data.get(row-1).getChange().contains("-")){
+                    holder.num.setBackgroundResource(R.drawable.round_2dp_down_bg);
+                    holder.num.setText(data.get(row-1).getChange());
+                }else {
+                    holder.num.setBackgroundResource(R.drawable.round_2dp_up_bg);
+                    holder.num.setText("+"+data.get(row-1).getChange());
+                }
+                holder.num.setTextColor(Color.parseColor("#ffffff"));
                 break;
             case 4:
-                holder.num.setText(data.get(row-1).getMarket());
+                if (App.get().getUnit()==1){
+                    String volume="0.00";
+                    if (new BigDecimal(data.get(row-1).getMarket_cny()).floatValue() < 10000) {
+                        volume=data.get(row-1).getMarket_cny();
+                    } else if (new BigDecimal(data.get(row-1).getMarket_cny()).floatValue() < 100000000) {
+                        volume=new BigDecimal(data.get(row-1).getMarket_cny()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
+                    } else {
+                        volume=new BigDecimal(data.get(row-1).getMarket_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                    }
+                    holder.num.setText("¥"+volume);
+                }else {
+                    String volume="0.00";
+                    if (new BigDecimal(data.get(row-1).getMarket()).floatValue() < 10000) {
+                        volume=data.get(row-1).getMarket();
+                    } else if (new BigDecimal(data.get(row-1).getMarket()).floatValue() < 100000000) {
+                        volume=new BigDecimal(data.get(row-1).getMarket()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
+                    } else {
+                        volume=new BigDecimal(data.get(row-1).getMarket()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                    }
+                    holder.num.setText("$"+volume);
+                }
                 break;
         }
     }
 
-    private void setNameView(int row, NameViewHolder holder) {
+    private void setNameView(final int row, NameViewHolder holder) {
+        holder.namell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_PAIXU1,row-1));
+            }
+        });
         Glide.with(context).load(data.get(row-1).getImg()).crossFade().into(holder.img);
         holder.no.setText(data.get(row-1).getRank());
         holder.name.setText(data.get(row-1).getSymbol());
@@ -105,18 +175,123 @@ public class Ranking1Adapter extends PanelAdapter {
             case 0:
                 holder.text.setText(R.string.shizhipaiming);
                 holder.line.setVisibility(View.VISIBLE);
+                if (type!=0){
+                    holder.img.setImageResource(R.mipmap.paixu_icon);
+                }else {
+                    if (isUp){
+                        holder.img.setImageResource(R.mipmap.paixu_icon_up);
+                    }else {
+                        holder.img.setImageResource(R.mipmap.paixu_icon_down);
+                    }
+                }
+                holder.titlell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (type==0){
+                            isUp=!isUp;
+                        }else {
+                            type=0;
+                            isUp=true;
+                        }
+                        EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_PAIXU1,-10,isUp?1:0));
+                    }
+                });
                 break;
             case 1:
                 holder.text.setText(R.string.jiaoyiliang24);
+                if (type!=1){
+                    holder.img.setImageResource(R.mipmap.paixu_icon);
+                }else {
+                    if (isUp){
+                        holder.img.setImageResource(R.mipmap.paixu_icon_up);
+                    }else {
+                        holder.img.setImageResource(R.mipmap.paixu_icon_down);
+                    }
+                }
+                holder.titlell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (type==1){
+                            isUp=!isUp;
+                        }else {
+                            type=1;
+                            isUp=true;
+                        }
+                        EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_PAIXU1,-11,isUp?1:0));
+                    }
+                });
                 break;
             case 2:
                 holder.text.setText(R.string.dangqianjiage);
+                if (type!=2){
+                    holder.img.setImageResource(R.mipmap.paixu_icon);
+                }else {
+                    if (isUp){
+                        holder.img.setImageResource(R.mipmap.paixu_icon_up);
+                    }else {
+                        holder.img.setImageResource(R.mipmap.paixu_icon_down);
+                    }
+                }
+                holder.titlell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (type==2){
+                            isUp=!isUp;
+                        }else {
+                            type=2;
+                            isUp=true;
+                        }
+                        EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_PAIXU1,-12,isUp?1:0));
+                    }
+                });
                 break;
             case 3:
                 holder.text.setText(R.string.zhangdiefu24);
+                if (type!=3){
+                    holder.img.setImageResource(R.mipmap.paixu_icon);
+                }else {
+                    if (isUp){
+                        holder.img.setImageResource(R.mipmap.paixu_icon_up);
+                    }else {
+                        holder.img.setImageResource(R.mipmap.paixu_icon_down);
+                    }
+                }
+                holder.titlell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (type==3){
+                            isUp=!isUp;
+                        }else {
+                            type=3;
+                            isUp=true;
+                        }
+                        EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_PAIXU1,-13,isUp?1:0));
+                    }
+                });
                 break;
             case 4:
                 holder.text.setText(R.string.shizhi);
+                if (type!=4){
+                    holder.img.setImageResource(R.mipmap.paixu_icon);
+                }else {
+                    if (isUp){
+                        holder.img.setImageResource(R.mipmap.paixu_icon_up);
+                    }else {
+                        holder.img.setImageResource(R.mipmap.paixu_icon_down);
+                    }
+                }
+                holder.titlell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (type==4){
+                            isUp=!isUp;
+                        }else {
+                            type=4;
+                            isUp=true;
+                        }
+                        EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_PAIXU1,-14,isUp?1:0));
+                    }
+                });
                 break;
         }
     }
@@ -156,12 +331,14 @@ public class Ranking1Adapter extends PanelAdapter {
 
     private static class TitleViewHolder extends RecyclerView.ViewHolder {
 
+        public View titlell;
         public ImageView img;
         public TextView text;
         public View line;
 
         public TitleViewHolder(View itemView) {
             super(itemView);
+            this.titlell=itemView.findViewById(R.id.titlell);
             this.img = (ImageView) itemView.findViewById(R.id.img);
             this.text = (TextView) itemView.findViewById(R.id.text);
             this.line = itemView.findViewById(R.id.line);
@@ -171,6 +348,7 @@ public class Ranking1Adapter extends PanelAdapter {
 
     private static class NameViewHolder extends RecyclerView.ViewHolder {
 
+        public View namell;
         public ImageView img;
         public TextView no;
         public TextView name;
@@ -178,6 +356,7 @@ public class Ranking1Adapter extends PanelAdapter {
 
         public NameViewHolder(View itemView) {
             super(itemView);
+            this.namell=itemView.findViewById(R.id.namell);
             this.img = (ImageView) itemView.findViewById(R.id.img);
             this.no = (TextView) itemView.findViewById(R.id.no);
             this.name = (TextView) itemView.findViewById(R.id.name);

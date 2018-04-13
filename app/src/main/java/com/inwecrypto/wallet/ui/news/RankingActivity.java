@@ -10,12 +10,19 @@ import android.widget.TextView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.base.BaseFragment;
-import com.inwecrypto.wallet.bean.TradingProjectDetaileBean;
+import com.inwecrypto.wallet.bean.MarketPriceBean;
+import com.inwecrypto.wallet.common.http.LzyResponse;
+import com.inwecrypto.wallet.common.http.api.ZixunApi;
+import com.inwecrypto.wallet.common.http.callback.JsonCallback;
 import com.inwecrypto.wallet.common.widget.SimpleToolbar;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.me.adapter.CommonPagerAdapter;
-import com.inwecrypto.wallet.ui.news.fragment.ProjectBottomHistoryFragment;
 import com.inwecrypto.wallet.ui.news.fragment.Ranking1Fragment;
+import com.inwecrypto.wallet.ui.news.fragment.Ranking2Fragment;
+import com.inwecrypto.wallet.ui.news.fragment.Ranking3Fragment;
+import com.inwecrypto.wallet.ui.news.fragment.Ranking4Fragment;
+import com.inwecrypto.wallet.ui.news.fragment.Ranking5Fragment;
+import com.lzy.okgo.model.Response;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -31,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 作者：xiaoji06 on 2018/2/9 16:25
@@ -52,6 +60,8 @@ public class RankingActivity extends BaseActivity {
     MagicIndicator magicIndicator;
     @BindView(R.id.view_pager)
     ViewPager mViewPager;
+    @BindView(R.id.market)
+    TextView market;
 
     private List<String> mDataList = new ArrayList<>();
 
@@ -89,9 +99,17 @@ public class RankingActivity extends BaseActivity {
         mDataList.add(getString(R.string.ermenzixun));
 
         Ranking1Fragment fragment1 = new Ranking1Fragment();
+        Ranking2Fragment fragment2 = new Ranking2Fragment();
+        Ranking3Fragment fragment3 = new Ranking3Fragment();
+        Ranking4Fragment fragment4 = new Ranking4Fragment();
+        Ranking5Fragment fragment5 = new Ranking5Fragment();
 
         fragments = new ArrayList<>();
         fragments.add(fragment1);
+        fragments.add(fragment2);
+        fragments.add(fragment3);
+        fragments.add(fragment4);
+        fragments.add(fragment5);
 
         adapter = new CommonPagerAdapter(getSupportFragmentManager(), fragments);
         mViewPager.setAdapter(adapter);
@@ -111,7 +129,7 @@ public class RankingActivity extends BaseActivity {
                 simplePagerTitleView.setNormalColor(Color.parseColor("#626262"));
                 simplePagerTitleView.setSelectedColor(Color.parseColor("#F46A00"));
                 simplePagerTitleView.setTextSize(14);
-                simplePagerTitleView.setPadding(simplePagerTitleView.getPaddingLeft(),simplePagerTitleView.getPaddingTop(),simplePagerTitleView.getPaddingRight(),UIUtil.dip2px(context, 4));
+                simplePagerTitleView.setPadding(simplePagerTitleView.getPaddingLeft(), simplePagerTitleView.getPaddingTop(), simplePagerTitleView.getPaddingRight(), UIUtil.dip2px(context, 4));
                 simplePagerTitleView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -136,7 +154,13 @@ public class RankingActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        ZixunApi.getMarketPrice(this, new JsonCallback<LzyResponse<MarketPriceBean>>() {
+            @Override
+            public void onSuccess(Response<LzyResponse<MarketPriceBean>> response) {
+               market.setText(getString(R.string.shizhi)+":$"+response.body().data.getTotal_market_cap_by_available_supply_usd().replaceAll(".[0-9]+?$", "")
+               +"    "+getString(R.string.paihang_jiaoyiliang24)+":$"+response.body().data.getTotal_volume_usd().replaceAll(".[0-9]+?$", ""));
+            }
+        });
     }
 
     @Override
