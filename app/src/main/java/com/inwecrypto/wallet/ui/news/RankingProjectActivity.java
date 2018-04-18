@@ -169,7 +169,11 @@ public class RankingProjectActivity extends BaseActivity {
                     } else if (new BigDecimal(marketCapBean.getVolume_cny()).floatValue() < 100000000) {
                         volume=new BigDecimal(marketCapBean.getVolume_cny()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
                     } else {
-                        volume=new BigDecimal(marketCapBean.getVolume_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        if (App.get().isZh()){
+                            volume=new BigDecimal(marketCapBean.getVolume_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }else {
+                            volume=new BigDecimal(marketCapBean.getVolume_cny()).divide(new BigDecimal(1000000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }
                     }
                     liang.setText("¥"+volume);
                 }else {
@@ -182,7 +186,11 @@ public class RankingProjectActivity extends BaseActivity {
                     } else if (new BigDecimal(marketCapBean.getVolume()).floatValue() < 100000000) {
                         volume=new BigDecimal(marketCapBean.getVolume()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
                     } else {
-                        volume=new BigDecimal(marketCapBean.getVolume()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        if (App.get().isZh()){
+                            volume=new BigDecimal(marketCapBean.getVolume()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }else {
+                            volume=new BigDecimal(marketCapBean.getVolume()).divide(new BigDecimal(1000000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }
                     }
                     liang.setText("$"+volume);
                 }
@@ -202,7 +210,11 @@ public class RankingProjectActivity extends BaseActivity {
                     } else if (new BigDecimal(marketCapBean.getMarket_cny()).floatValue() < 100000000) {
                         volume=new BigDecimal(marketCapBean.getMarket_cny()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
                     } else {
-                        volume=new BigDecimal(marketCapBean.getMarket_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        if (App.get().isZh()){
+                            volume=new BigDecimal(marketCapBean.getMarket_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }else {
+                            volume=new BigDecimal(marketCapBean.getMarket_cny()).divide(new BigDecimal(1000000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }
                     }
                     shizhi.setText("¥"+volume);
                 }else {
@@ -212,7 +224,11 @@ public class RankingProjectActivity extends BaseActivity {
                     } else if (new BigDecimal(marketCapBean.getMarket()).floatValue() < 100000000) {
                         volume=new BigDecimal(marketCapBean.getMarket()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
                     } else {
-                        volume=new BigDecimal(marketCapBean.getMarket()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        if (App.get().isZh()){
+                            volume=new BigDecimal(marketCapBean.getMarket()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }else{
+                            volume=new BigDecimal(marketCapBean.getMarket()).divide(new BigDecimal(1000000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }
                     }
                     shizhi.setText("$"+volume);
                 }

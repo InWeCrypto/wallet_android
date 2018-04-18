@@ -193,6 +193,8 @@ public class HotWalletActivity extends BaseActivity {
         params.height = (int) ((ScreenUtils.getScreenWidth(this) - DensityUtil.dip2px(this, 52)) / 1956.0 * 1176.0);
         cardBg.setLayoutParams(params);
 
+        amount.setMaxWidth(ScreenUtils.getScreenWidth(this)-DensityUtil.dip2px(this,80 ));
+
         SlidrConfig config = new SlidrConfig.Builder()
                 .primaryColor(Color.parseColor("#000000"))
                 .secondaryColor(Color.parseColor("#000000"))

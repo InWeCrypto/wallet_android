@@ -163,12 +163,12 @@ public class PingjiaXiangmuActivity extends BaseActivity {
         cantouguo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (type==1){
+                if (type==3){
                     cantouguo.setBackgroundResource(R.drawable.pingjia_type_bg);
                     type=0;
                     return;
                 }
-                type=1;
+                type=3;
                 cantouguo.setBackgroundResource(R.drawable.pingjia_type_select_bg);
                 xiangcantou.setBackgroundResource(R.drawable.pingjia_type_bg);
                 weiguan.setBackgroundResource(R.drawable.pingjia_type_bg);
@@ -178,12 +178,12 @@ public class PingjiaXiangmuActivity extends BaseActivity {
         xiangcantou.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (type==2){
+                if (type==1){
                     xiangcantou.setBackgroundResource(R.drawable.pingjia_type_bg);
                     type=0;
                     return;
                 }
-                type=2;
+                type=1;
                 xiangcantou.setBackgroundResource(R.drawable.pingjia_type_select_bg);
                 cantouguo.setBackgroundResource(R.drawable.pingjia_type_bg);
                 weiguan.setBackgroundResource(R.drawable.pingjia_type_bg);
@@ -193,12 +193,12 @@ public class PingjiaXiangmuActivity extends BaseActivity {
         weiguan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (type==3){
+                if (type==2){
                     weiguan.setBackgroundResource(R.drawable.pingjia_type_bg);
                     type=0;
                     return;
                 }
-                type=3;
+                type=2;
                 weiguan.setBackgroundResource(R.drawable.pingjia_type_select_bg);
                 cantouguo.setBackgroundResource(R.drawable.pingjia_type_bg);
                 xiangcantou.setBackgroundResource(R.drawable.pingjia_type_bg);

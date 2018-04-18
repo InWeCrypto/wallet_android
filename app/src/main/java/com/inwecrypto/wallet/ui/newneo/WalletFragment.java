@@ -67,6 +67,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
+import me.grantland.widget.AutofitTextView;
 
 /**
  * 作者：xiaoji06 on 2018/1/8 11:01
@@ -79,7 +80,7 @@ public class WalletFragment extends BaseFragment {
     @BindView(R.id.wallet_manager_bottom)
     ImageView walletManagerBottom;
     @BindView(R.id.amount)
-    TextView amount;
+    AutofitTextView amount;
     @BindView(R.id.see)
     ImageView see;
     @BindView(R.id.user_img)

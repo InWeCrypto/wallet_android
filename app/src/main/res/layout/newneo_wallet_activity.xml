@@ -100,14 +100,16 @@
                                 </LinearLayout>
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginLeft="4dp"
+                                    android:layout_marginRight="4dp"
                                     android:layout_centerInParent="true"
                                     android:orientation="vertical">
                                     <LinearLayout
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:gravity="center_vertical"
+                                        android:gravity="center"
                                         android:orientation="horizontal">
                                         <me.grantland.widget.AutofitTextView
                                             android:id="@+id/amount"
@@ -115,12 +117,15 @@
                                             android:layout_height="wrap_content"
                                             android:textSize="36sp"
                                             android:textColor="@color/c_333333"
-                                            android:text="$10000.00"/>
+                                            android:singleLine="true"
+                                            android:maxLines="1"
+                                            app:minTextSize="24sp"/>
                                         <ImageView
                                             android:id="@+id/see"
-                                            android:layout_width="21dp"
-                                            android:layout_height="15dp"
-                                            android:padding="3dp"
+                                            android:layout_width="27dp"
+                                            android:layout_height="31dp"
+                                            android:clickable="true"
+                                            android:padding="6dp"
                                             android:layout_marginLeft="4dp"
                                             android:layout_marginTop="4dp"
                                             android:src="@mipmap/openpassxxhdpi"/>

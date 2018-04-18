@@ -115,12 +115,15 @@
                                             android:layout_height="wrap_content"
                                             android:textSize="36sp"
                                             android:textColor="@color/c_333333"
-                                            android:text="$10000.00"/>
+                                            android:singleLine="true"
+                                            android:maxLines="1"
+                                            app:minTextSize="24sp"/>
                                         <ImageView
                                             android:id="@+id/see"
-                                            android:layout_width="21dp"
-                                            android:layout_height="15dp"
-                                            android:padding="3dp"
+                                            android:layout_width="27dp"
+                                            android:layout_height="31dp"
+                                            android:clickable="true"
+                                            android:padding="6dp"
                                             android:layout_marginLeft="4dp"
                                             android:layout_marginTop="4dp"
                                             android:src="@mipmap/openpassxxhdpi"/>

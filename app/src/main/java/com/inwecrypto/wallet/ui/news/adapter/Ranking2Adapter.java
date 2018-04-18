@@ -92,7 +92,11 @@ public class Ranking2Adapter extends PanelAdapter {
                 } else if (new BigDecimal(data.get(row-1).getVolume()).floatValue() < 100000000) {
                     volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.wan);
                 } else {
-                    volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                    if (App.get().isZh()){
+                        volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                    }else {
+                        volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(1000000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                    }
                 }
                 if (App.get().getUnit()==1){
                     holder.num.setText("¥"+volume);
@@ -105,8 +109,17 @@ public class Ranking2Adapter extends PanelAdapter {
                 break;
             case 3:
                 StringBuilder sb=new StringBuilder();
-                for (String type:data.get(row-1).getType().getZh()){
-                    sb.append(type+"、");
+                if (App.get().isZh()){
+                    for (String type:data.get(row-1).getType().getZh()){
+                        sb.append(type+"、");
+                    }
+                }else {
+                    for (String type:data.get(row-1).getType().getEn()){
+                        sb.append(type+"、");
+                    }
+                }
+                if (sb.length()!=0){
+                    sb.deleteCharAt(sb.length()-1);
                 }
                 holder.num.setText(sb.toString());
                 break;

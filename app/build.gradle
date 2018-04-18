@@ -106,4 +106,6 @@ dependencies {
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     compile 'com.kelin.scrollablepanel:library:1.2.0'
     implementation files('libs/open_sdk_r5990_lite.jar')
+    compile 'com.umeng.sdk:common:latest.integration'
+    compile 'com.umeng.sdk:analytics:latest.integration'
 }

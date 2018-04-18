@@ -17,8 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:gravity="bottom"
-        android:orientation="horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/price"
@@ -28,23 +28,30 @@
             android:textColor="@color/c_008c55"
             android:textSize="39dp" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="10dp"
-            android:text="@string/zhuanzhangjine"
-            android:textColor="@color/c_333333"
-            android:textSize="10dp" />
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="10dp"
+                android:text="@string/zhuanzhangjine"
+                android:textColor="@color/c_333333"
+                android:textSize="10dp" />
 
-        <TextView
-            android:id="@+id/tv_unit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="(ether)"
-            android:textColor="@color/c_333333"
-            android:textSize="10dp" />
+            <TextView
+                android:id="@+id/tv_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="(ether)"
+                android:textColor="@color/c_333333"
+                android:textSize="10dp" />
+        </LinearLayout>
+
 
     </LinearLayout>
 

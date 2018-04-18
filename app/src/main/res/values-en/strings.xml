@@ -38,7 +38,7 @@
     <string name="zhuanzhuangqueren">Transfer Confirmation</string>
     <string name="zhuanzhangxiangqing">Transfer Details</string>
     <string name="saoyisao_space">scan\u0020\u0020\u0020\u0020</string>
-    <string name="weibeifen">Not backed up</string>
+    <string name="weibeifen">Unbackup</string>
     <string name="guancha">Watch</string>
     <string name="liangdiankaipan">Markets Open at 00:00</string>
     <string name="zuigao">Highest</string>
@@ -108,9 +108,9 @@
     <string name="qingshurumiam">Please input password</string>
     <string name="tishi">Note</string>
     <string name="shanchu">Delete</string>
-    <string name="dingzhi">Pin</string>
-    <string name="dingzhishibai">Failed to pin</string>
-    <string name="dingzhichenggong">Pinned</string>
+    <string name="dingzhi">Top</string>
+    <string name="dingzhishibai">Failed to top</string>
+    <string name="dingzhichenggong">Success</string>
     <string name="jiazaishibai">Failed to load</string>
     <string name="wancheng">Completed</string>
     <string name="tianjiashibai">Failed to add</string>

@@ -98,7 +98,11 @@ public class Ranking1Adapter extends PanelAdapter {
                     } else if (new BigDecimal(data.get(row-1).getVolume_cny()).floatValue() < 100000000) {
                         volume=new BigDecimal(data.get(row-1).getVolume_cny()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
                     } else {
-                        volume=new BigDecimal(data.get(row-1).getVolume_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        if (App.get().isZh()){
+                            volume=new BigDecimal(data.get(row-1).getVolume_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }else {
+                            volume=new BigDecimal(data.get(row-1).getVolume_cny()).divide(new BigDecimal(1000000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }
                     }
                     holder.num.setText("¥"+volume);
                 }else {
@@ -108,7 +112,11 @@ public class Ranking1Adapter extends PanelAdapter {
                     } else if (new BigDecimal(data.get(row-1).getVolume()).floatValue() < 100000000) {
                         volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
                     } else {
-                        volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        if (App.get().isZh()){
+                            volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }else {
+                            volume=new BigDecimal(data.get(row-1).getVolume()).divide(new BigDecimal(1000000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }
                     }
                     holder.num.setText("$"+volume);
                 }
@@ -138,7 +146,11 @@ public class Ranking1Adapter extends PanelAdapter {
                     } else if (new BigDecimal(data.get(row-1).getMarket_cny()).floatValue() < 100000000) {
                         volume=new BigDecimal(data.get(row-1).getMarket_cny()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
                     } else {
-                        volume=new BigDecimal(data.get(row-1).getMarket_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        if (App.get().isZh()){
+                            volume=new BigDecimal(data.get(row-1).getMarket_cny()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }else {
+                            volume=new BigDecimal(data.get(row-1).getMarket_cny()).divide(new BigDecimal(1000000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }
                     }
                     holder.num.setText("¥"+volume);
                 }else {
@@ -148,7 +160,11 @@ public class Ranking1Adapter extends PanelAdapter {
                     } else if (new BigDecimal(data.get(row-1).getMarket()).floatValue() < 100000000) {
                         volume=new BigDecimal(data.get(row-1).getMarket()).divide(new BigDecimal(10000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+ App.get().getString(R.string.wan);
                     } else {
-                        volume=new BigDecimal(data.get(row-1).getMarket()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        if (App.get().isZh()){
+                            volume=new BigDecimal(data.get(row-1).getMarket()).divide(new BigDecimal(100000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }else {
+                            volume=new BigDecimal(data.get(row-1).getMarket()).divide(new BigDecimal(1000000000)).setScale(2, RoundingMode.HALF_UP).toPlainString()+App.get().getString(R.string.yi);
+                        }
                     }
                     holder.num.setText("$"+volume);
                 }

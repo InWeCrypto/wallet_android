@@ -31,6 +31,8 @@ import com.inwecrypto.wallet.common.util.GsonUtils;
 import com.inwecrypto.wallet.common.util.SPUtils;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
 import com.wanjian.cockroach.Cockroach;
 
 import okhttp3.OkHttpClient;
@@ -47,7 +49,7 @@ public class App extends Application{
     private SPUtils sp;
     private LoginBean loginBean;
     public static boolean isMain;
-    private int defaultLangue=2;
+    private int defaultLangue=1;
     private boolean isLogin;
 
     public static final String APP_ID="wxd346a4033d5a09a3";
@@ -62,6 +64,9 @@ public class App extends Application{
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         builder.detectFileUriExposure();
+
+        UMConfigure.init(this,"5ad2169df43e481ae4000266","", UMConfigure.DEVICE_TYPE_PHONE, null);
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
         //初始化微信
         api = WXAPIFactory.createWXAPI(this,APP_ID,false);
@@ -154,7 +159,7 @@ public class App extends Application{
     }
 
     public int getUnit() {//1.人民币  2.美元
-        return sp.getInt(Constant.UNIT_TYPE);
+        return sp.getInt(Constant.UNIT_TYPE,defaultLangue);
     }
 
 

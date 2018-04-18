@@ -45,7 +45,7 @@ import butterknife.BindView;
  * 功能：
  */
 
-public class InweHotActivity extends BaseActivity {
+public class  InweHotActivity extends BaseActivity {
 
 
     @BindView(R.id.txt_left_title)

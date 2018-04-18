@@ -37,6 +37,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.common.widget.MaterialDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.Locale;
 
@@ -138,6 +139,13 @@ public abstract class BaseActivity extends AppCompatActivity{
         // 语言状态检测
         recoverLanguage();
         super.onResume();
+        MobclickAgent.onResume(this); //统计时长
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this); //统计时长
     }
 
     /**

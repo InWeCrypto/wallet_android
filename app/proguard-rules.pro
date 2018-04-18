@@ -33,6 +33,19 @@
 #-------------------------------------------------------------------------
 
 #---------------------------------2.第三方包-------------------------------
+-keep class com.umeng.** {*;}
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keep public class com.inwecrypto.wallet.R$*{
+public static final int *;
+}
+
 #okhttp
 -dontwarn okhttp3.**
 -keep class okhttp3.**{*;}

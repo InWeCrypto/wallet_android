@@ -209,9 +209,15 @@ public class ProjectNewsWebActivity extends BaseActivity implements EasyPermissi
 //                                    dialog.dismiss();
                                     break;
                                 case 3:
-                                    Uri content_url = Uri.parse("https://t.me/share/url?text=" + title + "&url=" + url.replace("newsdetail2","newsdetail"));
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, content_url);
-                                    startActivity(intent);
+                                    try {
+                                        Intent vIt = new Intent("android.intent.action.SEND");
+                                        vIt.setPackage("org.telegram.messenger");
+                                        vIt.setType("text/plain");
+                                        vIt.putExtra(Intent.EXTRA_TEXT, title + "\n" + url.replace("newsdetail2","newsdetail"));
+                                        mActivity.startActivity(vIt);
+                                    } catch (Exception ex) {
+                                        Log.e(TAG, "telegramShare:" + ex);
+                                    }
                                     dialog.dismiss();
                                     break;
                                 case 4:

@@ -61,9 +61,6 @@
         android:name="com.inwecrypto.wallet.App"
         android:theme="@style/AppTheme">
 
-        <meta-data android:value="YOUR_APP_KEY" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>
-
         <activity android:name="com.inwecrypto.wallet.ui.WelcomeActivity"
             android:theme="@style/WelcomeStyle"
             android:configChanges="orientation|screenSize|keyboardHidden"

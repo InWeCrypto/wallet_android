@@ -539,7 +539,11 @@ public class MarketDetaileActivity extends BaseActivity {
                     } else if (liang < 100000000) {
                         volume24.setText(unit + decimalFormat.format(liang / 10000) + getString(R.string.wan));
                     } else {
-                        volume24.setText(unit + decimalFormat.format(liang / 10000 / 10000) + getString(R.string.yi));
+                        if (App.get().isZh()){
+                            volume24.setText(unit + decimalFormat.format(liang / 10000 / 10000) + getString(R.string.yi));
+                        }else {
+                            volume24.setText(unit + decimalFormat.format(liang / 10000 / 100000) + getString(R.string.yi));
+                        }
                     }
 
                     if (priceBean.get_$24h_change_cny().contains("-")) {

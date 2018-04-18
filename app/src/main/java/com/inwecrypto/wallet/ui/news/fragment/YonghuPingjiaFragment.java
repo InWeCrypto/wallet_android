@@ -525,9 +525,13 @@ public class YonghuPingjiaFragment extends BaseFragment implements OnChartValueS
                     if (null == pingjiaBean) {
                         myPingfenLl.setVisibility(View.GONE);
                     } else {
-                        myPingfenLl.setVisibility(View.VISIBLE);
-                        myRatingbar.setStar(Float.parseFloat(pingjiaBean.getScore()));
-                        myFenshu.setText(pingjiaBean.getScore() + getString(R.string.fenshu));
+                        if (response.body().data.getIs_category_comment()==0){
+                            myPingfenLl.setVisibility(View.GONE);
+                        }else {
+                            myPingfenLl.setVisibility(View.VISIBLE);
+                            myRatingbar.setStar(Float.parseFloat(pingjiaBean.getScore()));
+                            myFenshu.setText(pingjiaBean.getScore() + getString(R.string.fenshu));
+                        }
                     }
                 }
             });
@@ -581,7 +585,7 @@ public class YonghuPingjiaFragment extends BaseFragment implements OnChartValueS
                     int good = analysisBean.getLike() + analysisBean.getRecommend();
                     int bad = analysisBean.getDissatisfied() + analysisBean.getVery_dissatisfied();
                     BigDecimal totleTuijian = new BigDecimal(good + bad);
-                    int width = tuijianll.getWidth() + DensityUtil.dip2px(mContext, 8);
+                    int width = tuijianll.getWidth();
                     float preGood = 0;
                     float preBad = 0;
 
@@ -615,7 +619,7 @@ public class YonghuPingjiaFragment extends BaseFragment implements OnChartValueS
 
                     LinearLayout.LayoutParams pGood = (LinearLayout.LayoutParams) tuijianView.getLayoutParams();
                     LinearLayout.LayoutParams pBad = (LinearLayout.LayoutParams) butuijianView.getLayoutParams();
-                    int width = tuijianll.getWidth() + DensityUtil.dip2px(mContext, 8);
+                    int width = tuijianll.getWidth();
                     pGood.width = (int) (width * 0.5f);
                     pBad.width = (int) (width * 0.5f);
                     tuijianView.setLayoutParams(pGood);

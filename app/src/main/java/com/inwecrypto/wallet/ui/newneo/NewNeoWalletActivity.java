@@ -203,6 +203,8 @@ public class NewNeoWalletActivity extends BaseActivity {
         params.height= (int) ((ScreenUtils.getScreenWidth(this)-DensityUtil.dip2px(this,52))/1956.0*1176.0);
         cardBg.setLayoutParams(params);
 
+        amount.setMaxWidth(ScreenUtils.getScreenWidth(this)-DensityUtil.dip2px(this,80));
+
         appbarlayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
