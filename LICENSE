@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>wallet_ios/LICENSE at master · InWeCrypto/wallet_ios</title>
+  <meta name="Description" content="wallet_ios - A wallet app for iOS">
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1561.2">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Courier; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px Courier; -webkit-text-stroke: #000000; min-height: 16.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">MIT License</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">Copyright (c) 2017 GridProject</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">Permission is hereby granted, free of charge, to any person obtaining a copy</span></p>
+<p class="p1"><span class="s1">of this software and associated documentation files (the "Software"), to deal</span></p>
+<p class="p1"><span class="s1">in the Software without restriction, including without limitation the rights</span></p>
+<p class="p1"><span class="s1">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span></p>
+<p class="p1"><span class="s1">copies of the Software, and to permit persons to whom the Software is</span></p>
+<p class="p1"><span class="s1">furnished to do so, subject to the following conditions:</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">The above copyright notice and this permission notice shall be included in all</span></p>
+<p class="p1"><span class="s1">copies or substantial portions of the Software.</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span></p>
+<p class="p1"><span class="s1">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span></p>
+<p class="p1"><span class="s1">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span></p>
+<p class="p1"><span class="s1">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span></p>
+<p class="p1"><span class="s1">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span></p>
+<p class="p1"><span class="s1">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span></p>
+<p class="p1"><span class="s1">SOFTWARE.</span></p>
+</body>
+</html>
