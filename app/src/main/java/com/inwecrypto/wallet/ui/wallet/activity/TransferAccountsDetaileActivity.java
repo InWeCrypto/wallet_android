@@ -99,7 +99,11 @@ public class TransferAccountsDetaileActivity extends BaseActivity {
             priceNum=order.getFee();
         }
         BigDecimal b = new BigDecimal(priceNum);
-        price.setText("-" + b.divide(AppUtil.decimal(decimal)).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
+        if (order.getPay_address().toLowerCase().equals(order.getReceive_address().toLowerCase())){
+            price.setText(b.divide(AppUtil.decimal(decimal)).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
+        }else {
+            price.setText("-" + b.divide(AppUtil.decimal(decimal)).setScale(4, BigDecimal.ROUND_DOWN).toPlainString());
+        }
 
         String gasNum="0.0000";
         if (null!=order.getHandle_fee()){

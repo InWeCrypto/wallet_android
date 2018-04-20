@@ -63,6 +63,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import org.json.JSONObject;
 
@@ -74,6 +75,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import butterknife.BindView;
@@ -246,7 +249,15 @@ public class ProjectNewsWebActivity extends BaseActivity implements EasyPermissi
                                     }
                                     break;
                                 case 6:
-                                    ToastUtil.show(getString(R.string.jingqingqidai));
+                                    //这里分享一个链接，更多分享配置参考官方介绍：https://dev.twitter.com/twitterkit/android/compose-tweets
+                                    try {
+                                        TweetComposer.Builder builder = new TweetComposer.Builder(mActivity)
+                                                .text(title)
+                                                .url(new URL(url.replace("newsdetail2","newsdetail")));
+                                        builder.show();
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    }
                                     break;
                                 case 7:
                                     dialog.dismiss();

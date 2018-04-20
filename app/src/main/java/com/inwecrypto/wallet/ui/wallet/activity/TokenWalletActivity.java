@@ -309,7 +309,7 @@ public class TokenWalletActivity extends BaseActivity {
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if (wallet.getAddress().equals(mails.get(position).getPay_address())) {
+                if (wallet.getAddress().toLowerCase().equals(mails.get(position).getPay_address().toLowerCase())) {
                     Intent intent = new Intent(mActivity, TransferAccountsDetaileActivity.class);
                     intent.putExtra("order", mails.get(position));
                     intent.putExtra("unit", isEth ? "ether" : gnt.getName().toLowerCase());

@@ -149,6 +149,30 @@
         android:layout_marginRight="15dp">
 
         <LinearLayout
+            android:id="@+id/twitter"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@mipmap/twitter"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="twitter"
+                android:textSize="12sp"
+                android:layout_marginTop="6dp"
+                android:textColor="#7E7E7E"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/shoucang"
             android:clickable="true"
             android:layout_width="0dp"
@@ -166,30 +190,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/shoucang"
-                android:textSize="12sp"
-                android:layout_marginTop="6dp"
-                android:textColor="#7E7E7E"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/xiangmu"
-            android:clickable="true"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:src="@mipmap/fenxiang_chakan"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/chakanxiangmu"
                 android:textSize="12sp"
                 android:layout_marginTop="6dp"
                 android:textColor="#7E7E7E"/>

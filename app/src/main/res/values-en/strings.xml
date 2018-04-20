@@ -1,4 +1,6 @@
 <resources>
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">jFRczHoA7jym7X9DYOG6IMQab</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">X3hYoUjklg5c3QpLi6MPx487nmGSGjlMm77kTAWMeRJPt9Xmlu</string>
     <string name="app_name">InWeCrypto</string>
     <string name="hangqing">Market</string>
     <string name="zixun">News</string>
@@ -300,7 +302,7 @@
     <string name="zhengshiwangluo">MainNet</string>
     <string name="yidenglu">logged in</string>
     <string name="renmingbi">CNY</string>
-    <string name="dangqianbanben">Current version： 2.0.1</string>
+    <string name="dangqianbanben">Current version： 2.0.2</string>
     <string name="qianbaochakan">Wallet Explore</string>
     <string name="keyongshuliang">Amount Available</string>
     <string name="tianjia">Add</string>

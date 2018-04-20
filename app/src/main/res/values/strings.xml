@@ -1,4 +1,6 @@
 <resources>
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">jFRczHoA7jym7X9DYOG6IMQab</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">X3hYoUjklg5c3QpLi6MPx487nmGSGjlMm77kTAWMeRJPt9Xmlu</string>
     <string name="app_name">InWeCrypto</string>
     <string name="hangqing">行情</string>
     <string name="zixun">资讯</string>
@@ -299,7 +301,7 @@
     <string name="zhengshiwangluo">正式网络</string>
     <string name="yidenglu">已登录</string>
     <string name="renmingbi">人民币</string>
-    <string name="dangqianbanben">当前版本： 2.0.1</string>
+    <string name="dangqianbanben">当前版本： 2.0.2</string>
     <string name="qianbaochakan">钱包查看</string>
     <string name="keyongshuliang">可用数量</string>
     <string name="tianjia">添加</string>

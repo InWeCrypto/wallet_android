@@ -48,7 +48,28 @@ public class ProjectAdatpter extends CommonAdapter<ProjectDetaileBean> {
             holder.setText(R.id.news,"");
             holder.setText(R.id.time,"");
         }
-        holder.setText(R.id.price,null==projectDetaileBean.getPrice()?((App.get().getUnit()==1?"¥":"$")+"0.00"):((App.get().getUnit()==1?"¥":"$")+new BigDecimal(projectDetaileBean.getPrice()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString()));
+
+        if (App.get().getUnit()==1){
+            if (null==projectDetaileBean.getPrice()){
+                holder.setText(R.id.price,"¥0.00");
+            }else {
+                if (new BigDecimal(projectDetaileBean.getPrice()).floatValue()<0.01){
+                    holder.setText(R.id.price,"¥"+new BigDecimal(projectDetaileBean.getPrice()).toPlainString());
+                }else {
+                    holder.setText(R.id.price,"¥"+new BigDecimal(projectDetaileBean.getPrice()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                }
+            }
+        }else {
+            if (null==projectDetaileBean.getPrice()){
+                holder.setText(R.id.price,"$0.00");
+            }else {
+                if (new BigDecimal(projectDetaileBean.getPrice()).floatValue()<0.01){
+                    holder.setText(R.id.price,"$"+new BigDecimal(projectDetaileBean.getPrice()).toPlainString());
+                }else {
+                    holder.setText(R.id.price,"$"+new BigDecimal(projectDetaileBean.getPrice()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                }
+            }
+        }
 
         if (projectDetaileBean.isHasMarket()){
             holder.getView(R.id.charge).setVisibility(View.VISIBLE);

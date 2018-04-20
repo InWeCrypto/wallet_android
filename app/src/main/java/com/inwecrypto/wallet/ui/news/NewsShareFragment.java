@@ -88,7 +88,7 @@ public class NewsShareFragment extends DialogFragment{
                 }
             }
         });
-        dialog.findViewById(R.id.xiangmu).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.twitter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null!=listener){

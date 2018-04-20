@@ -49,9 +49,26 @@ public class CProjectAdatpter extends CommonAdapter<ProjectDetaileBean> {
 
         if (null != projectDetaileBean.getIco()) {
             if (App.get().getUnit() == 1) {
-                holder.setText(R.id.price, null == projectDetaileBean.getIco().getPrice_cny() ? "¥0.00" : ("¥" + new BigDecimal(projectDetaileBean.getIco().getPrice_cny()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString()));
+                if (null == projectDetaileBean.getIco().getPrice_cny()){
+                    holder.setText(R.id.price, "¥0.00");
+                }else {
+                    if (new BigDecimal(projectDetaileBean.getIco().getPrice_cny()).floatValue()<0.01){
+                        holder.setText(R.id.price, null == projectDetaileBean.getIco().getPrice_cny() ? "¥0.00" : ("¥" + new BigDecimal(projectDetaileBean.getIco().getPrice_cny()).toPlainString()));
+                    }else {
+                        holder.setText(R.id.price, null == projectDetaileBean.getIco().getPrice_cny() ? "¥0.00" : ("¥" + new BigDecimal(projectDetaileBean.getIco().getPrice_cny()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString()));
+                    }
+                }
             } else {
-                holder.setText(R.id.price, null == projectDetaileBean.getIco().getPrice_usd() ? "$0.00" : ("$" + new BigDecimal(projectDetaileBean.getIco().getPrice_usd()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString()));
+                if (null == projectDetaileBean.getIco().getPrice_usd()){
+                    holder.setText(R.id.price, "$0.00");
+                }else {
+                    if (new BigDecimal(projectDetaileBean.getIco().getPrice_usd()).floatValue()<0.01){
+                        holder.setText(R.id.price, null == projectDetaileBean.getIco().getPrice_usd() ? "$0.00" : ("$" + new BigDecimal(projectDetaileBean.getIco().getPrice_usd()).toPlainString()));
+                    }else {
+                        holder.setText(R.id.price, null == projectDetaileBean.getIco().getPrice_usd() ? "$0.00" : ("$" + new BigDecimal(projectDetaileBean.getIco().getPrice_usd()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString()));
+                    }
+
+                }
             }
             if (null != projectDetaileBean.getIco().getPercent_change_24h()) {
                 if (!projectDetaileBean.getIco().getPercent_change_24h().contains("-")) {

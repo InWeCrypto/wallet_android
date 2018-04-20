@@ -7,9 +7,10 @@ android {
         applicationId "com.inwecrypto.wallet"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 20180413
-        versionName "2.0.1"
+        versionCode 20180420
+        versionName "2.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
 
         ndk {
             // 设置支持的SO库架构
@@ -54,6 +55,7 @@ repositories {
     flatDir {
         dirs 'libs'   // aar目录
     }
+    google()
 }
 
 dependencies {
@@ -108,4 +110,7 @@ dependencies {
     implementation files('libs/open_sdk_r5990_lite.jar')
     compile 'com.umeng.sdk:common:latest.integration'
     compile 'com.umeng.sdk:analytics:latest.integration'
+    compile 'com.twitter.sdk.android:twitter:3.0.0'             //twitter分享
+    compile 'com.twitter.sdk.android:tweet-composer:3.0.0' //twitter分享，发布推文
+    compile 'com.android.support:multidex:1.0.2'
 }

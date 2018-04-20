@@ -256,10 +256,28 @@ public class TradingProjectActivity extends BaseActivity {
         if (null != project.getIco()) {
 
             if (App.get().getUnit()==1) {
-                price.setText(null == project.getIco().getPrice_cny() ? "¥0.00" : ("¥" + new BigDecimal(project.getIco().getPrice_cny()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString()));
+                if (null == project.getIco().getPrice_cny()){
+                    price.setText("¥0.00");
+
+                }else {
+                    if (new BigDecimal(project.getIco().getPrice_cny()).floatValue() < 0.01) {
+                        price.setText("¥" + new BigDecimal(project.getIco().getPrice_cny()).toPlainString());
+                    } else {
+                        price.setText("¥" + new BigDecimal(project.getIco().getPrice_cny()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                    }
+                }
                 volume.setText(getString(R.string.jiaoyilaing24) + (null == project.getIco().get_$24h_volume_cny() ? "" : project.getIco().get_$24h_volume_cny()));
             } else {
-                price.setText(null == project.getIco().getPrice_usd() ? "$0.00" : ("$" + new BigDecimal(project.getIco().getPrice_usd()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString()));
+                if (null == project.getIco().getPrice_usd()){
+                    price.setText("$0.00");
+
+                }else {
+                    if (new BigDecimal(project.getIco().getPrice_usd()).floatValue() < 0.01) {
+                        price.setText("$" + new BigDecimal(project.getIco().getPrice_usd()).toPlainString());
+                    } else {
+                        price.setText("$" + new BigDecimal(project.getIco().getPrice_usd()).setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
+                    }
+                }
                 volume.setText(getString(R.string.jiaoyilaing24) + (null == project.getIco().get_$24h_volume_usd() ? "" : project.getIco().get_$24h_volume_usd()));
             }
             if (project.getIco().getPercent_change_24h().contains("-")) {
