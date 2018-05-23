@@ -177,6 +177,13 @@ public class  InweHotActivity extends BaseActivity {
             }
         });
 
+        swipeRefresh.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefresh.setRefreshing(true);
+            }
+        });
+
     }
 
     @Override

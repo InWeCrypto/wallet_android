@@ -21,6 +21,7 @@ public class UpdateBean implements Serializable {
     private String updateHit;
     private String hash;
     private String force;
+    private String download_url;
 
     public String getVersionCode() {
         return versionCode;
@@ -52,5 +53,13 @@ public class UpdateBean implements Serializable {
 
     public void setForce(String force) {
         this.force = force;
+    }
+
+    public String getDownload_url() {
+        return download_url;
+    }
+
+    public void setDownload_url(String download_url) {
+        this.download_url = download_url;
     }
 }

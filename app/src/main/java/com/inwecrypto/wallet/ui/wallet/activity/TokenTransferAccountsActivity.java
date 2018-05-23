@@ -30,6 +30,7 @@ import com.lzy.okgo.model.Response;
 import com.xw.repo.BubbleSeekBar;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,6 +68,7 @@ public class TokenTransferAccountsActivity extends BaseActivity {
     EditText etHint;
     @BindView(R.id.tv_ok)
     TextView tvOk;
+
     private WalletBean wallet;
     private TokenBean.ListBean gnt;
     private BigDecimal gasPrice;
@@ -82,8 +84,8 @@ public class TokenTransferAccountsActivity extends BaseActivity {
         wallet = (WalletBean) extras.getSerializable("wallet");
         gnt = (TokenBean.ListBean) extras.getSerializable("gnt");
         price = extras.getString("price");
-        low = new BigDecimal("25200000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000), 0, BigDecimal.ROUND_DOWN);
-        high = new BigDecimal("2520120000000000").multiply(new BigDecimal(gnt.getGnt_category().getGas())).divide(new BigDecimal(21000), 0, BigDecimal.ROUND_DOWN);
+        low = Constant.GWEI_LOW.multiply(new BigDecimal(gnt.getGnt_category().getGas()).divide(new BigDecimal(6),0, RoundingMode.DOWN));
+        high = Constant.GWEI_HIGH.multiply(new BigDecimal(gnt.getGnt_category().getGas()).divide(new BigDecimal(6),0, RoundingMode.DOWN));
         distance = high.subtract(low);
     }
 

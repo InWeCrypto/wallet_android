@@ -176,6 +176,7 @@ public class FrogetPassActivty extends BaseActivity {
     private void getCode() {
         showFixLoading();
         UserApi.getCode(this
+                , 2
                 , email.getText().toString().trim()
                 , new JsonCallback<LzyResponse<Object>>() {
                     @Override

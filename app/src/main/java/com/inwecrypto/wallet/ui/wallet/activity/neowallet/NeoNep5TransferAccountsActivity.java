@@ -130,9 +130,9 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
         tvCurrentPrice.setText("(" + tokenBean.getName() + getString(R.string.keyongshuliang)+"：" + new BigDecimal(price).divide(new BigDecimal(10).pow(Integer.parseInt(tokenBean.getDecimals()))).setScale(8, BigDecimal.ROUND_DOWN).toPlainString() + ")");
         gas = new BigDecimal(neoBean.getGnt().get(0).getBalance()).setScale(8, BigDecimal.ROUND_DOWN).doubleValue();
         if (gas == 0) {
-            tvOk.setText(R.string.gasyuebuzu);
-            tvOk.setBackgroundColor(Color.parseColor("#DADADA"));
-            tvOk.setClickable(false);
+            //tvOk.setText(R.string.gasyuebuzu);
+            //tvOk.setBackgroundColor(Color.parseColor("#DADADA"));
+            //tvOk.setClickable(false);
             gasNum.setVisibility(View.VISIBLE);
             gasNum.setText("(Gas "+getString(R.string.keyongshuliang)+"：" + gas + ")");
         }
@@ -155,10 +155,10 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
 //                    ToastUtil.show(R.string.yuebuzu);
 //                    return;
 //                }
-                if (gas == 0) {
-                    ToastUtil.show(R.string.gasyuebuzu);
-                    return;
-                }
+//                if (gas == 0) {
+//                    ToastUtil.show(R.string.gasyuebuzu);
+//                    return;
+//                }
 
                 if (!AppUtil.isAddress(etAddress.getText().toString().trim())) {
                     ToastUtil.show(R.string.qingtianxiezhuanzhangqianbaodizhi);
@@ -210,7 +210,7 @@ public class NeoNep5TransferAccountsActivity extends BaseActivity {
                                             intent.putExtra("yuangas", response.body().data.getGas_consumed());
                                             keepTogo(intent);
                                         } else {
-                                            if (new BigDecimal(response.body().data.getGas_consumed()).doubleValue() < gas) {
+                                            if (new BigDecimal(response.body().data.getGas_consumed()).doubleValue() <= gas) {
                                                 Intent intent = new Intent(mActivity, NewNeoNep5TransferConfirmActivity.class);
                                                 intent.putExtra("wallet", wallet);
                                                 intent.putExtra("token", tokenBean);

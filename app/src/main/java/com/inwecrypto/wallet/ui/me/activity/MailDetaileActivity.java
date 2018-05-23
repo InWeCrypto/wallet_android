@@ -215,7 +215,10 @@ public class MailDetaileActivity extends BaseActivity {
                 @Override
                 public void onCacheSuccess(Response<LzyResponse<CommonRecordBean<MailBean>>> response) {
                     super.onCacheSuccess(response);
-                    onSuccess(response);
+                    try{
+                        onSuccess(response);
+                    }catch (Exception e){
+                    }
                 }
             });
         }

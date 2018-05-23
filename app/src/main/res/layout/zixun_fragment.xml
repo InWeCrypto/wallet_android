@@ -43,12 +43,12 @@
         
         <ImageView
             android:id="@+id/more"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="6dp"
+            android:layout_width="37dp"
+            android:layout_height="32dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="6dp"
             android:padding="6dp"
-            android:src="@mipmap/zhuye_tianjia_ico"/>
+            android:src="@mipmap/addhongbao"/>
 
     </LinearLayout>
 

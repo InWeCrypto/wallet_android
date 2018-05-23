@@ -107,6 +107,36 @@ public class PhotoUtils {
         return cropUri;
     }
 
+    /**
+     *
+     * @param activity
+     * @param PHOTO_REQUEST_CUT
+     */
+    public static Uri startPhotoZ(Activity activity,File file,int PHOTO_REQUEST_CUT) {
+        String cropImageName = "capty.jpg";
+        File cropFile = new File(activity.getExternalCacheDir(), cropImageName);
+        //注意到此处使用的file:// uri类型.
+        Uri cropUri = Uri.fromFile(cropFile);
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        Uri sourceUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            sourceUri = getImageContentUri(activity, file);
+        } else {
+            sourceUri = Uri.fromFile(file);
+        }
+        intent.setDataAndType(sourceUri, "image/*"); //此处有问题
+        intent.putExtra("crop", "true");
+        intent.putExtra("return-data", false);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", true);
+        ComponentName componentName = intent.resolveActivity(activity.getPackageManager());
+        if (componentName != null) {
+            activity.startActivityForResult(intent, PHOTO_REQUEST_CUT);
+        }
+        return cropUri;
+    }
+
     //获取文件的Content uri路径
     public static Uri getImageContentUri(Context context, File imageFile) {
         String filePath = imageFile.getAbsolutePath();

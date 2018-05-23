@@ -23,7 +23,13 @@ public class Constant {
 
     public static final String ETH_ORDER_ASSET_ID="0x0000000000000000000000000000000000000000";
 
+    public static final String TEST_HONGBAO_ADDRESS="0x43d14d1360a5deb9df655944cc9624cce95d94b4";
+
+    public static final String MAIN_HONGBAO_ADDRESS="0xf35a11211165e8c22ea9de3bbde2d72c244108d3";
+
     public static final long GAS_LIMIT=90000L;
+
+    public static final long HONGBAO_GAS_LIMIT=360000L;
 
     public static final int OPEN_CLOSE_MENU = 10001;
 
@@ -31,9 +37,17 @@ public class Constant {
 
     public static final BigDecimal p100 = new BigDecimal(100);
 
+    public static final BigDecimal GWEI_LOW= new BigDecimal("10000000000");
+
+    public static final BigDecimal GWEI_HIGH= new BigDecimal("100000000000");
+
     public static final BigDecimal low=new BigDecimal("25200000000000").multiply(new BigDecimal(Constant.GAS_LIMIT)).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
 
     public static final BigDecimal high=new BigDecimal("2520120000000000").multiply(new BigDecimal(Constant.GAS_LIMIT)).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
+
+    public static final BigDecimal hb_low=new BigDecimal("25200000000000").multiply(new BigDecimal(Constant.HONGBAO_GAS_LIMIT)).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
+
+    public static final BigDecimal hb_high=new BigDecimal("2520120000000000").multiply(new BigDecimal(Constant.HONGBAO_GAS_LIMIT)).divide(new BigDecimal(21000),0,BigDecimal.ROUND_HALF_UP);
 
     public static final String NET="net";
 
@@ -136,6 +150,8 @@ public class Constant {
     public static final String SORT="sort";
 
     public static final String SORT_UPDATE="sort_update";
+
+    public static final String IS_SEND_HONGBAO="is_send_hongbao";
 
     public static final String BASE_PROJECT_JSON="[\n" +
             " {\n" +
@@ -263,6 +279,18 @@ public class Constant {
     public static final int EVENT_PAIXU4 = 45;
 
     public static final int EVENT_PINGJIA_SUC = 46;
+
+    public static final int EVENT_HONGBAO_GNT = 47;
+
+    public static final int EVENT_HONGBAO_ADDRESS_GNT = 48;
+
+    public static final int EVENT_HONGBAO_ADDRESS = 49;
+
+    public static final int EVENT_HONGBAO_REFERS = 50;
+
+    public static final int EVENT_HONGBAO_GET = 51;
+
+    public static final int EVENT_HONGBAO_SHARE = 52;
 
     public static final int EVENT_TOKEN = 4009;
 

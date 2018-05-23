@@ -3,7 +3,6 @@ package com.inwecrypto.wallet.ui.me.activity;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -62,6 +62,8 @@ public class HelpCenterActivity extends BaseActivity {
     TextView reload;
     @BindView(R.id.progress)
     MaterialProgressBar progress;
+    @BindView(R.id.share)
+    ImageView share;
 
     private WebView mWebView = null;
     private final ReferenceQueue<WebView> WEB_VIEW_QUEUE = new ReferenceQueue<>();
@@ -84,7 +86,7 @@ public class HelpCenterActivity extends BaseActivity {
             public void onClick(View v) {
                 if (mWebView.canGoBack()) {
                     mWebView.goBack();
-                }else {
+                } else {
                     finish();
                 }
             }
@@ -95,12 +97,24 @@ public class HelpCenterActivity extends BaseActivity {
         txtRightTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!App.get().isLogin()){
+                if (!App.get().isLogin()) {
                     keepTogo(LoginActivity.class);
                     return;
                 }
-                Intent intent=new Intent(mActivity,FeedBackActivity.class);
+                Intent intent = new Intent(mActivity, FeedBackActivity.class);
                 keepTogo(intent);
+            }
+        });
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent share_intent = new Intent();
+                share_intent.setAction(Intent.ACTION_SEND);//设置分享行为
+                share_intent.setType("text/plain");//设置分享内容的类型
+                share_intent.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());//添加分享内容
+                startActivity(share_intent);
+
             }
         });
 
@@ -262,7 +276,7 @@ public class HelpCenterActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        mWebView.loadUrl((App.isMain?Url.MAIN_HELP:Url.TEST_HELP) +(App.get().isZh()?"zh":"en")+"/helpcenter");
+        mWebView.loadUrl((App.isMain ? Url.MAIN_HELP : Url.TEST_HELP) + (App.get().isZh() ? "zh" : "en") + "/helpcenter");
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -278,4 +292,5 @@ public class HelpCenterActivity extends BaseActivity {
     protected void EventBean(BaseEventBusBean event) {
 
     }
+
 }

@@ -140,6 +140,8 @@ public class CommonWebActivity extends BaseActivity {
             }
         });
 
+        // 设置结果，并进行传送
+        this.setResult(0, null);
     }
 
     private WebViewClient initWebViewClient() {

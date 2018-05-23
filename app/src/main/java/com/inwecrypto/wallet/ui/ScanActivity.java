@@ -31,6 +31,8 @@ import com.inwecrypto.wallet.common.Constant;
 import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.event.KeyEvent;
+import com.inwecrypto.wallet.ui.news.HongbaoKaiActivity;
+
 import me.dm7.barcodescanner.zbar.ZBarScannerView;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -129,7 +131,12 @@ public final class ScanActivity extends BaseActivity implements ZBarScannerView.
             },1000);
             return;
         }
-        EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_KEY,new KeyEvent(rawResult.getContents().toString())));
+        if (rawResult.getContents().toString().endsWith("inwe")){
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_HONGBAO_GET,new KeyEvent(rawResult.getContents().toString())));
+        }else {
+            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_KEY,new KeyEvent(rawResult.getContents().toString())));
+        }
+
         finish();
     }
 

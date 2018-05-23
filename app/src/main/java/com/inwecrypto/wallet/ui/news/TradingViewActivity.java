@@ -175,6 +175,13 @@ public class TradingViewActivity extends BaseActivity {
                 return false;
             }
         });
+
+        swipeRefresh.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefresh.setRefreshing(true);
+            }
+        });
     }
 
     @Override

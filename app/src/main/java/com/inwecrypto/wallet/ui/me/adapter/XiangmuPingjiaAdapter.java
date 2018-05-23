@@ -29,12 +29,12 @@ public class XiangmuPingjiaAdapter extends CommonAdapter<PingjiaBean> {
     @Override
     protected void convert(ViewHolder holder, PingjiaBean pingjia, int position) {
         Glide.with(mContext)
-                .load(pingjia.getUser().getImg())
+                .load(null==pingjia.getUser()?"":(null==pingjia.getUser().getImg()?"":pingjia.getUser().getImg()))
                 .crossFade()
                 .error(R.mipmap.wode_touxiang)
                 .transform(new GlideCircleTransform(mContext))
                 .into((ImageView) holder.getView(R.id.img));
-        holder.setText(R.id.name,pingjia.getUser().getName());
+        holder.setText(R.id.name,null==pingjia.getUser()?"":pingjia.getUser().getName());
         holder.setText(R.id.time, AppUtil.getGTime(pingjia.getCategory_comment_at()));
         ((RatingBar)holder.getView(R.id.ratingbar)).setStar(Float.parseFloat(pingjia.getScore()));
         holder.setText(R.id.fenshu,pingjia.getScore()+mContext.getString(R.string.fenshu));

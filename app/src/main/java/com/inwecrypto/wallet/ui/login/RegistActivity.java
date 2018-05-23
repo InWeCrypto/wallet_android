@@ -197,6 +197,7 @@ public class RegistActivity extends BaseActivity {
     private void getCode() {
         showFixLoading();
         UserApi.getCode(this
+                ,1
                 , email.getText().toString().trim()
                 , new JsonCallback<LzyResponse<Object>>() {
                     @Override

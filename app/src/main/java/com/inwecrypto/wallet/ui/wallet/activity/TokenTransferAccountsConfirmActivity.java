@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.base.BaseActivity;
 import com.inwecrypto.wallet.bean.CountBean;
+import com.inwecrypto.wallet.bean.HongbaoOrderBean;
 import com.inwecrypto.wallet.bean.TokenBean;
 import com.inwecrypto.wallet.bean.TransferABIBean;
 import com.inwecrypto.wallet.bean.WalletBean;
@@ -84,7 +85,7 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
         price = extras.getString("price");
         oxPrice = "0x" + new BigInteger(new BigDecimal(price).multiply(AppUtil.decimal(gnt.getDecimals())).setScale(0, BigDecimal.ROUND_DOWN).toPlainString(), 10).toString(16);
         gas = extras.getString("gas");
-        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(Constant.pEther).divide(new BigDecimal(gnt.getGnt_category().getGas()), 0, BigDecimal.ROUND_DOWN).toPlainString(), 10).toString(16);
+        oxGas = "0x" + new BigInteger(new BigDecimal(gas).multiply(Constant.pEther).divide(new BigDecimal(gnt.getGnt_category().getGas()).divide(new BigDecimal(6),0, BigDecimal.ROUND_DOWN), 0, BigDecimal.ROUND_DOWN).toPlainString(), 10).toString(16);
         hit = extras.getString("hit");
         wallet = (WalletBean) extras.getSerializable("wallet");
     }
@@ -234,9 +235,9 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                 , oxGas
                 , gnt.getName()
                 , gnt.getGnt_category().getAddress().toLowerCase()
-                , new JsonCallback<LzyResponse<Object>>() {
+                , new JsonCallback<LzyResponse<HongbaoOrderBean>>() {
                     @Override
-                    public void onSuccess(Response<LzyResponse<Object>> response) {
+                    public void onSuccess(Response<LzyResponse<HongbaoOrderBean>> response) {
                         hideFixLoading();
                         ToastUtil.show(R.string.zhuanzhangchenggong);
                         EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
@@ -245,14 +246,18 @@ public class TokenTransferAccountsConfirmActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onError(Response<LzyResponse<Object>> response) {
+                    public void onError(Response<LzyResponse<HongbaoOrderBean>> response) {
                         super.onError(response);
                         hideFixLoading();
                         if (response.getException().getMessage().contains("wallet_error")) {
-                            ToastUtil.show(getString(R.string.fuwuqineibucuowu));
-                            EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
-                            AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
-                            finish();
+                            if (response.getException().getMessage().contains("replacement transaction underpriced")){
+                                ToastUtil.show("您有相同的订单正在处理中");
+                            }else {
+                                ToastUtil.show(getString(R.string.fuwuqineibucuowu));
+                                EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
+                                AppManager.getAppManager().finishActivity(TransferAccountsActivity.class);
+                                finish();
+                            }
                         } else {
                             ToastUtil.show(getString(R.string.load_error));
                         }

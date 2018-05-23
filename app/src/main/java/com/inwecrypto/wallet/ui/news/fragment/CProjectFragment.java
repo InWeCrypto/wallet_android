@@ -184,7 +184,10 @@ public class CProjectFragment extends BaseFragment {
             @Override
             public void onCacheSuccess(Response<LzyResponse<ProjectListBean>> response) {
                 super.onCacheSuccess(response);
-                onSuccess(response);
+                try{
+                    onSuccess(response);
+                }catch (Exception e){
+                }
             }
 
             @Override

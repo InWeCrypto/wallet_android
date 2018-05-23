@@ -34,6 +34,42 @@ public class WalletBean implements Serializable{
     private int icon;
     private String type;
     private CategoryBean category;
+    private String token_name;
+    private String token_num;
+    private String token_decimal;
+    private boolean isSelect;
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
+
+    public String getToken_name() {
+        return token_name;
+    }
+
+    public void setToken_name(String token_name) {
+        this.token_name = token_name;
+    }
+
+    public String getToken_num() {
+        return token_num;
+    }
+
+    public void setToken_num(String token_num) {
+        this.token_num = token_num;
+    }
+
+    public String getToken_decimal() {
+        return token_decimal;
+    }
+
+    public void setToken_decimal(String token_decimal) {
+        this.token_decimal = token_decimal;
+    }
 
     public int getId() {
         return id;

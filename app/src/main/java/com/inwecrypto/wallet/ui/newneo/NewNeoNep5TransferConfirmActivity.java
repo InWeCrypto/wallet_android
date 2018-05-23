@@ -219,7 +219,6 @@ public class NewNeoNep5TransferConfirmActivity extends BaseActivity {
                             Tx tx = wallet.createNep5Tx(tokenBean.getGnt_category().getAddress()
                                     , Neomobile.decodeAddress(wallet.address())
                                     , Neomobile.decodeAddress(etAddress.getText().toString().trim())
-                                    , 0d
                                     , amount
                                     , unspent);
                             data = tx.getData();

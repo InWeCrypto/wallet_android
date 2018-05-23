@@ -45,9 +45,17 @@ public class UserApi {
      * @param email
      * @param callback
      */
-    public static void getCode(Object object,String email, JsonCallback<LzyResponse<Object>> callback){
+    public static void getCode(Object object,int type,String email, JsonCallback<LzyResponse<Object>> callback){
+        JSONObject params=new JSONObject();
+        try {
+            params.putOpt("type",type);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         OkGo.<LzyResponse<Object>>post(Url.SEND_CODE+email)
                 .tag(object)
+                .upJson(params)
                 .execute(callback);
     }
 

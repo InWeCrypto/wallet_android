@@ -251,7 +251,10 @@ public class GetGasActivity extends BaseActivity {
             @Override
             public void onCacheSuccess(Response<LzyResponse<TokenBean>> response) {
                 super.onCacheSuccess(response);
-                onSuccess(response);
+                try{
+                    onSuccess(response);
+                }catch (Exception e){
+                }
             }
 
             @Override

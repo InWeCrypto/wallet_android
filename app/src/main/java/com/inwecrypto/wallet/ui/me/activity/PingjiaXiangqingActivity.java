@@ -194,12 +194,12 @@ public class PingjiaXiangqingActivity extends BaseActivity {
         });
 
         Glide.with(this)
-                .load(pingjia.getUser()
+                .load(null==pingjia.getUser()?"":pingjia.getUser()
                 .getImg())
                 .crossFade()
                 .error(R.mipmap.wode_touxiang)
                 .transform(new GlideCircleTransform(this)).into(img);
-        name.setText(pingjia.getUser().getName());
+        name.setText(null==pingjia.getUser()?"":pingjia.getUser().getName());
         time.setText(AppUtil.getGTime(pingjia.getCategory_comment_at()));
         ratingbar.setStar(Float.parseFloat(pingjia.getScore()));
         fenshu.setText(pingjia.getScore()+getString(R.string.fenshu));

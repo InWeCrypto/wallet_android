@@ -138,22 +138,22 @@ public class JsonConvert<T> implements Converter<T> {
                     ToastUtil.show("Privilege access");
                     throw new IllegalStateException("4002:wallet_error:No permission");
                 } else if (bodys.contains("4003")) {
-                    throw new IllegalStateException("4003:wallet_error:Routing does not exist");
+                    throw new IllegalStateException("4003:wallet_error:Routing does not exist_"+bodys);
                 }else if (bodys.contains("4004")) {
-                    throw new IllegalStateException("4004:wallet_error:Validation does not pass");
+                    throw new IllegalStateException("4004:wallet_error:Validation does not pass_"+bodys);
                 }else if (bodys.contains("4005")) {
-                    throw new IllegalStateException("4005:wallet_error:Query data does not exist");
+                    throw new IllegalStateException("4005:wallet_error:Query data does not exist_"+bodys);
                 }else if (bodys.contains("4006")) {
-                    throw new IllegalStateException("4006:wallet_error:Request execution failure");
+                    throw new IllegalStateException("4006:wallet_error:Request execution failure_"+bodys);
                 }else if (bodys.contains("4007")) {
-                    throw new IllegalStateException("4007:wallet_error:The request succeeds and is about to jump");
+                    throw new IllegalStateException("4007:wallet_error:The request succeeds and is about to jump_"+bodys);
                 }else if (bodys.contains("4008")) {
-                    throw new IllegalStateException("4008:wallet_error:unregistered");
+                    throw new IllegalStateException("4008:wallet_error:unregistered_"+bodys);
                 }else if (bodys.contains("4009")) {
                     EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_TOKEN));
                     throw new IllegalStateException("4009:Token expired");
                 }else if (bodys.contains("5201")) {
-                    throw new IllegalStateException("5201:wallet_error");
+                    throw new IllegalStateException("5201:wallet_error_"+bodys);
                 }else {
                     //直接将服务端的错误信息抛出，onError中可以获取
                     throw new IllegalStateException("wallet_error:unknown error");

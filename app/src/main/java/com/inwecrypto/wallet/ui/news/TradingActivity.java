@@ -254,6 +254,12 @@ public class TradingActivity extends BaseActivity {
                 keepTogo(intent);
             }
         });
+        swipeRefresh.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefresh.setRefreshing(true);
+            }
+        });
     }
 
     @Override

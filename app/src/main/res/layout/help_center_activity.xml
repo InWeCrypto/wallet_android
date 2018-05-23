@@ -42,6 +42,17 @@
             app:mpb_useIntrinsicPadding="false"
             style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding" />
 
+
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@mipmap/share_help"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="15dp"/>
+
     </RelativeLayout>
 
 </LinearLayout>

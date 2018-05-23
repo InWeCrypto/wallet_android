@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/share_app_bg"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/status_bar_height">
+            <ImageView
+                android:id="@+id/close"
+                android:layout_width="38dp"
+                android:layout_height="48dp"
+                android:padding="15dp"
+                android:src="@mipmap/wihteback"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:textSize="18sp"
+                android:textColor="@color/c_ffffff"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="@string/fenxiangapp"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+        
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="110"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/c_ffffff"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/zhiqingjuecetaidutouzi"
+            android:layout_gravity="center"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="25"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/c_ffffff"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="In Crypto，We Trust"
+            android:layout_gravity="center"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="28"/>
+        
+        <ImageView
+            android:id="@+id/code"
+            android:layout_width="168dp"
+            android:layout_height="168dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/share_app_code"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="65"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/fenxiangnidetaidu"
+            android:textColor="@color/c_ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="64"/>
+
+        <net.qiujuer.genius.ui.widget.Button
+            android:id="@+id/share"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="34dp"
+            android:layout_marginRight="34dp"
+            android:background="@drawable/hongbao_buttom_bg"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/xiangpengyoutuijianinwe"
+            android:textColor="@color/c_ffffff"
+            android:textSize="14sp"
+            app:gTouchCornerRadius="12dp"
+            app:gTouchDurationRate="0.7"
+            app:gTouchEffect="ripple" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="270"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/c_ffffff"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="inwecrypto.com"
+            android:layout_gravity="center"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="30"/>
+
+    </LinearLayout>
+
+</FrameLayout>

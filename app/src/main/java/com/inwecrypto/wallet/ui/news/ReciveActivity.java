@@ -134,7 +134,10 @@ public class ReciveActivity extends BaseActivity {
             @Override
             public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletBean>>> response) {
                 super.onCacheSuccess(response);
-                onSuccess(response);
+                try{
+                    onSuccess(response);
+                }catch (Exception e){
+                }
             }
 
             @Override

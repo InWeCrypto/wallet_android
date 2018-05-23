@@ -135,7 +135,10 @@ public class MailListFragment extends BaseFragment {
                 @Override
                 public void onCacheSuccess(Response<LzyResponse<CommonListBean<MailBean>>> response) {
                     super.onCacheSuccess(response);
-                    onSuccess(response);
+                    try{
+                        onSuccess(response);
+                    }catch (Exception e){
+                    }
                 }
 
                 @Override

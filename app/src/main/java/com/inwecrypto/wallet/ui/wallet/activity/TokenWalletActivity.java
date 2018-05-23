@@ -467,7 +467,10 @@ public class TokenWalletActivity extends BaseActivity {
                     @Override
                     public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
                         super.onCacheSuccess(response);
-                        onSuccess(response);
+                        try{
+                            onSuccess(response);
+                        }catch (Exception e){
+                        }
                     }
 
                 });
@@ -490,7 +493,10 @@ public class TokenWalletActivity extends BaseActivity {
                     @Override
                     public void onCacheSuccess(Response<LzyResponse<ValueBean>> response) {
                         super.onCacheSuccess(response);
-                        onSuccess(response);
+                        try{
+                            onSuccess(response);
+                        }catch (Exception e){
+                        }
                     }
                 });
             }
@@ -521,7 +527,10 @@ public class TokenWalletActivity extends BaseActivity {
                 @Override
                 public void onCacheSuccess(Response<LzyResponse<CommonListBean<OrderBean>>> response) {
                     super.onCacheSuccess(response);
-                    onSuccess(response);
+                    try{
+                        onSuccess(response);
+                    }catch (Exception e){
+                    }
                 }
 
                 @Override

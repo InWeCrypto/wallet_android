@@ -136,6 +136,32 @@ public class Url {
 
     public static String TOTLE_MARKET = BASE_2 + "/ico/total_market_value";
 
+    public static String GET_GNT_CATEGORY = BASE_2 + "/offline_wallet/extend/getGntCategory/";
+
+    public static String DRAW_RECORD = BASE_2 + "/redbag/draw_record";
+
+    public static String SEND_RECORD = BASE_2 + "/redbag/send_record/";
+
+    public static String SEND_RECORD_LIST = BASE_2 + "/redbag/send_record";
+
+    public static String REDBAG_AUTH = BASE_2 + "/redbag/auth";
+
+    public static String REDBAG_FEE = BASE_2 + "/redbag/fee/";
+
+    public static String REDBAG_SEND = BASE_2 + "/redbag/send/";
+
+    public static String REDBAG_SEND_COUNT = BASE_2 + "/redbag/send_count";
+
+    public static String REDBAG_DRAW = BASE_2 + "/redbag/draw/";
+
+    public static String REDBAG_SEND_RECORD = BASE_2 + "/redbag/send_record/";
+
+    public static String RPC = BASE_2 + "/offline_wallet/rpc";
+
+    public static String REDBAG_ID = BASE_2 + "/offline_wallet/extend/getRedbagId";
+
+    public static String MIN_GAS = BASE_2 + "/config/get_key/REDBAG_MAX_GAS";
+
 
 
     public static String MAIN_NEWS = "http://inwecrypto.com/newsdetail2?art_id=";
@@ -149,6 +175,14 @@ public class Url {
     public static String MAIN_HELP = "http://inwecrypto.com/";
 
     public static String TEST_HELP = "http://testnet.inwecrypto.com/";
+
+    public static String MAIN_HONGBAO = "http://inwecrypto.com/redbag/";
+
+    public static String TEST_HONGBAO = "http://testnet.inwecrypto.com/redbag/";
+
+    public static String MAIN_HONGBAOXIEYI_EN="http://inwecrypto.com/rpAgreementEn.html";
+
+    public static String MAIN_HONGBAOXIEYI="http://inwecrypto.com/rpAgreement.html";
 
 
 
@@ -460,6 +494,32 @@ public class Url {
         RANK_MARKET_CAP = BASE_2 + "/token_rank/market_cap/";
 
         TOTLE_MARKET = BASE_2 + "/ico/total_market_value";
+
+        GET_GNT_CATEGORY = BASE_2 + "/offline_wallet/extend/getGntCategory/";
+
+        DRAW_RECORD = BASE_2 + "/redbag/draw_record";
+
+        SEND_RECORD = BASE_2 + "/redbag/send_record/";
+
+        SEND_RECORD_LIST = BASE_2 + "/redbag/send_record";
+
+        REDBAG_AUTH = BASE_2 + "/redbag/auth";
+
+        REDBAG_FEE = BASE_2 + "/redbag/fee/";
+
+        REDBAG_SEND = BASE_2 + "/redbag/send/";
+
+        REDBAG_SEND_COUNT = BASE_2 + "/redbag/send_count";
+
+        REDBAG_DRAW = BASE_2 + "/redbag/draw/";
+
+        REDBAG_SEND_RECORD = BASE_2 + "/redbag/send_record/";
+
+        RPC = BASE_2 + "/offline_wallet/rpc";
+
+        REDBAG_ID = BASE_2 + "/offline_wallet/extend/getRedbagId";
+
+        MIN_GAS = BASE_2 + "/config/get_key/REDBAG_MAX_GAS";
     }
 
 }

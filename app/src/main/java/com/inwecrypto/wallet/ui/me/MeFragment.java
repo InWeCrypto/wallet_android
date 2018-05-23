@@ -26,6 +26,7 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.me.activity.AboutUsActivity;
+import com.inwecrypto.wallet.ui.me.activity.AppShareActivity;
 import com.inwecrypto.wallet.ui.me.activity.HelpCenterActivity;
 import com.inwecrypto.wallet.ui.me.activity.MailListActivity;
 import com.inwecrypto.wallet.ui.me.activity.MarketTipActivity;
@@ -81,6 +82,8 @@ public class MeFragment extends BaseFragment {
     TextView qindenglu;
     @BindView(R.id.pinglun)
     RelativeLayout pinglun;
+    @BindView(R.id.appShare)
+    RelativeLayout appShare;
 
     @Override
     protected int setLayoutID() {
@@ -226,6 +229,14 @@ public class MeFragment extends BaseFragment {
                 mActivity.keepTogo(intent);
             }
         });
+
+        appShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, AppShareActivity.class);
+                mActivity.keepTogo(intent);
+            }
+        });
     }
 
     @Override
@@ -274,6 +285,5 @@ public class MeFragment extends BaseFragment {
             loadData();
         }
     }
-
 
 }

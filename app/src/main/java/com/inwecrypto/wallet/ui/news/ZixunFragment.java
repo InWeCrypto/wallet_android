@@ -47,7 +47,9 @@ import com.inwecrypto.wallet.common.util.ToastUtil;
 import com.inwecrypto.wallet.common.widget.AutoLoopViewPager;
 import com.inwecrypto.wallet.common.widget.NoScrollViewPager;
 import com.inwecrypto.wallet.event.BaseEventBusBean;
+import com.inwecrypto.wallet.event.KeyEvent;
 import com.inwecrypto.wallet.ui.QuickActivity;
+import com.inwecrypto.wallet.ui.ScanActivity;
 import com.inwecrypto.wallet.ui.login.LoginActivity;
 import com.inwecrypto.wallet.ui.me.adapter.CommonPagerAdapter;
 import com.inwecrypto.wallet.ui.newneo.CreateWalletFragment;
@@ -61,6 +63,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.IllegalFormatCodePointException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -623,6 +626,19 @@ public class ZixunFragment extends BaseFragment implements AutoLoopViewPager.OnG
         if (event.getEventCode() == Constant.EVENT_ZIXUN_MESSAGE) {
             getIM();
         }
+
+        if (event.getEventCode() == Constant.EVENT_HONGBAO_GET){
+            Intent intent=new Intent(mActivity,ScanHongbaoActivity.class);
+            intent.putExtra("url",((KeyEvent)event.getData()).getKey());
+            keepTogo(intent);
+            EventBus.getDefault().removeAllStickyEvents();
+        }
+
+        if (event.getEventCode() == Constant.EVENT_KEY){
+            ToastUtil.show(getString(R.string.qingsaomiaoinwehongbao));
+            EventBus.getDefault().removeAllStickyEvents();
+        }
+
     }
 
     private void selectType(int i) {
@@ -663,6 +679,7 @@ public class ZixunFragment extends BaseFragment implements AutoLoopViewPager.OnG
         View saoyisao = selectPopupWin.findViewById(R.id.saoyisao);
         View addWallet = selectPopupWin.findViewById(R.id.addWallet);
         View shoufukuan = selectPopupWin.findViewById(R.id.shoufukuan);
+        View hongbao = selectPopupWin.findViewById(R.id.hongbao);
 
 
         final PopupWindow window = new PopupWindow(selectPopupWin, DensityUtil.dip2px(mContext, 130), WindowManager.LayoutParams.WRAP_CONTENT);
@@ -691,10 +708,29 @@ public class ZixunFragment extends BaseFragment implements AutoLoopViewPager.OnG
         });
 
 
+        hongbao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!App.get().isLogin()) {
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
+                Intent intent=new Intent(getActivity(),HongbaoActivity.class);
+                keepTogo(intent);
+                window.dismiss();
+            }
+        });
+
         saoyisao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.show(R.string.jinqingqidai);
+                if (!App.get().isLogin()) {
+                    keepTogo(LoginActivity.class);
+                    return;
+                }
+                Intent intent=new Intent(getActivity(),ScanActivity.class);
+                keepTogo(intent);
+                window.dismiss();
             }
         });
 

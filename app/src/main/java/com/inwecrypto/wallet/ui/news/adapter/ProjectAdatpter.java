@@ -9,6 +9,7 @@ import com.bumptech.glide.Priority;
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.R;
 import com.inwecrypto.wallet.bean.ProjectDetaileBean;
+import com.inwecrypto.wallet.common.util.AppUtil;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -43,7 +44,7 @@ public class ProjectAdatpter extends CommonAdapter<ProjectDetaileBean> {
                 +" ("+(null==projectDetaileBean.getLong_name()?"":projectDetaileBean.getLong_name())+")");
         if (null!=projectDetaileBean.getLast_article()){
             holder.setText(R.id.news,projectDetaileBean.getLast_article().getTitle());
-            holder.setText(R.id.time,projectDetaileBean.getLast_article().getCreated_at());
+            holder.setText(R.id.time, AppUtil.getGTime(projectDetaileBean.getLast_article().getCreated_at()));
         }else {
             holder.setText(R.id.news,"");
             holder.setText(R.id.time,"");

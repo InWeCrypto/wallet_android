@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="19dp"
+        android:paddingTop="19dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/round_4dp_fafafa_bg">
+        
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@mipmap/get_hongbao_icon"/>
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:textSize="12sp"
+                android:textColor="#000000"/>
+
+
+            <TextView
+                android:id="@+id/num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="2dp"
+                android:textSize="15sp"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ED7421"
+                android:textSize="12sp"
+                android:paddingTop="2dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingBottom="2dp"
+                android:background="@drawable/round_2dp_ed7421_line_bg"/>
+
+            <LinearLayout
+                android:id="@+id/statell"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="#ED7421"
+                    android:textSize="10sp"
+                    android:text="@string/lingquzhong"/>
+                
+                <ProgressBar
+                    android:id="@+id/progess"
+                    android:layout_width="44dp"
+                    android:layout_height="15dp"
+                    android:layout_marginTop="2dp"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/hongbao_list_progressbar"
+                    android:max="100"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/p_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="#029857"
+                    android:textSize="10sp"/>
+                
+            </LinearLayout>
+        </FrameLayout>
+        
+    </LinearLayout>
+
+</FrameLayout>

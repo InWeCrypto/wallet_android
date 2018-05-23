@@ -509,7 +509,10 @@ public class MarketDetaileActivity extends BaseActivity {
             @Override
             public void onCacheSuccess(Response<LzyResponse<ArrayList<KLBean>>> response) {
                 super.onCacheSuccess(response);
-                onSuccess(response);
+                try{
+                    onSuccess(response);
+                }catch (Exception e){
+                }
             }
 
             @Override

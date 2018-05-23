@@ -446,7 +446,10 @@ public class NeoTokenWalletActivity extends BaseActivity {
             public void onCacheSuccess(Response<LzyResponse<NeoOderBean>> response) {
                 super.onCacheSuccess(response);
                 if (page==0){
-                    onSuccess(response);
+                    try{
+                        onSuccess(response);
+                    }catch (Exception e){
+                    }
                 }
             }
 

@@ -7,8 +7,8 @@ android {
         applicationId "com.inwecrypto.wallet"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 20180420
-        versionName "2.0.2"
+        versionCode 20180521
+        versionName "2.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 

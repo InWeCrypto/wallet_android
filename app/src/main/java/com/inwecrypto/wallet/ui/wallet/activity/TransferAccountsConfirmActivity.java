@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.inwecrypto.wallet.bean.HongbaoOrderBean;
 import com.inwecrypto.wallet.common.util.AppUtil;
 import com.inwecrypto.wallet.ui.newneo.InputPassFragment;
 import com.lzy.okgo.model.Response;
@@ -212,9 +213,9 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
                 , oxGas
                 , wallet.getCategory().getName()
                 , Constant.ETH_ORDER_ASSET_ID
-                , new JsonCallback<LzyResponse<Object>>() {
+                , new JsonCallback<LzyResponse<HongbaoOrderBean>>() {
             @Override
-            public void onSuccess(Response<LzyResponse<Object>> response) {
+            public void onSuccess(Response<LzyResponse<HongbaoOrderBean>> response) {
                 hideFixLoading();
                 ToastUtil.show(R.string.zhuanzhangchenggong);
                 EventBus.getDefault().postSticky(new BaseEventBusBean(Constant.EVENT_PRICE));
@@ -223,7 +224,7 @@ public class TransferAccountsConfirmActivity extends BaseActivity {
             }
 
             @Override
-            public void onError(Response<LzyResponse<Object>> response) {
+            public void onError(Response<LzyResponse<HongbaoOrderBean>> response) {
                 super.onError(response);
                 hideFixLoading();
                 if (response.getException().getMessage().contains("wallet_error")){

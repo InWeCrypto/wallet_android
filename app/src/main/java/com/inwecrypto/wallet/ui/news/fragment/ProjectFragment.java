@@ -115,7 +115,10 @@ public class ProjectFragment extends BaseFragment {
             @Override
             public void onCacheSuccess(Response<LzyResponse<ProjectListBean>> response) {
                 super.onCacheSuccess(response);
-                onSuccess(response);
+                try{
+                    onSuccess(response);
+                }catch (Exception e){
+                }
             }
 
             @Override
@@ -169,7 +172,13 @@ public class ProjectFragment extends BaseFragment {
                                     JSONObject prices=json.getJSONObject("data");
                                     int i=0;
                                     for (ProjectDetaileBean projectDetaileBean:data){
-                                        JSONObject unit = prices.getJSONObject(projectDetaileBean.getUnit());
+                                        JSONObject unit=null;
+                                        try {
+                                           unit = prices.getJSONObject(projectDetaileBean.getUnit());
+                                        }catch (Exception e){
+                                            projectDetaileBean.setHasMarket(false);
+                                            continue;
+                                        }
                                         if ("-".equals(unit.getString("id"))){
                                             projectDetaileBean.setHasMarket(false);
                                             continue;

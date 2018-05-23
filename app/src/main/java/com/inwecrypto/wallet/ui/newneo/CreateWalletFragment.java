@@ -131,10 +131,11 @@ public class CreateWalletFragment extends DialogFragment {
                             startActivity(intent);
                             CreateWalletFragment.this.getDialog().cancel();
                         }else {
-                            addLayout.startAnimation(slide_left_to_left);
-                            addLayout.setVisibility(View.GONE);
-                            innerTypeLayout.startAnimation(slide_right_to_left);
-                            innerTypeLayout.setVisibility(View.VISIBLE);
+                            Intent intent=new Intent(getActivity(),NewNeoAddWalletActivity.class);
+                            intent.putExtra("wallets",wallets);
+                            intent.putExtra("isNeo",isNeo);
+                            startActivity(intent);
+                            CreateWalletFragment.this.getDialog().cancel();
                         }
                     }else {
                         addLayout.startAnimation(slide_left_to_left);
@@ -153,10 +154,11 @@ public class CreateWalletFragment extends DialogFragment {
                         startActivity(intent);
                         CreateWalletFragment.this.getDialog().cancel();
                     }else {
-                        typeLayout.startAnimation(slide_left_to_left);
-                        typeLayout.setVisibility(View.GONE);
-                        innerTypeLayout.startAnimation(slide_right_to_left);
-                        innerTypeLayout.setVisibility(View.VISIBLE);
+                        Intent intent=new Intent(getActivity(),NewNeoAddWalletActivity.class);
+                        intent.putExtra("wallets",wallets);
+                        intent.putExtra("isNeo",isNeo);
+                        startActivity(intent);
+                        CreateWalletFragment.this.getDialog().cancel();
                     }
                     break;
                 case R.id.back:

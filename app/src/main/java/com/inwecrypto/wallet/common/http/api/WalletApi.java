@@ -2,6 +2,7 @@ package com.inwecrypto.wallet.common.http.api;
 
 import com.inwecrypto.wallet.App;
 import com.inwecrypto.wallet.bean.ClaimUtxoBean;
+import com.inwecrypto.wallet.bean.HongbaoOrderBean;
 import com.inwecrypto.wallet.bean.IcoGas;
 import com.inwecrypto.wallet.bean.NeoOderBean;
 import com.inwecrypto.wallet.bean.NewNeoGntInfoBean;
@@ -253,7 +254,7 @@ public class WalletApi {
             ,String handle_fee
             ,String flag
             ,String asset_id
-            ,JsonCallback<LzyResponse<Object>> callback){
+            ,JsonCallback<LzyResponse<HongbaoOrderBean>> callback){
         HashMap<String,String> params=new HashMap<>();
         params.put("wallet_id",wallet_id+"");
         params.put("data",data);
@@ -264,7 +265,7 @@ public class WalletApi {
         params.put("handle_fee",handle_fee);
         params.put("asset_id",asset_id);
         params.put("flag",flag);
-        OkGo.<LzyResponse<Object>>post(Url.WALLET_ORDER)
+        OkGo.<LzyResponse<HongbaoOrderBean>>post(Url.WALLET_ORDER)
                 .tag(object)
                 .params(params)
                 .execute(callback);
@@ -375,6 +376,18 @@ public class WalletApi {
                 .execute(callback);
     }
 
+    public static void balanceOfToken(Object object,String contract,String address, JsonCallback<LzyResponse<ValueBean>> callback){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("contract",contract);
+        params.put("address",address);
+        OkGo.<LzyResponse<ValueBean>>post(Url.BALANCEOF)
+                .tag(object)
+                .cacheKey(Constant.BALANCEOF+contract+address)
+                .cacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)
+                .params(params)
+                .execute(callback);
+    }
+
     public static void mimBlock(Object object,JsonCallback<LzyResponse<MinBlockBean>> callback){
         OkGo.<LzyResponse<MinBlockBean>>get(Url.MIN_BLOCK)
                 .tag(object)
@@ -456,4 +469,6 @@ public class WalletApi {
                 .upJson(params)
                 .execute(callback);
     }
+
+
 }

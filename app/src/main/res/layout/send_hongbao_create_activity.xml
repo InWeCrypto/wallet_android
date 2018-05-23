@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_ffffff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/hongbao_title_bg"
+        android:orientation="vertical">
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/status_bar_height" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/close"
+                android:layout_width="38dp"
+                android:layout_height="44dp"
+                android:paddingBottom="13dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="13dp"
+                android:visibility="invisible"
+                android:src="@mipmap/wihteback" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/fahongbao"
+                android:textColor="@color/c_ffffff"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefersh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#029857" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#F1F1F1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hongbaochuangjianzhong"
+                    android:textColor="@color/c_333333"
+                    android:textSize="18dp"/>
+
+                <TextView
+                    android:id="@+id/state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#9FA0A0"
+                    android:textSize="13dp"/>
+
+                <ProgressBar
+                    android:id="@+id/progess"
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_marginLeft="42dp"
+                    android:layout_marginRight="42dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="27dp"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:background="@drawable/hongbao_progressbar_bg"
+                    android:padding="2dp"
+                    android:progressDrawable="@drawable/hongbao_progressbar"
+                    android:max="100"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shaohouchakanhongbaochuangjianqingkuang"
+                    android:textColor="#1E1E1E"
+                    android:textSize="13dp"/>
+
+                <TextView
+                    android:id="@+id/back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="9dp"
+                    android:textColor="#EB6106"
+                    android:textSize="13dp"/>
+
+
+            </LinearLayout>
+
+            <net.qiujuer.genius.ui.widget.Button
+                android:id="@+id/next"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="34dp"
+                android:layout_marginRight="34dp"
+                android:background="@drawable/hongbao_buttom_bg"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/xiayibu"
+                android:enabled="false"
+                android:textColor="@color/c_ffffff"
+                android:textSize="14sp"
+                app:gTouchCornerRadius="12dp"
+                app:gTouchDurationRate="0.7"
+                app:gTouchEffect="ripple" />
+
+            <TextView
+                android:id="@+id/addGas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/dengdaitaijiuzengjiagas"
+                android:textColor="#EA6204"
+                android:textSize="13dp"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+        </LinearLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</LinearLayout>

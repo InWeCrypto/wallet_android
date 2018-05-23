@@ -83,7 +83,6 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
     private FragmentManager manager;
     private int currentIndex = -1;
 
-    private WebView mWebView;
 
     private boolean isYaoqin;
 
@@ -123,26 +122,6 @@ public class MainTabActivity extends BaseActivity implements View.OnClickListene
         }
         initTab(savedInstanceState);
         initListener();
-
-        //预加载网页
-        mWebView = new WebView(this);
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.loadUrl(Constant.MAIN_WEB);
-        mWebView.setWebViewClient(new WebViewClient(){
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return super.shouldOverrideUrlLoading(view, url);
-            }
-        });
-        mWebView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mWebView.removeAllViews();
-                mWebView.destroy();
-                mWebView = null;
-            }
-        }, 2000);
 
         if (App.get().isLogin()){
             //开启服务

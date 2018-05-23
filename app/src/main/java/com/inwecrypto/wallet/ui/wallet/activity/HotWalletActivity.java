@@ -605,7 +605,10 @@ public class HotWalletActivity extends BaseActivity {
                 @Override
                 public void onCacheSuccess(Response<LzyResponse<CommonListBean<WalletCountBean>>> response) {
                     super.onCacheSuccess(response);
-                    onSuccess(response);
+                    try{
+                        onSuccess(response);
+                    }catch (Exception e){
+                    }
                 }
             });
         }
@@ -635,7 +638,10 @@ public class HotWalletActivity extends BaseActivity {
                 @Override
                 public void onCacheSuccess(Response<LzyResponse<TokenBean>> response) {
                     super.onCacheSuccess(response);
-                    onSuccess(response);
+                    try{
+                        onSuccess(response);
+                    }catch (Exception e){
+                    }
                 }
 
                 @Override

@@ -5,8 +5,17 @@ import com.inwecrypto.wallet.bean.ArticleListBean;
 import com.inwecrypto.wallet.bean.ArticleTagsBean;
 import com.inwecrypto.wallet.bean.CandyBowBean;
 import com.inwecrypto.wallet.bean.CommonDataBean;
+import com.inwecrypto.wallet.bean.CommonPageBean;
 import com.inwecrypto.wallet.bean.CommonRecordBean;
+import com.inwecrypto.wallet.bean.DrawRecordBean;
 import com.inwecrypto.wallet.bean.ExchangeNoticeListBean;
+import com.inwecrypto.wallet.bean.HongbaoAuthBean;
+import com.inwecrypto.wallet.bean.HongbaoDetailBean;
+import com.inwecrypto.wallet.bean.HongbaoFeeBean;
+import com.inwecrypto.wallet.bean.HongbaoGntBean;
+import com.inwecrypto.wallet.bean.HongbaoMinGas;
+import com.inwecrypto.wallet.bean.HongbaoNumBean;
+import com.inwecrypto.wallet.bean.HongbaoRecordDetaileBean;
 import com.inwecrypto.wallet.bean.MarketCapBean;
 import com.inwecrypto.wallet.bean.MarketPriceBean;
 import com.inwecrypto.wallet.bean.PingjiaBean;
@@ -20,6 +29,7 @@ import com.inwecrypto.wallet.bean.Rank3Bean;
 import com.inwecrypto.wallet.bean.Rank4Bean;
 import com.inwecrypto.wallet.bean.Rank5Bean;
 import com.inwecrypto.wallet.bean.SearchBean;
+import com.inwecrypto.wallet.bean.SendHongbaoBean;
 import com.inwecrypto.wallet.bean.TagBean;
 import com.inwecrypto.wallet.bean.TradingProjectDetaileBean;
 import com.inwecrypto.wallet.bean.WalletBean;
@@ -41,6 +51,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.sql.CommonDataSource;
+
+import retrofit2.http.PATCH;
 
 /**
  * 作者：xiaoji06 on 2018/2/9 20:36
@@ -631,6 +643,305 @@ public class ZixunApi {
      */
     public static void getMarketPrice(Object object,JsonCallback<LzyResponse<MarketPriceBean>> callback){
         OkGo.<LzyResponse<MarketPriceBean>>get(Url.TOTLE_MARKET)
+                .tag(object)
+                .execute(callback);
+    }
+
+    /**
+     * 获取 红包代币
+     * @param object
+     * @param callback
+     */
+    public static void getGntCategory(Object object,int id,JsonCallback<LzyResponse<ArrayList<HongbaoGntBean>>> callback){
+        OkGo.<LzyResponse<ArrayList<HongbaoGntBean>>>get(Url.GET_GNT_CATEGORY+id)
+                .tag(object)
+                .execute(callback);
+    }
+
+    /**
+     * 获取 领取的红包列表
+     * @param object
+     * @param callback
+     */
+    public static void getDrawRecord(Object object,ArrayList<WalletBean> walletBeans,int page,JsonCallback<LzyResponse<CommonPageBean<DrawRecordBean>>> callback){
+
+        JSONObject params=new JSONObject();
+        JSONArray wallets=new JSONArray();
+
+        for (WalletBean wallet:walletBeans){
+            wallets.put(wallet.getAddress().toLowerCase());
+        }
+
+        try {
+            params.putOpt("wallet_addrs",wallets);
+            params.putOpt("page",page);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<LzyResponse<CommonPageBean<DrawRecordBean>>>post(Url.DRAW_RECORD)
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+    /**
+     * 获取 获取红包的详情
+     * @param object
+     * @param callback
+     */
+    public static void getSendRecord(Object object,String id,JsonCallback<LzyResponse<HongbaoDetailBean>> callback){
+        OkGo.<LzyResponse<HongbaoDetailBean>>get(Url.SEND_RECORD+id)
+                .tag(object)
+                .execute(callback);
+    }
+
+    /**
+     * 获取 获取红包的详情
+     * @param object
+     * @param callback
+     */
+    public static void getSendRecord(Object object,ArrayList<WalletBean> walletBeans,int page,JsonCallback<LzyResponse<CommonPageBean<SendHongbaoBean>>> callback){
+
+        JSONObject params=new JSONObject();
+        JSONArray wallets=new JSONArray();
+
+        for (WalletBean wallet:walletBeans){
+            wallets.put(wallet.getAddress().toLowerCase());
+        }
+
+        try {
+            params.putOpt("wallet_addrs",wallets);
+            params.putOpt("page",page);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<LzyResponse<CommonPageBean<SendHongbaoBean>>>post(Url.SEND_RECORD_LIST)
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+    /**
+     * 授权
+     * @param object
+     * @param callback
+     */
+    public static void authRedbag(Object object
+            ,String redbag_addr
+            ,String redbag_symbol
+            ,String redbag_number
+            ,String redbag
+            ,String auth_tx_nonce
+            ,String auth_gas
+            ,String repeat_id
+            ,String asset_id
+            ,String pay_address
+            ,String receive_address
+            ,String fee
+            ,String handle_fee
+            ,String remark
+            ,String data
+            ,JsonCallback<LzyResponse<HongbaoAuthBean>> callback){
+
+        JSONObject params=new JSONObject();
+        JSONObject transcation=new JSONObject();
+        try {
+            params.putOpt("redbag_addr",redbag_addr.toLowerCase());
+            params.putOpt("redbag_symbol",redbag_symbol);
+            params.putOpt("redbag_number",redbag_number);
+            params.putOpt("redbag",redbag);
+            params.putOpt("auth_tx_nonce",auth_tx_nonce);
+            params.putOpt("auth_gas",auth_gas);
+            params.putOpt("repeat_id",repeat_id);
+
+            transcation.putOpt("asset_id",asset_id);
+            transcation.putOpt("pay_address",pay_address.toLowerCase());
+            transcation.putOpt("receive_address",receive_address.toLowerCase());
+            transcation.putOpt("fee",fee);
+            transcation.putOpt("handle_fee",handle_fee);
+            transcation.putOpt("remark",remark);
+            transcation.putOpt("data",data);
+
+            params.putOpt("transaction_param",transcation);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<LzyResponse<HongbaoAuthBean>>post(Url.REDBAG_AUTH)
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+    /**
+     * 支付手续费
+     * @param object
+     * @param callback
+     */
+    public static void redbagFee(Object object
+            ,String id
+            ,String redbag_addr
+            ,String fee
+            ,String fee_addr
+            ,String redbag_id
+            ,String redbag_tx_nonce
+            ,String repeat_id
+            ,String asset_id
+            ,String pay_address
+            ,String receive_address
+            ,String order_fee
+            ,String handle_fee
+            ,String remark
+            ,String data
+            ,JsonCallback<LzyResponse<HongbaoFeeBean>> callback){
+
+        JSONObject params=new JSONObject();
+        JSONObject transcation=new JSONObject();
+        try {
+            params.putOpt("fee",fee);
+            params.putOpt("fee_addr",fee_addr.toLowerCase());
+            params.putOpt("redbag_id",redbag_id);
+            params.putOpt("redbag_tx_nonce",redbag_tx_nonce);
+            params.putOpt("repeat_id",repeat_id);
+
+            transcation.putOpt("asset_id",asset_id);
+            transcation.putOpt("pay_address",pay_address.toLowerCase());
+            transcation.putOpt("receive_address",receive_address.toLowerCase());
+            transcation.putOpt("fee",order_fee);
+            transcation.putOpt("handle_fee",handle_fee);
+            transcation.putOpt("remark",remark);
+            transcation.putOpt("data",data);
+
+            params.putOpt("transaction_param",transcation);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<LzyResponse<HongbaoFeeBean>>post(Url.REDBAG_FEE+id+"/"+redbag_addr)
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+    /**
+     * 发送红包
+     * @param object
+     * @param callback
+     */
+    public static void sendRedbag(Object object
+            ,String id
+            ,String redbag_addr
+            ,String share_type
+            ,String share_attr
+            ,String share_user
+            ,String share_msg
+            ,JsonCallback<LzyResponse<HongbaoFeeBean>> callback){
+
+        JSONObject params=new JSONObject();
+
+        try {
+            params.putOpt("share_type",share_type);
+            params.putOpt("share_type",share_type);
+            params.putOpt("share_attr",share_attr);
+            params.putOpt("share_user",share_user);
+            params.putOpt("share_msg",share_msg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<LzyResponse<HongbaoFeeBean>>post(Url.REDBAG_SEND+id+"/"+redbag_addr)
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+
+    /**
+     * 获取 获取红包个数
+     * @param object
+     * @param callback
+     */
+    public static void getSendRecordNum(Object object,ArrayList<WalletBean> walletBeans,JsonCallback<LzyResponse<HongbaoNumBean>> callback){
+
+        JSONObject params=new JSONObject();
+        JSONArray wallets=new JSONArray();
+
+        for (WalletBean wallet:walletBeans){
+            wallets.put(wallet.getAddress().toLowerCase());
+        }
+
+        try {
+            params.putOpt("wallet_addrs",wallets);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<LzyResponse<HongbaoNumBean>>post(Url.REDBAG_SEND_COUNT)
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+    /**
+     * 收红包
+     * @param object
+     * @param callback
+     */
+    public static void getRedbag(Object object
+            ,String id
+            ,String redbag_addr
+            ,String wallet_addr
+            ,JsonCallback<LzyResponse<DrawRecordBean>> callback){
+
+        JSONObject params=new JSONObject();
+
+        try {
+            params.putOpt("wallet_addr",wallet_addr.toLowerCase());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<LzyResponse<DrawRecordBean>>post(Url.REDBAG_DRAW+id+"/"+redbag_addr.toLowerCase())
+                .tag(object)
+                .upJson(params)
+                .execute(callback);
+    }
+
+
+    /**
+     * 获取红包详情数据
+     * @param object
+     * @param id
+     * @param callback
+     */
+    public static void getRedbagDetaile(Object object
+            ,String id,JsonCallback<LzyResponse<HongbaoRecordDetaileBean>> callback){
+        OkGo.<LzyResponse<HongbaoRecordDetaileBean>>get(Url.REDBAG_SEND_RECORD+id)
+                .tag(object)
+                .execute(callback);
+    }
+
+
+    public static void ethRpc(Object object
+            ,JSONObject rpc,JsonCallback<LzyResponse<String>> callback){
+        OkGo.<LzyResponse<String>>post(Url.RPC)
+                .tag(object)
+                .upJson(rpc)
+                .execute(callback);
+    }
+
+
+    public static void getRedbagId(Object object,JsonCallback<LzyResponse<String>> callback){
+        OkGo.<LzyResponse<String>>get(Url.REDBAG_ID)
+                .tag(object)
+                .execute(callback);
+    }
+
+    public static void getMinGas(Object object,JsonCallback<LzyResponse<HongbaoMinGas>> callback){
+        OkGo.<LzyResponse<HongbaoMinGas>>get(Url.MIN_GAS)
                 .tag(object)
                 .execute(callback);
     }
