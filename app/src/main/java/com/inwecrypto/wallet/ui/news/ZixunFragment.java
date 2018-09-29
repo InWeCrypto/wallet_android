@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -172,6 +173,14 @@ public class ZixunFragment extends BaseFragment implements AutoLoopViewPager.OnG
 
     private ArrayList<ArticleDetaileBean> scrollData = new ArrayList<>();
 
+    private int AdHight;
+
+    private boolean isDown=true;
+
+    private boolean isRun=false;
+
+    private int preVerticalOffset=0;
+
     @Override
     protected int setLayoutID() {
         return R.layout.zixun_fragment;
@@ -189,7 +198,8 @@ public class ZixunFragment extends BaseFragment implements AutoLoopViewPager.OnG
         setLayout();
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) scroll.getLayoutParams();
-        params.height = (int) (ScreenUtils.getScreenWidth(mContext) / 750.0 * 373.0);
+        AdHight=(int) (ScreenUtils.getScreenWidth(mContext) / 750.0 * 373.0);
+        params.height = AdHight;
         scroll.setLayoutParams(params);
 
         scroll.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -210,6 +220,13 @@ public class ZixunFragment extends BaseFragment implements AutoLoopViewPager.OnG
         appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                Log.e("verticalOffset","verticalOffset:"+verticalOffset+",AdHight:"+AdHight);
+                if ((AdHight+verticalOffset)==0){
+                    vpList.setDispath(true);
+                }else {
+                    vpList.setDispath(false);
+                }
+
                 if (0 == verticalOffset) {
                     hotll.setVisibility(View.INVISIBLE);
                     if (null != filpper) {

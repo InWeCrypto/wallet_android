@@ -15,6 +15,8 @@ INJECTED from /Users/donghaijun/AndroidStudioProjects/inwecrypto/MPChart/Android
 		INJECTED from /Users/donghaijun/AndroidStudioProjects/inwecrypto/MPChart/AndroidManifest.xml
 		ADDED from /Users/donghaijun/AndroidStudioProjects/inwecrypto/MPChart/AndroidManifest.xml:2:1-13:12
 		INJECTED from /Users/donghaijun/AndroidStudioProjects/inwecrypto/MPChart/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/donghaijun/AndroidStudioProjects/inwecrypto/MPChart/AndroidManifest.xml:2:1-13:12
 	android:versionCode
 		INJECTED from /Users/donghaijun/AndroidStudioProjects/inwecrypto/MPChart/AndroidManifest.xml
 		ADDED from /Users/donghaijun/AndroidStudioProjects/inwecrypto/MPChart/AndroidManifest.xml:2:1-13:12

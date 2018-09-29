@@ -80,7 +80,7 @@ public class App extends Application{
 
         //初始化SP
         sp=new SPUtils(this, Constant.SP_NAME);
-        isMain=sp.getBoolean(Constant.NET,true);
+        isMain=sp.getBoolean(Constant.NET,false);
         if (sp.getBoolean(Constant.UNIT_CHANGE,false)){
             if (isZh()){
                 defaultLangue=1;
@@ -187,7 +187,7 @@ public class App extends Application{
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
         //log颜色级别，决定了log在控制台显示的颜色
         loggingInterceptor.setColorLevel(Level.INFO);
-        //builder.addInterceptor(loggingInterceptor);
+        builder.addInterceptor(loggingInterceptor);
         builder.connectTimeout(30, TimeUnit.SECONDS);
         builder.readTimeout(30, TimeUnit.SECONDS);
         builder.writeTimeout(30, TimeUnit.SECONDS);

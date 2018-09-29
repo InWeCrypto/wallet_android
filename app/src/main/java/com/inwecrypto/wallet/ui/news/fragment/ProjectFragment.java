@@ -227,4 +227,9 @@ public class ProjectFragment extends BaseFragment {
             adatpter.notifyDataSetChanged();
         }
     }
+
+    public boolean isFirst(){
+        if (null==list)return true;
+        return !list.canScrollVertically(-1);
+    }
 }

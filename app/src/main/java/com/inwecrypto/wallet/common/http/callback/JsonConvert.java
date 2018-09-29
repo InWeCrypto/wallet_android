@@ -128,7 +128,7 @@ public class JsonConvert<T> implements Converter<T> {
                     LzyResponse lzyResponse = Convert.fromJson(bodys, type);
                     response.close();
                     return (T) lzyResponse;
-                }else if (bodys.contains("4001")||bodys.contains("4010")) {
+                }else if (bodys.contains("4001")||bodys.contains("4001")) {
                     EventBus.getDefault().post(new BaseEventBusBean(Constant.EVENT_TOKEN));
                     throw new IllegalStateException("4001:Please login");
                 }else if (bodys.contains("4010")) {
